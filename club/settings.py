@@ -15,11 +15,11 @@ SECRET_KEY = os.getenv("SECRET_KEY") or "wow so secret"
 DEBUG = (os.getenv("DEBUG") != "false")  # SECURITY WARNING: don't run with debug turned on in production!
 TESTS_RUN = True if os.getenv("TESTS_RUN") else False
 
-ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost", "0.0.0.0", "vas3k.club"]
+ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost", "0.0.0.0", "sorokin.club"]
 INTERNAL_IPS = ["127.0.0.1"]
 
 ADMINS = [
-    ("admin", "club@vas3k.club"),
+    ("admin", "club@sorokin.club"),
     ("vas3k", "me@vas3k.ru"),
 ]
 
@@ -165,7 +165,7 @@ EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Вастрик.Клуб <club@vas3k.club>")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Вастрик.Клуб <club@sorokin.club>")
 
 # App
 
@@ -229,16 +229,16 @@ c+Ha7cw3U+n6KI4idHLiwa0CAwEAAQ==
 -----END PUBLIC KEY-----"""
 JWT_ALGORITHM = "RS256"
 
-MEDIA_UPLOAD_URL = "https://i.vas3k.club/upload/multipart/"
+MEDIA_UPLOAD_URL = "https://i.sorokin.club/upload/multipart/"
 MEDIA_UPLOAD_CODE = os.getenv("MEDIA_UPLOAD_CODE")
 VIDEO_EXTENSIONS = {"mp4", "mov", "webm"}
 IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "gif"}
 
-OG_IMAGE_GENERATOR_URL = "https://og.vas3k.club/preview"
-OG_IMAGE_DEFAULT = "https://vas3k.club/static/images/share.png"
-OG_MACHINE_AUTHOR_LOGO = "https://vas3k.club/static/images/the_machine_logo.png"
+OG_IMAGE_GENERATOR_URL = "https://og.sorokin.club/preview"
+OG_IMAGE_DEFAULT = "https://sorokin.club/static/images/share.png"
+OG_MACHINE_AUTHOR_LOGO = "https://sorokin.club/static/images/the_machine_logo.png"
 OG_IMAGE_GENERATOR_DEFAULTS = {
-    "logo": "https://vas3k.club/static/images/logo/logo-white-text.png",
+    "logo": "https://sorokin.club/static/images/logo/logo-white-text.png",
     "op": 0.6,
     "bg": "#FFFFFF",
 }
@@ -252,7 +252,7 @@ TELEGRAM_CLUB_CHAT_URL = os.getenv("TELEGRAM_CLUB_CHAT_URL")
 TELEGRAM_CLUB_CHAT_ID = os.getenv("TELEGRAM_CLUB_CHAT_ID")
 TELEGRAM_ONLINE_CHANNEL_URL = os.getenv("TELEGRAM_ONLINE_CHANNEL_URL")
 TELEGRAM_ONLINE_CHANNEL_ID = os.getenv("TELEGRAM_ONLINE_CHANNEL_ID")
-TELEGRAM_BOT_WEBHOOK_URL = "https://vas3k.club/telegram/webhook/"
+TELEGRAM_BOT_WEBHOOK_URL = "https://sorokin.club/telegram/webhook/"
 TELEGRAM_BOT_WEBHOOK_HOST = "0.0.0.0"
 TELEGRAM_BOT_WEBHOOK_PORT = 8816
 
@@ -264,7 +264,7 @@ STRIPE_SUCCESS_URL = APP_HOST + "/monies/done/?reference={CHECKOUT_SESSION_ID}"
 
 WEBHOOK_SECRETS = set(os.getenv("WEBHOOK_SECRETS", "").split(","))
 
-DEFAULT_AVATAR = "https://i.vas3k.club/v.png"
+DEFAULT_AVATAR = "https://i.sorokin.club/v.png"
 COMMENT_EDITABLE_TIMEDELTA = timedelta(hours=24)
 COMMENT_DELETABLE_TIMEDELTA = timedelta(days=10 * 365)
 COMMENT_DELETABLE_BY_POST_AUTHOR_TIMEDELTA = timedelta(days=14)
@@ -279,16 +279,16 @@ MIN_DAYS_TO_GIVE_BADGES = 35  # minimum "days" balance to buy and gift any badge
 MAX_MUTE_COUNT = 5  # maximum number of users allowed to mute
 CLEARED_POST_TEXT = "```\n" \
     "😥 Этот пост был удален самим автором и от него остались лишь комментарии участников. " \
-    "Если вы хотите приютить и развить эту тему как новый автор, напишите модераторам Клуба: moderator@vas3k.club." \
+    "Если вы хотите приютить и развить эту тему как новый автор, напишите модераторам Клуба: moderator@sorokin.club." \
     "\n```"
 
 MODERATOR_USERNAME = "moderator"
 DELETED_USERNAME = "deleted"
 
-POSTING_GUIDE_URL = "https://vas3k.club/post/10447/"
-CHATS_GUIDE_URL = "https://vas3k.club/post/9542/"
-PEOPLE_GUIDE_URL = "https://vas3k.club/post/2584/"
-PARLIAMENT_GUIDE_URL = "https://vas3k.club/post/12870/"
+POSTING_GUIDE_URL = "https://sorokin.club/post/10447/"
+CHATS_GUIDE_URL = "https://sorokin.club/post/9542/"
+PEOPLE_GUIDE_URL = "https://sorokin.club/post/2584/"
+PARLIAMENT_GUIDE_URL = "https://sorokin.club/post/12870/"
 
 WEBPACK_LOADER = {
     "DEFAULT": {
