@@ -232,7 +232,7 @@ JWT_ALGORITHM = "RS256"
 MEDIA_UPLOAD_URL = "https://i.sorokin.club/upload/multipart/"
 MEDIA_UPLOAD_CODE = os.getenv("MEDIA_UPLOAD_CODE")
 VIDEO_EXTENSIONS = {"mp4", "mov", "webm"}
-IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "gif"}
+IMAGE_EXTENSIONS = {"jpg", "jpeg", "jpe", "png", "gif"}
 
 OG_IMAGE_GENERATOR_URL = "https://og.sorokin.club/preview"
 OG_IMAGE_DEFAULT = "https://sorokin.club/static/images/share.png"
