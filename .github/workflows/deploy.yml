@@ -14,9 +14,9 @@ jobs:
         with:
           ref: 'club'
       - run: docker login ghcr.io -u $GITHUB_ACTOR -p ${{ secrets.TOKEN }}
-      - run: docker build -t ghcr.io/sorokin.media/club:latest -t ghcr.io/sorokin.media/club:$GITHUB_SHA .
-      - run: docker image push ghcr.io/sorokin.media/club:$GITHUB_SHA
-      - run: docker image push ghcr.io/sorokin.media/club:latest
+      - run: docker build -t ghcr.io/$GITHUB_ACTOR/sorokin.club:latest -t ghcr.io/$GITHUB_ACTOR/sorokin.club:$GITHUB_SHA .
+      - run: docker image push ghcr.io/$GITHUB_ACTOR/sorokin.club:$GITHUB_SHA
+      - run: docker image push ghcr.io/$GITHUB_ACTOR/sorokin.club:latest
 
   deploy:
     name: Deploy
@@ -62,4 +62,4 @@ jobs:
       - run: echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ${{ env.SSH_KEY_PATH }} && chmod 600 ${{ env.SSH_KEY_PATH }}
       - run: scp -o StrictHostKeyChecking=no -i ${{ env.SSH_KEY_PATH }} .env ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }}:/var/www/club/.env
       - run: scp -o StrictHostKeyChecking=no -i ${{ env.SSH_KEY_PATH }} docker-compose.production.yml ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }}:/var/www/club/docker-compose.production.yml
-      - run: ssh -i ${{ env.SSH_KEY_PATH }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd /var/www/club && docker login ghcr.io -u $GITHUB_ACTOR -p ${{ secrets.TOKEN }} && docker pull ghcr.io/sorokin.media/club:$GITHUB_SHA && docker-compose -f docker-compose.production.yml --env-file=.env up -d && docker system prune --all --force"
+      - run: ssh -i ${{ env.SSH_KEY_PATH }} ${{ secrets.PRODUCTION_SSH_USERNAME }}@${{ secrets.PRODUCTION_SSH_HOST }} "cd /var/www/club && docker login ghcr.io -u $GITHUB_ACTOR -p ${{ secrets.TOKEN }} && docker pull ghcr.io/$GITHUB_ACTOR/sorokin.club:$GITHUB_SHA && docker-compose -f docker-compose.production.yml --env-file=.env up -d && docker system prune --all --force"
