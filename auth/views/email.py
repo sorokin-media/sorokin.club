@@ -62,7 +62,7 @@ def email_login(request):
                         membership_platform_type=User.MEMBERSHIP_PLATFORM_DIRECT,
                         full_name=email_or_login[:email_or_login.find("@")],
                         membership_started_at=now,
-                        membership_expires_at=now + timedelta(days=365),
+                        membership_expires_at=now,
                         created_at=now,
                         updated_at=now,
                         moderation_status=User.MODERATION_STATUS_INTRO,
