@@ -78,19 +78,21 @@
 
         <div>     
         <h2>Оффлайн</h2>
-        <p>Клуб - это не только сайт и чаты. Самое интересное происходит в оффлайне. Пока клуб набирает базу участников - эти активности в планах. Но скоро они станут реальностью!</p>
-        <p>У создателей клуба есть большой опыт проведения оффлайн-мероприятий и многие считают, что это лучшие мероприятия в их жизни. Повторим этот опыт в клубе!</p>
+        <p>Клуб - это не только сайт и чаты. Самое интересное происходит в оффлайне. Пока проект набирает базу участников - эти активности в планах. Но скоро они станут реальностью!</p>
+        <p>У создателей есть большой опыт проведения оффлайн-мероприятий и многие считают, что это лучшие мероприятия в их жизни. Повторим этот опыт в клубе!</p>
                 <ul class="feature-list">
                     <li>Встречи в разных городах.</li>
                     <li>Голосовые конференции для обсуждения наболевших вопросов.</li>
                     <li>Тусовки для приятного активного времяпрепровождения: небольшие походы, прогулки, заплывы на яхтах и прочее.</li>
                     <li>Совместные путешествия.</li>
                     <li>Большие закрытые клубные конференции.</li>
-               </ul>  
+               </ul>
+            <p>.</p>
         </div>
             
 
-             <div><h2>Тусовки по интересам</h2>
+             <div>
+                 <h2>Тусовки по интересам</h2>
 
                 <ul class="feature-list">
                     <li>Сеть клубных чатиков в телеграме.</li>
@@ -277,14 +279,10 @@
                     <!-- <a href="{% url "join" %}" class="button button-black button-big">Вступить в Клуб</a> -->
                 </p>
             </div>
-        </div>
-    </main>
-{% endblock %}
-
-{% block footer %}
-    <footer class="footer">
-        <div class="footer-left" style="text-align: center; font-size: 130%;">
-            &copy; <a href="https://sorokin.club" target="_blank">sorokin.club</a> {% now "Y" %} &nbsp;&middot;&nbsp;
+            
+            <div>
+                
+                &copy; <a href="https://sorokin.club" target="_blank">sorokin.club</a> {% now "Y" %} &nbsp;&middot;&nbsp;
             <a href="/docs/about/">О Клубе и Правила Клуба</a> &nbsp;&middot;&nbsp;
 
             <a href="/docs/contact/">Написать нам</a><br />
@@ -298,6 +296,29 @@
             <img src="https://sorokin.club/static/images/visa.svg" width="77" />&nbsp;&nbsp;
             <img src="https://sorokin.club/static/images/mastercard.svg" width="77" />&nbsp;&nbsp;
             <img src="https://sorokin.club/static/images/mir.png" width="77" />
+                
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer class="footer">
+        <div class="footer-left" style="text-align: center; font-size: 130%;">
+            <!-- &copy; <a href="https://sorokin.club" target="_blank">sorokin.club</a> {% now "Y" %} &nbsp;&middot;&nbsp;
+            <a href="/docs/about/">О Клубе и Правила Клуба</a> &nbsp;&middot;&nbsp;
+
+            <a href="/docs/contact/">Написать нам</a><br />
+
+            <a href="/docs/oferta/">Оферта</a> &nbsp;&middot;&nbsp;
+
+            <a href="/docs/privacy_policy/">Политика приватности</a><br />
+            
+            <a href="/docs/policy/">Политика оплаты, доставки и возврата</a><br /><br />
+            
+            <img src="https://sorokin.club/static/images/visa.svg" width="77" />&nbsp;&nbsp;
+            <img src="https://sorokin.club/static/images/mastercard.svg" width="77" />&nbsp;&nbsp;
+            <img src="https://sorokin.club/static/images/mir.png" width="77" /> -->
             
         </div>
     </footer>
