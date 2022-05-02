@@ -40,11 +40,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url "feed_label" "ama" %}" class="{% if label_code == "ama" %}feed-sidebar-menu-selected{% endif %}">
-                        ✋ AMA
-                    </a>
-                </li>
-                <li>
                     <a href="{% url "feed_label" "inside" %}" class="{% if label_code == "inside" %}feed-sidebar-menu-selected{% endif %}">
                         💎️ Инсайды
                     </a>
@@ -82,6 +77,16 @@
             </ul>
         </div>
 
+        <!-- 
+<li>
+                    <a href="{% url "feed_label" "ama" %}" class="{% if label_code == "ama" %}feed-sidebar-menu-selected{% endif %}">
+                        ✋ AMA
+                    </a>
+                </li> 
+
+
+-->
+        
         <div class="feed-sidebar-block">
             <div class="feed-sidebar-header">Комнаты</div>
             <div class="feed-sidebar-topics">
