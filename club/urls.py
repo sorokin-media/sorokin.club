@@ -22,6 +22,7 @@ from notifications.webhooks import webhook_event
 from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription
 from payments.views.crypto import crypto, coinbase_webhook
+from payments.views.unitpay import unitpay_webhook
 from posts.api import md_show_post, api_show_post
 from posts.models.post import Post
 from posts.rss import NewPostsRss
@@ -78,6 +79,7 @@ urlpatterns = [
     path("monies/subscription/<str:subscription_id>/stop/", stop_subscription, name="stop_subscription"),
     path("monies/stripe/webhook/", stripe_webhook, name="stripe_webhook"),
     path("monies/coinbase/webhook/", coinbase_webhook, name="coinbase_webhook"),
+    path("monies/unitpay/webhook/", unitpay_webhook, name="unitpay_webhook"),
 
     path("user/<slug:user_slug>/", profile, name="profile"),
     path("user/<slug:user_slug>.json", api_profile, name="api_profile"),
