@@ -14,7 +14,8 @@ jobs:
         with:
           ref: 'club'
       - run: docker login ghcr.io -u glader -p ${{ secrets.TOKEN }}
-      - run: docker build -t ghcr.io/glader/sorokin.club:latest -t ghcr.io/glader/sorokin.club:$GITHUB_SHA .
+      - run: docker pull ghcr.io/glader/sorokin.club:latest
+      - run: docker build -t ghcr.io/glader/sorokin.club:latest -t ghcr.io/glader/sorokin.club:$GITHUB_SHA --cache-from ghcr.io/glader/sorokin.club:latest .
       - run: docker image push ghcr.io/glader/sorokin.club:$GITHUB_SHA
       - run: docker image push ghcr.io/glader/sorokin.club:latest
 
