@@ -15,7 +15,7 @@ def unitpay_webhook(request):
     signature = None
     params = dict()
 
-    for k, v in request.GET:
+    for k, v in request.GET.items():
         if k == "method":
             method = v
 
