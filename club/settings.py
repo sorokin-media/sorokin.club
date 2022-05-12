@@ -289,7 +289,7 @@ CLEARED_POST_TEXT = "```\n" \
 MODERATOR_USERNAME = "moderator"
 DELETED_USERNAME = "deleted"
 
-POSTING_GUIDE_URL = "https://sorokin.club/post/10447/"
+POSTING_GUIDE_URL = "https://sorokin.club/post/76/"
 CHATS_GUIDE_URL = "https://sorokin.club/post/9542/"
 PEOPLE_GUIDE_URL = "https://sorokin.club/post/2584/"
 PARLIAMENT_GUIDE_URL = "https://sorokin.club/post/12870/"
