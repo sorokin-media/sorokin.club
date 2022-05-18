@@ -14,19 +14,16 @@
                 </small>
             </div>
 
-            <stripe-checkout-button
-                public-key="{{ settings.STRIPE_PUBLIC_KEY }}"
-                session-id="{{ session.id }}"
-                class="button button-big pay-button">
+            <a href="{{ invoice.url }}" class="button button-big join-button">
                 Перейти к оплате
-            </stripe-checkout-button>
+            </a>
 
             <p style="font-size: 300%; margin: 20px 0;">
                 ☝️
             </p>
 
             <p style="font-size: 90%;">
-                Платежи для нас процессит <a href="https://stripe.com" target="_blank">Stripe</a>.
+                Платежи для нас процессит <a href="https://unitpay.ru" target="_blank">UnitPay</a>.
                 Кнопочка выше перенесёт вас на их специальную безопасную страницу оплаты.
                 Клуб не видит и не хранит никаких платёжных данных.
             </p>
