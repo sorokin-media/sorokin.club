@@ -68,7 +68,7 @@ PRODUCTS = {
         "stripe_id": "price_1H5byfKgJMaF2rHtJHeirP4V" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
         "description": "1 год членства в Клубе",
-        "amount": 10,
+        "amount": 600,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -80,7 +80,7 @@ PRODUCTS = {
         "stripe_id": "price_1H73kbKgJMaF2rHtTS3clmtv" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
         "description": "1 год членства в Клубе (автопополнение каждый год)",
-        "amount": 10,
+        "amount": 600,
         "recurrent": True,
         "activator": club_subscription_activator,
         "data": {
@@ -92,7 +92,7 @@ PRODUCTS = {
         "stripe_id": "price_1H5c1sKgJMaF2rHtEQ1Jl7Pt" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "84c507f9-0a21-471f-8d10-acf0a154db0d",
         "description": "Членство в Клубе на 2 года",
-        "amount": 20,
+        "amount": 1200,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -104,7 +104,7 @@ PRODUCTS = {
         "stripe_id": "price_1H73n7KgJMaF2rHtZtU9dvJT" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "84c507f9-0a21-471f-8d10-acf0a154db0d",
         "description": "2 года членства в Клубе (автопополнение каждые 2 года)",
-        "amount": 20,
+        "amount": 1200,
         "recurrent": True,
         "activator": club_subscription_activator,
         "data": {
@@ -116,7 +116,7 @@ PRODUCTS = {
         "stripe_id": "price_1H5c3JKgJMaF2rHtPiIED05T" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "ff0df23f-06d8-473f-9ad8-74039a62aeb1",
         "description": "Членство в Клубе на 10 лет",
-        "amount": 50,
+        "amount": 5000,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -128,7 +128,7 @@ PRODUCTS = {
         "stripe_id": "price_1H73rBKgJMaF2rHtyaW1DGWM" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "ff0df23f-06d8-473f-9ad8-74039a62aeb1",
         "description": "Членство в Клубе на 10 лет (автопополнение каждый год)",
-        "amount": 50,
+        "amount": 5000,
         "recurrent": "yearly",
         "activator": club_subscription_activator,
         "data": {
@@ -140,7 +140,7 @@ PRODUCTS = {
         "stripe_id": "price_1IXA3fKgJMaF2rHtq37jPrym" if not IS_TEST_STRIPE else "price_1IX9QuKgJMaF2rHtJnrSs0Ud",
         "coinbase_id": None,
         "description": "Пригласить друга в Клуб",
-        "amount": 20,
+        "amount": 600,
         "recurrent": False,
         "activator": club_invite_activator,
         "data": {
