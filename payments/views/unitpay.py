@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from json import dumps
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
 
 from notifications.email.users import send_payed_email
@@ -123,19 +123,30 @@ def unitpay_webhook(request):
     if order_id == "test":
         return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
 
-    payload = request.GET
-    log.info("Unitpay order %s", order_id)
+    if request.GET["method"] == "check":
+        payment = Payment.get(order_id)
+        if not payment:
+            return HttpResponseNotFound(dumps({"result": {"message": "Платеж не найден"}}))
+        if payment.status == Payment.STATUS_STARTED:
+            return HttpResponse(dumps({"result": {"message": "Проверка пройдена успешно"}}))
+        return HttpResponseBadRequest(dumps({"result": {"message": "Платеж уже оплачен"}}))
 
-    payment = Payment.finish(
-        reference=order_id,
-        status=Payment.STATUS_SUCCESS,
-        data=payload,
-    )
+    if request.GET["method"] == "pay":
+        payload = request.GET
+        log.info("Unitpay order %s", order_id)
 
-    product = PRODUCTS[payment.product_code]
-    product["activator"](product, payment, payment.user)
+        payment = Payment.finish(
+            reference=order_id,
+            status=Payment.STATUS_SUCCESS,
+            data=payload,
+        )
 
-    if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
-        send_payed_email(payment.user)
+        product = PRODUCTS[payment.product_code]
+        product["activator"](product, payment, payment.user)
 
-    return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+        if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
+            send_payed_email(payment.user)
+
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+
+    HttpResponseBadRequest(dumps({"result": {"message": "Неизвестный параметр method"}}))
