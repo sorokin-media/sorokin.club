@@ -120,6 +120,9 @@ def unitpay_webhook(request):
 
     # process payment
     order_id = request.GET["params[account]"]
+    if order_id == "test":
+        return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
+
     payload = request.GET
     log.info("Unitpay order %s", order_id)
 
