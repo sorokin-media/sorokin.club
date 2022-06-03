@@ -12,7 +12,7 @@
             Если вам не подходят наши <a href="{% url "docs" "about" %}" target="_blank">правила</a>, вы боитесь деанона или пришли «просто почитать посты» рекомендуем сэкономить нам всем время и пойти на <a href="https://ok.ru/" rel="nofollow">Одноклассники</a>, там как-то с этим попроще.
         </div>
 
-        <form action="{% url "pay" %}" method="get">
+        <form action="{% url "unitpay_pay" %}" method="get">
 
         <div class="join-subtitle" id="select_package">Пакет брать будем?</div>
 
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "docs" "about" %}" target="_blank">правилами</a> Клуба и помню, что мне придётся написать интро и пройти модерацию</label>
+        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "docs" "about" %}" target="_blank">правилами клуба</a> и <a href="https://sorokin.club/docs/subscription/" target="_blank">правилами подписки</a> и помню, что мне придётся написать интро и пройти модерацию</label>
 
         <button type="submit" class="button button-big join-button">Перейти к оплате</button>
 

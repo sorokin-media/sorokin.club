@@ -3,7 +3,7 @@
 {% block content %}
     <div class="block membership-expired">
 
-        <div class="membership-expired-title">Ваша клубная карта истекла 😿</div>
+        <div class="membership-expired-title">Ваша клубная карта истекла 😿😿😿</div>
 
 
         {% if features.PATREON_AUTH_ENABLED and me.membership_platform_type == "patreon" %}
@@ -37,7 +37,7 @@
 
     <br>
 
-    <form action="{% url "pay" %}" method="get">
+    <form action="{% url "unitpay_pay" %}" method="get">
 
         {% include "payments/blocks/packages.html" %}
 

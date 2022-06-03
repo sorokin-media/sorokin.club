@@ -6,7 +6,7 @@
 {% load emails %}
 
 {% block og_meta %}
-    <meta property="og:site_name" content="Вастрик.Клуб" />
+    <meta property="og:site_name" content="Сорокин.Клуб" />
     <meta property="og:title" content="Клубный журнал. Итоги недели. Выпуск #{{ issue_number }}" />
     <meta property="og:type" content="article" />
     <meta property="og:description" content="На этой неделе у нас +{{ newbie_count }} {{ newbie_count|rupluralize:"новый член,новых члена,новых членов" }} Клуба. Всего за неделю написали {{ post_count }} {{ post_count | rupluralize:"пост,поста,постов" }}." />
@@ -91,13 +91,13 @@
 {% endblock %}
 
 {% block logo %}
-    <a href="https://vas3k.club">
+    <a href="https://sorokin.club">
         <center><img src="{{ settings.APP_HOST }}{% static "images/logo/logo-256.png" %}" alt="" height="80" width="80" style="display:inline-block;width: 80px;height: 80px;min-width: 80px; margin-top: 30px;"></center>
     </a>
 {% endblock %}
 
 {% block title %}
-    Журнал Вастрик.Клуба<br>
+    Журнал Сорокин.Клуба<br>
 
     {% if not digest_title %}
         <span class="issue">Итоги недели. Выпуск #{{ issue_number }}</span>

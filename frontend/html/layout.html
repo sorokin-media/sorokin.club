@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="ru">
 <head>
-    <title>{% block title %}Вастрик.Клуб 🤘✖️👩‍💻‍{% endblock %}</title>
+    <title>{% block title %}Сорокин.Клуб 🤘✖️👩‍💻‍{% endblock %}</title>
     {% block fonts %}
         {% include "common/fonts.html" %}
     {% endblock %}
@@ -17,7 +17,7 @@
     </script>
 
     <link rel="alternate" type="application/rss+xml"
-          title="Вастрик.Клуб: Новые посты"
+          title="Сорокин.Клуб: Новые посты"
           href="{% url "rss" %}{% if me %}?hash={{ me.secret_hash }}{% endif %}" />
 
     {% block og_tags %}
@@ -47,11 +47,15 @@
 {% block footer %}
     <footer class="footer" id="footer">
         <div class="footer-left">
-            <a href="{% url "docs" "about" %}">О Клубе</a> &nbsp;&middot;&nbsp;
+            <a href="{% url "docs" "about" %}">О Клубе и Правила Клуба</a> &nbsp;&middot;&nbsp;
 
-            <a href="{% url "docs" "contact" %}">Написать нам</a> &nbsp;&middot;&nbsp;
+            <a href="{% url "docs" "contact" %}">Написать нам</a>
 
-            <a href="{% url "docs" "privacy_policy" %}">Политика приватности</a><br><br>
+            <!-- <a href="{% url "docs" "oferta" %}">Оферта</a> &nbsp;&middot;&nbsp;
+            
+            <a href="{% url "docs" "policy" %}">Политика оплаты, доставки и возврата</a> &nbsp;&middot;&nbsp;
+
+            <a href="{% url "docs" "privacy_policy" %}">Политика приватности</a>--> <br><br>
 
             CC BY-SA
         </div>

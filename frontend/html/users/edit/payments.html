@@ -41,11 +41,11 @@
         {% endfor %}
 
         <div class="block-description block-description-center">
-            О любых проблемах с оплатой сразу пишите на <a href="mailto:monies@vas3k.club">monies@vas3k.club</a>.<br>
-            Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.
+            О любых проблемах с оплатой сразу пишите на <a href="mailto:monies@sorokin.club">monies@sorokin.club</a>.<br>
+            Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.<br>Вы можете остановить подписку в любой момент, написав нам на <a href="mailto:club@sorokin.club">club@sorokin.club</a> или связавшись с командой модерации в <a href="https://t.me/sorokinclub_chat">телеграм-чате клуба</a>.</p>
         </div>
 
-        <form action="{% url "pay" %}" method="get">
+        <form action="{% url "unitpay_pay" %}" method="get">
 
         <div class="block-header" id="select_package">На сколько еще пополняем?</div>
 
@@ -125,7 +125,7 @@
         </div>
 
         <div class="block invite-friend">
-            <form action="{% url "pay" %}" method="get">
+            <form action="{% url "unitpay_pay" %}" method="get">
                 {% csrf_token %}
                 <input type="hidden" name="product_code" value="club1_invite">
                 <input type="hidden" name="is_invite" value="true">

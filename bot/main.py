@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 def command_help(update: Update, context: CallbackContext) -> None:
     update.effective_chat.send_message(
-        "✖️ <b>Я — твой личный бот для Вастрик.Клуба</b>\n\n"
+        "✖️ <b>Я — твой личный бот для Сорокин.Клуба</b>\n\n"
         "Через меня можно отвечать на комменты и посты — просто напиши "
         "ответ реплаем на сообщение и я перепостю его в Клуб. "
         "Так можно общаться в комментах даже не открывая сайт.\n\n"
@@ -44,7 +44,7 @@ def private_message(update: Update, context: CallbackContext) -> None:
     if str(update.effective_user.id) not in set(club_users):
         update.effective_chat.send_message(
             "Привет! Мы пока не знакомы. Привяжи меня к аккаунту командой /auth с "
-            "<a href=\"https://vas3k.club/user/me/edit/bot/\">кодом из профиля</a> через пробел",
+            "<a href=\"https://sorokin.club/user/me/edit/bot/\">кодом из профиля</a> через пробел",
             parse_mode=ParseMode.HTML
         )
     else:
@@ -68,6 +68,7 @@ def main() -> None:
     dispatcher.add_handler(CallbackQueryHandler(moderation.reject_post, pattern=r"^reject_post.+"))
     dispatcher.add_handler(CallbackQueryHandler(moderation.approve_user_profile, pattern=r"^approve_user:.+"))
     dispatcher.add_handler(CallbackQueryHandler(moderation.reject_user_profile, pattern=r"^reject_user.+"))
+    dispatcher.add_handler(CommandHandler("promote", moderation.command_promote_user))
 
     # Public + private chats
     dispatcher.add_handler(CommandHandler("help", command_help))

@@ -63,112 +63,76 @@ def club_invite_activator(product, payment, user):
 
 
 PRODUCTS = {
-    "club1": {
-        "code": "club1",
+    "club12": {
+        "code": "club12",
         "stripe_id": "price_1H5byfKgJMaF2rHtJHeirP4V" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
-        "description": "Год членства в Клубе",
-        "amount": 15,
+        "description": "1 год членства в Клубе",
+        "amount": 1200,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
             "timedelta": timedelta(days=365),
         },
     },
-    "club1_recurrent_yearly": {
-        "code": "club1_recurrent_yearly",
+    "club12_recurrent": {
+        "code": "club6_recurrent",
         "stripe_id": "price_1H73kbKgJMaF2rHtTS3clmtv" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
-        "description": "Год членства в Клубе (автопополнение каждый год)",
-        "amount": 15,
-        "recurrent": "yearly",
+        "description": "1 год членства в Клубе (автопополнение каждый год)",
+        "amount": 1200,
+        "recurrent": True,
         "activator": club_subscription_activator,
         "data": {
             "timedelta": timedelta(days=365),
         },
     },
-    "club1_recurrent_monthly": {
-        "code": "club1_recurrent_monthly",
-        "stripe_id": "price_1H73luKgJMaF2rHteHuMsvBE" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
-        "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
-        "description": "Год членства в Клубе (автопополнение каждый месяц)",
-        "amount": 15,
-        "recurrent": "monthly",
-        "activator": club_subscription_activator,
-        "data": {
-            "timedelta": timedelta(days=365),
-        },
-    },
-    "club3": {
-        "code": "club3",
+    "club24": {
+        "code": "club24",
         "stripe_id": "price_1H5c1sKgJMaF2rHtEQ1Jl7Pt" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "84c507f9-0a21-471f-8d10-acf0a154db0d",
-        "description": "Членство в Клубе на 3 года",
-        "amount": 40,
+        "description": "Членство в Клубе на 2 года",
+        "amount": 2400,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
-            "timedelta": timedelta(days=365 * 3),
+            "timedelta": timedelta(days=365 * 2),
         },
     },
-    "club3_recurrent_yearly": {
-        "code": "club3_recurrent_yearly",
+    "club24_recurrent": {
+        "code": "club24_recurrent",
         "stripe_id": "price_1H73n7KgJMaF2rHtZtU9dvJT" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "84c507f9-0a21-471f-8d10-acf0a154db0d",
-        "description": "+3 года членства в Клубе (автопополнение каждый год)",
-        "amount": 40,
-        "recurrent": "yearly",
+        "description": "2 года членства в Клубе (автопополнение каждые 2 года)",
+        "amount": 2400,
+        "recurrent": True,
         "activator": club_subscription_activator,
         "data": {
-            "timedelta": timedelta(days=365 * 3),
+            "timedelta": timedelta(days=365 * 2),
         },
     },
-    "club3_recurrent_monthly": {
-        "code": "club3_recurrent_monthly",
-        "stripe_id": "price_1H73oXKgJMaF2rHtITGhACgO" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
-        "coinbase_id": "84c507f9-0a21-471f-8d10-acf0a154db0d",
-        "description": "+3 года членства в Клубе (автопополнение каждый месяц)",
-        "amount": 40,
-        "recurrent": "monthly",
-        "activator": club_subscription_activator,
-        "data": {
-            "timedelta": timedelta(days=365 * 3),
-        },
-    },
-    "club50": {
-        "code": "club50",
+    "club120": {
+        "code": "club120",
         "stripe_id": "price_1H5c3JKgJMaF2rHtPiIED05T" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "ff0df23f-06d8-473f-9ad8-74039a62aeb1",
-        "description": "Членство в Клубе на 50 лет",
-        "amount": 150,
+        "description": "Членство в Клубе на 10 лет",
+        "amount": 9000,
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
-            "timedelta": timedelta(days=365 * 50),
+            "timedelta": timedelta(days=365 * 10),
         },
     },
-    "club50_recurrent_yearly": {
-        "code": "club50_recurrent_yearly",
+    "club120_recurrent": {
+        "code": "club120_recurrent",
         "stripe_id": "price_1H73rBKgJMaF2rHtyaW1DGWM" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "ff0df23f-06d8-473f-9ad8-74039a62aeb1",
-        "description": "Членство в Клубе на 50 лет (автопополнение каждый год)",
-        "amount": 150,
+        "description": "Членство в Клубе на 10 лет (автопополнение каждый год)",
+        "amount": 9000,
         "recurrent": "yearly",
         "activator": club_subscription_activator,
         "data": {
-            "timedelta": timedelta(days=365 * 50),
-        },
-    },
-    "club50_recurrent_monthly": {
-        "code": "club50_recurrent_monthly",
-        "stripe_id": "price_1H73q7KgJMaF2rHtswNA3rha" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
-        "coinbase_id": "ff0df23f-06d8-473f-9ad8-74039a62aeb1",
-        "description": "Членство в Клубе на 50 лет (автопополнение каждый месяц)",
-        "amount": 150,
-        "recurrent": "monthly",
-        "activator": club_subscription_activator,
-        "data": {
-            "timedelta": timedelta(days=365 * 50),
+            "timedelta": timedelta(days=365 * 10),
         },
     },
     "club1_invite": {
@@ -176,7 +140,7 @@ PRODUCTS = {
         "stripe_id": "price_1IXA3fKgJMaF2rHtq37jPrym" if not IS_TEST_STRIPE else "price_1IX9QuKgJMaF2rHtJnrSs0Ud",
         "coinbase_id": None,
         "description": "Пригласить друга в Клуб",
-        "amount": 15,
+        "amount": 1200,
         "recurrent": False,
         "activator": club_invite_activator,
         "data": {
