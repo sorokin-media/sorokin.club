@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 
+from datetime import datetime
 from auth.helpers import auth_required, moderator_role_required, curator_role_required
 from notifications.telegram.common import render_html_message
 from notifications.telegram.posts import announce_in_club_channel
@@ -65,6 +66,8 @@ def announce_post(request, post_slug):
                 announce_text=form.cleaned_data["text"],
                 image=form.cleaned_data["image"] if form.cleaned_data["with_image"] else None
             )
+            post.announce_at = datetime.now()
+            post.save()
             return render(request, "message.html", {
                 "title": "Запощено ✅"
             })

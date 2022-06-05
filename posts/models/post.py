@@ -96,6 +96,7 @@ class Post(models.Model, ModelDiffMixin):
     last_activity_at = models.DateTimeField(auto_now_add=True, db_index=True)
     published_at = models.DateTimeField(null=True, db_index=True)
     deleted_at = models.DateTimeField(null=True)
+    announce_at = models.DateTimeField(null=True)
 
     comment_count = models.IntegerField(default=0)
     view_count = models.IntegerField(default=0)
@@ -119,6 +120,7 @@ class Post(models.Model, ModelDiffMixin):
             "updated_at",
             "last_activity_at",
             "published_at",
+            "announce_at",
             "comment_count",
             "view_count",
             "upvotes",
