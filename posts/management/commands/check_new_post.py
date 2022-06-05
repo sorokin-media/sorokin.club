@@ -24,6 +24,6 @@ class Command(BaseCommand):
         if not posts_query:
             send_telegram_message(
                 chat=ADMIN_CHAT,
-                text=render_html_message("moderator_new_post_review.html"),
+                text=render_html_message("moderator_no_new_intro.html"),
             )
 

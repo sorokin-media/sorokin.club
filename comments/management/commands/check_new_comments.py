@@ -16,6 +16,6 @@ class Command(BaseCommand):
         if not comments_query:
             send_telegram_message(
                 chat=ADMIN_CHAT,
-                text=render_html_message("moderator_no_new_post.html"),
+                text="Уже 6 часов не было ни одного нового комментария",
             )
 
