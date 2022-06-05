@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = "Check new comment"
 
     def handle(self, *args, **options):
-        delta = datetime.now() - timedelta(hours=6)
+        delta = datetime.now() - timedelta(minutes=1)
         comments_query = Comment.objects.filter(created_at__gte=delta)
         if not comments_query:
             send_telegram_message(
