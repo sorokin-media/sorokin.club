@@ -17,10 +17,10 @@ class Command(BaseCommand):
                 chat=ADMIN_CHAT,
                 text=render_html_message("moderator_no_new_post.html"),
             )
-        delta_intro = datetime.now() - timedelta(hours=24)
-        posts_query = Post.objects.filter(created_at__gte=delta_intro).filter(type='intro')
-        if not posts_query:
-            send_telegram_message(
-                chat=ADMIN_CHAT,
-                text=render_html_message("moderator_no_new_intro.html"),
-            )
+        # delta_intro = datetime.now() - timedelta(hours=24)
+        # posts_query = Post.objects.filter(created_at__gte=delta_intro).filter(type='intro')
+        # if not posts_query:
+        #     send_telegram_message(
+        #         chat=ADMIN_CHAT,
+        #         text=render_html_message("moderator_no_new_intro.html"),
+        #     )
