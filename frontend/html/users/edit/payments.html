@@ -36,7 +36,7 @@
 
                 <br><br>
 
-                <a href="{% url "stop_subscription" subscription.id %}" class="button button-small" onclick="return confirm('Точно отключаем?')">Отключить</a>
+                <a href="{% url "stop_subscription_test" me.id %}" class="button button-small" onclick="return confirm('Точно отключаем(test)?')">Отключить</a>
             </div>
         {% endfor %}
 

@@ -147,6 +147,14 @@ def stop_subscription(request, subscription_id):
 
     return render(request, "payments/messages/subscription_stopped.html")
 
+def stop_subscription_test(request, subscription_id):
+
+    user_find = User.objects.filter(id=subscription_id).first()
+    user_find.stripe_id = ''
+    user_find.save()
+
+    return render(request, "payments/messages/subscription_stopped.html")
+
 
 def stripe_webhook(request):
     payload = request.body
