@@ -27,7 +27,7 @@
 
         {% for subscription in subscriptions %}
             <div class="block pay-subscription">
-                🔥 Включено автопополнение на <strong>€{{ subscription.amount | floatformat }}</strong> каждый
+                🔥 Включено автопополнение на <strong>{{ subscription.amount | floatformat }} р.</strong> каждый
                 {% if subscription.interval == "month" %}
                     месяц <strong>{{ subscription.next_charge_at | date:"j" }} числа</strong>
                 {% else %}

@@ -112,7 +112,7 @@ def edit_payments(request, user_slug):
         subscriptions = [dict(
             id='asdsadad',
             next_charge_at = datetime.utcnow() + timedelta(days=345),
-            amount= 60,
+            amount= 1200,
             interval=10
         )]
         # try:
