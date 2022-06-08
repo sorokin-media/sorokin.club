@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 
 from posts.models.post import Post
+from django.db.models import Q
 from notifications.telegram.common import ADMIN_CHAT, send_telegram_message, render_html_message
 
 
@@ -11,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         delta = datetime.now() - timedelta(hours=12)
-        posts_query = Post.objects.filter(published_at__gte=delta).filter(type='post')
+        posts_query = Post.objects.filter(published_at__gte=delta).filter(Q(type=Post.TYPE_POST) | Q(type=Post.TYPE_LINK) | Q(type=Post.TYPE_QUESTION) | Q(type=Post.TYPE_IDEA) | Q(type=Post.TYPE_PROJECT) | Q(type=Post.TYPE_EVENT) | Q(type=Post.TYPE_REFERRAL) | Q(type=Post.TYPE_BATTLE) | Q(type=Post.TYPE_GUIDE) | Q(type=Post.TYPE_THREAD))
         if not posts_query:
             send_telegram_message(
                 chat=ADMIN_CHAT,
