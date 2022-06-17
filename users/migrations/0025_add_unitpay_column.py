@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='user',
+            model_name='users',
             name='unitpay_id',
             field=models.CharField(max_length=128, null=True),
         ),
