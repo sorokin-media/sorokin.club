@@ -48,10 +48,17 @@
 <!-- Add user to new auditory (vk pixel) + give two achivment (yandex) if user status approved -->
 {% if me.moderation_status == 'approved' %}
 
+  <script src="https://vk.com/js/api/openapi.js?162"></script>
+
   <script type="text/javascript">
-    VK.Retargeting.Add(46717378);
-    ym(88682790,'reachGoal','payed_user');
-    ym(88682790,'reachGoal','payed_user_rt');
+
+    document.addEventListener("DOMContentLoaded", function () {
+      VK.Retargeting.Init("VK-RTRG-1381374-1jx7f"),
+      VK.Retargeting.Add(46717378),
+      ym(88682790,'reachGoal','payed_user');
+      ym(88682790,'reachGoal','payed_user_rt');
+    });
+
   </script>
 
 {% endif %}
