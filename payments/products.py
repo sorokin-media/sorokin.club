@@ -94,7 +94,6 @@ PRODUCTS = {
         "description": "1 год членства в Клубе",
         "amount": 12,
         "recurrent": False,
-        "activator": club_subscription_activator,
         "data": {
             "timedelta": timedelta(days=3),
         },
@@ -106,7 +105,6 @@ PRODUCTS = {
         "description": "1 год членства в Клубе (автопополнение каждый год)",
         "amount": 10,
         "recurrent": True,
-        "activator": club_subscription_activator,
         "data": {
             "timedelta": timedelta(days=3),
         },
