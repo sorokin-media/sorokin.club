@@ -142,23 +142,20 @@ def unitpay_webhook(request):
             data=payload,
         )
 
-        if payment.user.telegram_id != '204349098':
-            product = PRODUCTS[payment.product_code]
-            product["activator"](product, payment, payment.user)
-
-            if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
-                send_payed_email(payment.user)
+        if "params[subscriptionId]" in request.GET:
+            user_model = payment.user
+            user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
+            user_model.save()
         else:
-            if "params[subscriptionId]" in request.GET:
-                user_model = payment.user
-                user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
-                user_model.save()
+            user_model = payment.user
+            user_model.unitpay_id = ''
+            user_model.save()
 
-            product = PRODUCTS[payment.product_code]
-            product["activator"](product, payment, payment.user)
+        product = PRODUCTS[payment.product_code]
+        product["activator"](product, payment, payment.user)
 
-            if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
-                send_payed_email(payment.user)
+        if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
+            send_payed_email(payment.user)
 
         return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 
