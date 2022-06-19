@@ -91,7 +91,7 @@ PRODUCTS = {
         "code": "club12_tested",
         "stripe_id": "price_1H5byfKgJMaF2rHtJHeirP4V" if not IS_TEST_STRIPE else "price_1H5cChKgJMaF2rHtugvlcjKR",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
-        "description": "1 год членства в Клубе",
+        "description": "3 day членства в Клубе",
         "amount": 12,
         "recurrent": False,
         "data": {
@@ -102,7 +102,7 @@ PRODUCTS = {
         "code": "club12_tested_recurrent",
         "stripe_id": "price_1H73kbKgJMaF2rHtTS3clmtv" if not IS_TEST_STRIPE else "price_1H74BCKgJMaF2rHtRhUtbn3C",
         "coinbase_id": "e69b2ee9-d363-42c1-9f5d-64366922121f",
-        "description": "1 год членства в Клубе (автопополнение каждый год)",
+        "description": "3 day членства в Клубе (автопополнение каждый год)",
         "amount": 10,
         "recurrent": True,
         "data": {
