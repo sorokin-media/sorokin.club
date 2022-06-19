@@ -132,6 +132,7 @@ def unitpay_webhook(request):
         return HttpResponseBadRequest(dumps({"result": {"message": "Платеж уже оплачен"}}))
 
     if request.GET["method"] == "pay":
+        unitpay_id = request.GET["params[subscriptionId]"]
         payload = request.GET
         log.info("Unitpay order %s", order_id)
 
@@ -148,9 +149,9 @@ def unitpay_webhook(request):
             if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
                 send_payed_email(payment.user)
         else:
-            unitpay_id = request.GET["params[subscriptionId]"]
+
             if unitpay_id:
-                payment.user.unitpay_id = unitpay_id
+                payment.user.unitpay_id = str(unitpay_id)
                 payment.user.save()
 
             product = PRODUCTS[payment.product_code]
