@@ -120,9 +120,7 @@ def unitpay_webhook(request):
 
     # process payment
     order_id = request.GET["params[account]"]
-    data_unitpay_id = ''
-    if request.GET["params[subscriptionId]"]:
-        data_unitpay_id = request.GET["params[subscriptionId]"]
+    data_unitpay_id = request.GET["params[subscriptionId]"]
 
     if order_id == "test":
         return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
@@ -153,7 +151,7 @@ def unitpay_webhook(request):
                 send_payed_email(payment.user)
         else:
             user_model = payment.user
-            user_model.unitpay_id = data_unitpay_id
+            user_model.unitpay_id = str(data_unitpay_id)
             user_model.save()
 
             product = PRODUCTS[payment.product_code]
