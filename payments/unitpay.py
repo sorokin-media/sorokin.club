@@ -30,17 +30,27 @@ class UnitpayService:
             "price": product["amount"],
             "type": "commodity",
         }]
-
-        params = {
-            "sum": str(product["amount"]),
-            "account": order_id,
-            "desc": "Сорокин.Клуб",
-            "currency": "RUB",
-            "backUrl": settings.APP_HOST,
-            # "subscription": False,
-            "customerEmail": user.email,
-            "cashItems": b64encode(json.dumps(cash).encode()),
-        }
+        if product["recurrent"]:
+            params = {
+                "sum": str(product["amount"]),
+                "account": order_id,
+                "desc": "Сорокин.Клуб",
+                "currency": "RUB",
+                "backUrl": settings.APP_HOST,
+                "subscription": True,
+                "customerEmail": user.email,
+                "cashItems": b64encode(json.dumps(cash).encode()),
+            }
+        else:
+            params = {
+                "sum": str(product["amount"]),
+                "account": order_id,
+                "desc": "Сорокин.Клуб",
+                "currency": "RUB",
+                "backUrl": settings.APP_HOST,
+                "customerEmail": user.email,
+                "cashItems": b64encode(json.dumps(cash).encode()),
+            }
 
         params["signature"] = cls.make_signature(params)
 
