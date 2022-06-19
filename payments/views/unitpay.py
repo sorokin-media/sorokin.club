@@ -149,10 +149,10 @@ def unitpay_webhook(request):
             if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
                 send_payed_email(payment.user)
         else:
-            # if request.GET.get("params[subscriptionId]"):
-            #     user_model = payment.user
-            #     user_model.unitpay_id = str(data_unitpay_id)
-            #     user_model.save()
+            if "params[subscriptionId]" in request.GET:
+                user_model = payment.user
+                user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
+                user_model.save()
 
             product = PRODUCTS[payment.product_code]
             product["activator"](product, payment, payment.user)
