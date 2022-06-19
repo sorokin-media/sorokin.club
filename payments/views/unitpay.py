@@ -149,7 +149,7 @@ def unitpay_webhook(request):
                 send_payed_email(payment.user)
         else:
             user_model = payment.user
-            user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
+            user_model.unitpay_id = 'test123test433'
             user_model.save()
 
             product = PRODUCTS[payment.product_code]
