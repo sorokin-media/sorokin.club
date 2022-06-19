@@ -37,7 +37,7 @@ class UnitpayService:
             "desc": "Сорокин.Клуб",
             "currency": "RUB",
             "backUrl": settings.APP_HOST,
-            "subscription": str(int(product["recurrent"])),
+            "subscription": bool(product["recurrent"]),
             "customerEmail": user.email,
             "cashItems": b64encode(json.dumps(cash).encode()),
         }
