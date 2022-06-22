@@ -678,7 +678,7 @@ input[type=range]:focus::-ms-fill-upper {
             margin: 0 5px 0 0;
         }
 
-        .dark .topic-type-card {
+        [theme="dark"] .topic-type-card {
           filter: saturate(0.8);
         }
 
