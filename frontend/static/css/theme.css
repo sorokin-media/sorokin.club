@@ -57,36 +57,36 @@ html[theme="dark"] {
     --opposite-bg-color: #FCFDFF;
 
     --text-color: #DDD;
-    --brighter-text-color: #FFF;
+    --brighter-text-color: #eaeaea;
     --opposite-text-color: #333;
 
     --block-bg-color: #1B1B1C;
-    --opposite-block-bg-color: #FFF;
+    --opposite-block-bg-color: #eaeaea;
     --block-shadow: 0px 0px 0px #000;
     --block-border: solid 1px #FCFDFF;
 
     --link-color: #DDD;
-    --link-hover-color: #FFF;
+    --link-hover-color: #eaeaea;
     --visited-link-color: #737373;
 
     --button-color: #333;
-    --button-bg-color: #FFF;
+    --button-bg-color: #eaeaea;
     --button-disabled-bg-color: #8A8A8A;
-    --button-border: solid 2px #FFF;
-    --button-hover-color: #FFF;
+    --button-border: solid 2px #eaeaea;
+    --button-hover-color: #eaeaea;
     --button-hover-bg-color: #333;
-    --button-hover-border: solid 2px #FFF;
+    --button-hover-border: solid 2px #eaeaea;
 
     --select-color: #333;
-    --select-bg-color: #FFF;
+    --select-bg-color: #eaeaea;
 
-    --input-color: #fff;
+    --input-color: #eaeaea;
     --input-bg-color: #373c48;
     --input-border-color: #333;
     --input-toolbar-bg: #252a35;
-    --input-toolbar-button-color: #fff;
+    --input-toolbar-button-color: #eaeaea;
     --input-link: #b3b6ff;
-    --input-selection-color: #978fd8;
+    --input-selection-color: #58537D;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -95,24 +95,24 @@ html[theme="dark"] {
         --opposite-bg-color: #FCFDFF;
 
         --text-color: #DDD;
-        --brighter-text-color: #FFF;
+        --brighter-text-color: #eaeaea;
         --opposite-text-color: #333;
 
         --block-bg-color: #1B1B1C;
-        --opposite-block-bg-color: #FFF;
+        --opposite-block-bg-color: #eaeaea;
         --block-shadow: 0px 0px 0px #000;
         --block-border: solid 1px #FCFDFF;
 
         --link-color: #DDD;
-        --link-hover-color: #FFF;
+        --link-hover-color: #eaeaea;
         --visited-link-color: #737373;
 
         --button-color: #333;
-        --button-bg-color: #FFF;
-        --button-border: solid 2px #FFF;
-        --button-hover-color: #FFF;
+        --button-bg-color: #eaeaea;
+        --button-border: solid 2px #eaeaea;
+        --button-hover-color: #eaeaea;
         --button-hover-bg-color: #333;
-        --button-hover-border: solid 2px #FFF;
+        --button-hover-border: solid 2px #eaeaea;
     }
 }
 
@@ -243,4 +243,9 @@ select,
 }
 .battle-side-b-background {
     background: #53AA68;
+}
+
+/* Global dark styles */
+[theme="dark"] img {
+  filter: brightness(0.7);
 }

@@ -11,12 +11,27 @@
         background-color: var(--opposite-bg-color);
     }
 
+    [theme="dark"] .profile-card {
+      color: var(--text-color);
+      background-color: var(--input-bg-color);
+    }
+
         .profile-card a {
             color: var(--opposite-text-color);
         }
 
             .profile-card a:hover {
                 color: var(--opposite-text-color);
+
+                opacity: 0.8;
+            }
+
+        [theme="dark"] .profile-card a {
+          color: var(--text-color);
+        }
+
+            [theme="dark"] .profile-card a:hover {
+                color: var(--text-color);
             }
 
         .profile-card-photo {
