@@ -98,6 +98,18 @@
             box-shadow: 0 0 20px 0 var(--input-selection-color);
         }
 
+        [theme="dark"] .block .post-title-link::before {
+          box-shadow: none;
+
+          border: 1px solid transparent;
+          transition: border-color .3s;
+        }
+
+        [theme="dark"] .block .post-title-link:hover::before,
+        [theme="dark"] .block .post-title-link:focus::before {
+          border-color: var(--input-selection-color);
+        }
+
             .post-type-post .post-edit-button {
                 display: inline-block;
                 vertical-align: middle;

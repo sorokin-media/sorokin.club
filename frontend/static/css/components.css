@@ -814,6 +814,10 @@
         box-shadow: 0 0 40px rgba(94, 104, 125, 0.3);
     }
 
+    [theme="dark"] .feed-post:hover {
+      box-shadow: none;
+    }
+
         .feed-post-type-intro:hover,
         .feed-post-type-weekly_digest:hover {
             box-shadow: none;
