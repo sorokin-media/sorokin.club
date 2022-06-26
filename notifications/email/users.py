@@ -4,6 +4,7 @@ from auth.models import Code
 from bot.handlers.common import UserRejectReason
 from notifications.email.sender import send_club_email
 from users.models.user import User
+from payments.models import Payment
 
 
 def send_payed_email(user: User):
@@ -94,6 +95,19 @@ def send_banned_email(user: User, days: int, reason: str):
             "reason": reason,
         }),
         tags=["banned"]
+    )
+
+def send_subscribe_8_email(user: User, sum: int, purse: str):
+    sub_template = loader.get_template("emails/subscriptions_8.html")
+    send_club_email(
+        recipient=user.email,
+        subject=f"Оплата подписки",
+        html=sub_template.render({
+            "user": user,
+            "sum": sum,
+            "purse": purse,
+        }),
+        tags=["subscription"]
     )
 
 

@@ -27,16 +27,11 @@
 
         {% for subscription in subscriptions %}
             <div class="block pay-subscription">
-                🔥 Включено автопополнение на <strong>{{ subscription.amount | floatformat }} р.</strong> каждый
-                {% if subscription.interval == "month" %}
-                    месяц <strong>{{ subscription.next_charge_at | date:"j" }} числа</strong>
-                {% else %}
-                    год <strong>{{ subscription.next_charge_at | date:"j E" }}</strong>
-                {% endif %}
+                🔥 Включено автопополнение на <strong>{{ subscription.amount | floatformat }} р.</strong> с карты {{ subscription.purse }}. Следующий платеж будет {{ subscription.next_charge_at }}
 
                 <br><br>
 
-                <a href="{% url "stop_subscription_test" me.id %}" class="button button-small" onclick="return confirm('Точно отключаем(test)?')">Отключить</a>
+                <a href="{% url "stop_subscription_test" me.id %}" class="button button-small" onclick="return confirm('Ты уверен? Тогда ты будешь оплачивать руками по текущей цене')">Отключить и удалить карту</a>
             </div>
         {% endfor %}
 

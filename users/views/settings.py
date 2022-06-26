@@ -14,6 +14,8 @@ from users.forms.profile import ProfileEditForm, NotificationsEditForm
 from users.models.geo import Geo
 from users.models.user import User
 from utils.strings import random_hash
+from payments.models import Payment
+import json
 
 
 @auth_required
@@ -108,23 +110,15 @@ def edit_payments(request, user_slug):
         .order_by("-membership_expires_at")[:64]
 
     subscriptions = []
-    if user.stripe_id:
+    if user.unitpay_id:
+        payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
+        payment_json = json.loads(payment_last.data)
         subscriptions = [dict(
             id='asdsadad',
-            next_charge_at = datetime.utcnow() + timedelta(days=345),
-            amount= 1200,
-            interval=10
+            next_charge_at = datetime.date(user.membership_expires_at - timedelta(days=5)),
+            amount = payment_last.amount,
+            purse = payment_json['params[purse]']
         )]
-        # try:
-        #     stripe_subscriptions = stripe.Subscription.list(customer=user.stripe_id, limit=100)
-        #     subscriptions = [dict(
-        #         id=s["id"],
-        #         next_charge_at=datetime.utcfromtimestamp(s["current_period_end"]),
-        #         amount=int(s["plan"]["amount"] / 100),
-        #         interval=s["plan"]["interval"],
-        #     ) for s in stripe_subscriptions["data"]]
-        # except (stripe.error.InvalidRequestError, stripe.error.AuthenticationError):
-        #     subscriptions = []
 
     return render(request, "users/edit/payments.html", {
         "user": user,

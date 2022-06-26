@@ -94,6 +94,13 @@ def notify_user_auth(user, code):
             text=f"<code>{code.code}</code> — ваш одноразовый код для входа в Клуб",
         )
 
+def subscribe_8_user(user, sum, purse):
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"Через три дня мы попытаемся списать оплату, списано будет {sum}, карта { purse } проверь что карта работает и на ней есть денежки.",
+        )
+
 
 def notify_admin_user_on_ban(user, days, reason):
     banned_user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
