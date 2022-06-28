@@ -27,13 +27,19 @@ import { createMarkdownEditor, handleFormSubmissionShortcuts, imageUploadOptions
 
 export default {
     mounted() {
-        if (isMobile()) {
-            return;
-        }
+        // if (isMobile()) {
+        //     return;
+        // }
 
         const $markdownElementDiv = this.$el.children[0];
         this.editor = createMarkdownEditor($markdownElementDiv, {
-            toolbar: false,
+            toolbar: [
+				{
+					name:'easyMDE-insert-image-btn',
+					title: 'Вставить изображение',
+					className: 'fa fab fa-image',
+				}
+			],
         });
 
         this.editor.element.form.addEventListener("keydown", handleFormSubmissionShortcuts);

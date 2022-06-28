@@ -54,6 +54,7 @@
             if (e.type === "drop") {
                 e.stopPropagation();
                 e.preventDefault();
+
                 return inlineattach.onDrop(e);
             }
         });
@@ -69,6 +70,8 @@
         var editor = new codeMirrorEditor(codeMirror),
             inlineattach = new inlineAttachment(options, editor),
             el = codeMirror.getWrapperElement();
+
+		const commentME = el.closest('.comment-markdown-editor');
 
         el.addEventListener(
             "paste",
@@ -87,6 +90,33 @@
                 return false;
             }
         });
+
+        // insert image
+        const insertImageBtn = commentME.querySelector('.easyMDE-insert-image-btn');
+
+        if (insertImageBtn) {
+
+			// -- create image input
+			const inputImage = document.createElement('input');
+			const acceptTypes = options.allowedTypes || '';
+
+			inputImage.type = 'file';
+			inputImage.name = 'file-input';
+			inputImage.accept = acceptTypes;
+			inputImage.style.display = 'none';
+
+			inputImage.addEventListener('change', function(e) {
+				inlineattach.onFileInput(e);
+				inputImage.value = '';
+			})
+
+			commentME.appendChild(inputImage);
+
+			// -- trigger image input
+			insertImageBtn.addEventListener('click', function(e) {
+				inputImage.click();
+			})
+        }
     };
 
     inlineAttachment.editors.codemirror4 = codeMirrorEditor4;
