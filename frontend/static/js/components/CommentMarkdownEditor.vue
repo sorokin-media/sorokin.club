@@ -1,5 +1,6 @@
 <template>
     <div class="comment-markdown-editor">
+
         <slot></slot>
         <div
             class="mention-autocomplete-hint"
@@ -22,38 +23,19 @@
 </template>
 
 <script>
+
+import EasyMDE from "easymde";
 import { isMobile, throttle } from "../common/utils";
 import { createMarkdownEditor, handleFormSubmissionShortcuts, imageUploadOptions } from "../common/markdown-editor";
 
 export default {
-    mounted() {
-        if (isMobile()) {
-            return;
-        }
-
-        const $markdownElementDiv = this.$el.children[0];
-        this.editor = createMarkdownEditor($markdownElementDiv, {
-            toolbar: false,
-        });
-
-        this.editor.element.form.addEventListener("keydown", handleFormSubmissionShortcuts);
-        inlineAttachment.editors.codemirror4.attach(this.editor.codemirror, imageUploadOptions);
-
-        this.editor.codemirror.on("change", this.handleAutocompleteHintTrigger);
-        this.editor.codemirror.on("change", this.handleSuggest);
-
-        this.populateCacheWithCommentAuthors();
-    },
-    watch: {
-        users: function (val, oldVal) {
-            if (val.length > 0) {
-                this.selectedUserIndex = 0;
-                document.addEventListener("keydown", this.handleKeydown, true);
-            } else {
-                document.removeEventListener("keydown", this.handleKeydown, true);
-            }
+    props: {
+        enableToolbar: {
+            type: Boolean,
+            default: false,
         },
     },
+
     data() {
         return {
             selectedUserIndex: null,
@@ -64,8 +46,81 @@ export default {
                 samples: {},
                 users: {},
             },
+
+            toolbarSettings: [
+                {
+                    name: "bold",
+                    action: EasyMDE.toggleBold,
+                    className: "fa fa-bold",
+                    title: "Bold",
+                },
+                {
+                    name: "italic",
+                    action: EasyMDE.toggleItalic,
+                    className: "fa fa-italic",
+                    title: "Italic",
+                },
+                {
+                    name: "header",
+                    action: EasyMDE.toggleHeadingSmaller,
+                    className: "fas fa-heading",
+                    title: "Heading",
+                },
+                {
+                    name: "quote",
+                    action: EasyMDE.toggleBlockquote,
+                    className: "fas fa-quote-right",
+                    title: "Quote",
+                },
+                "|",
+                {
+                    name: "list",
+                    action: EasyMDE.toggleUnorderedList,
+                    className: "fas fa-list",
+                    title: "List",
+                },
+                {
+                    name: "url",
+                    action: EasyMDE.drawLink,
+                    className: "fas fa-link",
+                    title: "Insert URL",
+                },
+                {
+                    name: "code",
+                    action: EasyMDE.toggleCodeBlock,
+                    className: "fas fa-code",
+                    title: "Insert code",
+                },
+            ],
         };
     },
+
+    mounted() {
+        const $markdownElementDiv = this.$el.children[0];
+        this.editor = createMarkdownEditor($markdownElementDiv, {
+            toolbar: this.enableToolbar ? this.toolbarSettings : false,
+        });
+
+        this.editor.element.form.addEventListener("keydown", handleFormSubmissionShortcuts);
+        inlineAttachment.editors.codemirror4.attach(this.editor.codemirror, imageUploadOptions);
+
+        this.editor.codemirror.on("change", this.handleAutocompleteHintTrigger);
+        this.editor.codemirror.on("change", this.handleSuggest);
+
+        this.populateCacheWithCommentAuthors();
+    },
+
+    watch: {
+        users: function (val, oldVal) {
+            if (val.length > 0) {
+                this.selectedUserIndex = 0;
+                document.addEventListener("keydown", this.handleKeydown, true);
+            } else {
+                document.removeEventListener("keydown", this.handleKeydown, true);
+            }
+        },
+    },
+
     methods: {
         handleKeydown(event) {
             if (
