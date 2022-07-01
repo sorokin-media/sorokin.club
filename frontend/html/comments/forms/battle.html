@@ -4,7 +4,18 @@
         <div class="comment-form-avatar">
             <div class="avatar"><img src="{{ me.get_avatar }}" alt="Аватар {{ me.full_name }}" loading="lazy" /></div>
         </div>
-        <div class="comment-form-body comment-form-battle">
+
+        <comment-markdown-editor-wrapper
+            :component-classes="{
+                body: ['comment-form-body', 'comment-form-battle'],
+                footer: 'comment-form-button',
+            }"
+
+            :editor-settings="{
+                class: 'comment-form-body-text',
+                postSlug: '{{ post.slug }}',
+            }"
+        >
             <div class="comment-form-body-battle-side">Я за
                 <select name="{{ form.battle_side.name }}" id="{{ form.battle_side.id_for_label }}">
                     {% for code, side in post.metadata.battle.sides.items %}
@@ -13,13 +24,20 @@
                 </select>
             </div>
             <div class="comment-form-body-title">{{ form.title }}</div>
-            <comment-markdown-editor class="comment-form-body-text" post-slug="{{ post.slug }}">
+
+            <template v-slot:form-text>
                 {{ form.text }}
-            </comment-markdown-editor>
-            {% if form.text.errors %}<span class="form-errors">{{ form.full_name.errors }}</span>{% endif %}
-        </div>
-        <div class="comment-form-button">
-            <button type="submit" class="button">Отправить</button>
-        </div>
+            </template>
+
+            <template v-slot:form-errors>
+                {% if form.text.errors %}<span class="form-errors">{{ form.full_name.errors }}</span>{% endif %}
+            </template>
+
+            <template v-slot:form-footer>
+                <button type="submit" class="button">Отправить</button>
+            </template>
+
+        </comment-markdown-editor-wrapper>
+
     </div>
 </form>
