@@ -71,7 +71,7 @@
             inlineattach = new inlineAttachment(options, editor),
             el = codeMirror.getWrapperElement();
 
-		const commentME = el.closest('.comment-markdown-editor');
+		    const MEWrapper = el.closest('.comment-markdown-editor-wrapper');
 
         el.addEventListener(
             "paste",
@@ -92,30 +92,30 @@
         });
 
         // insert image
-        const insertImageBtn = commentME.querySelector('.easyMDE-insert-image-btn');
+        const insertImageBtn = MEWrapper.querySelector('.easyMDE-insert-image-btn');
 
         if (insertImageBtn) {
 
-			// -- create image input
-			const inputImage = document.createElement('input');
-			const acceptTypes = options.allowedTypes || '';
+          // -- create image input
+          const inputImage = document.createElement('input');
+          const acceptTypes = options.allowedTypes || '';
 
-			inputImage.type = 'file';
-			inputImage.name = 'file-input';
-			inputImage.accept = acceptTypes;
-			inputImage.style.display = 'none';
+          inputImage.type = 'file';
+          inputImage.name = 'file-input';
+          inputImage.accept = acceptTypes;
+          inputImage.style.display = 'none';
 
-			inputImage.addEventListener('change', function(e) {
-				inlineattach.onFileInput(e);
-				inputImage.value = '';
-			})
+          inputImage.addEventListener('change', function(e) {
+            inlineattach.onFileInput(e);
+            inputImage.value = '';
+          })
 
-			commentME.appendChild(inputImage);
+          MEWrapper.appendChild(inputImage);
 
-			// -- trigger image input
-			insertImageBtn.addEventListener('click', function(e) {
-				inputImage.click();
-			})
+          // -- trigger image input
+          insertImageBtn.addEventListener('click', function(e) {
+            inputImage.click();
+          })
         }
     };
 
