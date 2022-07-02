@@ -21,7 +21,7 @@ class Invoice:
 
 class UnitpayService:
     @classmethod
-    def create_payment(cls, product: dict, user: User) -> Invoice:
+    def create_payment(cls, product: dict, user: User, subscription=False) -> Invoice:
         order_id = uuid4().hex
 
         cash = [{
@@ -51,7 +51,17 @@ class UnitpayService:
                 "customerEmail": user.email,
                 "cashItems": b64encode(json.dumps(cash).encode()),
             }
-
+        if subscription:
+            params = {
+                "sum": str(product["amount"]),
+                "account": order_id,
+                "desc": "Сорокин.Клуб",
+                "currency": "RUB",
+                "backUrl": settings.APP_HOST,
+                "subscriptionId": user.unitpay_id,
+                "customerEmail": user.email,
+                "cashItems": b64encode(json.dumps(cash).encode()),
+            }
         params["signature"] = cls.make_signature(params)
 
         url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
