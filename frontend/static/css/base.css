@@ -637,6 +637,10 @@ input[type=range]:focus::-ms-fill-upper {
         top: -1px;
     }
 
+    [theme="dark"] .topic-type-inline {
+      filter: saturate(0.8) brightness(0.7);
+    }
+
         .topic-type-inline .topic-icon {
             width: 15px;
             height: 15px;
@@ -679,7 +683,7 @@ input[type=range]:focus::-ms-fill-upper {
         }
 
         [theme="dark"] .topic-type-card {
-          filter: saturate(0.8);
+          filter: saturate(0.8) brightness(0.7);
         }
 
     .topic-type-post {

@@ -457,7 +457,10 @@
                 .user-tag-active {
                     border-color: var(--bg-color);
                     color: #FFF !important;
-                    font-weight: 500;
+                }
+
+                [theme="dark"] .user-tag-active {
+                  filter: brightness(0.8) saturate(0.9);
                 }
 
     .profile-tags-footer {

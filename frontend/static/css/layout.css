@@ -347,7 +347,7 @@
 
 .reply-form {
     display: grid;
-    grid-template-columns: 40px auto 110px;
+    grid-template-columns: 40px auto;
     justify-content: stretch;
 }
 
@@ -359,23 +359,6 @@
         justify-self: start;
     }
 
-    .reply-form-body {
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 1;
-        grid-row-end: 2;
-        justify-self: stretch;
-    }
-
-    .reply-form-button {
-        grid-column-start: 3;
-        grid-column-end: 4;
-        grid-row-start: 1;
-        grid-row-end: 2;
-        justify-self: end;
-        align-self: end;
-    }
-
     @media only screen and (max-width : 570px) {
         .reply-form {
             display: grid;
@@ -383,15 +366,6 @@
             grid-template-rows: auto auto;
             justify-content: stretch;
         }
-
-            .reply-form-button {
-                grid-column-start: 1;
-                grid-column-end: 3;
-                grid-row-start: 2;
-                grid-row-end: 3;
-                justify-self: end;
-                align-self: end;
-            }
     }
 
 .reply {

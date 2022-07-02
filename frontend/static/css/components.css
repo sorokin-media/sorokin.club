@@ -24,13 +24,6 @@
         text-align: left;
     }
 
-    @media only screen and (max-width : 570px) {
-        .content {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-    }
-
 .footer {
     padding: 50px 20px 100px;
     margin-top: 200px;
