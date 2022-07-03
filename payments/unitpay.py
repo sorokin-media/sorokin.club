@@ -1,10 +1,12 @@
 import hashlib
 import json
 import logging
+import socket
 from base64 import b64encode
 from dataclasses import dataclass
 from urllib.parse import urlencode
 from uuid import uuid4
+import requests
 
 from django.conf import settings
 
@@ -94,3 +96,37 @@ class UnitpayService:
         counted_signature = hashlib.sha256(string.encode()).hexdigest()
 
         return signature == counted_signature
+
+    def create_payment_subscribed(cls, product: dict, user: User) -> Invoice:
+        order_id = uuid4().hex
+        cash = [{
+            "name": "Сорокин.Клуб",
+            "count": 1,
+            "price": product["amount"],
+            "type": "commodity",
+        }]
+        params = {
+            "paymentType": "card",
+            "account": order_id,
+            "sum": str(product["amount"]),
+            "projectId": 439242,
+            "resultUrl": 'https://sorokin.club',
+            "customerEmail": user.email,
+            "subscriptionId": user.unitpay_id,
+            "desc": "Сорокин.Клуб",
+            "ip": socket.gethostbyname(socket.gethostname()),
+            "secretKey": settings.UNITPAY_SECRET_KEY,
+            "cashItems": b64encode(json.dumps(cash).encode()),
+        }
+        params["signature"] = cls.make_signature(params)
+
+        response = requests.post(
+            url='https://unitpay.ru/api',
+            headers={"Content-Type": "application/json"},
+            data={
+                "method": 'initPayment',
+                "params": params,
+            },
+        )
+
+        return response
