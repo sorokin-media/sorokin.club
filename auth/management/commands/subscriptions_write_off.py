@@ -52,7 +52,7 @@ class Command(BaseCommand):
         #         )
         #         pay_service = UnitpayService()
         #         invoice = pay_service.create_payment_subscribed(product, user, order_id)
-        expiring_users = User.objects.filter(email='dev@dev.dev')
+        expiring_users = User.objects.filter(email='raskrutka89@gmail.com')
         for user in expiring_users:
             product = PRODUCTS.get('club12_tested_recurrent')
             cash = [{
