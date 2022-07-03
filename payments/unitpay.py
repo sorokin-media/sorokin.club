@@ -112,6 +112,7 @@ class UnitpayService:
             "projectId": 439242,
             "resultUrl": 'https://sorokin.club',
             "customerEmail": user.email,
+            "currency": "RUB",
             "subscriptionId": user.unitpay_id,
             "desc": "Сорокин.Клуб",
             "ip": socket.gethostbyname(socket.gethostname()),
