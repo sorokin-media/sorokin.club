@@ -16,6 +16,7 @@ from payments.unitpay import UnitpayService
 from payments.products import PRODUCTS
 from pprint import pprint
 from urllib.request import urlopen
+from urllib.parse import quote
 
 class Command(BaseCommand):
     help = "Fetches expiring accounts and tries to renew the subscription"
@@ -51,7 +52,7 @@ class Command(BaseCommand):
         #         )
         #         pay_service = UnitpayService()
         #         invoice = pay_service.create_payment_subscribed(product, user, order_id)
-        expiring_users = User.objects.filter(email='raskrutka89@gmail.com')
+        expiring_users = User.objects.filter(email='dev@dev.dev')
         for user in expiring_users:
             product = PRODUCTS.get('club12_tested_recurrent')
             cash = [{
@@ -97,7 +98,8 @@ class Command(BaseCommand):
             #     headers={"Content-Type": "application/json"},
             #     json=data,
             # )
-            requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', params)
+            requestUrl = 'https://unitpay.ru/api?method=initPayment&' + quote(self.insertUrlEncode('params', params))
+            pprint(requestUrl)
             response = urlopen(requestUrl)
         self.stdout.write("Done 🥙")
 
