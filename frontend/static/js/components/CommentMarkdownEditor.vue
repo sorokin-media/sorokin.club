@@ -1,6 +1,5 @@
 <template>
     <div class="comment-markdown-editor">
-
         <slot></slot>
         <div
             class="mention-autocomplete-hint"
@@ -23,82 +22,24 @@
 </template>
 
 <script>
-
-import EasyMDE from "easymde";
 import { isMobile, throttle } from "../common/utils";
 import { createMarkdownEditor, handleFormSubmissionShortcuts, imageUploadOptions } from "../common/markdown-editor";
 
 export default {
-    props: {
-        enableToolbar: {
-            type: Boolean,
-            default: false,
-        },
-    },
-
-    data() {
-        return {
-            selectedUserIndex: null,
-            postSlug: null,
-            users: [],
-            autocomplete: null,
-            autocompleteCache: {
-                samples: {},
-                users: {},
-            },
-
-            toolbarSettings: [
-                {
-                    name: "bold",
-                    action: EasyMDE.toggleBold,
-                    className: "fa fa-bold",
-                    title: "Bold",
-                },
-                {
-                    name: "italic",
-                    action: EasyMDE.toggleItalic,
-                    className: "fa fa-italic",
-                    title: "Italic",
-                },
-                {
-                    name: "header",
-                    action: EasyMDE.toggleHeadingSmaller,
-                    className: "fas fa-heading",
-                    title: "Heading",
-                },
-                {
-                    name: "quote",
-                    action: EasyMDE.toggleBlockquote,
-                    className: "fas fa-quote-right",
-                    title: "Quote",
-                },
-                "|",
-                {
-                    name: "list",
-                    action: EasyMDE.toggleUnorderedList,
-                    className: "fas fa-list",
-                    title: "List",
-                },
-                {
-                    name: "url",
-                    action: EasyMDE.drawLink,
-                    className: "fas fa-link",
-                    title: "Insert URL",
-                },
-                {
-                    name: "code",
-                    action: EasyMDE.toggleCodeBlock,
-                    className: "fas fa-code",
-                    title: "Insert code",
-                },
-            ],
-        };
-    },
-
     mounted() {
+        // if (isMobile()) {
+        //     return;
+        // }
+
         const $markdownElementDiv = this.$el.children[0];
         this.editor = createMarkdownEditor($markdownElementDiv, {
-            toolbar: this.enableToolbar ? this.toolbarSettings : false,
+            toolbar: [
+				{
+					name:'easyMDE-insert-image-btn',
+					title: 'Вставить изображение',
+					className: 'fa fab fa-image',
+				}
+			],
         });
 
         this.editor.element.form.addEventListener("keydown", handleFormSubmissionShortcuts);
@@ -109,7 +50,6 @@ export default {
 
         this.populateCacheWithCommentAuthors();
     },
-
     watch: {
         users: function (val, oldVal) {
             if (val.length > 0) {
@@ -120,7 +60,18 @@ export default {
             }
         },
     },
-
+    data() {
+        return {
+            selectedUserIndex: null,
+            postSlug: null,
+            users: [],
+            autocomplete: null,
+            autocompleteCache: {
+                samples: {},
+                users: {},
+            },
+        };
+    },
     methods: {
         handleKeydown(event) {
             if (

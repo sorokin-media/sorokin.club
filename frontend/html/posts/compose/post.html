@@ -52,21 +52,8 @@
 
                 <div class="form-row compose-form-text">
                     <label for="{{ form.text.id_for_label }}" class="form-label">{{ form.text.label }}</label>
-
-                    <comment-markdown-editor-wrapper
-                        :enable-toolbar="true"
-                    >
-                        <template v-slot:form-text>
-                            {{ form.text }}
-                        </template>
-
-                        <template v-slot:form-errors>
-                            {% if form.title.errors %}<span class="compose-form-errors">{{ form.title.errors }}</span>{% endif %}
-                        </template>
-
-                    </comment-markdown-editor-wrapper>
-
-
+                    {{ form.text }}
+                    {% if form.title.errors %}<span class="compose-form-errors">{{ form.title.errors }}</span>{% endif %}
                     <span class="form-row-help form-row-help-wide">
                         Можно использовать <a href="https://www.markdownguide.org/basic-syntax/" target="_blank">Markdown</a>.
                         Для загрузки картинок просто перетащите их в редактор.

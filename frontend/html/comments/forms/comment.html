@@ -4,26 +4,14 @@
         <div class="comment-form-avatar">
             <div class="avatar"><img src="{{ me.get_avatar }}" alt="Аватар {{ me.full_name }}" loading="lazy" /></div>
         </div>
-
-        <comment-markdown-editor-wrapper
-          :editor-settings="{
-            class: 'comment-form-body-text',
-            postSlug: '{{ post.slug }}',
-          }"
-        >
-          <template v-slot:form-text>
-            {{ form.text }}
-          </template>
-
-          <template v-slot:form-errors>
+        <div class="comment-form-body">
+            <comment-markdown-editor class="comment-form-body-text" post-slug="{{ post.slug }}">
+                {{ form.text }}
+            </comment-markdown-editor>
             {% if form.text.errors %}<span class="form-errors">{{ form.full_name.errors }}</span>{% endif %}
-          </template>
-
-          <template v-slot:form-footer>
+        </div>
+        <div class="comment-form-button">
             <button type="submit" class="button">Отправить</button>
-          </template>
-
-        </comment-markdown-editor-wrapper>
-
+        </div>
     </div>
 </form>
