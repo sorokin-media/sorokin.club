@@ -97,8 +97,8 @@ class UnitpayService:
 
         return signature == counted_signature
 
-    def create_payment_subscribed(cls, product: dict, user: User) -> Invoice:
-        order_id = uuid4().hex
+    def create_payment_subscribed(cls, product: dict, user: User, order_id) -> Invoice:
+
         cash = [{
             "name": "Сорокин.Клуб",
             "count": 1,
