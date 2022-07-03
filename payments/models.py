@@ -58,7 +58,9 @@ class Payment(models.Model):
 
         payment.status = status
         if data:
-            payment.data = json.dumps(data)
+            payment_old_json = json.loads(payment.data)
+            payment_old_json.update(data)
+            payment.data = json.dumps(payment_old_json)
         payment.save()
 
         return payment
