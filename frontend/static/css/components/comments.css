@@ -617,6 +617,35 @@
     position: relative;
 }
 
+.comment-markdown-editor--mobile textarea.markdown-editor-invisible,
+.comment-markdown-editor--mobile textarea.markdown-editor-full {
+    display: block !important;
+
+    order: 2;
+}
+
+.comment-markdown-editor--mobile textarea.markdown-editor-invisible:hover,
+.comment-markdown-editor--mobile textarea.markdown-editor-full:hover {
+    transform: none;
+}
+
+.comment-markdown-editor--mobile .CodeMirror {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.comment-markdown-editor--mobile {
+    display: flex;
+    flex-direction: column;
+}
+
 /* .comment-markdown-editor-wrapper */
 .comment-markdown-editor-wrapper__body {
   margin-bottom: 10px;
