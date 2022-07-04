@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-markdown-editor">
+    <div class="comment-markdown-editor" :class="{ 'comment-markdown-editor--mobile' : isMobileMode }">
         <slot></slot>
         <div
             class="mention-autocomplete-hint"
@@ -28,22 +28,32 @@ import { isMobile, throttle } from "../common/utils";
 import { createMarkdownEditor, handleFormSubmissionShortcuts, imageUploadOptions } from "../common/markdown-editor";
 
 export default {
-     props: {
+    props: {
         enableToolbar: {
             type: Boolean,
             default: false,
         },
     },
 
+    computed: {
+        isMobileMode() {
+            return isMobile();
+        }
+    },
+
     mounted() {
-        // if (isMobile()) {
-        //     return;
-        // }
 
         const $markdownElementDiv = this.$el.children[0];
         this.editor = createMarkdownEditor($markdownElementDiv, {
             toolbar: this.enableToolbar ? this.toolbarSettings : false,
         });
+
+
+        this.editor.element.addEventListener('input', (e) => {
+            const value = e.target.value;
+
+            this.editor.value(value);
+        })
 
         this.editor.element.form.addEventListener("keydown", handleFormSubmissionShortcuts);
         inlineAttachment.editors.codemirror4.attach(this.editor.codemirror, imageUploadOptions);

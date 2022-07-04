@@ -344,6 +344,18 @@
         }
     };
 
+    inlineAttachment.prototype.onSelection = function (e) {
+        this.editor.setSelection(e);
+    };
+
+    inlineAttachment.prototype.syncCursorPosition = function (e) {
+        this.editor.syncCursorPosition(e);
+    };
+
+    inlineAttachment.prototype.textAreaFocusCursor = function (e) {
+        this.editor.textAreaFocusCursor(e);
+    };
+
     /**
      * Called when a paste event occured
      * @param  {Event} e
