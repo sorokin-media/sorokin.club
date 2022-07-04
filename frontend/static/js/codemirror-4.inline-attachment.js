@@ -87,6 +87,34 @@
                 return false;
             }
         });
+
+        // insert image
+        const MEWrapper = el.closest('.comment-markdown-editor-wrapper') || el.closest('.comment-markdown-editor') || el;
+        const insertImageBtn = MEWrapper.querySelector('.easyMDE-insert-image-btn');
+
+        if (insertImageBtn) {
+
+            // -- create image input
+            const inputImage = document.createElement('input');
+            const acceptTypes = options.allowedTypes || '';
+
+            inputImage.type = 'file';
+            inputImage.name = 'file-input';
+            inputImage.accept = acceptTypes;
+            inputImage.style.display = 'none';
+
+            inputImage.addEventListener('change', function(e) {
+                inlineattach.onFileInput(e);
+                inputImage.value = '';
+            })
+
+            MEWrapper.appendChild(inputImage);
+
+            // -- trigger image input
+            insertImageBtn.addEventListener('click', function(e) {
+                inputImage.click();
+            })
+        }
     };
 
     inlineAttachment.editors.codemirror4 = codeMirrorEditor4;
