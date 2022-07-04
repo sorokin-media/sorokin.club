@@ -5,17 +5,33 @@
             <div class="avatar"><img src="{{ me.get_avatar }}" alt="Аватар {{ me.full_name }}" loading="lazy" /></div>
         </div>
 
-        <div class="reply-form-body">
-            <comment-markdown-editor post-slug="{{ post.slug }}">
+        <comment-markdown-editor-wrapper
+            :isSeparateFormFooter="true"
+
+            :component-classes="{
+                body: 'reply-form-body',
+                footer: 'reply-form-button',
+            }"
+
+            :editor-settings="{
+                class: '',
+                postSlug: '{{ post.slug }}'
+            }"
+        >
+
+            <template v-slot:form-text>
                 {{ reply_form.text }}
-            </comment-markdown-editor>
-            {% if reply_form.text.errors %}<span class="form-errors">{{ reply_form.full_name.errors }}</span>{% endif %}
-        </div>
+            </template>
 
-        <input type="hidden" name="reply_to_id" value="{{ comment.id }}">
+            <template v-slot:form-errors>
+                {% if reply_form.text.errors %}<span class="form-errors">{{ reply_form.full_name.errors }}</span>{% endif %}
+            </template>
 
-        <div class="reply-form-button">
-            <button type="submit" class="button button-small">Отправить</button>
-        </div>
+            <template v-slot:form-footer>
+                <button type="submit" class="button button-small">Отправить</button>
+            </template>
+
+        </comment-markdown-editor-wrapper>
+
     </div>
 </form>
