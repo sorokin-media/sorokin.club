@@ -36,9 +36,9 @@ export default {
     },
 
     mounted() {
-        if (isMobile()) {
-            return;
-        }
+        // if (isMobile()) {
+        //     return;
+        // }
 
         const $markdownElementDiv = this.$el.children[0];
         this.editor = createMarkdownEditor($markdownElementDiv, {
