@@ -8,15 +8,27 @@
                 <div class="comment-form-avatar">
                     <div class="avatar"><img src="{% if form.instance.author.avatar %}{{ form.instance.author.get_avatar }}{% else %}{{ me.get_avatar }}{% endif %}" alt="Аватар" /></div>
                 </div>
-                <div class="comment-form-body">
-                    <comment-markdown-editor post-slug="{{ post.slug }}">
+
+                <comment-markdown-editor-wrapper
+                    :editor-settings="{
+                        class: '',
+                        postSlug: '{{ post.slug }}'
+                    }"
+                >
+
+                    <template v-slot:form-text>
                         {{ form.text }}
-                    </comment-markdown-editor>
-                    {% if form.text.errors %}<span class="form-errors">{{ form.full_name.errors }}</span>{% endif %}
-                </div>
-                <div class="comment-form-button">
-                    <button type="submit" class="button">Сохранить</button>
-                </div>
+                    </template>
+
+                    <template v-slot:form-errors>
+                        {% if form.text.errors %}<span class="form-errors">{{ form.full_name.errors }}</span>{% endif %}
+                    </template>
+
+                    <template v-slot:form-footer>
+                        <button type="submit" class="button">Сохранить</button>
+                    </template>
+
+                </comment-markdown-editor-wrapper>
             </div>
         </form>
     </div>
