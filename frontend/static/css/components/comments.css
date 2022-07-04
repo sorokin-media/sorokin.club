@@ -775,11 +775,6 @@
 
 /* .editor-toolbar */
 .editor-toolbar {
-	position: sticky;
-    top: 0;
-	left: 0;
-    z-index: 1;
-
 	padding: 7.5px;
 	border-bottom: 1px solid var(--input-border-color);
 }
@@ -787,11 +782,4 @@
 .editor-toolbar button {
 	width: 35px;
 	height: 35px;
-}
-
-/* .avatar */
-.comment-form .avatar {
-	position: sticky;
-	top: 15px;
-	left: 0;
 }
