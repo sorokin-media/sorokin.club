@@ -393,19 +393,5 @@
         return result;
     };
 
-    inlineAttachment.prototype.onFileInput = function (e) {
-      var result = false;
-      for (var i = 0; i < e.target.files.length; i++) {
-          var file = e.target.files[i];
-          if (this.isFileAllowed(file)) {
-              result = true;
-              this.onFileInserted(file);
-              this.uploadFile(file);
-          }
-      }
-
-      return result;
-    };
-
     window.inlineAttachment = inlineAttachment;
 })(document, window);

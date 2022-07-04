@@ -191,6 +191,7 @@ select,
 .CodeMirror {
     -webkit-appearance: none;
     border: none;
+    box-shadow: 0 4px 8px -2px rgba(9,30,66,.25),0 0 0 1px rgba(9,30,66,.08);
     outline: none;
     padding: 8px 15px;
     resize: vertical;
