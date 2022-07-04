@@ -55,3 +55,7 @@ venv/
 
 gdpr/downloads/*.zip
 .history
+
+# Frontend
+package-copy.json
+webpack.config-copy.js
