@@ -70,7 +70,7 @@
             inlineattach = new inlineAttachment(options, editor),
             el = codeMirror.getWrapperElement();
 
-		    const MEWrapper = el.closest('.comment-markdown-editor-wrapper');
+		    const MEWrapper = el.closest('.comment-markdown-editor-wrapper') || el.closest('.comment-markdown-editor');
 
         el.addEventListener(
             "paste",
