@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from uuid import uuid4
 import requests
 import socket
+from django.conf import settings
 from base64 import b64encode
 from django.core.management import BaseCommand
 from users.models.user import User
@@ -44,6 +45,21 @@ class Command(BaseCommand):
         #         product = PRODUCTS.get(payment_last.product_code)
         #         order_id = uuid4().hex
         #
+        # params = {
+        #     "paymentType": "card",
+        #     "account": 'f26401e13a224b5a96408c267491c7e0',
+        #     "sum": str(product["amount"]),
+        #     "projectId": 439242,
+        #     "resultUrl": 'https://sorokin.club',
+        #     "customerEmail": 'raskrutka89@gmail.com',
+        #     "currency": "RUB",
+        #     "subscriptionId": 5521639,
+        #     "desc": "Сорокин.Клуб",
+        #     "ip": socket.gethostbyname(socket.gethostname()),
+        #     "secretKey": '7613f08591c81fe10b28595e84b3963d',
+        #     "cashItems": b64encode(json.dumps(cash).encode()),
+        # }
+        # params["signature"] = UnitpayService.make_signature(params)
         #         payment = Payment.create(
         #             reference=order_id,
         #             user=user,
@@ -54,53 +70,44 @@ class Command(BaseCommand):
         #         invoice = pay_service.create_payment_subscribed(product, user, order_id)
         expiring_users = User.objects.filter(email='raskrutka89@gmail.com')
         for user in expiring_users:
-            product = PRODUCTS.get('club12_tested_recurrent')
-            cash = [{
-                "name": "Сорокин.Клуб",
-                "count": 1,
-                "price": product["amount"],
-                "type": "commodity",
-            }]
-            cash_items = b64encode(json.dumps(cash).encode())
-            params = {
-                "paymentType": "card",
-                "account": 'f26401e13a224b5a96408c267491c7e0',
-                "sum": str(product["amount"]),
-                "projectId": 439242,
-                "resultUrl": 'https://sorokin.club',
-                "customerEmail": 'raskrutka89@gmail.com',
-                "currency": "RUB",
-                "subscriptionId": 5521639,
-                "desc": "Сорокин.Клуб",
-                "ip": socket.gethostbyname(socket.gethostname()),
-                "secretKey": '7613f08591c81fe10b28595e84b3963d',
-                "cashItems": b64encode(json.dumps(cash).encode()),
-            }
-            params["signature"] = UnitpayService.make_signature(params)
+            self.stdout.write(f"Checking user: {user.slug}")
+            payment_last = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').last()
+            if payment_last:
+                # Для теста
+                product = PRODUCTS.get('club12_tested_recurrent')
+                order_id = uuid4().hex
 
-            data = {
-                "paymentType": "card",
-                "account": 'f26401e13a224b5a96408c267491c7e0',
-                "sum": str(product["amount"]),
-                "projectId": 439242,
-                "resultUrl": 'https://sorokin.club',
-                "customerEmail": 'raskrutka89@gmail.com',
-                "currency": "RUB",
-                "subscriptionId": 5521639,
-                "desc": "Сорокин.Клуб",
-                "ip": socket.gethostbyname(socket.gethostname()),
-                "secretKey": '7613f08591c81fe10b28595e84b3963d',
-                "cashItems": cash_items,
-                "signature": UnitpayService.make_signature(params)
-            }
-            # response = requests.post(
-            #     'https://unitpay.ru/api',
-            #     headers={"Content-Type": "application/json"},
-            #     json=data,
-            # )
-            requestUrl = 'https://unitpay.ru/api?method=initPayment&' + quote(self.insertUrlEncode('params', params))
-            pprint(requestUrl)
-            response = urlopen(requestUrl)
+                cash = [{
+                    "name": "Сорокин.Клуб",
+                    "count": 1,
+                    "price": product["amount"],
+                    "type": "commodity",
+                }]
+                cash_items = b64encode(json.dumps(cash).encode())
+                data = {
+                    "paymentType": "card",
+                    "account": order_id,
+                    "sum": str(product["amount"]),
+                    "projectId": 439242,
+                    "resultUrl": 'https://sorokin.club',
+                    "customerEmail": user.email,
+                    "currency": "RUB",
+                    "subscriptionId": user.unitpay_id,
+                    "desc": "Сорокин.Клуб",
+                    "ip": '109.169.147.136',
+                    "secretKey": settings.UNITPAY_SECRET_KEY,
+                    "cashItems": cash_items
+                }
+                data["signature"] = UnitpayService.make_signature(data)
+                payment = Payment.create(
+                    reference=order_id,
+                    user=user,
+                    product=product,
+                    data={},
+                )
+                requestUrl = 'https://unitpay.ru/api?method=initPayment&' + quote(self.insertUrlEncode('params', data))
+                response = urlopen(requestUrl)
+                pprint(response)
         self.stdout.write("Done 🥙")
 
     def insertUrlEncode(self, inserted, params):
