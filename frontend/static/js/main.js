@@ -107,11 +107,39 @@ new Vue({
                         textarea.nextElementSibling.CodeMirror ||
                         textarea.nextElementSibling.querySelector(".CodeMirror").CodeMirror;
                     if (codeMirrorEditor !== undefined) {
-                        codeMirrorEditor.setValue(codeMirrorEditor.getValue() + value);
+                        codeMirrorEditor.setValue(codeMirrorEditor.getValue() + ' ' + value);
                         codeMirrorEditor.focus();
                         codeMirrorEditor.setCursor(codeMirrorEditor.lineCount(), 0);
+
+                        syncCursorPositionToTextarea(codeMirrorEditor, textarea);
                     }
                 }
+            }
+
+            // Sync cursor markdown-textarea and inner textarea
+            function syncCursorPositionToTextarea(codemirror, textarea) {
+                const curCursorPos = codemirror.getCursor();
+                const textArea = textarea;
+                const textAreaLineArr = textArea.value.substr(0, textArea.selectionStart).split("\n");
+
+                let selectionPoint = 0;
+
+                for (let i = 0; i < textAreaLineArr.length; i++) {
+                    const line = textAreaLineArr[i];
+
+                    if (i > curCursorPos.line) {
+                        break;
+                    }
+
+                    if (i == curCursorPos.line) {
+                        selectionPoint += curCursorPos.ch;
+                    } else {
+                        selectionPoint += line.length + 1;
+                    }
+                }
+
+                textArea.selectionStart = selectionPoint;
+                textArea.selectionEnd = selectionPoint;
             }
 
             // Add username to reply
