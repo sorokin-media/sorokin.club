@@ -18,6 +18,7 @@
                 postSlug: '{{ post.slug }}'
             }"
         >
+            <input type="hidden" name="reply_to_id" value="{{ comment.id }}">
 
             <template v-slot:form-text>
                 {{ reply_form.text }}
