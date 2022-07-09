@@ -111,13 +111,13 @@ def edit_payments(request, user_slug):
 
     subscriptions = []
     if user.unitpay_id:
-        payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
+        payment_last = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').last()
         payment_json = json.loads(payment_last.data)
         subscriptions = [dict(
             id='asdsadad',
-            next_charge_at = datetime.date(user.membership_expires_at - timedelta(days=5)),
-            amount = payment_last.amount,
-            purse = payment_json['params[purse]']
+            next_charge_at=datetime.date(user.membership_expires_at - timedelta(days=5)),
+            amount=payment_last.amount,
+            purse=payment_json['params[purse]']
         )]
 
     return render(request, "users/edit/payments.html", {

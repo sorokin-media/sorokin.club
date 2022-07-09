@@ -70,7 +70,7 @@ class Command(BaseCommand):
             data = {
                 "paymentType": payment_json['params[paymentType]'],
                 "account": order_id,
-                "sum": payment_last.amount,
+                "sum": str(payment_last.amount),
                 "projectId": 439242,
                 "resultUrl": 'https://sorokin.club',
                 "customerEmail": user.email,
