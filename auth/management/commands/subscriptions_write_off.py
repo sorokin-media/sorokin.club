@@ -76,7 +76,7 @@ class Command(BaseCommand):
                 "customerEmail": user.email,
                 "currency": "RUB",
                 "subscriptionId": user.unitpay_id,
-                "desc": "Сорокин.Клуб",
+                "desc": "Sorokin.Club",
                 "ip": payment_json['params[ip]'],
                 "secretKey": settings.UNITPAY_SECRET_KEY,
                 "cashItems": cash_items
