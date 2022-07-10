@@ -146,10 +146,6 @@ def unitpay_webhook(request):
             user_model = payment.user
             user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
             user_model.save()
-        else:
-            user_model = payment.user
-            user_model.unitpay_id = ''
-            user_model.save()
 
         product = PRODUCTS[payment.product_code]
         product["activator"](product, payment, payment.user)
