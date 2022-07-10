@@ -8,8 +8,10 @@ from users.models.user import User
 from payments.models import Payment
 from notifications.email.users import send_subscribe_8_email
 from notifications.email.users import couldnd_withdraw_money_email
+from notifications.email.users import cancel_subscribe_user_email
 from notifications.telegram.users import subscribe_8_user
 from notifications.telegram.users import couldnd_withdraw_money
+from notifications.telegram.users import cancel_subscribe_user
 from payments.unitpay import UnitpayService
 from payments.products import PRODUCTS
 from pprint import pprint
@@ -138,3 +140,5 @@ class Command(BaseCommand):
     def cancelSubUser(self, user):
         user.unitpay_id = ''
         user.save()
+        cancel_subscribe_user(user)
+        cancel_subscribe_user_email(user)

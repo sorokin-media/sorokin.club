@@ -121,6 +121,16 @@ def couldnd_withdraw_money_email(user: User):
         tags=["subscription"]
     )
 
+def cancel_subscribe_user_email(user: User):
+    sub_template = loader.get_template("emails/cancel_subscribe.html")
+    send_club_email(
+        recipient=user.email,
+        subject=f"Оплата подписки",
+        html=sub_template.render({
+            "user": user,
+        }),
+        tags=["subscription"]
+    )
 
 def send_ping_email(user: User, message: str):
     ping_template = loader.get_template("emails/ping.html")
