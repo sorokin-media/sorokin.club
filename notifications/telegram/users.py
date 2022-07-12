@@ -101,6 +101,19 @@ def subscribe_8_user(user, sum, purse):
             text=f"Через три дня мы попытаемся списать оплату, списано будет {sum}, карта { purse } проверь что карта работает и на ней есть денежки.",
         )
 
+def couldnd_withdraw_money(user):
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"Мы попытались списать оплату за подписку, но платеж не прошел, проверь данные бро.",
+        )
+
+def cancel_subscribe_user(user):
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"Мы не смогли списать оплату, подписка отменена бро. Все продления по текущей цене :(",
+        )
 
 def notify_admin_user_on_ban(user, days, reason):
     banned_user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
