@@ -52,13 +52,28 @@
 
   <script defer>
     document.addEventListener("DOMContentLoaded", function () {
-      VK.Retargeting.Add("46717378");
-      VK.Retargeting.Event('clubbro');
-
       ym(88682790,'reachGoal','payed_user');
       ym(88682790,'reachGoal','payed_user_rt');
     });
-
   </script>
+
+  <script type="text/javascript">
+    !function(){
+      var t = document.createElement("script");
+      t.type="text/javascript",
+      t.async=!0,
+      t.src='https://vk.com/js/api/openapi.js?169',
+
+      t.onload=function(){
+        VK.Retargeting.Init("VK-RTRG-1467866-ux4p"),
+        VK.Retargeting.Hit()
+      },
+
+      document.head.appendChild(t)
+    }();
+  </script>
+  <noscript>
+      <img src="https://vk.com/rtrg?p=VK-RTRG-1467866-ux4p" style="position:fixed; left:-999px;" alt=""/>
+  </noscript>
 
 {% endif %}
