@@ -1,9 +1,10 @@
 from uuid import uuid4
-
+from datetime import timedelta
 from django.db import models
 
 class SubscriptionPlan(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    subscription_id = models.UUIDField()
     name = models.TextField(null=False)
     amount = models.IntegerField(default=0)
     description = models.TextField(null=False)
