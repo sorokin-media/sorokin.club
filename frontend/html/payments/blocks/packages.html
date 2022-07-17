@@ -1,30 +1,14 @@
 <div class="pay-packages">
-    <div>
-        <input type="radio" id="package-year" name="product_code" value="club12" checked>
-        <label for="package-year" class="block pay-package">
-            <div class="pay-package-name">На 1 год</div>
-            <div class="pay-package-image">🤘</div>
-            <div class="pay-package-price">1200₽</div>
-        </label>
-    </div>
-
-    <div>
-        <input type="radio" id="package-three" name="product_code" value="club24">
-        <label for="package-three" class="block pay-package">
-            <div class="pay-package-name">На 2 года</div>
-            <div class="pay-package-image">😎</div>
-            <div class="pay-package-price">2400₽</div>
-        </label>
-    </div>
-
-    <div>
-        <input type="radio" id="package-hundred" name="product_code" value="club120">
-        <label for="package-hundred" class="block pay-package">
-            <div class="pay-package-name">На 10 лет</div>
-            <div class="pay-package-image">🚀</div>
-            <div class="pay-package-price">9000₽</div>
-        </label>
-    </div>
+    {% for plan in plans %}
+        <div>
+            <input type="radio" id="package-{{ plan.code }}" name="product_code" value="{{ plan.code }}">
+            <label for="package-{{ plan.code }}" class="block pay-package">
+                <div class="pay-package-name">{{ plan.package_name }}</div>
+                <div class="pay-package-image">{{ plan.package_image }}</div>
+                <div class="pay-package-price">{{ plan.package_price }}₽</div>
+            </label>
+        </div>
+    {% endfor %}
 </div>
 
 <div class="pay-recurrent">

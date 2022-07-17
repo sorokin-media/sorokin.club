@@ -39,7 +39,7 @@
 
     <form action="{% url "unitpay_pay" %}" method="get">
 
-        {% include "payments/blocks/packages.html" %}
+        {% include "payments/blocks/packages.html" with plans=plans %}
 
         <br><br><br><br>
 

@@ -5,6 +5,7 @@ from django.db import models
 
 from payments.exceptions import PaymentNotFound, PaymentAlreadyFinalized
 from users.models.user import User
+from users.models.subscription_plan import SubscriptionPlan
 
 
 class Payment(models.Model):
@@ -33,12 +34,12 @@ class Payment(models.Model):
         db_table = "payments"
 
     @classmethod
-    def create(cls, reference: str, user: User, product: dict, data: dict = None, status: str = STATUS_STARTED):
+    def create(cls, reference: str, user: User, product: SubscriptionPlan, data: dict = None, status: str = STATUS_STARTED):
         return Payment.objects.create(
             reference=reference,
             user=user,
-            product_code=product["code"],
-            amount=product.get("amount") or 0.0,
+            product_code=product.code,
+            amount=product.amount or 0.0,
             status=status,
             data=json.dumps(data),
         )

@@ -8,8 +8,11 @@ from django.shortcuts import render
 from notifications.email.users import send_payed_email
 from payments.models import Payment
 from payments.products import PRODUCTS
+from payments.products import club_subscription_activator
+from payments.products import club_invite_activator
 from payments.unitpay import UnitpayService
 from users.models.user import User
+from users.models.subscription_plan import SubscriptionPlan
 
 log = logging.getLogger(__name__)
 
@@ -18,11 +21,10 @@ def unitpay_pay(request):
     product_code = request.GET.get("product_code")
     is_invite = request.GET.get("is_invite")
     is_recurrent = request.GET.get("is_recurrent")
-    if is_recurrent:
-        product_code = f"{product_code}_recurrent"
 
     # find product by code
-    product = PRODUCTS.get(product_code)
+
+    product = SubscriptionPlan.objects.filter(code=product_code).last()
     if not product:
         return render(request, "error.html", {
             "title": "Что-то пошло не так 😣",
@@ -94,7 +96,7 @@ def unitpay_pay(request):
 
     # create stripe session and payment (to keep track of history)
     pay_service = UnitpayService()
-    invoice = pay_service.create_payment(product, user)
+    invoice = pay_service.create_payment(product, user, is_recurrent)
 
     payment = Payment.create(
         reference=invoice.id,
@@ -147,8 +149,11 @@ def unitpay_webhook(request):
             user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
             user_model.save()
 
-        product = PRODUCTS[payment.product_code]
-        product["activator"](product, payment, payment.user)
+        product = SubscriptionPlan.objects.filter(code=payment.product_code).last()
+        if product.code == 'club1_invite':
+            club_invite_activator(product, payment, payment.user)
+        else:
+            club_subscription_activator(product, payment, payment.user)
 
         if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
             send_payed_email(payment.user)

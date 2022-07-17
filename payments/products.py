@@ -18,16 +18,11 @@ def club_subscription_activator(product, payment, user):
     if user.membership_expires_at < now:
         user.membership_expires_at = now  # ignore days in the past
 
-    user.membership_expires_at += product["data"]["timedelta"]
-
+    user.membership_expires_at += timedelta(days=product.timedelta)
     # force patreon migration
     if user.membership_platform_type == User.MEMBERSHIP_PLATFORM_PATREON:
         user.membership_platform_type = User.MEMBERSHIP_PLATFORM_DIRECT
 
-    user.membership_platform_data = {
-        "reference": payment.reference,
-        "recurrent": product.get("recurrent"),
-    }
     user.save()
 
     # notify the user

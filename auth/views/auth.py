@@ -12,13 +12,17 @@ from club.exceptions import AccessDenied
 from posts.models.post import Post
 from users.models.user import User
 from utils.strings import random_string
-
+from users.models.subscription import Subscription
+from users.models.subscription_plan import SubscriptionPlan
 
 def join(request):
     if request.me:
         return redirect("profile", request.me.slug)
-
-    return render(request, "auth/join.html")
+    plan_subcription = Subscription.objects.filter(default=True).last()
+    plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
+    return render(request, "auth/join.html", {
+        "plans": plans
+    })
 
 
 def login(request):

@@ -13,6 +13,8 @@ from search.models import SearchIndex
 from users.forms.profile import ProfileEditForm, NotificationsEditForm
 from users.models.geo import Geo
 from users.models.user import User
+from users.models.subscription import Subscription
+from users.models.subscription_plan import SubscriptionPlan
 from utils.strings import random_hash
 from payments.models import Payment
 import json
@@ -119,11 +121,25 @@ def edit_payments(request, user_slug):
             amount=payment_last.amount,
             purse=payment_json['params[purse]']
         )]
+        plan_query = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
+        if plan_query:
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_query.subscription_id)
+        else:
+            plan_subcription = Subscription.objects.filter(default=True).last()
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
+    else:
+        plan_subcription = Subscription.objects.filter(default=True).last()
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
+
+    if user.telegram_id == '204349098':
+        plan_subcription = Subscription.objects.filter(name='Test').last()
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
 
     return render(request, "users/edit/payments.html", {
         "user": user,
         "subscriptions": subscriptions,
         "top_users": top_users,
+        "plans": plans
     })
 
 

@@ -21,3 +21,19 @@ class Command(BaseCommand):
                                              description='10 год членства в Клубе', code='club120', timedelta=3650,
                                              package_name='На 10 лет', package_image='🚀', package_price=9000)
         subscription_plan.save()
+
+        subscription_invite = Subscription(name="Invite", default=False)
+        subscription_invite.save()
+
+        subscription_plan = SubscriptionPlan(subscription_id=subscription_invite.id, name='За друга', amount=1200,
+                                             description='Пригласить друга в Клуб', code='club1_invite', timedelta=365,
+                                             package_name='Позвать в Клуб', package_image='🚀', package_price=1200)
+        subscription_plan.save()
+
+        subscription_test = Subscription(name="Test", default=False)
+        subscription_test.save()
+
+        subscription_plan = SubscriptionPlan(subscription_id=subscription_test.id, name='тест', amount=12,
+                                             description='Тест дляя меня', code='club12_test', timedelta=30,
+                                             package_name='Ntcn gjlgbcrf', package_image='🚀', package_price=12)
+        subscription_plan.save()

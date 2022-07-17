@@ -45,30 +45,32 @@
         <div class="block-header" id="select_package">На сколько еще пополняем?</div>
 
         <br>
-        {% if me.telegram_id == '204349098' %}
-<div class="pay-packages">
-    <div>
-        <input type="radio" id="package-year" name="product_code" value="club12_tested" checked>
-        <label for="package-year" class="block pay-package">
-            <div class="pay-package-name">На 1 год</div>
-            <div class="pay-package-image">🤘</div>
-            <div class="pay-package-price">12₽</div>
-        </label>
-    </div>
-</div>
+<!--        {% if me.telegram_id == '204349098' %}-->
+<!--<div class="pay-packages">-->
+<!--    <div>-->
+<!--        <input type="radio" id="package-year" name="product_code" value="club12_tested" checked>-->
+<!--        <label for="package-year" class="block pay-package">-->
+<!--            <div class="pay-package-name">На 1 год</div>-->
+<!--            <div class="pay-package-image">🤘</div>-->
+<!--            <div class="pay-package-price">12₽</div>-->
+<!--        </label>-->
+<!--    </div>-->
+<!--</div>-->
 
-<div class="pay-recurrent">
-    <label class="block pay-recurrent-block">
-        <input type="checkbox" name="is_recurrent" value="true">
-        повторять каждый
-        <select name="recurrent_interval">
-            <option value="yearly" selected>год</option>
-        </select>
-    </label>
-</div>
-        {% else %}
-        {% include "payments/blocks/packages.html" %}
-        {% endif %}
+<!--<div class="pay-recurrent">-->
+<!--    <label class="block pay-recurrent-block">-->
+<!--        <input type="checkbox" name="is_recurrent" value="true">-->
+<!--        повторять каждый-->
+<!--        <select name="recurrent_interval">-->
+<!--            <option value="yearly" selected>год</option>-->
+<!--        </select>-->
+<!--    </label>-->
+<!--</div>-->
+<!--        {% else %}-->
+<!--        {% include "payments/blocks/packages.html" with plans=plans %}-->
+<!--        {% endif %}-->
+
+        {% include "payments/blocks/packages.html" with plans=plans %}
         <button type="submit" class="button button-big join-button">Продлить членство 🤙</button>
 
         </form>

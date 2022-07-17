@@ -1,12 +1,11 @@
 import hashlib
 import json
 import logging
-import socket
 from base64 import b64encode
 from dataclasses import dataclass
 from urllib.parse import urlencode
 from uuid import uuid4
-import requests
+from users.models.subscription_plan import SubscriptionPlan
 
 from django.conf import settings
 
@@ -23,18 +22,18 @@ class Invoice:
 
 class UnitpayService:
     @classmethod
-    def create_payment(cls, product: dict, user: User) -> Invoice:
+    def create_payment(cls, product: SubscriptionPlan, user: User, reccurent: bool) -> Invoice:
         order_id = uuid4().hex
 
         cash = [{
             "name": "Сорокин.Клуб",
             "count": 1,
-            "price": product["amount"],
+            "price": product.amount,
             "type": "commodity",
         }]
-        if product["recurrent"]:
+        if reccurent:
             params = {
-                "sum": str(product["amount"]),
+                "sum": str(product.amount),
                 "account": order_id,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
@@ -45,7 +44,7 @@ class UnitpayService:
             }
         else:
             params = {
-                "sum": str(product["amount"]),
+                "sum": str(product.amount),
                 "account": order_id,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
@@ -96,38 +95,3 @@ class UnitpayService:
         counted_signature = hashlib.sha256(string.encode()).hexdigest()
 
         return signature == counted_signature
-
-    def create_payment_subscribed(cls, product: dict, user: User, order_id) -> Invoice:
-
-        cash = [{
-            "name": "Сорокин.Клуб",
-            "count": 1,
-            "price": product["amount"],
-            "type": "commodity",
-        }]
-        params = {
-            "paymentType": "card",
-            "account": order_id,
-            "sum": str(product["amount"]),
-            "projectId": 439242,
-            "resultUrl": 'https://sorokin.club',
-            "customerEmail": user.email,
-            "currency": "RUB",
-            "subscriptionId": user.unitpay_id,
-            "desc": "Сорокин.Клуб",
-            "ip": socket.gethostbyname(socket.gethostname()),
-            "secretKey": settings.UNITPAY_SECRET_KEY,
-            "cashItems": b64encode(json.dumps(cash).encode()),
-        }
-        params["signature"] = cls.make_signature(params)
-
-        response = requests.post(
-            url='https://unitpay.ru/api',
-            headers={"Content-Type": "application/json"},
-            data={
-                "method": 'initPayment',
-                "params": params,
-            },
-        )
-
-        return response

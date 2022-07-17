@@ -12,6 +12,7 @@ from notifications.email.users import cancel_subscribe_user_email
 from notifications.telegram.users import subscribe_8_user
 from notifications.telegram.users import couldnd_withdraw_money
 from notifications.telegram.users import cancel_subscribe_user
+from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
 from payments.products import PRODUCTS
 from pprint import pprint
@@ -98,7 +99,8 @@ class Command(BaseCommand):
         payment_last = Payment.objects.filter(user_id=user.id, status='success',
                                               data__contains='subscriptionId').order_by('created_at').last()
         if payment_last:
-            product = PRODUCTS.get(payment_last.product_code)
+            # product = PRODUCTS.get(payment_last.product_code)
+            product = SubscriptionPlan.objects.filter(code=payment_last.product_code)
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
             cash = [{
