@@ -1,7 +1,11 @@
 <div class="pay-packages">
     {% for plan in plans %}
         <div>
-            <input type="radio" id="package-{{ plan.code }}" name="product_code" value="{{ plan.code }}">
+            {% if plan.name == plans.0.name %}
+                <input type="radio" id="package-{{ plan.code }}" name="product_code" value="{{ plan.code }}" checked>
+            {% else %}
+                <input type="radio" id="package-{{ plan.code }}" name="product_code" value="{{ plan.code }}">
+            {% endif %}
             <label for="package-{{ plan.code }}" class="block pay-package">
                 <div class="pay-package-name">{{ plan.package_name }}</div>
                 <div class="pay-package-image">{{ plan.package_image }}</div>
