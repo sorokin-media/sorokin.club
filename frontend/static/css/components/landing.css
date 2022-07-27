@@ -14,12 +14,20 @@
         box-sizing: border-box;
     }
 
+        .landing-block-large-limited {
+            max-width: var(--extra-max-content-width);
+        }
+
         .landing-block-limited {
             max-width: var(--max-content-width);
         }
 
         .landing-block-narrow {
             max-width: var(--normal-content-width);
+        }
+
+        .landing-block--space-between {
+            justify-content: space-between;
         }
 
         .landing-block-20 {
@@ -52,6 +60,8 @@
 
         .landing-block p {
             opacity: 0.85;
+
+            margin-bottom: 1.8em;
         }
 
             @media only screen and (max-width : 768px) {
@@ -67,13 +77,29 @@
                     box-sizing: border-box;
                     padding: 20px;
                 }
+
+                .landing-block--space-between {
+                    justify-content: unset;
+                }
             }
 
         .landing-block h2 {
             font-size: 220%;
             line-height: 1.2em;
             display: block;
+
+            margin-top: 0;
         }
+
+.landing-posts-block .landing-posts {
+    padding-top: 10px;
+}
+
+    @media (max-width: 768px) {
+        .landing-posts-block .landing-posts {
+            padding-top: 0;
+        }
+    }
 
 .landing-block-chats {
     width: 100%;
@@ -110,10 +136,22 @@
     position: absolute;
     top: 45%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+
+    max-width: calc(100% - 40px);
+
     font-size: 40px;
     line-height: 1.2em;
+
+    transform: translateX(-50%) translateY(-50%);
 }
+
+    .landing-title  p {
+        font-size: 80%;
+    }
+
+    .landing-title .button-container {
+        font-size: 75%;
+    }
 
     @media only screen and (max-width : 768px) {
         .landing-title {
@@ -133,6 +171,7 @@
         font-size: 180%;
         line-height: 1.24em;
         margin-bottom: 0;
+        margin-top: 0;
     }
 
     .feature-list {
@@ -363,6 +402,33 @@
         padding-bottom: 0px;
     }
 
+    .landing-posts .landing-post:nth-child(even) {
+        left: -5px !important;
+    }
+
+    .landing-posts .landing-post:nth-child(odd) {
+        left: 5px !important;
+    }
+
+    .landing-post {
+        left: unset !important;
+        width: 100%;
+
+        padding: 20px 30px;
+    }
+
+    .landing-post-upvotes {
+        top: 50%;
+        right: 0;
+
+        max-width: 58px;
+
+        overflow: auto;
+        background-color: #fff;
+
+        transform: translate(50%, -50%);
+    }
+
     .landing-block-map {
         margin-top: 50px;
         padding-bottom: 60px;
@@ -381,6 +447,10 @@
 @media only screen and (max-width: 570px) {
     .landing-block-map {
         margin-top: 0;
+    }
+
+    .landing-block h2 {
+        font-size: 180%;
     }
 
     .map-background {

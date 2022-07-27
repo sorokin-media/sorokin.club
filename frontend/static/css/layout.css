@@ -1,5 +1,6 @@
 /* Layouts and grids without any styles */
 :root {
+    --extra-max-content-width: 1300px;
     --max-content-width: 1100px;
     --normal-content-width: 900px;
 }
