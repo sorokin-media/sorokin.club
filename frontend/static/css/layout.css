@@ -1,7 +1,7 @@
 /* Layouts and grids without any styles */
 :root {
-    --max-content-width: 1000px;
-    --normal-content-width: 800px;
+    --max-content-width: 1100px;
+    --normal-content-width: 900px;
 }
 
 .menu {
@@ -83,7 +83,7 @@
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
-    max-width: var(--max-content-width);
+    max-width: var(--normal-content-width);
 }
 
 .search {

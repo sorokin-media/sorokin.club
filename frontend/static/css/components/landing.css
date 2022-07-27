@@ -10,7 +10,7 @@
         align-items: flex-start;
         position: relative;
         margin: 0 auto;
-        padding: 40px 10px 80px;
+        padding: 40px 10px 50px;
         box-sizing: border-box;
     }
 
@@ -54,13 +54,13 @@
             opacity: 0.85;
         }
 
-            @media only screen and (max-width : 570px) {
+            @media only screen and (max-width : 768px) {
                 .landing-block-20, .landing-block-30, .landing-block-40,
                 .landing-block-50, .landing-block-60, .landing-block-70,
                 .landing-block-80 {
                     max-width: 100% !important;
                     box-sizing: border-box;
-                    padding: 20px;
+                    padding: 20px 0;
                 }
 
                 .landing-block {
@@ -115,7 +115,7 @@
     line-height: 1.2em;
 }
 
-    @media only screen and (max-width : 570px) {
+    @media only screen and (max-width : 768px) {
         .landing-title {
             font-size: 5vw;
         }
@@ -209,14 +209,18 @@
         position: absolute;
         top: 20px;
         right: 10%;
-        max-width: 400px;
+        max-width: calc(100% - 300px - 15%);
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
     }
 
         .map-counter {
             display: inline-block;
             float: right;
-            padding: 20px 35px;
-            margin-bottom: 20px;
+            padding: 0.5em 0.875em;
+            margin-bottom: 0.5em;
             background-color: #FFFFFF;
             color: #000000;
             font-size: 220%;
@@ -256,6 +260,9 @@
     position: relative;
     width: 100%;
     min-height: 500px;
+
+    padding-left: 20px;
+    box-sizing: border-box;
 }
 
     .landing-post {
@@ -342,4 +349,50 @@
     width: 150px;
     height: 150px;
     float: right;
+}
+
+@media (max-width: 768px) {
+    .landing-block h2,
+    .feature-title {
+        margin-top: 0;
+    }
+
+    .landing-posts {
+        order: 2;
+        padding: 20px;
+        padding-bottom: 0px;
+    }
+
+    .landing-block-map {
+        margin-top: 50px;
+        padding-bottom: 60px;
+    }
+
+    .map-counters {
+        right: 5%;
+        max-width: calc(100% - 300px - 10%);
+    }
+
+    .map-counter {
+        font-size: 170%;
+    }
+}
+
+@media only screen and (max-width: 570px) {
+    .landing-block-map {
+        margin-top: 0;
+    }
+
+    .map-background {
+        height: 500px;
+    }
+
+    .map-counters {
+        right: 8%;
+        max-width: 80%;
+    }
+
+    .map-counter {
+        font-size: 145%;
+    }
 }
