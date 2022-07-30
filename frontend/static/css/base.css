@@ -817,4 +817,5 @@ img.emoji {
 .preview_button_size {
     margin-top: 10px;
     font-size: 80%;
+    padding-bottom: 0;
 }
