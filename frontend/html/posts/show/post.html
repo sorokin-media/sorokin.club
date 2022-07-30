@@ -35,7 +35,7 @@
                         </div>
                     {% elif not post.is_visible %}
                         <div class="post-label">
-                            {% include "posts/widgets/draft_label.html" %}
+                            {% include "posts/widgets/preview_button_footer.html" %}
                         </div>
                     {% endif %}
 
@@ -95,7 +95,11 @@
                 </div>
             </section>
         {% endblock %}
-
+        {% if not post.is_visible %}
+            <div class="post-label">
+                {% include "posts/widgets/preview_button_footer.html" %}
+            </div>
+        {% endif %}
         {% block post_footer %}
             <footer class="post-footer p-author">
                 {% include "users/widgets/card.html" with user=post.author %}
