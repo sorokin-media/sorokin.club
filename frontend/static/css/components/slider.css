@@ -3,7 +3,7 @@
 
     --slider-vertical-gap: 0;
     --slider-horizontal-gap: 20px;
-    --arrows-width: 75px;
+    --arrows-width: 55px;
     --arrows-gap-slider: 10px;
 
     box-sizing: border-box;
@@ -24,7 +24,7 @@
     padding-right: calc(var(--slider-horizontal-gap) / 2);
 }
 
-.slider-default .slick-slide div {
+.slider-default .slick-slide > div {
     display: flex;
     align-items: center;
     justify-content: center;
