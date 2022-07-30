@@ -814,3 +814,7 @@ img.emoji {
     transform: scale(1.05);
     transition: transform .2s;
 }
+.preview_button_size {
+    margin-top: 10px;
+    font-size: 80%;
+}
