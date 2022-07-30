@@ -65,11 +65,4 @@ module.exports = {
             "vue-mapbox": "vue-mapbox/dist/vue-mapbox.umd.min.js",
         }
     },
-
-    watch: true,
-    watchOptions: {
-        ignored: /node_modules/,
-        aggregateTimeout: 200,
-        poll: 1000,
-    },
 };
