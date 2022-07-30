@@ -21,7 +21,7 @@
 <body>
 
     {% block body %}
-    <main class="landing">
+    <main class="landing" id="app">
         <div class="landing-block intro-landing-block landing-block-limited">
             <img src="{% static "images/logo/logo-1024.png" %}" alt="">
             <div class="landing-title">
@@ -179,6 +179,26 @@
             </div>
         </div>
 
+        <div class="landing-block landing-block-post-slider">
+            <post-slider>
+                <a href="https://sorokin.club/post/1289/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/landing/posts/p00003.png" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/3467/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/landing/posts/p00004.png" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/2970/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/landing/posts/p00005.png" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/1494/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/landing/posts/p00009.png" %}" alt="post">
+                </a>
+            </post-slider>
+        </div>
+
         <div class="landing-block landing-block-narrow">
             <div>
                 <h2>Зачем вступать?</h2>
@@ -298,6 +318,161 @@
                     <div class="map-counter">Чаты</div>
                 </div>
             </div>
+        </div>
+
+        <div class="landing-block landing-block-reviews">
+            <default-slider
+                :customClasses="reviews-slider"
+            >
+
+                <div class="reviews-item">
+                    <div class="reviews-item__avatar">
+                        <img src="{% static "images/home/reviews/1/avatar.jpe" %}" alt="">
+                    </div>
+                    <div class="reviews-item__main">
+                        <div class="reviews-item__header">
+                            <div class="reviews-item__title">
+                                <div class="reviews-item__name">Алексей Сорокин</div>
+                                <div class="reviews-item__position">Fullstack developer - digital company</div>
+                            </div>
+
+                            <ul class="reviews-item__achive-list">
+                                <li>
+                                    Декан кафедры SEO в “GeekBrains”
+                                </li>
+
+                                <li>
+                                    Автор курса “Линкбилдинг” в “Нетологии”
+                                </li>
+
+                                <li>
+                                    Больше 19 лет в интернет-маркетинге и SEO
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="reviews-item__body">
+                            <div class="reviews-item__review">
+                                <div class="reviews-item__text">
+                                    <p>
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в своей сфере в живую.
+                                    </p>
+                                    <p>
+                                        Здесь классный баланс между контентом и болталкой, а ещё между работой и развлечениями. Всегда можно пойти почитать опыт других ребят по схожим проектам, а можно поболтать в чатике о котиках.
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в сво
+                                    </p>
+                                </div>
+                                <div class="reviews-item__read-more">Читать полностью</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-item">
+                    <div class="reviews-item__avatar">
+                        <img src="{% static "images/home/reviews/1/avatar.jpe" %}" alt="">
+                    </div>
+                    <div class="reviews-item__main">
+                        <div class="reviews-item__header">
+                            <div class="reviews-item__title">
+                                <div class="reviews-item__name">Алексей Сорокин</div>
+                                <div class="reviews-item__position">Fullstack developer - digital company</div>
+                            </div>
+
+                            <ul class="reviews-item__achive-list">
+                                <li>
+                                    Декан кафедры SEO в “GeekBrains”
+                                </li>
+
+                                <li>
+                                    Автор курса “Линкбилдинг” в “Нетологии”
+                                </li>
+
+                                <li>
+                                    Больше 19 лет в интернет-маркетинге и SEO
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="reviews-item__body">
+                            <div class="reviews-item__review">
+                                <div class="reviews-item__text">
+                                    <p>
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в своей сфере в живую.
+                                    </p>
+                                    <p>
+                                        Здесь классный баланс между контентом и болталкой, а ещё между работой и развлечениями. Всегда можно пойти почитать опыт других ребят по схожим проектам, а можно поболтать в чатике о котиках.
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в сво
+                                    </p>
+                                </div>
+                                <div class="reviews-item__read-more">Читать полностью</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-item">
+                    <div class="reviews-item__avatar">
+                        <img src="{% static "images/home/reviews/1/avatar.jpe" %}" alt="">
+                    </div>
+                    <div class="reviews-item__main">
+                        <div class="reviews-item__header">
+                            <div class="reviews-item__title">
+                                <div class="reviews-item__name">Алексей Сорокин</div>
+                                <div class="reviews-item__position">Fullstack developer - digital company</div>
+                            </div>
+
+                            <ul class="reviews-item__achive-list">
+                                <li>
+                                    Декан кафедры SEO в “GeekBrains”
+                                </li>
+
+                                <li>
+                                    Автор курса “Линкбилдинг” в “Нетологии”
+                                </li>
+
+                                <li>
+                                    Больше 19 лет в интернет-маркетинге и SEO
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="reviews-item__body">
+                            <div class="reviews-item__review">
+                                <div class="reviews-item__text">
+                                    <p>
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в своей сфере в живую.
+                                    </p>
+                                    <p>
+                                        Здесь классный баланс между контентом и болталкой, а ещё между работой и развлечениями. Всегда можно пойти почитать опыт других ребят по схожим проектам, а можно поболтать в чатике о котиках.
+                                        В движухе почти с самого начала, уже не помню сколько это в месяцах, но оно и не важно.
+                                    </p>
+                                    <p>
+                                        Клуб даёт мега-поддержку, когда ты весь такой современный онлайщик, интернет-предприниматель или фрилансер и сидишь работаешь из дома не особо общаясь с людьми в сво
+                                    </p>
+                                </div>
+                                <div class="reviews-item__read-more">Читать полностью</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </default-slider>
         </div>
 
         <div class="landing-block landing-block-narrow" id="join">
