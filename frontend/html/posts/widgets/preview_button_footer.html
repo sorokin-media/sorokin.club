@@ -1,10 +1,12 @@
-<div class="form-row form-row-center preview_button_size">
+<div class="form-row form-row-space-between preview_button_size">
     <form action="{% url "edit_post" post.slug %}">
         <button class="button button-inverted">
             Редактировать 🖊️
         </button>
     </form>
-<!--    <button type="submit" name="action" value="publish" class="button button-inverted" onclick="return confirm('Публикуем? Пост увидят все и он попадет на модерацию')">-->
-<!--        Публикуем! 🤘-->
-<!--    </button>-->
+    <form action="." method="post" class="compose-form" enctype="multipart/form-data">
+        <button type="submit" name="action" value="publish" class="button button-inverted" onclick="return confirm('Публикуем? Пост увидят все и он попадет на модерацию')">
+            Публикуем! 🤘
+        </button>
+    </form>
 </div>

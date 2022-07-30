@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import TemplateDoesNotExist
 
 from comments.forms import CommentForm, ReplyForm, BattleCommentForm
@@ -9,6 +9,7 @@ from bookmarks.models import PostBookmark
 from posts.models.subscriptions import PostSubscription
 from posts.models.votes import PostVote
 from users.models.mute import Muted
+from posts.models.linked import LinkedPost
 
 POSSIBLE_COMMENT_ORDERS = {"created_at", "-created_at", "-upvotes"}
 
@@ -61,6 +62,12 @@ def render_post(request, post, context=None):
     # TODO: make a proper type->form mapping here in future
     if post.type == Post.TYPE_BATTLE:
         context["comment_form"] = BattleCommentForm()
+
+    action = request.POST.get("action")
+    if action == "publish":
+        post.publish()
+        LinkedPost.create_links_from_text(post, post.text)
+        return redirect("show_post", post.type, post.slug)
 
     try:
         return render(request, f"posts/show/{post.type}.html", context)
