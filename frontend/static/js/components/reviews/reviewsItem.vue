@@ -65,7 +65,7 @@ export default {
         return {
             hideTextLogic: false,
             isTextHidden: false,
-            maxReviewHeight: 225,
+            maxReviewHeight: 270,
         }
     },
 

@@ -38,6 +38,7 @@ export default {
 
                 dots: true,
                 arrows: true,
+                infinite: false,
 
                 appendArrows: this.$refs.arrowContainer,
                 appendDots: this.$refs.dotsContainer,

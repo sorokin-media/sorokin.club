@@ -94,6 +94,10 @@
     opacity: 1;
 }
 
+.slider-default__arrows .slick-arrow.slick-disabled {
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* Slider dots
 ==========================*/
