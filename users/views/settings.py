@@ -123,13 +123,13 @@ def edit_payments(request, user_slug):
         )]
         plan_query = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
         if plan_query:
-            plans = SubscriptionPlan.objects.filter(subscription_id=plan_query.subscription_id).order_by("-created_at")
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_query.subscription_id).order_by("+created_at")
         else:
             plan_subcription = Subscription.objects.filter(default=True).last()
-            plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("-created_at")
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("+created_at")
     else:
         plan_subcription = Subscription.objects.filter(default=True).last()
-        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("-created_at")
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("+created_at")
 
     # if user.telegram_id == '204349098':
     #     plan_subcription = Subscription.objects.filter(name='Test').last()
