@@ -21,7 +21,7 @@
 <body>
 
     {% block body %}
-    <main class="landing">
+    <main class="landing" id="app">
         <div class="landing-block intro-landing-block landing-block-limited">
             <img src="{% static "images/logo/logo-1024.png" %}" alt="">
             <div class="landing-title">
@@ -179,6 +179,26 @@
             </div>
         </div>
 
+        <div class="landing-block landing-block-post-slider">
+            <post-slider>
+                <a href="https://sorokin.club/post/69/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/home/posts/1.jpg" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/128/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/home/posts/2.jpg" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/181/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/home/posts/3.jpg" %}" alt="post">
+                </a>
+
+                <a href="https://sorokin.club/post/209/" target="_blank" class="landing-screenshot">
+                    <img src="{% static "images/home/posts/4.jpg" %}" alt="post">
+                </a>
+            </post-slider>
+        </div>
+
         <div class="landing-block landing-block-narrow">
             <div>
                 <h2>Зачем вступать?</h2>
@@ -299,6 +319,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Отзывы -->
+        <reviews></reviews>
 
         <div class="landing-block landing-block-narrow" id="join">
             <div>

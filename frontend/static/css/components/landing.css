@@ -91,6 +91,13 @@
             margin-top: 0;
         }
 
+.landing-block-post-slider {
+    max-width: 1450px;
+
+    padding-right: 0;
+    padding-left: 0;
+}
+
 .landing-posts-block .landing-posts {
     padding-top: 10px;
 }
@@ -287,12 +294,19 @@
         top: 0;
         left: 0;
         z-index: 1;
+
+        opacity: 0.8;
+
+        padding: 5%;
+
+        transition: all 0.2s;
     }
 
-        .landing-screenshot:hover {
+        .landing-screenshot:hover,
+        .landing-screenshot:focus {
             z-index: 100;
+            opacity: 1;
             transform: scale(1.1);
-            transition: transform 0.1s;
         }
 
 .landing-posts {

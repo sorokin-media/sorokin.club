@@ -64,5 +64,5 @@ module.exports = {
             vue: mode === "production" ? "vue/dist/vue.min.js" : "vue/dist/vue.js",
             "vue-mapbox": "vue-mapbox/dist/vue-mapbox.umd.min.js",
         }
-    }
+    },
 };

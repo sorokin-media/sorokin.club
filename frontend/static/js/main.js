@@ -26,6 +26,9 @@ Vue.component("friend-button", () => import("./components/FriendButton.vue"));
 Vue.component("comment-scroll-arrow", () => import("./components/CommentScrollArrow.vue"));
 Vue.component("comment-markdown-editor", () => import("./components/CommentMarkdownEditor.vue"));
 Vue.component("comment-markdown-editor-wrapper", () => import("./components/CommentMarkdownEditorWrapper.vue"));
+Vue.component("default-slider", () => import("./components/sliders/defaultSlider.vue"));
+Vue.component("post-slider", () => import("./components/sliders/postSlider.vue"));
+Vue.component("reviews", () => import("./components/reviews/reviews.vue"));
 
 // Since our pages have user-generated content, any fool can insert "{{" on the page and break it.
 // We have no other choice but to completely turn off template matching and leave it on only for components.
