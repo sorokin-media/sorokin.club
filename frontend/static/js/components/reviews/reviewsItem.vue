@@ -92,7 +92,8 @@ export default {
     },
 
     mounted () {
-        this.checkReviewHeight();
+        this.maxReviewHeight = parseInt(window.getComputedStyle(this.$refs.review).maxHeight.replace(/\D/gm, ''));
+        this.setupCheckReviewHeight();
     },
 
     beforeDestroy () {
@@ -100,14 +101,35 @@ export default {
     },
 
     methods: {
-        checkReviewHeight () {
-           if (this.$refs.review.scrollHeight > this.maxReviewHeight) {
+
+        setupCheckReviewHeight () {
+            if (this.$refs.review.scrollHeight > this.maxReviewHeight) {
                 this.hideTextLogic = true;
                 this.isTextHidden = true;
            } else {
                 this.hideTextLogic = false
                 this.isTextHidden = false;
            }
+        },
+
+        checkReviewHeight () {
+
+            if (this.$refs.review.scrollHeight > this.maxReviewHeight) {
+
+                if (!this.isTextHidden && this.hideTextLogic) {
+                    this.$refs.review.style.maxHeight = this.$refs.review.scrollHeight + 'px';
+                }
+
+                if (!this.hideTextLogic) {
+                    this.hideTextLogic = true;
+                    this.isTextHidden = true;
+                }
+
+            } else {
+                this.hideTextLogic = false;
+                this.isTextHidden = false;
+            }
+
         },
 
         toggleReview () {
@@ -119,6 +141,7 @@ export default {
 
             this.isTextHidden = !this.isTextHidden;
         }
+
     }
 }
 </script>

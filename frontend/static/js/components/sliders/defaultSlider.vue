@@ -42,15 +42,6 @@ export default {
 
                 appendArrows: this.$refs.arrowContainer,
                 appendDots: this.$refs.dotsContainer,
-
-                responsive: [
-                    {
-                        breakpoint: 1024,
-                        settings: {
-                            arrows: false,
-                        }
-                    },
-                ]
             },
 
             classes: ['post-slider'],

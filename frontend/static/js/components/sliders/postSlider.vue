@@ -1,5 +1,5 @@
 <template>
-    <div class="slider-default slider-default--arrows-out post-slider">
+    <div class="slider-default slider-default--arrows-out slider-default--arrows-mobile-hidden post-slider">
         <div class="slider-default__slider-container">
             <div ref="arrowContainer" class="slider-default__arrows"></div>
             <div class="slider-default__inner">
@@ -48,9 +48,17 @@ export default {
                         breakpoint: 768,
                         settings: {
                             slidesToShow: 2,
-                            slidesToScroll: 2
+                            slidesToScroll: 2,
+                            arrows: false,
                         }
                     },
+                    {
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                        }
+                    }
                 ]
             },
 
