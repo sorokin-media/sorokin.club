@@ -19,7 +19,7 @@ def join(request):
     if request.me:
         return redirect("profile", request.me.slug)
     plan_subcription = Subscription.objects.filter(default=True).last()
-    plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
+    plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("-created_at")
     return render(request, "auth/join.html", {
         "plans": plans
     })
