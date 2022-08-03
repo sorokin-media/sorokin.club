@@ -1,0 +1,6 @@
+.modal-mask,
+.modal-mask *,
+.modal-mask *::before,
+.modal-mask *::after {
+    box-sizing: border-box;
+}

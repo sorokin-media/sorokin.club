@@ -41,6 +41,10 @@
         {% endblock %}
         {% block content %}
         {% endblock %}
+
+        {% if me.moderation_status != 'approved' %}
+            <get-post-modal/>
+        {% endif %}
     </main>
 {% endblock %}
 
@@ -52,7 +56,7 @@
             <a href="{% url "docs" "contact" %}">Написать нам</a>
 
             <!-- <a href="{% url "docs" "oferta" %}">Оферта</a> &nbsp;&middot;&nbsp;
-            
+
             <a href="{% url "docs" "policy" %}">Политика оплаты, доставки и возврата</a> &nbsp;&middot;&nbsp;
 
             <a href="{% url "docs" "privacy_policy" %}">Политика приватности</a>--> <br><br>
