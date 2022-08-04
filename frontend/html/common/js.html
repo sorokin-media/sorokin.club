@@ -84,16 +84,21 @@
  -->
 <script>
     const introStartForm = document.getElementById('intro-start-form');
-    const introFormUpdateDelay = 15 * 1000;
-    const startIntroDataUpdate = updateFormData(introStartForm, {
-        url: '/intro/',
-        method: 'PUT',
-        async: true,
-    });
 
-    setInterval(() => {
-        startIntroDataUpdate();
-    }, introFormUpdateDelay);
+    if (introStartForm) {
+
+        const introFormUpdateDelay = 15 * 1000;
+        const startIntroDataUpdate = updateFormData(introStartForm, {
+            url: '/intro/',
+            method: 'PUT',
+            async: true,
+        });
+
+        setInterval(() => {
+            startIntroDataUpdate();
+        }, introFormUpdateDelay);
+
+    }
 
     function updateFormData (form, { url = '/', method = 'PUT', async = true }) {
         let oldData = undefined;
