@@ -72,7 +72,7 @@ export default {
     generateTelegramLink () {
       const url = new URL(window.location);
       const targetKeyName = 'utm_source';
-      const startWord = url.searchParams.get(targetKeyName) ? url.searchParams.get(targetKeyName) : url.pathname.replace('/', '_');
+      const startWord = url.searchParams.get(targetKeyName) ? url.searchParams.get(targetKeyName) : url.pathname.replace(/[\/\\]+/gm, '_');
 
       this.telegramLink = `tg://resolve?domain=sorokinclub_public_bot&start=${ startWord }`;
     },
@@ -208,6 +208,7 @@ export default {
     align-items: center;
     justify-content: center;
 
+    font-size: 1.3125rem;
     text-decoration: none;
     text-align: left;
 
