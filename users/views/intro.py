@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import redirect, render
 from django_q.tasks import async_task
 
@@ -7,13 +8,32 @@ from posts.models.post import Post
 from users.forms.intro import UserIntroForm
 from users.models.geo import Geo
 from users.models.user import User
+from pprint import pprint
 
 
 @auth_required
 def intro(request):
+    pprint(request)
     if request.me.moderation_status == User.MODERATION_STATUS_APPROVED:
         return redirect("profile", request.me.slug)
-
+    if request.method == "PUT":
+        user = request.me
+        data = json.loads(request.body)
+        user.bio = data["bio"]
+        user.city = data["city"]
+        user.company = data["company"]
+        user.country = data["country"]
+        user.position = data["position"]
+        user.save()
+        existing_intro = Post.get_user_intro(request.me)
+        if not existing_intro:
+            existing_intro = Post.upsert_user_intro(
+                user, data["intro"], is_visible=False
+            )
+        else:
+            existing_intro.text = data["intro"]
+            existing_intro.html = data["intro"]
+            existing_intro.save()
     if request.method == "POST":
         form = UserIntroForm(request.POST, request.FILES, instance=request.me)
         if form.is_valid():
