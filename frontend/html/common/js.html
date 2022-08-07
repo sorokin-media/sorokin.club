@@ -2,6 +2,36 @@
 {% load text_filters %}
 {% load render_bundle from webpack_loader %}
 
+
+<script>
+    const curUrl = new URL(window.location);
+    const urlUtm = curUrl.searchParams.get('utm_source') || '';
+
+    if (get_cookie('utm_source') !== urlUtm && urlUtm.length > 0) {
+        document.cookie = `utm_source=${ urlUtm }`;
+    }
+
+    function get_cookie ( cookie_name ) {
+        var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+        if ( results ) {
+            return ( unescape ( results[2] ) );
+        } else {
+            return null;
+        }
+    }
+</script>
+
+{% if me.moderation_status == 'approved' %}
+    <script>
+        document.cookie = 'is_approved=true';
+    </script>
+{% else %}
+    <script>
+        document.cookie = 'is_approved=false';
+    </script>
+{% endif %}
+
 <script>
     window.imageUploadUrl = "{{ settings.MEDIA_UPLOAD_URL }}";
     window.imageUploadCode = "{{ settings.MEDIA_UPLOAD_CODE }}";
@@ -11,21 +41,20 @@
 <!-- For twitter embeds -->
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+<noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script>
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(88682790, "init", {
+    ym(88682790, "init", {
         clickmap:true,
         trackLinks:true,
         accurateTrackBounce:true
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    });
 
+</script>
 <!-- VK Pixel -->
 <!-- Add user to new auditory (vk pixel) + give two achivment (yandex) if user status approved -->
 {% if me.moderation_status == 'approved' %}
@@ -36,6 +65,8 @@
     document.addEventListener("DOMContentLoaded", function () {
       ym(88682790,'reachGoal','payed_user');
       ym(88682790,'reachGoal','payed_user_rt');
+
+      console.log(ym);
     });
   </script>
 

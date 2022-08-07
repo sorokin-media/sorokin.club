@@ -21,7 +21,7 @@
 
       <div class="actions">
         <div class="action__row">
-            <a :href="telegramLink" class="btn btn--blue" type="button">
+            <a :href="telegramLink" @click="telegramClick" class="btn btn--blue" type="button">
                 <span>Получать в  Telegram</span>
                 <div class="icon">
                     <svg width="43" height="39" viewBox="0 0 43 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,7 +40,20 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueYandexMetrika from 'vue-yandex-metrika'
 import vueModal from "./vueModal.vue";
+import { getCookie } from "../../common/utils"
+
+Vue.use(VueYandexMetrika, {
+    id: 88682790,
+    // env: 'production',
+    options: {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+    }
+})
 
 export default {
   name: 'get-post-modal',
@@ -60,7 +73,8 @@ export default {
     this.generateTelegramLink();
 
     setTimeout(() => {
-      this.isActive = true;
+        this.isActive = true;
+        this.$metrika.reachGoal('popup_view');
     }, this.delayOpen * 1000)
   },
 
@@ -72,10 +86,14 @@ export default {
     generateTelegramLink () {
       const url = new URL(window.location);
       const targetKeyName = 'utm_source';
-      const startWord = url.searchParams.get(targetKeyName) ? url.searchParams.get(targetKeyName) : url.pathname.replace(/[\/\\]+/gm, '_');
+      const startWord = getCookie(targetKeyName) ? getCookie(targetKeyName) : url.pathname.replace(/[\/\\]+/gm, '_');
 
       this.telegramLink = `tg://resolve?domain=sorokinclub_public_bot&start=${ startWord }`;
     },
+
+    telegramClick () {
+        this.$metrika.reachGoal('popup_tg_click');
+    }
   }
 }
 </script>
