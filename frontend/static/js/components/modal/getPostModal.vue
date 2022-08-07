@@ -47,7 +47,7 @@ import { getCookie } from "../../common/utils"
 
 Vue.use(VueYandexMetrika, {
     id: 88682790,
-    // env: 'production',
+    env: process.env.NODE_ENV,
     options: {
         clickmap:true,
         trackLinks:true,
