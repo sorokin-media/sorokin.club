@@ -26,9 +26,41 @@
     <script>
         document.cookie = 'is_approved=true';
     </script>
+
 {% else %}
     <script>
         document.cookie = 'is_approved=false';
+    </script>
+
+    <!-- Save data to cookie -->
+    <script>
+        const lastUpdateCookie = get_cookie('last_update_cookie_data');
+        const curTime = + new Date();
+        const updateCookieDelay = 60 * 1000;
+
+        const queryParams = curUrl.searchParams.toString().split('&').reduce((arr, cookie) => {
+            const key = cookie.split('=')[0];
+            const value = cookie.split('=')[1];
+
+            arr.push({ key: key, value: value });
+            return arr;
+        }, []);
+
+        if (curTime - lastUpdateCookie >= updateCookieDelay) {
+
+            // Set all query to cookie
+            queryParams.forEach(({ key, value }, index) => {
+                document.cookie = key + '=' + value;
+            })
+
+            // Set last page to cookie if utm_source isn't exist
+            if (!queryParams.find((el) => el.key === 'utm_source') && !get_cookie('utm_source')) {
+                document.cookie = 'last_page=' + curUrl.pathname.replace(/[\/\\]+/gm, '_');
+            }
+
+            document.cookie = 'last_update_cookie_data=' + curTime;
+        }
+
     </script>
 {% endif %}
 
@@ -41,20 +73,19 @@
 <!-- For twitter embeds -->
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
-<script>
+<script type="text/javascript" >
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
     (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
     ym(88682790, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true
+         clickmap:true,
+         trackLinks:true,
+         accurateTrackBounce:true
     });
-
-</script>
+ </script>
+ <noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- VK Pixel -->
 <!-- Add user to new auditory (vk pixel) + give two achivment (yandex) if user status approved -->
 {% if me.moderation_status == 'approved' %}
@@ -65,8 +96,6 @@
     document.addEventListener("DOMContentLoaded", function () {
       ym(88682790,'reachGoal','payed_user');
       ym(88682790,'reachGoal','payed_user_rt');
-
-      console.log(ym);
     });
   </script>
 
