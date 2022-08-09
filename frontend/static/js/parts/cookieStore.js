@@ -9,11 +9,11 @@ if (get_cookie('utm_source') !== urlUtm && urlUtm.length > 0) {
 
 // Referrer
 const referrerList = [
-    'yandex.ru',
-    'google.com',
-    'rambler.ru',
-    'yahoo.ru',
-    'mail.ru',
+    'yandex',
+    'google',
+    'rambler',
+    'yahoo',
+    'mail',
 ];
 let curReferrer = document.referrer;
 
@@ -21,17 +21,16 @@ if (curReferrer.length && !get_cookie('utm_source')) {
 
     curReferrer = new URL(curReferrer).hostname.split('.');
 
-    if (curReferrer.length >= 2)  {
-        curReferrer = curReferrer[curReferrer.length - 2] + '.' + curReferrer[curReferrer.length - 1];
+    if (curReferrer.length == 2)  {
+        curReferrer = curReferrer[curReferrer.length - 2];
     } else {
-        curReferrer = curReferrer.join('.');
+        curReferrer = '';
     }
 
     const isReferrerInList = referrerList.indexOf(curReferrer) !== -1 ? true : false;
-    const curRefferUppercase = curReferrer.split('.')[0].toUpperCase();
 
-    if (isReferrerInList && get_cookie('search_referrer') !== curRefferUppercase) {
-        document.cookie = 'search_referrer=' + curRefferUppercase;
+    if (isReferrerInList && get_cookie('search_referrer') !== curReferrer.toUpperCase()) {
+        document.cookie = 'search_referrer=' + curReferrer.toUpperCase();
     }
 }
 
