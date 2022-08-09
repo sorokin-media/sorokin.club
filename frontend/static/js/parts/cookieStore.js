@@ -1,0 +1,47 @@
+const curUrl = new URL(window.location);
+
+// Utm_source
+const urlUtm = curUrl.searchParams.get('utm_source') || '';
+
+if (get_cookie('utm_source') !== urlUtm && urlUtm.length > 0) {
+    document.cookie = `utm_source=${ urlUtm }`;
+}
+
+// Referrer
+const referrerList = [
+    'yandex.ru',
+    'google.com',
+    'rambler.ru',
+    'yahoo.ru',
+    'mail.ru',
+];
+let curReferrer = document.referrer;
+
+if (curReferrer.length && !get_cookie('utm_source')) {
+
+    curReferrer = new URL(curReferrer).hostname.split('.');
+
+    if (curReferrer.length >= 2)  {
+        curReferrer = curReferrer[curReferrer.length - 2] + '.' + curReferrer[curReferrer.length - 1];
+    } else {
+        curReferrer = curReferrer.join('.');
+    }
+
+    const isReferrerInList = referrerList.indexOf(curReferrer) !== -1 ? true : false;
+    const curRefferUppercase = curReferrer.split('.')[0].toUpperCase();
+
+    if (isReferrerInList && get_cookie('search_referrer') !== curRefferUppercase) {
+        document.cookie = 'search_referrer=' + curRefferUppercase;
+    }
+}
+
+
+function get_cookie ( cookie_name ) {
+    var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+    if ( results ) {
+        return ( unescape ( results[2] ) );
+    } else {
+        return null;
+    }
+}
