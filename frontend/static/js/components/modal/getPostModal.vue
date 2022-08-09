@@ -1,5 +1,5 @@
 <template>
-  <vue-modal v-if="isActive" @close="closeModal">
+  <vue-modal v-if="isActive" class="get-post-modal" @close="closeModal">
     <template v-slot:header>
       <p class="title">
        <span>Делимся самым</span> <span><b>интересным</b></span>
@@ -63,7 +63,7 @@ export default {
 
   data () {
     return {
-        delayOpen: 30,
+        delayOpen: 2,
         isActive: false,
         telegramLink: 'tg://resolve?domain=sorokinclub_public_bot&start=STARTWORD',
     }
@@ -85,8 +85,7 @@ export default {
 
     generateTelegramLink () {
       const url = new URL(window.location);
-      const targetKeyName = 'utm_source';
-      const startWord = getCookie(targetKeyName) ? getCookie(targetKeyName) : url.pathname.replace(/[\/\\]+/gm, '_');
+      const startWord = getCookie('utm_source') ? getCookie('utm_source') : getCookie('search_referrer') + url.pathname.replace(/[\/\\]+/gm, '_');
 
       this.telegramLink = `tg://resolve?domain=sorokinclub_public_bot&start=${ startWord }`;
     },
@@ -100,7 +99,7 @@ export default {
 
 <style scoped>
 .title {
-    font-size: 2.7rem;
+    font-size: 2.2rem;
     margin: 0;
 
     display: flex;
@@ -142,7 +141,7 @@ export default {
     text-align: center;
 
     margin: -1.5rem;
-    margin-bottom: 4.5rem;
+    margin-bottom: 2.7rem;
     padding: 0;
 }
 
@@ -155,7 +154,7 @@ export default {
     display: flex;
     flex-direction: column;
 
-    font-size: 1.85rem;
+    font-size: 1.5rem;
     color: #52555C;
 
     line-height: 150%;
@@ -163,7 +162,7 @@ export default {
 
 .content-text > * {
     margin: 0;
-    margin-bottom: 1.35rem;
+    margin-bottom: 1rem;
 }
 
 .content-text > *:last-child {
@@ -176,12 +175,12 @@ export default {
 
 .content-text-bold {
     font-weight: bold;
-    font-size: 2.1rem;
+    font-size: 1.9rem;
 }
 
 .content-logo {
     width: 100%;
-    max-width: 175px;
+    max-width: 165px;
     height: auto;
 }
 
@@ -331,6 +330,12 @@ export default {
   }
 }
 
+@media (max-width: 576px) {
+  .btn {
+    font-size: 1.2rem;
+  }
+}
+
 @media (min-width: 768px) {
   .content {
     flex-wrap: nowrap;
@@ -344,4 +349,10 @@ export default {
   }
 }
 
+</style>
+
+<style>
+    .get-post-modal .modal-container {
+        max-width: 680px;
+    }
 </style>

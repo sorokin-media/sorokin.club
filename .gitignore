@@ -6,7 +6,7 @@
 dist
 build
 eggs
-parts
+# parts
 sdist
 develop-eggs
 .installed.cfg

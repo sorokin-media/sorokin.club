@@ -2,25 +2,7 @@
 {% load text_filters %}
 {% load render_bundle from webpack_loader %}
 
-
-<script>
-    const curUrl = new URL(window.location);
-    const urlUtm = curUrl.searchParams.get('utm_source') || '';
-
-    if (get_cookie('utm_source') !== urlUtm && urlUtm.length > 0) {
-        document.cookie = `utm_source=${ urlUtm }`;
-    }
-
-    function get_cookie ( cookie_name ) {
-        var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
-
-        if ( results ) {
-            return ( unescape ( results[2] ) );
-        } else {
-            return null;
-        }
-    }
-</script>
+<script src="/static/js/parts/cookieStore.js" ></script>
 
 {% if me.moderation_status == 'approved' %}
     <script>
@@ -75,38 +57,40 @@
 
 <!-- Yandex.Metrika counter -->
 
-    <!-- First yandexM counter -->
-    <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+<!-- First yandexM counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(88682790, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    ym(88682790, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+    });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Second yandexM counter -->
-    <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+<!-- Second yandexM counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(89880963, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true,
-            ecommerce:"dataLayer"
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/89880963" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    ym(89880963, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true,
+        ecommerce:"dataLayer"
+    });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/89880963" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
  <!-- /Yandex.Metrika counter -->
 
  <!-- VK Pixel -->
+
+
 <!-- Add user to new auditory (vk pixel) + give two achivment (yandex) if user status approved -->
 {% if me.moderation_status == 'approved' %}
 
@@ -162,50 +146,5 @@
 {% endif %}
 
 
-<!--
-    Intro start form interval update
- -->
-<script>
-    const introStartForm = document.getElementById('intro-start-form');
-
-    if (introStartForm) {
-
-        const introFormUpdateDelay = 15 * 1000;
-        const startIntroDataUpdate = updateFormData(introStartForm, {
-            url: '/intro/',
-            method: 'PUT',
-            async: true,
-        });
-
-        setInterval(() => {
-            startIntroDataUpdate();
-        }, introFormUpdateDelay);
-
-    }
-
-    function updateFormData (form, { url = '/', method = 'PUT', async = true }) {
-        let oldData = undefined;
-
-        return wrapper;
-
-        function wrapper () {
-            const body = Object.values(form).reduce(
-                (obj, field) => {
-                    obj[field.name] = field.value;
-                    return obj;
-                }, {}
-            );
-
-            if (JSON.stringify(body) === JSON.stringify(oldData)) {
-                return;
-            }
-
-            // Put request
-            const putRequest = new XMLHttpRequest();
-            putRequest.open(method, url, async);
-            putRequest.send(JSON.stringify(body));
-
-            oldData = body;
-        }
-    }
-</script>
+<!-- Js Parts -->
+<script src="/static/js/parts/introIntervalUpdate.js"></script>

@@ -96,8 +96,8 @@ export default {
     }
 
     .modal-body {
-        margin-top: 5rem;
-        margin-bottom: 3rem;
+        margin-top: 4rem;
+        margin-bottom: 2.5rem;
     }
 
     .modal-close-button {
