@@ -21,10 +21,10 @@ if (curReferrer.length && !get_cookie('utm_source')) {
 
     curReferrer = new URL(curReferrer).hostname.split('.');
 
-    if (curReferrer.length == 2)  {
+    if (curReferrer.length > 1)  {
         curReferrer = curReferrer[curReferrer.length - 2];
     } else {
-        curReferrer = '';
+        curReferrer = curReferrer[0];
     }
 
     const isReferrerInList = referrerList.indexOf(curReferrer) !== -1 ? true : false;
