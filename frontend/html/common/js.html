@@ -71,22 +71,7 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/88682790" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-<!-- Second yandexM counter -->
-<script type="text/javascript" >
-    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-    ym(89880963, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true,
-        ecommerce:"dataLayer"
-    });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/89880963" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
- <!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika counter -->
 
  <!-- VK Pixel -->
 
@@ -94,36 +79,53 @@
 <!-- Add user to new auditory (vk pixel) + give two achivment (yandex) if user status approved -->
 {% if me.moderation_status == 'approved' %}
 
-  <script src="https://vk.com/js/api/openapi.js?162"></script>
+    <!-- Second yandexM counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-  <script defer>
-    document.addEventListener("DOMContentLoaded", function () {
-      ym(88682790,'reachGoal','payed_user');
-      ym(88682790,'reachGoal','payed_user_rt');
+        ym(89880963, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true,
+            ecommerce:"dataLayer"
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/89880963" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-      ym(89880963,'reachGoal','payed_user');
-      ym(89880963,'reachGoal','payed_user_rt');
-    });
-  </script>
 
-  <script type="text/javascript">
-    !function(){
-      var t = document.createElement("script");
-      t.type="text/javascript",
-      t.async=!0,
-      t.src='https://vk.com/js/api/openapi.js?169',
+    <script src="https://vk.com/js/api/openapi.js?162"></script>
 
-      t.onload=function(){
-        VK.Retargeting.Init("VK-RTRG-1467866-ux4p"),
-        VK.Retargeting.Hit()
-      },
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function () {
+        ym(88682790,'reachGoal','payed_user');
+        ym(88682790,'reachGoal','payed_user_rt');
 
-      document.head.appendChild(t)
-    }();
-  </script>
-  <noscript>
-      <img src="https://vk.com/rtrg?p=VK-RTRG-1467866-ux4p" style="position:fixed; left:-999px;" alt=""/>
-  </noscript>
+        ym(89880963,'reachGoal','payed_user');
+        ym(89880963,'reachGoal','payed_user_rt');
+        });
+    </script>
+
+    <script type="text/javascript">
+        !function(){
+        var t = document.createElement("script");
+        t.type="text/javascript",
+        t.async=!0,
+        t.src='https://vk.com/js/api/openapi.js?169',
+
+        t.onload=function(){
+            VK.Retargeting.Init("VK-RTRG-1467866-ux4p"),
+            VK.Retargeting.Hit()
+        },
+
+        document.head.appendChild(t)
+        }();
+    </script>
+    <noscript>
+        <img src="https://vk.com/rtrg?p=VK-RTRG-1467866-ux4p" style="position:fixed; left:-999px;" alt=""/>
+    </noscript>
 
 {% else %}
 
