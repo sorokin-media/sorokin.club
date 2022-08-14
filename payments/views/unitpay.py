@@ -153,7 +153,7 @@ def unitpay_webhook(request):
         if product.code == 'club1_invite':
             club_invite_activator(product, payment, payment.user)
         else:
-            club_subscription_activator(product, payment, payment.user)
+            club_subscription_activator(product, payment, payment.user, request)
 
         if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
             send_payed_email(payment.user)
