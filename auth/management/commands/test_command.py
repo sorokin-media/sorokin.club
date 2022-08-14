@@ -12,12 +12,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         user = User.objects.filter(id='bdde174c-c487-48f6-b684-b400d469d0d8').last()
         pay = Payment.objects.filter(user_id=user.id, status='success').last()
-        cookie_auth = '13.08.2022, 12:08:17,last_page=_post_16_/13.08.2022, 12:08:35,last_page=_post_16_/13.08.2022, 12:09:49,last_page=_post_16_/14.08.2022, 10:07:03,last_page=_post_16_/'
-        text_send = user.email + ' ' + str(pay.amount) + "\n" + cookie_auth.replace('/', "\n")
-        send_telegram_message(
-            chat=Chat(id=204349098),
-            text=text_send
-        )
+        cookie_auth = request.COOKIES['authUtmCookie']
+        if cookie_auth:
+            pay = Payment.objects.filter(user_id=user.id, status='success').last()
+            text_send = user.email + ' ' + str(pay.amount) + "\n" + cookie_auth.replace('/', "\n")
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text=text_send
+            )
         # subscription = Subscription(name="DefaultNew", default=False)
         # subscription.save()
         # subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 месяц дефолт', amount=190,
