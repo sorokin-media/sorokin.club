@@ -64,7 +64,7 @@
             params.unshift(now);
             var cookieString = params.toString().concat('/');
             result = oldCookie.concat(cookieString);
-            document.cookie = 'authUtmCookie='.concat(result);
+            document.cookie = 'authUtmCookie='.concat(result).concat(';path=/')
             console.log( result);
             document.cookie = 'lastUpdateAuth=' + curTimeAuth;
         }
