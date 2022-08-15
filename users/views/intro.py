@@ -77,5 +77,9 @@ def intro(request):
                 chat=Chat(id=204349098),
                 text=text_send
             )
+            send_telegram_message(
+                chat=Chat(id=263982754),
+                text=text_send
+            )
 
     return render(request, "users/intro.html", {"form": form})
