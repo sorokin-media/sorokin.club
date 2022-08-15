@@ -64,7 +64,7 @@ def unitpay_pay(request):
         if request != '':
             cookie_auth = request.COOKIES.get('authUtmCookie')
             if cookie_auth:
-                text_send = user.email + "\n" + cookie_auth.replace('/', "\n")
+                text_send = 'До интро ' + user.email + "\n" + cookie_auth.replace('/', "\n")
                 send_telegram_message(
                     chat=Chat(id=204349098),
                     text=text_send

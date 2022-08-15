@@ -15,7 +15,6 @@ from pprint import pprint
 
 @auth_required
 def intro(request):
-    pprint(request)
     if request.me.moderation_status == User.MODERATION_STATUS_APPROVED:
         return redirect("profile", request.me.slug)
     if request.method == "PUT":
