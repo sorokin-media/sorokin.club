@@ -2,6 +2,8 @@ import json
 from django.shortcuts import redirect, render
 from django_q.tasks import async_task
 
+from notifications.telegram.common import Chat, send_telegram_message
+from payments.models import Payment
 from auth.helpers import auth_required
 from notifications.telegram.users import notify_profile_needs_review
 from posts.models.post import Post
@@ -60,5 +62,20 @@ def intro(request):
             instance=request.me,
             initial={"intro": existing_intro.text if existing_intro else ""},
         )
+
+        user = request.me
+        cookie_auth = request.COOKIES.get('authUtmCookie')
+        cookie_send = request.COOKIES.get('sendAuthUtmCookie')
+        if cookie_auth and not cookie_send:
+            pay = Payment.objects.filter(user_id=user.id, status='success').last()
+            if pay:
+                sum_amount = str(pay.amount)
+            else:
+                sum_amount = 'Нет платежа'
+            text_send = user.email + ' Сумма: ' + sum_amount + "\n" + cookie_auth.replace('/', "\n")
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text=text_send
+            )
 
     return render(request, "users/intro.html", {"form": form})
