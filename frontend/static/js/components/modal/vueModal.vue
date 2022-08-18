@@ -9,31 +9,9 @@
           </button>
 
           <div class="modal__content">
-
-            <div class="modal__header">
-
-              <slot name="header">
-                default header
-              </slot>
-
-            </div>
-
-            <div class="modal__body">
-
-              <slot name="body">
-                default body
-              </slot>
-
-            </div>
-
-            <div class="modal__footer">
-
-              <slot name="footer">
-                default footer
-              </slot>
-
-            </div>
+            <slot></slot>
           </div>
+
         </div>
       </div>
     </div>

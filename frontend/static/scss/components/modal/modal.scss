@@ -46,11 +46,6 @@
     transition: all 0.3s ease;
   }
 
-  &__body {
-    margin-top: 3rem;
-    margin-bottom: 2.5rem;
-  }
-
   &__close-btn {
     position: relative;
 
@@ -102,21 +97,6 @@
     }
   }
 
-  &__header {
-    padding-bottom: 0;
-    border-bottom: 0;
-
-    h3 {
-      margin-top: 0;
-      color: #333;
-    }
-  }
-
-  &__footer {
-    padding-top: 0;
-    border-top: 0;
-  }
-
   &-enter {
     opacity: 0;
   }
@@ -150,11 +130,6 @@
       padding-top: 3rem;
 
       margin-right: 0;
-    }
-
-    &__body {
-      margin-top: 3rem;
-      margin-bottom: 2rem;
     }
   }
 }
