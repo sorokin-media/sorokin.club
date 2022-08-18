@@ -65,7 +65,6 @@ def network(request):
         "page_html": secret_page_html,
     })
 
-
 @require_GET
 def robots(request):
     lines = [
