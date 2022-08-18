@@ -137,7 +137,8 @@ export default {
 
     generateTelegramLink () {
       const url = new URL(window.location);
-      const startWord = getCookie('utm_source') ? getCookie('utm_source') : getCookie('search_referrer') + url.pathname.replace(/[\/\\]+/gm, '_');
+      const search_referrer = getCookie('search_referrer') || '';
+      let startWord = getCookie('utm_source') ? getCookie('utm_source') : search_referrer + url.pathname.replace(/[\/\\]+/gm, '_');
 
       this.telegramLink = `tg://resolve?domain=sorokinclub_public_bot&start=${ startWord }`;
     },
