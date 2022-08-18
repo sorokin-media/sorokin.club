@@ -1,3 +1,4 @@
+import "../scss/main.scss";
 import twemoji from "twemoji";
 import EasyMDE from "easymde";
 import Lightense from "lightense-images";
