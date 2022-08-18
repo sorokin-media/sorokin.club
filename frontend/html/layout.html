@@ -42,9 +42,13 @@
         {% block content %}
         {% endblock %}
 
-        {% if me.moderation_status != 'approved' and request.path != '/join/' and request.path != '/club/' and request.path != '/auth/login/' and request.path != '/intro/' %}
-            <get-post-modal/>
+        {% if request.path in telegram_modal_ignore_paths %}
+        {% else %}
+            {% if me.moderation_status != 'approved' %}
+                <get-post-modal/>
+            {% endif %}
         {% endif %}
+
 
     </main>
 {% endblock %}

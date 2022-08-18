@@ -20,3 +20,28 @@ def data_processor(request):
 
 def features_processor(request):
     return {"features": features}
+
+def telegram_add_processor(request):
+    ignore_paths = [
+        '/intro/',
+        '/join/',
+        '/club/',
+
+        '/auth/login/',
+        '/auth/logout/',
+        '/auth/patreon/',
+        '/auth/patreon_callback/',
+        '/auth/email/',
+        '/auth/email/code/',
+        '/auth/external/',
+
+        '/monies/',
+        '/monies/crypto/',
+        '/monies/done/',
+        '/monies/membership_expired/',
+        '/monies/stripe/webhook/',
+        '/monies/coinbase/webhook/',
+        '/monies/unitpay/pay/',
+        '/monies/unitpay/webhook/',
+    ]
+    return {"telegram_modal_ignore_paths": ignore_paths}
