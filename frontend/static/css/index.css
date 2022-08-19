@@ -29,4 +29,7 @@
 @import "./components/badges.css";
 @import "./components/slider.css";
 @import "./components/reviews.css";
-@import "./components/modal.css";
+
+/* Modals */
+@import "./components/modal/modal.css";
+@import "./components/modal/post-modal.css";
