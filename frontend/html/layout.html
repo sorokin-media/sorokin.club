@@ -42,7 +42,7 @@
         {% block content %}
         {% endblock %}
 
-        {% if me.moderation_status != 'approved' and request.path != '/join/' and request.path != '/club/' and request.path != '/auth/login/' and request.path != '/intro/' %}
+        {% if me.moderation_status != 'approved' and request.path != '/join/' and request.path != '/auth/login/' and request.path != '/intro/' %}
             <get-post-modal/>
         {% endif %}
 
