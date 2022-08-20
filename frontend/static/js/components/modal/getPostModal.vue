@@ -88,7 +88,7 @@
 import Vue from 'vue'
 import VueYandexMetrika from 'vue-yandex-metrika'
 import vueModal from "./vueModal.vue";
-import { getCookie } from "../../common/utils"
+import { getCookie, isMobile } from "../../common/utils"
 
 Vue.use(VueYandexMetrika, {
     id: 88682790,
@@ -114,7 +114,7 @@ export default {
 
   data () {
     return {
-        delayOpen: 30,
+        delayOpen: 1,
         isActive: false,
         telegramLink: 'tg://resolve?domain=sorokinclub_public_bot&start=STARTWORD',
     }
@@ -124,10 +124,15 @@ export default {
 
     this.generateTelegramLink();
 
-    setTimeout(() => {
-        this.isActive = true;
+    if (this.isModal) {
+         setTimeout(() => {
+            this.isActive = true;
+            this.$metrika.reachGoal('popup_view');
+        }, this.delayOpen * 1000)
+    } else {
         this.$metrika.reachGoal('popup_view');
-    }, this.delayOpen * 1000)
+    }
+
   },
 
   methods: {
