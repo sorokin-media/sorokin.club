@@ -114,7 +114,7 @@ export default {
 
   data () {
     return {
-        delayOpen: 1,
+        delayOpen: 30,
         isActive: false,
         telegramLink: 'tg://resolve?domain=sorokinclub_public_bot&start=STARTWORD',
     }
