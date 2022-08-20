@@ -2,7 +2,6 @@
     font-size: 140%;
     line-height: 1.5em;
 }
-
     .landing-block {
         display: flex;
         flex-wrap: wrap;
@@ -167,6 +166,10 @@
 
         .landing {
             padding-top: 80px;
+        }
+
+        .landing--club {
+            padding-top: 0;
         }
     }
 
