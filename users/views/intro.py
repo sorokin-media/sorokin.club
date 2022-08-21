@@ -10,6 +10,7 @@ from posts.models.post import Post
 from users.forms.intro import UserIntroForm
 from users.models.geo import Geo
 from users.models.user import User
+from posts.models.subscriptions import PostSubscription
 from pprint import pprint
 
 
@@ -48,6 +49,8 @@ def intro(request):
             intro_post = Post.upsert_user_intro(
                 user, form.cleaned_data["intro"], is_visible=False
             )
+
+            PostSubscription.subscribe(request.me, intro_post, type=PostSubscription.TYPE_ALL_COMMENTS)
 
             Geo.update_for_user(user)
 
