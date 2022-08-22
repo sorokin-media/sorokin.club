@@ -13,7 +13,7 @@ from payments.products import club_invite_activator
 from payments.unitpay import UnitpayService
 from users.models.user import User
 from users.models.subscription_plan import SubscriptionPlan
-from notifications.telegram.common import Chat, send_telegram_message
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 
 log = logging.getLogger(__name__)
 
@@ -66,6 +66,10 @@ def unitpay_pay(request):
                 text_send = 'До интро ' + user.email + "\n" + cookie_auth.replace('/', "\n")
                 send_telegram_message(
                     chat=Chat(id=204349098),
+                    text=text_send
+                )
+                send_telegram_message(
+                    chat=ADMIN_CHAT,
                     text=text_send
                 )
     elif is_invite:  # scenario 2: invite a friend

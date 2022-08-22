@@ -2,7 +2,7 @@ import json
 from django.shortcuts import redirect, render
 from django_q.tasks import async_task
 
-from notifications.telegram.common import Chat, send_telegram_message
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 from payments.models import Payment
 from auth.helpers import auth_required
 from notifications.telegram.users import notify_profile_needs_review
@@ -10,6 +10,7 @@ from posts.models.post import Post
 from users.forms.intro import UserIntroForm
 from users.models.geo import Geo
 from users.models.user import User
+from posts.models.subscriptions import PostSubscription
 from pprint import pprint
 
 
@@ -49,6 +50,8 @@ def intro(request):
                 user, form.cleaned_data["intro"], is_visible=False
             )
 
+            PostSubscription.subscribe(request.me, intro_post, type=PostSubscription.TYPE_ALL_COMMENTS)
+
             Geo.update_for_user(user)
 
             # notify moderators to review profile
@@ -73,11 +76,11 @@ def intro(request):
                 sum_amount = 'Нет платежа'
             text_send = user.email + ' Сумма: ' + sum_amount + "\n" + cookie_auth.replace('/', "\n")
             send_telegram_message(
-                chat=Chat(id=204349098),
+                chat=ADMIN_CHAT,
                 text=text_send
             )
             send_telegram_message(
-                chat=Chat(id=263982754),
+                chat=Chat(id=204349098),
                 text=text_send
             )
 
