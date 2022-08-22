@@ -250,49 +250,88 @@
 }
 
 @media (max-width: 768px) {
+    .post-modal-section:first-child {
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+
+    .post-modal__container {
+        padding: 2rem 1rem;
+        padding-top: 2rem;
+    }
+
+    .post-modal__header {
+        margin-bottom: 1.5rem;
+    }
+
     .post-modal__title {
-        font-size: 2rem;
+        font-size: 1.5rem;
         line-height: 1.2;
     }
     .post-modal__title span {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     .post-modal__title b {
-        padding: 0.6rem 1.5rem;
+        padding: 0.4em 1.2em;
         font-size: 0.9em;
     }
     .post-modal__body {
-        margin-top: 3rem;
-        margin-bottom: 2rem;
-    }
-    .post-modal__content {
-        margin-bottom: 2.5rem;
-    }
-    .post-modal__content-text {
-        font-size: 1.4rem;
-    }
-    .post-modal__content-text > * {
+        margin: 0;
         margin-bottom: 1rem;
     }
+
+    .post-modal__content {
+        margin-top: 0;
+        margin-bottom: 2rem;
+    }
+
+    .post-modal__content-text {
+        font-size: 1.2rem;
+        margin: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .post-modal__content-text > * {
+        margin-bottom: 0.6rem;
+    }
+
     .post-modal__content-text .bold {
-        font-size: 1.8rem;
+        font-size: 1.2em;
     }
+
     .post-modal__content-logo {
-        max-width: 125px;
+        max-width: 95px;
+        margin: 0;
     }
+
     .post-modal__btn {
-        padding: 0.9rem 1.2rem;
+        padding: 0.6em 2em;
+
+        font-size: 1.05rem;
     }
+
+    .post-modal__btn span {
+        margin-right: 1em;
+    }
+
+    .post-modal__btn .icon {
+        width: 28px;
+    }
+
     .post-modal__action-row .post-modal__btn {
-        width: 100%;
+        width: unset;
         -webkit-box-pack: center;
         -ms-flex-pack: center;
         justify-content: center;
     }
+
+    .post-modal__under-text {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
-    .post-modal__btn {
-        font-size: 1.2rem;
+    .post-modal__action-row .post-modal__btn {
+        width: 100%;
     }
 }
