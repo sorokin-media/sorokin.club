@@ -82,7 +82,8 @@
                 }
             }
 
-        .landing-block h2 {
+        .landing-block h2,
+        .landing-block .h2 {
             font-size: 220%;
             line-height: 1.2em;
             display: block;
@@ -157,6 +158,17 @@
 
     .landing-title .button-container {
         font-size: 75%;
+    }
+
+    .landing-title__title,
+    .landing-title p.landing-title__title {
+        margin: 0.67em 0;
+
+        font-size: 2em;
+        font-weight: bold;
+        color: #fff;
+
+        opacity: 1;
     }
 
     @media only screen and (max-width : 768px) {
@@ -413,6 +425,7 @@
 
 @media (max-width: 768px) {
     .landing-block h2,
+    .landing-block .h2,
     .feature-title {
         margin-top: 0;
     }
@@ -470,7 +483,8 @@
         margin-top: 0;
     }
 
-    .landing-block h2 {
+    .landing-block h2,
+    .landing-block .h2 {
         font-size: 180%;
     }
 
