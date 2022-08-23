@@ -31,5 +31,5 @@
 @import "./components/reviews.css";
 
 /* Modals */
-@import "./components/modal/modal.css";
-@import "./components/modal/post-modal.css";
+@import "./components/modal.css";
+@import "./components/post-modal.css";

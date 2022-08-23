@@ -1,11 +1,11 @@
-.modal__mask,
-.modal__mask *,
-.modal__mask *::before,
-.modal__mask *::after {
+.modal,
+.modal *,
+.modal *::before,
+.modal *::after {
     box-sizing: border-box;
 }
 
-.modal__mask {
+.modal {
     position: fixed;
     z-index: 9998;
     top: 0;

@@ -1,3 +1,13 @@
 {
-  "editor.tabSize": 4
+  "editor.tabSize": 4,
+  "liveSassCompile.settings.formats":[
+        // This is Default.
+        {
+            "format": "expanded",
+            "extensionName": ".css",
+            "savePath": "/frontend/static/css/components"
+        },
+    ],
+
+    "liveSassCompile.settings.generateMap" : false,
 }
