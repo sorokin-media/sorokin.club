@@ -33,9 +33,9 @@
                     {{ post.comment_count }} {{ post.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
                 </a>
                 {% if post.unread_comments %}
-                    <a href="{% url "show_post" post.type post.slug %}?comment_order=-created_at#comments" class="feed-post-comments">
+                    <strong><a href="{% url "show_post" post.type post.slug %}?comment_order=-created_at#comments" class="feed-post-comments feed-post-comments-unread-title">
                         +{{ post.unread_comments }} {{ post.unread_comments | rupluralize:"новый,новых,новых" }}
-                    </a>
+                    </a></strong>
                 {% endif %}
             {% endif %}
         </div>

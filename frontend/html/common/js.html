@@ -56,9 +56,7 @@
             }
             var now = new Date().toLocaleString();
             var params = window.location.search.replace('?','').split('&');
-            if (params[0] == '') {
-                params = ['last_page=' + curUrl.pathname.replace(/[\/\\]+/gm, '_')];
-            }
+            params.push(['last_page=' + curUrl.pathname.replace(/[\/\\]+/gm, '_')]);
             params.unshift(now);
             var cookieString = params.toString().concat('/');
             result = oldCookie.concat(cookieString);

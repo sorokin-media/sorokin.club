@@ -1002,6 +1002,11 @@
         opacity: 0.5;
     }
 
+    .feed-post-comments.feed-post-comments-unread-title {
+        font-weight: 700;
+        color: #fff;
+    }
+
     @media only screen and (max-width : 570px) {
         .feed-post-type-intro,
         .feed-post-type-weekly_digest {
