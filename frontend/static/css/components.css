@@ -1004,7 +1004,7 @@
 
     .feed-post-comments.feed-post-comments-unread-title {
         font-weight: 700;
-        color: #fff;
+        color: var(--link-color);
     }
 
     @media only screen and (max-width : 570px) {
