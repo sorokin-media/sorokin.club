@@ -30,6 +30,7 @@ Vue.component("default-slider", () => import("./components/sliders/defaultSlider
 Vue.component("post-slider", () => import("./components/sliders/postSlider.vue"));
 Vue.component("reviews", () => import("./components/reviews/reviews.vue"));
 Vue.component("getPostModal", () => import("./components/modal/getPostModal.vue"));
+Vue.component("tg-button", () => import("./components/tg-bot/tg-button.vue"));
 
 // Since our pages have user-generated content, any fool can insert "{{" on the page and break it.
 // We have no other choice but to completely turn off template matching and leave it on only for components.

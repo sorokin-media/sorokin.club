@@ -1,0 +1,348 @@
+.tg-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0.5em 1.8em;
+
+    font-family: "DelagoticOne", "Ubuntu", "Arial", sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #282C35;
+    text-decoration: none;
+
+    background-color: #fff;
+    border-radius: 0.9em;
+
+    transition: all .3s;
+
+    box-sizing: border-box;
+
+    *,
+    *::after,
+    *::before {
+        box-sizing: border-box;
+    }
+
+    span {
+        margin-right: 0.6em;
+    }
+
+    .icon {
+        width: 100%;
+        max-width: 60px;
+
+        flex-shrink: 0;
+        height: unset;
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    &:hover,
+    &:focus {
+        opacity: 0.7;
+        color: #282C35;
+    }
+}
+
+.tg-bot-head {
+    position: relative;
+
+    padding: 2rem 0;
+
+    text-transform: uppercase;
+    font-weight: 500;
+
+    background-image: url('/static/images/tg-bot/bg-desc.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right bottom;
+
+    box-sizing: border-box;
+
+    *,
+    *::after,
+    *::before {
+        box-sizing: border-box;
+    }
+
+    &::after {
+        content: '';
+
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        opacity: 0.42;
+
+        width: 100%;
+        height: 10px;
+
+        background: linear-gradient( 0deg, rgb(0,33,68) 0%, rgb(255,255,255) 100%);
+    }
+		// .tg-bot-head__content
+
+		&__content {
+            position: relative;
+
+            width: 100%;
+            max-width: 800px;
+
+            margin-right: auto;
+            margin-left: 0;
+            padding-top: 2rem;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            text-align: center;
+		}
+
+		// .tg-bot-head__logo
+
+		&__logo {
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            display: block;
+
+            width: 100%;
+            max-width: 11.25%;
+            height: 100px;
+
+            img {
+                width: 100%;
+                height: 100%;
+
+                display: block;
+
+                object-fit: contain;
+
+                filter: unset;
+            }
+		}
+
+		// .tg-bot-head__action
+
+		&__action {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            padding: 0 17.5%;
+
+            text-align: center;
+
+            margin-bottom: 4rem;
+
+            .tg-btn {
+                width: 100%;
+                margin-bottom: 0.7rem;
+            }
+
+            p {
+                margin: 0;
+                margin-bottom: 0.5em;
+
+                font-size: 1.125rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+		}
+
+		// .tg-bot-head__title
+
+		&__title {
+            margin: 0;
+
+            font-family: "DelagoticOne", "Ubuntu", "Arial", sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.38;
+            letter-spacing: 0.03em;
+
+            color: #fff;
+
+            text-shadow: 0 5px 10px rgba(0, 0, 0, .3);
+		}
+
+        p {
+            color: #fff;
+            opacity: 1;
+        }
+
+        .landing-block {
+            padding: 0 20px;
+        }
+}
+.tg-bot-body {
+    padding-top: 25px;
+
+    color: #fff;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__action {
+        display: none;
+
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        margin-bottom: 1.4rem;
+
+        .tg-btn {
+            margin-bottom: 1.2rem;
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+
+    &__title {
+        margin: 0 auto;
+
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        font-weight: 400;
+        font-family: "Ubuntu", sans-serif;
+
+        margin-bottom: 1rem;
+
+        b {
+            letter-spacing: 0.05em;
+            font-size: 1.8rem;
+            font-weight: bold;
+            font-family: "DelagoticOne", "Ubuntu", "Arial", sans-serif;
+        }
+    }
+
+    .landing-block-title {
+        margin-bottom: 1.5rem;
+
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-align: center;
+        font-family: "DelagoticOne", "Ubuntu", "Arial", sans-serif;
+    }
+
+    .feature-list {
+        margin: 0 2.5%;
+        padding-top: 0;
+
+        font-size: 1.125rem;
+        text-transform: uppercase;
+    }
+
+    .button {
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-family: "DelagoticOne", "Ubuntu", "Arial", sans-serif;
+    }
+}
+
+@media (max-width: 992px) {
+  .tg-bot-head {
+    position: relative;
+
+    &::before {
+        content: '';
+
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: 100%;
+        height: 100%;
+
+        opacity: 0.5;
+
+        background-color: #282C35;
+
+        z-index: 2;
+    }
+
+    &__action {
+        display: none;
+    }
+
+    &__content {
+        position: relative;
+
+        max-width: 100%;
+        min-height: 400px;
+
+        padding-top: 120px;
+
+        justify-content: flex-end;
+
+        z-index: 3;
+    }
+
+    &__title {
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+    }
+
+    &__logo {
+        max-width: 90px;
+    }
+  }
+
+  .tg-bot-body {
+    &__action {
+        display: flex;
+
+        margin-bottom: 1.3rem;
+    }
+
+    &__title {
+        font-size: 1rem;
+        line-height: 1.4;
+
+        margin-bottom: 1.4rem;
+
+        b {
+            font-size: 1.2rem;
+        }
+    }
+
+    .tg-btn {
+        font-size: 0.9rem;
+
+        .icon {
+            max-width: 40px;
+        }
+    }
+
+    .landing-block-title {
+        font-size: 1.2rem;
+    }
+
+    .feature-list {
+        font-size: 0.9rem;
+    }
+
+    .button {
+        font-size: 1rem;
+    }
+  }
+}

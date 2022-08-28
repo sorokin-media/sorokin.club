@@ -21,45 +21,67 @@
 <body>
 
     {% block body %}
-    <main class="landing landing--club" id="app">
+    <main class="landing landing--club tg-bot" id="app">
 
-        <get-post-modal :is-modal="false"></get-post-modal>
+        <div class="landing-block-container tg-bot-head">
+            <div class="landing-block landing-block-large-limited">
+                <div class="tg-bot-head__content">
+                    <div class="tg-bot-head__logo">
+                        <img src="{% static "images/logo-white-2.png" %}" alt="">
+                    </div>
 
-        <div class="landing-block landing-block-narrow" id="why">
-            <div>
-                <h2>Зачем нужен бизнес-клуб? TG BIOT</h2>
+                    <div class="tg-bot-head__action">
+                        <tg-button></tg-button>
+                        <p>
+                            Делимся самым интересным
+                        </p>
+                    </div>
 
-                <p>
-                    Клуб — это наше закрытое сообщество предпринимателей, в котором мы делимся опытом вдали от большого интернета.
-                </p>
-
-                <p>
-                    Мы не считаем себя элитарными, у нас нет великой цели и прочей идейной хрени.
-                    Мы лишь собрались здесь чтобы наконец-то поговорить честно, открыто и без посторонних.
-                </p>
+                    <h1 class="tg-bot-head__title">
+                        БЕСПЛАТНЫЙ ДОСТУП <br>
+                        К КОНТЕНТУ ИЗ закрытой <br>
+                        ЧАСТИ КЛУБА ПРЕДПРИНИМАТЕЛЕЙ
+                    </h1>
+                </div>
             </div>
         </div>
 
-        <div class="landing-block landing-block-narrow" id="join">
+        <div class="landing-block landing-block-large-limited tg-bot-body" >
             <div>
-                <h2 class="landing-block-title">Как вступить?</h2>
+                <div class="tg-bot-body__title">
+                    <b> Лучшая статья </b> из закрытой части клуба предпринимателей <b> раз в неделю</b> полная версия бесплатно и без регистрации!
+                </div>
+
+                <div class="tg-bot-body__action">
+                    <tg-button></tg-button>
+                    <p>
+                        Делимся самым интересным
+                    </p>
+                </div>
+
+                <h2 class="landing-block-title">ЧЕМ МЫ ЛУЧШЕ ДРУГИХ?</h2>
 
                 <!-- <img src="{% static "images/landing/dolor.png" %}" alt="$1" class="landing-dolor"> -->
 
-                <p>
-                    Членство в Клубе платное. Это позволяет нам оставаться независимыми от мнения инвесторов и рекламодателей.
-                </p>
+                <ul class="feature-list">
+                    <li>
+                        Закрытое сообщество предпринимателей — делимся опытом из разных ниш вдали от большого интернета.
+                    </li>
 
-                <p>
-                    Плюс, мы не пускаем анонимов. Вам придется заполнить профиль и рассказать о себе (также нужно будет использовать своё настоящее имя и фамилию и загрузить фотографию в качестве аватарки).
-                </p>
+                    <li>
+                        Регулярные клубные онлайн-сессии про инвестиции  в условиях неопределенности, бизнес, SEO и многое другое, мастермайнды и наставничество, ama-сессии.
+                    </li>
+
+                    <li>
+                        Встречи в разных городах — уже были в Самаре, Санкт-Петербурге, Москве, в начале сентября встреча в Нижнем Новгороде.
+                    </li>
+                </ul>
 
                 <br>
 
                 <div class="button-container">
                     <div class="button-container__inner">
-                        <a href="{% url "login" %}" class="button button-black">Войти</a>
-                        <a href="{% url "join" %}" class="button button-black">Вступить в Клуб</a>
+                        <a href="/" class="button button-black">Подробнее на сайте</a>
                     </div>
                 </div>
             </div>
@@ -69,7 +91,7 @@
     </main>
     {% endblock %}
 
-    {% block footer %}
+    <!-- {% block footer %}
 
     <footer class="footer">
         <div class="footer-left" style="text-align: left; font-size: 130%;">
@@ -90,7 +112,7 @@
 
         </div>
     </footer>
-    {% endblock %}
+    {% endblock %} -->
 
     {% include "common/js.html" %}
     {% block js %}{% endblock %}
