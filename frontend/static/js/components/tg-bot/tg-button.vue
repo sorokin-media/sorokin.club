@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueYandexMetrika from 'vue-yandex-metrika'
-import { getCookie } from "../../common/utils"
+import Vue from 'vue';
+import VueYandexMetrika from 'vue-yandex-metrika';
+import { getCookie } from "../../common/utils";
 
 Vue.use(VueYandexMetrika, {
     id: 88682790,
@@ -20,7 +20,7 @@ Vue.use(VueYandexMetrika, {
         trackLinks:true,
         accurateTrackBounce:true
     }
-})
+});
 
 export default {
   name: 'tg-button',
