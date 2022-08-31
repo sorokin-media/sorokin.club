@@ -12,15 +12,18 @@ class Command(BaseCommand):
     help = "Fetches expiring accounts and tries to renew the subscription"
 
     def handle(self, *args, **options):
-        users_query = User.objects.filter(is_email_verified=True)
-        for user in users_query:
-            post_intro = Post.objects.filter(type='intro', author_id=user.id).last()
-            if post_intro:
-                subscribe_intro = PostSubscription.objects.filter(post_id=post_intro.id, user_id=user.id)
-                if subscribe_intro:
-                    print('Есть')
-                else:
-                    PostSubscription.subscribe(user, post_intro, type=PostSubscription.TYPE_ALL_COMMENTS)
+        payment_last = Payment.objects.filter(user_id='fadac4b3-152c-4181-8e5f-2269a2df9d95', status='success',
+                                              data__contains='subscriptionId').order_by('created_at').last()
+        print(payment_last)
+        # users_query = User.objects.filter(is_email_verified=True)
+        # for user in users_query:
+        #     post_intro = Post.objects.filter(type='intro', author_id=user.id).last()
+        #     if post_intro:
+        #         subscribe_intro = PostSubscription.objects.filter(post_id=post_intro.id, user_id=user.id)
+        #         if subscribe_intro:
+        #             print('Есть')
+        #         else:
+        #             PostSubscription.subscribe(user, post_intro, type=PostSubscription.TYPE_ALL_COMMENTS)
 
 
 #         user = User.objects.filter(id='bdde174c-c487-48f6-b684-b400d469d0d8').last()

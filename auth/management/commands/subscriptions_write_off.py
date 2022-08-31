@@ -106,7 +106,7 @@ class Command(BaseCommand):
                                               data__contains='subscriptionId').order_by('created_at').last()
         if payment_last:
             # product = PRODUCTS.get(payment_last.product_code)
-            product = SubscriptionPlan.objects.filter(code=payment_last.product_code)
+            product = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
             cash = [{
