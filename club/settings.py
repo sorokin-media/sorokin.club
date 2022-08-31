@@ -175,6 +175,9 @@ APP_NAME = "Сорокин.Клуб"
 APP_DESCRIPTION = "Всё интересное происходит за закрытыми дверями"
 LAUNCH_DATE = datetime(2022, 5, 2)
 
+LANDING_DESCRIPTION = "Бизнес-клуб предпринимателей"
+LANDING_KEYWORDS = "Бизнес-клуб предпринимателей"
+
 AUTH_CODE_LENGTH = 6
 AUTH_CODE_EXPIRATION_TIMEDELTA = timedelta(minutes=10)
 AUTH_MAX_CODE_TIMEDELTA = timedelta(hours=3)
