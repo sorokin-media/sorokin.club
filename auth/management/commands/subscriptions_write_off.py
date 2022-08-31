@@ -107,6 +107,7 @@ class Command(BaseCommand):
         if payment_last:
             # product = PRODUCTS.get(payment_last.product_code)
             product = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
+            print(product)
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
             cash = [{
@@ -138,7 +139,9 @@ class Command(BaseCommand):
                 data={},
             )
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
+            print(requestUrl)
             response = urlopen(requestUrl)
+            print(response)
             if response.status_code == 200:
                 print("Success")
             else:
