@@ -50,18 +50,10 @@ def club(request):
     })
 
 def tg_bot(request):
-    stats = cache.get("landing_stats")
-    if not stats:
-        stats = {
-            "users": User.registered_members().count(),
-            "countries": User.registered_members().values("country")
-            .annotate(total=Count("country")).order_by().count() + 1,
-        }
-        cache.set("landing_stats", stats, settings.LANDING_CACHE_TIMEOUT)
+    return render(request, "pages/tg-bot.html")
 
-    return render(request, "pages/tg-bot.html", {
-        "stats": stats
-    })
+def tg_bot_second(request):
+    return render(request, "pages/tg-bot-second.html")
 
 def docs(request, doc_slug):
     if doc_slug not in EXISTING_DOCS:

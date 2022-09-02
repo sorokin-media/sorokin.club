@@ -1,0 +1,346 @@
+@charset "utf-8";
+
+
+@font-face {
+    font-family: 'Dela Gothic One';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../webfonts/dela/dela-gothic-one-v10-latin_cyrillic-regular.eot');
+    src: url('../../webfonts/dela/dela-gothic-one-v10-latin_cyrillic-regular.woff2') format('woff2'), url('../../webfonts/dela/dela-gothic-one-v10-latin_cyrillic-regular.woff') format('woff');
+  }
+  @font-face {
+    font-family: 'Roboto Flex';
+    font-style: normal;
+    font-display: swap;
+    src: url('../../webfonts/roboto/RobotoFlex-VariableFont.ttf') format('truetype-variations');
+  }
+
+
+body {
+  -webkit-text-size-adjust: 100%;
+  background-color: #282c35;
+  color: #fff;
+  font-family: 'Roboto Flex', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0;
+  min-height: 100vh;
+}
+.container {
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  max-width: 1236px;
+  width: 100%;
+}
+a {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+img {
+  outline: none;
+  border: none;
+}
+a,
+a:hover,
+a:focus,
+input,
+input:hover,
+input:focus,
+input:active,
+select,
+select:hover,
+select:focus,
+select:active,
+textarea,
+textarea:hover,
+textarea:focus,
+textarea:active,
+button,
+button:hover,
+button:focus,
+button:active,
+label,
+label:hover,
+label:focus,
+label:active {
+  outline: none;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner,
+select::-moz-focus-inner {
+  border: none;
+}
+textarea,
+input,
+select,
+button {
+  border-radius: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+.showcase {
+  background-image: url('../../images/tg-bot-second/showcase-bg.png');
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.showcase__top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+}
+.showcase__logo {
+  margin-right: 60px;
+}
+.showcase__logo img {
+  max-width: 100%;
+}
+.btn-tg {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  -ms-grid-row-align: center;
+  align-items: center;
+  background-color: #fff;
+  background-image: url('../../images/tg-bot-second/btn-bg.png');
+  background-position: right center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  color: #282c35;
+  font-size: 30px;
+  font-weight: 600;
+  padding: 12px 48px;
+  text-transform: uppercase;
+}
+.btn-tg svg {
+  fill: currentColor;
+  margin-left: 20px;
+}
+.btn-tg:hover {
+  opacity: 0.9;
+}
+.telegram__button {
+  position: relative;
+  text-align: center;
+}
+.telegram__button-sub {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: -36px;
+  left: 0;
+  right: 0;
+}
+.showcase__bottom {
+  max-width: 840px;
+  margin-top: 92px;
+  text-align: center;
+}
+.showcase__bottom h1 {
+  display: inline;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.35;
+  margin-top: 0;
+  margin-bottom: 0;
+  word-spacing: 0.25em;
+  position: relative;
+  box-decoration-break: clone;
+  background-color: rgba(6, 15, 46, 0.75);
+  box-shadow: 5px 0px 30px 20px rgba(6, 15, 46, 0.6), -5px 0px 30px 20px rgba(6, 15, 46, 0.6);
+}
+.showcase__bottom h1 span {
+  position: relative;
+  z-index: 20;
+}
+.content {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+.content h2 {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.content .telegram__button {
+  display: none;
+  margin-bottom: 25px;
+}
+.content__text {
+  margin-bottom: 25px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.content__text-shadow {
+  font-size: 23px;
+  line-height: 1.25;
+  display: inline;
+  box-decoration-break: clone;
+  background-color: #181d26;
+  box-shadow: 5px 0px 50px 30px #181d26, -5px 0px 50px 30px #181d26;
+}
+.content__text-shadow .accent {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 29px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.content__text-inner {
+  position: relative;
+  z-index: 10;
+}
+.content__list {
+  line-height: 1.4;
+  list-style-type: square;
+  margin: 0 auto;
+  max-width: 1140px;
+  padding-left: 15px;
+}
+.content__list li:not(:last-child) {
+  margin-bottom: 25px;
+}
+.content__button {
+  margin-top: 25px;
+  text-align: center;
+}
+.btn {
+  background-color: #fff;
+  background-image: url('../../images/tg-bot-second/btn-bg.png');
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: 28px;
+  border-radius: 10px;
+  display: inline-block;
+  color: #282c35;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 6px 24px;
+  text-transform: uppercase;
+}
+.btn:hover {
+  opacity: 0.9;
+}
+@media all and (max-width: 1023px) {
+  .showcase__bottom {
+    max-width: none;
+    text-align: center;
+  }
+}
+@media all and (max-width: 900px) {
+  .showcase {
+    background-position: 72% bottom;
+  }
+  .showcase__bottom h1 {
+    font-size: 28px;
+  }
+  .showcase .telegram__button {
+    display: none;
+  }
+  .content .telegram__button {
+    display: block;
+  }
+  .telegram__button {
+    padding-bottom: 36px;
+  }
+  .telegram__button-sub {
+    bottom: 0;
+  }
+}
+@media all and (max-width: 700px) {
+  .showcase__bottom h1 {
+    font-size: 22px;
+  }
+  .content h2 {
+    font-size: 24px;
+  }
+  .btn-tg {
+    font-size: 24px;
+    padding: 6px 36px;
+  }
+  .btn-tg svg {
+    width: 48px;
+    height: 48px;
+  }
+  .content__text-shadow {
+    font-size: 18px;
+    line-height: 1.67;
+  }
+  .content__text-shadow .accent {
+    font-size: 24px;
+  }
+}
+@media all and (max-width: 460px) {
+  body {
+    font-size: 14px;
+  }
+  .showcase {
+    background-position: 65% bottom;
+    padding-top: 20px;
+  }
+  .showcase__logo {
+    width: 60px;
+  }
+  .showcase__bottom {
+    margin-top: 60px;
+  }
+  .showcase__bottom h1 {
+    font-size: 13px;
+  }
+  .content {
+    padding-top: 15px;
+  }
+  .content h2 {
+    font-size: 13px;
+  }
+  .content__list li:not(:last-child) {
+    margin-bottom: 15px;
+  }
+  .btn-tg {
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 8px 20px;
+  }
+  .btn-tg svg {
+    width: 28px;
+    height: 28px;
+    margin-left: 8px;
+  }
+  .content__text-shadow {
+    font-size: 12px;
+  }
+  .content__text-shadow .accent {
+    font-size: 13px;
+  }
+  .telegram__button {
+    padding-bottom: 24px;
+  }
+  .telegram__button-sub {
+    font-size: 13px;
+  }
+  .btn {
+    font-size: 16px;
+  }
+}
+/*# sourceMappingURL=styles.css.map */
