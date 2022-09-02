@@ -65,7 +65,7 @@ urlpatterns = [
 
     path("club/", club, name="club"),
     path("tg_bot/", tg_bot, name="tg_bot"),
-    path("tg-bot/", tg_bot_second, name="tg-bot"),
+    path("tg-club/", tg_bot_second, name="tg-club"),
 
     path("join/", join, name="join"),
     path("auth/login/", login, name="login"),
