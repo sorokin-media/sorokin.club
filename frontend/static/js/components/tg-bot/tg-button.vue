@@ -46,7 +46,7 @@ export default {
     },
 
     telegramClick () {
-        this.$metrika.reachGoal('popup_tg_click');
+        this.$metrika.reachGoal('tg_miniland');
     }
   }
 }
