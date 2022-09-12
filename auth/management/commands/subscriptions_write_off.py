@@ -14,10 +14,9 @@ from notifications.telegram.users import couldnd_withdraw_money
 from notifications.telegram.users import cancel_subscribe_user
 from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
-from payments.products import PRODUCTS
-from pprint import pprint
 from urllib.request import urlopen
 from urllib.parse import quote
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 
 
 class Command(BaseCommand):
@@ -140,6 +139,15 @@ class Command(BaseCommand):
             response = urlopen(requestUrl)
             if response.status == 200:
                 print("Success")
+                text_send = 'Автосписание ' + user.email + " " + str(payment_last.amount)
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text=text_send
+                )
+                send_telegram_message(
+                    chat=ADMIN_CHAT,
+                    text=text_send
+                )
             else:
                 couldnd_withdraw_money_email(user)
                 couldnd_withdraw_money(user)
