@@ -25,52 +25,52 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=8),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=9),
-        #                                      unitpay_id__gt=0)
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
-        #     payment_json = json.loads(payment_last.data)
-        #     send_subscribe_8_email(user, payment_last.amount, payment_json['params[purse]'])
-        #     subscribe_8_user(user, payment_last.amount, payment_json['params[purse]'])
-        # self.stdout.write("Done 🥙")
-        #
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=4),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=5),
-        #                                      unitpay_id__gt=0,
-        #                                      moderation_status='approved')
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     self.sendPayUnitpay(user)
-        # self.stdout.write("Done 🥙")
-        #
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=3),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=4),
-        #                                      unitpay_id__gt=0,
-        #                                      moderation_status='approved')
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     self.sendPayUnitpay(user)
-        # self.stdout.write("Done 🥙")
-        #
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=3),
-        #                                      unitpay_id__gt=0,
-        #                                      moderation_status='approved')
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     self.sendPayUnitpay(user)
-        # self.stdout.write("Done 🥙")
-        #
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=1),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=2),
-        #                                      unitpay_id__gt=0,
-        #                                      moderation_status='approved')
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     self.sendPayUnitpay(user)
-        # self.stdout.write("Done 🥙")
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=8),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=9),
+                                             unitpay_id__gt=0)
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
+            payment_json = json.loads(payment_last.data)
+            send_subscribe_8_email(user, payment_last.amount, payment_json['params[purse]'])
+            subscribe_8_user(user, payment_last.amount, payment_json['params[purse]'])
+        self.stdout.write("Done 🥙")
+
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=4),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=5),
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved')
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            self.sendPayUnitpay(user)
+        self.stdout.write("Done 🥙")
+
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=3),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=4),
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved')
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            self.sendPayUnitpay(user)
+        self.stdout.write("Done 🥙")
+
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=3),
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved')
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            self.sendPayUnitpay(user)
+        self.stdout.write("Done 🥙")
+
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=1),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=2),
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved')
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            self.sendPayUnitpay(user)
+        self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=0),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=1),
@@ -81,14 +81,14 @@ class Command(BaseCommand):
             self.sendPayUnitpay(user)
         self.stdout.write("Done 🥙")
 
-        # expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-1),
-        #                                      membership_expires_at__lte=datetime.utcnow() + timedelta(days=0),
-        #                                      unitpay_id__gt=0,
-        #                                      moderation_status='approved')
-        # for user in expiring_users:
-        #     self.stdout.write(f"Checking user: {user.slug}")
-        #     # self.cancelSubUser(user)
-        # self.stdout.write("Done 🥙")
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-1),
+                                             membership_expires_at__lte=datetime.utcnow() + timedelta(days=0),
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved')
+        for user in expiring_users:
+            self.stdout.write(f"Checking user: {user.slug}")
+            # self.cancelSubUser(user)
+        self.stdout.write("Done 🥙")
 
     def insertUrlEncode(self, inserted, params):
         result = ''
@@ -105,7 +105,6 @@ class Command(BaseCommand):
         payment_last = Payment.objects.filter(user_id=user.id, status='success',
                                               data__contains='subscriptionId').order_by('created_at').last()
         if payment_last:
-            # product = PRODUCTS.get(payment_last.product_code)
             product = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
@@ -138,9 +137,7 @@ class Command(BaseCommand):
                 data={},
             )
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
-            print(requestUrl)
             response = urlopen(requestUrl)
-            print(response)
             if response.status == 200:
                 print("Success")
             else:
