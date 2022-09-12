@@ -110,7 +110,7 @@ class Command(BaseCommand):
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
             cash = [{
-                "name": "Сорокин.Клуб",
+                "name": "Sorokin.Club",
                 "count": 1,
                 "price": payment_last.amount,
                 "type": "commodity",
@@ -141,9 +141,7 @@ class Command(BaseCommand):
             print(requestUrl)
             response = urlopen(requestUrl)
             print(response)
-            response = response.read().decode('utf-8')
-            print(response)
-            if response.status_code == 200:
+            if response.status == 200:
                 print("Success")
             else:
                 couldnd_withdraw_money_email(user)
