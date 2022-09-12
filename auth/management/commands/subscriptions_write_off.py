@@ -139,13 +139,15 @@ class Command(BaseCommand):
             )
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
             print(requestUrl)
-            # response = urlopen(requestUrl)
-            # print(response)
-            # if response.status_code == 200:
-            #     print("Success")
-            # else:
-            #     couldnd_withdraw_money_email(user)
-            #     couldnd_withdraw_money(user)
+            response = urlopen(requestUrl)
+            print(response)
+            response = response.read().decode('utf-8')
+            print(response)
+            if response.status_code == 200:
+                print("Success")
+            else:
+                couldnd_withdraw_money_email(user)
+                couldnd_withdraw_money(user)
 
     def cancelSubUser(self, user):
         user.unitpay_id = ''
