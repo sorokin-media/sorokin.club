@@ -117,7 +117,7 @@ class Command(BaseCommand):
             }]
             cash_items = quote(b64encode(json.dumps(cash).encode()))
             data = {
-                "paymentType": payment_json['params[paymentType]'],
+                "paymentType": payment_json['params[paymentType]'][0],
                 "account": order_id,
                 "sum": str(payment_last.amount),
                 "projectId": 439242,
@@ -126,7 +126,7 @@ class Command(BaseCommand):
                 "currency": "RUB",
                 "subscriptionId": user.unitpay_id,
                 "desc": "Sorokin.Club",
-                "ip": payment_json['params[ip]'],
+                "ip": payment_json['params[ip]'][0],
                 "secretKey": settings.UNITPAY_SECRET_KEY,
                 "cashItems": cash_items
             }
