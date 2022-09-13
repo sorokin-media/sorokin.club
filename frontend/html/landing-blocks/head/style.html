@@ -1,6 +1,7 @@
+{% load render_bundle from webpack_loader %}
+
 {% block fonts %}
     {% include "common/fonts.html" %}
 {% endblock %}
 
-{% include "common/favicon.html" %}
 {% render_bundle "main" "css" %}

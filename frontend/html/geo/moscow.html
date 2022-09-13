@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+{% load text_filters %}
+{% load render_bundle from webpack_loader %}
+<html lang="ru" theme="dark">
+<head>
+    <title>
+        {% block title %}
+            Бизнес-клуб предпринимателей: Сорокин.Клуб ✖️‍
+        {% endblock %}
+    </title>
+
+    {% include "common/favicon.html" %}
+
+    {% block meta %}
+        {% include "landing-blocks/head/default-meta.html" %}
+
+        <meta name="description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta name="keywords" content="{{ settings.GEO_MOSCOW_KEYWORDS }}" />
+    {% endblock %}
+
+    {% block og_tags %}
+        <meta property="og:title" content="{{ settings.GEO_MOSCOW_TITLE }}">
+        <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+        <meta property="og:url" content="{{ settings.GEO_MOSCOW_URL }}">
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta property="og:image" content="{% static "images/share.png" %}">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ settings.GEO_MOSCOW_TITLE }}">
+        <meta name="twitter:description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta name="twitter:image" content="{% static "images/share.png" %}">
+    {% endblock %}
+
+    {% include "landing-blocks/head/style.html" %}
+    {% include "landing-blocks/head/scripts-meta.html" %}
+</head>
+<body>
+
+    {% block body %}
+    <main class="landing" id="app">
+        {% include "landing-blocks/title.html" %}
+        {% include "landing-blocks/why-need.html" %}
+        {% include "landing-blocks/tribe.html" %}
+        {% include "landing-blocks/why-we-are.html" %}
+        {% include "landing-blocks/about.html" %}
+        {% include "landing-blocks/what-inside.html" %}
+        {% include "landing-blocks/offline.html" %}
+        {% include "landing-blocks/posts.html" %}
+        {% include "landing-blocks/why-come-in.html" %}
+        {% include "landing-blocks/action-fun.html" %}
+        {% include "landing-blocks/community-map.html" %}
+        {% include "landing-blocks/reviews.html" %}
+        {% include "landing-blocks/join.html" %}
+
+        {% include "landing-blocks/post-modal.html" %}
+    </main>
+    {% endblock %}
+
+    {% block footer %}
+        {% include "landing-blocks/footer.html" %}
+    {% endblock %}
+
+    {% include "common/js.html" %}
+    {% block js %}{% endblock %}
+</body>
+</html>
