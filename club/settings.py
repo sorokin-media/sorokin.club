@@ -325,3 +325,9 @@ if SENTRY_DSN and not DEBUG:
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]
     MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
+
+# GEO TARGETING META
+GEO_MOSCOW_TITLE = "Московский клуб"
+GEO_MOSCOW_DESC = "Описание московского клуба"
+GEO_MOSCOW_KEYWORDS = "Клуб, Москва, круто"
+GEO_MOSCOW_URL = "http://127.0.0.1:8000/club-moscow/"

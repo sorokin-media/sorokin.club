@@ -1,0 +1,125 @@
+<!--
+    Чтобы кастомизировать какой либо блок, необходимо за место подключения блока -> вставить его разметку напрямую.
+    Таким образом блок будет индивидуален и не привязан контентом к такому же блоку с основного лендинга.
+
+    Все пути указаны относительно пути /frontend/html/
+ -->
+
+<!DOCTYPE html>
+{% load static %}
+{% load text_filters %}
+{% load render_bundle from webpack_loader %}
+<html lang="ru" theme="dark">
+<head>
+    <title>
+        {% block title %}
+            Бизнес-клуб предпринимателей: Сорокин.Клуб ✖️‍
+        {% endblock %}
+    </title>
+
+    {% include "common/favicon.html" %}
+
+    <!-- Основная мета -->
+    {% block meta %}
+        {% include "landing-blocks/head/default-meta.html" %}
+
+        <meta name="description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta name="keywords" content="{{ settings.GEO_MOSCOW_KEYWORDS }}" />
+    {% endblock %}
+
+    <!-- Мета при ссылках в соц сетях -->
+    {% block og_tags %}
+        <meta property="og:title" content="{{ settings.GEO_MOSCOW_TITLE }}">
+        <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+        <meta property="og:url" content="{{ settings.GEO_MOSCOW_URL }}">
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta property="og:image" content="{% static "images/share.png" %}">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ settings.GEO_MOSCOW_TITLE }}">
+        <meta name="twitter:description" content="{{ settings.GEO_MOSCOW_DESC }}">
+        <meta name="twitter:image" content="{% static "images/share.png" %}">
+    {% endblock %}
+
+    {% include "landing-blocks/head/style.html" %}
+    {% include "landing-blocks/head/scripts-meta.html" %}
+</head>
+<body>
+
+    {% block body %}
+    <main class="landing" id="app">
+        <!-- Главный блок -->
+        {% include "landing-blocks/title.html" %}
+
+        <!-- Зачем нужен бизнес-клуб -->
+        {% include "landing-blocks/why-need.html" %}
+
+        <!-- Своё племя -->
+        {% include "landing-blocks/our-tribe.html" %}
+
+        <!-- Почему мы? -->
+        {% include "landing-blocks/why-we-are.html" %}
+
+        <!-- О чем? -->
+        {% include "landing-blocks/about.html" %}
+
+        <!-- Что внутри? -->
+        {% include "landing-blocks/what-inside.html" %}
+
+        <!-- Оффлайн -->
+        {% include "landing-blocks/offline.html" %}
+
+        <!-- Слайдер постов -->
+        {% include "landing-blocks/posts.html" %}
+
+        <!-- Зачем вступать? -->
+        {% include "landing-blocks/why-come-in.html" %}
+
+        <!--
+            - Пример кастомизации элемента
+            Сначала убираем обычное подключение блока и вставляем основную разметку этого блока прямо в код
+            Далее кастомизируем
+
+        -->
+
+        <!-- Движухи, фан и взаимопомощь -->
+        <!-- {% include "landing-blocks/action-fun.html" %} -->
+
+        <div class="landing-block landing-posts-block landing-block--space-between landing-block-large-limited">
+            <div class="landing-block-50 landing-posts">
+                <!-- Есть отдельные блоки-колонки с постами, чтобы не переписывать их вручную (эти блоки используются и на основном лендинге) -->
+                {% include "landing-blocks/post-columns/action-fun.html" %}
+            </div>
+
+            <!-- Кастомизация контента -->
+            <div class="landing-block-40">
+                <h2 class="feature-title">Движухи, фан и взаимопомощь в москве</h2>
+                <ul class="feature-list">
+                    <li>Митапы и сходки в офлайне и в москве ).</li>
+                    <li>Совместный досуг и путешествия в москве :).</li>
+                    <li>Коучинг и менторство между участниками Клуба в москве :D.</li>
+                    <li>У нас запрещена анонимность и действует жесткая модерация. Так мы сохраняем здоровое коммьюнити без говна в москве и не только XD.</li>
+                    <li>Подробнее о правилах можно почитать в разделе <a href="{% url "docs" "about" %}" target="_blank">О Клубе в москве ^_^</a>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Недушное коммьюнити -->
+        {% include "landing-blocks/community-map.html" %}
+
+        <!-- Отзывы -->
+        {% include "landing-blocks/reviews.html" %}
+
+        <!-- Как вступить? -->
+        {% include "landing-blocks/join.html" %}
+
+        <!-- Модальное окно (tg-bot)-->
+        {% include "landing-blocks/post-modal.html" %}
+    </main>
+    {% endblock %}
+
+    <!-- подвал-->
+    {% include "landing-blocks/footer.html" %}
+</body>
+</html>

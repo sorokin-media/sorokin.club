@@ -23,7 +23,7 @@
                 </li>
                 <li>
                     <a href="{% url "network" %}">
-                        💬 Сеть
+                        💬 Чаты
                     </a>
                 </li>
                 <li>
@@ -39,6 +39,12 @@
                         📝 Посты
                     </a>
                 </li>
+                <li>
+                    <a href="https://sorokin.club/event/" class="{% if label_code == "approved" %}feed-sidebar-menu-selected{% endif %}">
+                        📅 События
+                    </a>
+                </li>
+                
                 <!-- <li>
                     <a href="{% url "feed_label" "inside" %}" class="{% if label_code == "inside" %}feed-sidebar-menu-selected{% endif %}">
                         💎️ Инсайды
