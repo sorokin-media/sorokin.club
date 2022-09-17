@@ -90,6 +90,10 @@ class UserBadge(models.Model):
                     membership_expires_at=F("membership_expires_at") - timedelta(days=badge.price_days)
                 )
 
+            User.objects.filter(id=to_user.id).update(
+                membership_expires_at=F("membership_expires_at") + timedelta(days=badge.price_days)
+            )
+
             # add badge to post/comment metadata (for caching purposes)
             comment_or_post = comment or post
             metadata = comment_or_post.metadata or {}
