@@ -20,7 +20,8 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 ADMINS = [
     ("admin", "club@sorokin.club"),
-    ("glader", "glader.ru@gmail.com"),
+    ("raskrutka89", "raskrutka89@gmail.com"),
+    # ("glader", "glader.ru@gmail.com"),
 ]
 
 INSTALLED_APPS = [
