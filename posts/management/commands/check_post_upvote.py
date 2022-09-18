@@ -5,6 +5,7 @@ from django.core.management import BaseCommand
 from posts.models.post import Post
 from badges.models import Badge, UserBadge
 from users.models.user import User
+from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -12,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         posts_query = Post.objects.filter(created_at__gte=datetime(2022, 9, 20),
-                                             upvotes__gt=10,
+                                             upvotes__gt=settings.ADD_DOLOR_POST_UPVOTE,
                                              type='post',
                                              upvote_badge=False)
         for post_one in posts_query:
