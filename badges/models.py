@@ -9,6 +9,7 @@ from club.exceptions import InsufficientFunds, BadRequest, ContentDuplicated
 from comments.models import Comment
 from posts.models.post import Post
 from users.models.user import User
+from notifications.telegram.common import ADMIN_CHAT, send_telegram_message, render_html_message, CLUB_ONLINE, Chat
 
 
 class Badge(models.Model):
@@ -141,6 +142,15 @@ class UserBadge(models.Model):
             )
 
             post.increment_upvote_badge_true()
+
+            send_telegram_message(
+                chat=Chat(id=to_user.telegram_id),
+                text=render_html_message("post_upvote_add.html", post=post),
+            )
+            send_telegram_message(
+                chat=ADMIN_CHAT,
+                text=render_html_message("post_upvote_add.html", post=post),
+            )
 
             # add badge to post/comment metadata (for caching purposes)
             comment_or_post = comment or post

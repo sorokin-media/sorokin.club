@@ -2,3 +2,5 @@
 {% if user_badge.note %}<i>{{ user_badge.note }}</i>
 {% endif %}
 Награда теперь будет висеть <a href="{{ settings.APP_HOST }}{% url "profile" user_badge.to_user.slug %}">в вашем профиле</a> и все будут знать какой вы крутой.
+
+Добавлено {{ user_badge.badge.price_days }} дней в клубе. Спасибо {{ user_badge.from_user.full_name }}!

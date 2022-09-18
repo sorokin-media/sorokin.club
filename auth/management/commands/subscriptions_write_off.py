@@ -147,7 +147,7 @@ class Command(BaseCommand):
             response = urlopen(requestUrl)
             if response.status == 200:
                 print("Success")
-                text_send = 'Автосписание ' + user.email + " " + str(payment_last.amount)
+                text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
                 send_telegram_message(
                     chat=Chat(id=204349098),
                     text=text_send
