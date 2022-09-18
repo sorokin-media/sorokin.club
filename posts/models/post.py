@@ -125,7 +125,7 @@ class Post(models.Model, ModelDiffMixin):
             "comment_count",
             "view_count",
             "upvotes",
-            "upvote_budge",
+            "upvote_badge",
             "hotness",
             "label_code",
             "is_approved_by_moderator",
