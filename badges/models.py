@@ -26,7 +26,7 @@ class Badge(models.Model):
 
     @classmethod
     def visible_objects(cls):
-        return cls.objects.filter(is_visible=True)
+        return cls.objects.filter(is_visible=True).exclude(code='dolor')
 
 
 class UserBadge(models.Model):
@@ -93,6 +93,54 @@ class UserBadge(models.Model):
             User.objects.filter(id=to_user.id).update(
                 membership_expires_at=F("membership_expires_at") + timedelta(days=badge.price_days)
             )
+
+            # add badge to post/comment metadata (for caching purposes)
+            comment_or_post = comment or post
+            metadata = comment_or_post.metadata or {}
+            badges = metadata.get("badges") or {}
+            if badge.code not in badges:
+                # add new badge
+                badges[badge.code] = {
+                    "title": badge.title,
+                    "description": badge.description,
+                    "count": 1,
+                }
+            else:
+                # if badge exists, increment badge count
+                badges[badge.code]["count"] += 1
+
+            # update metadata only (do not use .save(), it saves all fields and can cause side-effects)
+            metadata["badges"] = badges
+            type(comment_or_post).objects.filter(id=comment_or_post.id).update(metadata=metadata)
+
+        return user_badge
+
+    @classmethod
+    def create_user_badge_post_admin(cls, badge, from_user, to_user, post=None, comment=None, note=None):
+
+        with transaction.atomic():
+            # save user badge into the database
+            try:
+                user_badge = UserBadge.objects.create(
+                    badge=badge,
+                    from_user=from_user,
+                    to_user=to_user,
+                    post=post,
+                    comment=comment,
+                    note=note,
+                )
+            except IntegrityError:
+                raise ContentDuplicated(
+                    title="🛑 Вы уже дарили награду за этот пост или комментарий",
+                    message="Повторно награды дарить нельзя. Но вы можете подарить другую награду."
+                )
+
+            # deduct days balance from profile
+            User.objects.filter(id=to_user.id).update(
+                membership_expires_at=F("membership_expires_at") + timedelta(days=badge.price_days)
+            )
+
+            post.increment_upvote_badge_true()
 
             # add badge to post/comment metadata (for caching purposes)
             comment_or_post = comment or post

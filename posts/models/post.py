@@ -101,6 +101,7 @@ class Post(models.Model, ModelDiffMixin):
     comment_count = models.IntegerField(default=0)
     view_count = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0, db_index=True)
+    upvote_badge = models.BooleanField(default=False)
     hotness = models.IntegerField(default=0, db_index=True)
 
     is_visible = models.BooleanField(default=False)  # published or draft
@@ -124,6 +125,7 @@ class Post(models.Model, ModelDiffMixin):
             "comment_count",
             "view_count",
             "upvotes",
+            "upvote_budge",
             "hotness",
             "label_code",
             "is_approved_by_moderator",
@@ -172,6 +174,9 @@ class Post(models.Model, ModelDiffMixin):
 
     def increment_vote_count(self):
         return Post.objects.filter(id=self.id).update(upvotes=F("upvotes") + 1)
+
+    def increment_upvote_badge_true(self):
+        return Post.objects.filter(id=self.id).update(upvote_badge=True)
 
     def decrement_vote_count(self):
         return Post.objects.filter(id=self.id).update(upvotes=F("upvotes") - 1)

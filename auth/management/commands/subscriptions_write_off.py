@@ -26,7 +26,9 @@ class Command(BaseCommand):
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=8),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=9),
-                                             unitpay_id__gt=0)
+                                             unitpay_id__gt=0,
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
@@ -38,7 +40,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=4),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=5),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
@@ -47,7 +50,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=3),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=4),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
@@ -56,7 +60,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=3),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
@@ -65,7 +70,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=1),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=2),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
@@ -74,7 +80,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=0),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=1),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
@@ -83,7 +90,8 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-1),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=0),
                                              unitpay_id__gt=0,
-                                             moderation_status='approved')
+                                             moderation_status='approved',
+                                             deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             # self.cancelSubUser(user)
