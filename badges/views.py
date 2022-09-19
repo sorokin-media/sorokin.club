@@ -25,7 +25,7 @@ def create_badge_for_post(request, post_slug):
 
         return render(request, "badges/create.html", {
             "post": post,
-            "badges": Badge.visible_objects().all(),
+            "badges": Badge.visible_objects_exclude_dolor().all(),
         })
 
     badge_code = request.POST.get("badge_code")
@@ -82,7 +82,7 @@ def create_badge_for_comment(request, comment_id):
 
         return render(request, "badges/create.html", {
             "comment": comment,
-            "badges": Badge.visible_objects().all(),
+            "badges": Badge.visible_objects_exclude_dolor().all(),
         })
 
     badge_code = request.POST.get("badge_code")

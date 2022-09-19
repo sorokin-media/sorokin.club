@@ -27,6 +27,10 @@ class Badge(models.Model):
 
     @classmethod
     def visible_objects(cls):
+        return cls.objects.filter(is_visible=True)
+
+    @classmethod
+    def visible_objects_exclude_dolor(cls):
         return cls.objects.filter(is_visible=True).exclude(code='dolor')
 
 
