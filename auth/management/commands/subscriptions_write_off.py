@@ -157,8 +157,8 @@ class Command(BaseCommand):
                     text=text_send
                 )
             else:
-                couldnd_withdraw_money_email(user)
                 couldnd_withdraw_money(user)
+                couldnd_withdraw_money_email(user)
 
     def cancelSubUser(self, user):
         user.unitpay_id = ''

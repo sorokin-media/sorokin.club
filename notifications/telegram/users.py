@@ -107,6 +107,10 @@ def couldnd_withdraw_money(user):
             chat=Chat(id=user.telegram_id),
             text=f"Мы попытались списать оплату за подписку, но платеж не прошел, проверь данные бро.",
         )
+        send_telegram_message(
+            chat=Chat(id=204349098),
+            text=f"Мы попытались списать оплату за подписку, но платеж не прошел, проверь данные бро.",
+        )
 
 def cancel_subscribe_user(user):
     if user.telegram_id:
