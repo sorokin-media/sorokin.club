@@ -68,7 +68,7 @@ class UnitpayService:
     @classmethod
     def make_signature(cls, payload) -> str:
         fields = ("account", "currency", "desc", "sum")
-        string = "{up}".join([payload[field] for field in fields] + [settings.UNITPAY_SECRET_KEY])
+        string = "{up}".join([payload[field] for field in fields] + ['settings.UNITPAY_SECRET_KEY'])
         signature = hashlib.sha256(string.encode()).hexdigest()
         return signature
 

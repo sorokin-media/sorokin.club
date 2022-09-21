@@ -146,7 +146,7 @@ class Command(BaseCommand):
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
             print(requestUrl)
             response = urlopen(requestUrl)
-            print(response)
+            print(response.__dict__)
             if response.status == 200:
                 print("Success")
             #     text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
