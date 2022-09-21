@@ -144,23 +144,30 @@ class Command(BaseCommand):
                 data={},
             )
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
-            print(requestUrl)
+            # print(requestUrl)
             response = urlopen(requestUrl)
-            print(response.__dict__)
-            if response.status == 200:
+            # print(response.__dict__)
+            data = response.read().decode('utf-8')
+            jsons = json.loads(data)
+            # print(jsons)
+            if not jsons['error']:
                 print("Success")
-            #     text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
-            #     send_telegram_message(
-            #         chat=Chat(id=204349098),
-            #         text=text_send
-            #     )
-            #     send_telegram_message(
-            #         chat=ADMIN_CHAT,
-            #         text=text_send
-            #     )
-            # else:
-            #     couldnd_withdraw_money(user)
-            #     couldnd_withdraw_money_email(user)
+                text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text=text_send
+                )
+                send_telegram_message(
+                    chat=ADMIN_CHAT,
+                    text=text_send
+                )
+            else:
+                couldnd_withdraw_money(user)
+                couldnd_withdraw_money_email(user)
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text=jsons['error']['message']
+                )
 
     def cancelSubUser(self, user):
         user.unitpay_id = ''
