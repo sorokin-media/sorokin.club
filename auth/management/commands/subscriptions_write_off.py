@@ -94,7 +94,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            # self.cancelSubUser(user)
+            self.cancelSubUser(user)
         self.stdout.write("Done 🥙")
 
     def insertUrlEncode(self, inserted, params):
@@ -145,9 +145,10 @@ class Command(BaseCommand):
             )
             requestUrl = 'https://unitpay.ru/api?method=initPayment&' + self.insertUrlEncode('params', data)
             print(requestUrl)
-            # response = urlopen(requestUrl)
-            # if response.status == 200:
-            #     print("Success")
+            response = urlopen(requestUrl)
+            print(response)
+            if response.status == 200:
+                print("Success")
             #     text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
             #     send_telegram_message(
             #         chat=Chat(id=204349098),
