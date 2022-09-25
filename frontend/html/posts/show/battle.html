@@ -66,7 +66,11 @@
             </div>
 
             <div class="text-body text-body-layout-notitle text-body-type-post e-content">
+                {% if flag_muted %}
+                Сожалеем, но мы не покажем тебе этот пост. Причина: блокировка пользователя.
+                    {% else %}
                 {% render_post post %}
+                    {% endif %}
             </div>
 
             <div class="post-footer">

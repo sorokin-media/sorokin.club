@@ -77,7 +77,11 @@
 
                 {% if comments %}
                     <div class="post-comments-list">
+                        {% if flag_muted %}
+                        Сожалеем, но мы не покажем тебе этот пост. Причина: блокировка пользователя.
+                        {% else %}
                         {% include "comments/list.html" with comments=comments reply_form=reply_form type="normal" muted_user_ids=muted_user_ids %}
+                        {% endif %}
                     </div>
                 {% endif %}
 

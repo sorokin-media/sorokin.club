@@ -53,6 +53,11 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
         if muted:
             posts = posts.exclude(author_id__in=muted)
 
+    if request.me:
+        muted = Muted.objects.filter(user_to_id=request.me).values_list("user_from").all()
+        if muted:
+            posts = posts.exclude(author_id__in=muted)
+
     # hide non-public posts and intros from unauthorized users
     if not request.me:
         posts = posts.exclude(is_public=False).exclude(type=Post.TYPE_INTRO)

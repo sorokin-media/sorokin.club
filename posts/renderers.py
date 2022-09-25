@@ -27,6 +27,7 @@ def render_post(request, post, context=None):
         upvoted_at = int(PostVote.objects.filter(post=post, user=request.me).first().created_at.timestamp() * 1000) if is_voted else None
         subscription = PostSubscription.get(request.me, post)
         muted_user_ids = list(Muted.objects.filter(user_from=request.me).values_list("user_to_id", flat=True).all())
+        muted_user_ids_our = list(Muted.objects.filter(user_to_id=request.me).values_list("user_from", flat=True).all())
     else:
         comments = Comment.visible_objects(show_deleted=True).filter(post=post).all()
         is_voted = False
@@ -34,6 +35,7 @@ def render_post(request, post, context=None):
         upvoted_at = None
         subscription = None
         muted_user_ids = []
+        muted_user_ids_our = []
 
     # order comments
     comment_order = request.GET.get("comment_order") or "-upvotes"
@@ -43,6 +45,12 @@ def render_post(request, post, context=None):
     # hide deleted comments for battle (visual junk)
     if post.type == Post.TYPE_BATTLE:
         comments = comments.filter(is_deleted=False)
+
+    flag_muted = False
+    if post.author_id in muted_user_ids:
+        flag_muted = True
+    if post.author_id in muted_user_ids_our:
+        flag_muted = True
 
     comment_form = CommentForm(initial={'text': post.comment_template}) if post.comment_template else CommentForm()
     context = {
@@ -57,6 +65,7 @@ def render_post(request, post, context=None):
         "upvoted_at": upvoted_at,
         "subscription": subscription,
         "muted_user_ids": muted_user_ids,
+        "flag_muted": flag_muted,
     }
 
     # TODO: make a proper type->form mapping here in future

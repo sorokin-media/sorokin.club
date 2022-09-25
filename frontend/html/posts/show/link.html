@@ -18,6 +18,10 @@
             &rarr;&nbsp;<a href="{{ post.url }}" target="_blank" rel="noopener">{{ post.url }}</a>
         {% endif %}
 
-        {% render_post post %}
+        {% if flag_muted %}
+            Сожалеем, но мы не покажем тебе этот пост. Причина: блокировка пользователя.
+        {% else %}
+            {% render_post post %}
+        {% endif %}
     </section>
 {% endblock %}
