@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         posts_query = Post.objects.filter(created_at__gte=datetime(2022, 9, 18),
-                                             upvotes__gt=settings.ADD_DOLOR_POST_UPVOTE,
+                                             upvotes__gte=settings.ADD_DOLOR_POST_UPVOTE,
                                              upvote_badge=False).filter(Q(type=Post.TYPE_POST) | Q(type=Post.TYPE_LINK) | Q(type=Post.TYPE_QUESTION) | Q(type=Post.TYPE_IDEA) | Q(type=Post.TYPE_PROJECT) | Q(type=Post.TYPE_EVENT) | Q(type=Post.TYPE_REFERRAL) | Q(type=Post.TYPE_BATTLE) | Q(type=Post.TYPE_GUIDE) | Q(type=Post.TYPE_THREAD))
         for post_one in posts_query:
             print(post_one)
