@@ -204,5 +204,6 @@ class User(models.Model, ModelDiffMixin):
     @classmethod
     def registered_members(cls):
         return cls.objects.filter(
-            moderation_status=User.MODERATION_STATUS_APPROVED
+            moderation_status=User.MODERATION_STATUS_APPROVED,
+            membership_expires_at__gte=datetime.utcnow()
         )
