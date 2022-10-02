@@ -10,6 +10,8 @@ from posts.models.subscriptions import PostSubscription
 from users.models.friends import Friend
 from users.models.mute import Muted
 from users.models.user import User
+from django.template import loader, TemplateDoesNotExist
+from notifications.email.sender import send_club_email
 
 
 @receiver(post_save, sender=Comment)
@@ -36,6 +38,17 @@ def async_create_or_update_comment(comment):
                 )
                 notified_user_ids.add(post_subscriber.user.id)
 
+        else:
+            if comment.author != post_subscriber.user:
+                if post_subscriber.type == PostSubscription.TYPE_ALL_COMMENTS \
+                        or (post_subscriber.type == PostSubscription.TYPE_TOP_LEVEL_ONLY and not comment.reply_to_id):
+                    renewal_template = loader.get_template("emails/comment_to_post_email.html")
+                    send_club_email(
+                        recipient=post_subscriber.user.email,
+                        subject=f"Новый коммент к посту!",
+                        html=renewal_template.render({"comment": comment}),
+                        tags=["comment"]
+                    )
     # notify thread author on reply (note: do not notify yourself)
     if comment.reply_to:
         thread_author = comment.reply_to.author
