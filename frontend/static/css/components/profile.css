@@ -16,6 +16,17 @@
       background-color: var(--input-bg-color);
     }
 
+    .profile-card-expire {
+        vertical-align: middle;
+        color: var(--opposite-text-color);
+        background-color: var(--opposite-bg-color-expire);
+    }
+
+    [theme="dark"] .profile-card-expire {
+      color: var(--text-color);
+      background-color: var(--input-bg-color-expire);
+    }
+
         .profile-card a {
             color: var(--opposite-text-color);
         }
@@ -93,6 +104,11 @@
         .profile-user-hat {
             padding-top: 10px;
             font-size: 120%;
+        }
+
+        .profile-user-job-expired {
+            padding-top: 10px;
+            font-weight: 700;
         }
 
         .profile-user-bio {

@@ -1,5 +1,5 @@
 {% load text_filters %}
-<article class="block profile-card h-card">
+<article class="block profile-card h-card {% if not user.is_paid_member %}profile-card-expire{% endif %}">
     <div class="profile-card-photo u-photo">
         <div class="avatar profile-user-avatar"><img src="{{ user.get_avatar }}" alt="Аватар {{ user.full_name }}" loading="lazy" /></div>
     </div>
@@ -19,6 +19,12 @@
         {% if user.city or user.country %}
             <div class="profile-user-location">
                 📍{% if user.city %}<span class="p-locality">{{ user.city }}</span>, {% endif %}<span class="p-country-name">{{ user.country }}</span>
+            </div>
+        {% endif %}
+
+        {% if not user.is_paid_member %}
+            <div class="profile-user-job-expired">
+                Клубная карта закончилась 😿
             </div>
         {% endif %}
 

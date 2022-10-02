@@ -58,6 +58,7 @@ html[theme="dark"],
 html[theme="dark"]:root {
     --bg-color: #282c35;
     --opposite-bg-color: #FCFDFF;
+    --opposite-bg-color-expire: #69748c;
 
     --text-color: #DDD;
     --brighter-text-color: #eaeaea;
@@ -85,6 +86,7 @@ html[theme="dark"]:root {
 
     --input-color: #eaeaea;
     --input-bg-color: #373c48;
+    --input-bg-color-expire: #7b859c;
     --input-border-color: #333;
     --input-toolbar-bg: #252a35;
     --input-toolbar-button-color: #eaeaea;
