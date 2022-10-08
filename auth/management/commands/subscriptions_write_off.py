@@ -162,11 +162,12 @@ class Command(BaseCommand):
                     text=text_send
                 )
             else:
+                text_send = jsons['error']['message'] + " " + user.email
                 couldnd_withdraw_money(user)
                 couldnd_withdraw_money_email(user)
                 send_telegram_message(
                     chat=Chat(id=204349098),
-                    text=jsons['error']['message']
+                    text=text_send
                 )
 
     def cancelSubUser(self, user):
