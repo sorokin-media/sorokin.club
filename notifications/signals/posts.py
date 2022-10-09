@@ -9,6 +9,8 @@ from common.regexp import USERNAME_RE
 from posts.models.post import Post
 from users.models.friends import Friend
 from users.models.user import User
+from django.template import loader
+from notifications.email.sender import send_club_email
 
 REJECT_POST_REASONS = {
     "post": [
@@ -123,12 +125,25 @@ def async_create_or_update_post(post, is_created):
         # parse @nicknames and notify mentioned users
         for username in USERNAME_RE.findall(post.text):
             user = User.objects.filter(slug=username).first()
-            if user and user.telegram_id and user.id not in notified_user_ids:
-                send_telegram_message(
-                    chat=Chat(id=user.telegram_id),
-                    text=render_html_message("post_mention.html", post=post),
-                )
-                notified_user_ids.add(user.id)
+            if user:
+                if user.telegram_id:
+                    if user.id not in notified_user_ids:
+                        send_telegram_message(
+                            chat=Chat(id=user.telegram_id),
+                            text=render_html_message("post_mention.html", post=post),
+                        )
+                        notified_user_ids.add(user.id)
+                else:
+                    if user.id not in notified_user_ids:
+                        renewal_template = loader.get_template("emails/post_mention_email.html")
+                        send_club_email(
+                            recipient=user.email,
+                            subject=f"Кто-то упомянул вас в посте!",
+                            html=renewal_template.render({"post": post}),
+                            tags=["comment"]
+                        )
+                        notified_user_ids.add(user.id)
+
 
         # notify friends about new posts
         friends = Friend.friends_for_user(post.author)

@@ -49,15 +49,32 @@ def async_create_or_update_comment(comment):
                         html=renewal_template.render({"comment": comment}),
                         tags=["comment"]
                     )
+                    send_club_email(
+                        recipient='raskrutka89@gmail.com',
+                        subject=f"Новый коммент к посту!",
+                        html=renewal_template.render({"comment": comment}),
+                        tags=["comment"]
+                    )
     # notify thread author on reply (note: do not notify yourself)
     if comment.reply_to:
         thread_author = comment.reply_to.author
-        if thread_author.telegram_id and comment.author != thread_author and thread_author.id not in notified_user_ids:
-            send_telegram_message(
-                chat=Chat(id=thread_author.telegram_id),
-                text=render_html_message("comment_to_thread.html", comment=comment),
-            )
-            notified_user_ids.add(thread_author.id)
+        if thread_author.telegram_id:
+            if comment.author != thread_author and thread_author.id not in notified_user_ids:
+                send_telegram_message(
+                    chat=Chat(id=thread_author.telegram_id),
+                    text=render_html_message("comment_to_thread.html", comment=comment),
+                )
+                notified_user_ids.add(thread_author.id)
+        else:
+            if comment.author != thread_author and thread_author.id not in notified_user_ids:
+                renewal_template = loader.get_template("emails/comment_to_thread_email.html")
+                send_club_email(
+                    recipient=thread_author.email,
+                    subject=f"Новый реплай к вашему комментарию!",
+                    html=renewal_template.render({"comment": comment}),
+                    tags=["comment"]
+                )
+                notified_user_ids.add(thread_author.id)
 
     # post top level comments to online channel
     if not comment.reply_to and comment.post.is_visible and comment.post.is_visible_in_feeds:

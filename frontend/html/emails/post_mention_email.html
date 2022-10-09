@@ -1,0 +1,52 @@
+{% extends "emails/layout.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block css %}
+<style>
+p {
+    font-size: 19px;
+}
+
+ul {
+    list-style: none;
+    font-size: 19px;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+    li {
+        display: block;
+        margin-top: 20px;
+        padding-left: 15px;
+    }
+
+</style>
+{% endblock %}
+
+{% block title %}
+    Кто-то упомянул вас в посте
+{% endblock %}
+
+{% block body %}
+    <p>
+        <strong>Кто-то упомянул вас в посте «<a href="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}">{{ post.title }}</a>»</strong>
+    </p>
+
+    <p><a href="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}">Посмотреть ➜</a></p>
+
+    <p>
+        PS Чтобы мы не беспокоили тебя по мелким поводам, подключи клубного Телеграм-бота по этой ссылке <a href="{{ settings.TELEGRAM_BOT_URL }}?start={{ me.secret_hash }}" target="_blank" class="button button-blue">Привязать бота</a>
+    </p>
+
+    <p>
+        🥶️ Если совсем ничего не помогает, откройте бота и скопируйте ему команду:<br>
+        <strong>/auth {{ user.secret_hash }}</strong><br><br>
+        Только никому не говорите этот код!
+    </p>
+
+    <br><br><br>
+{% endblock %}
+
+{% block unsubscribe %}{% endblock %}
+
