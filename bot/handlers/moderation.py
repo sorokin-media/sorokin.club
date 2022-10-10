@@ -223,7 +223,7 @@ def command_promote_user(update: Update, context: CallbackContext) -> None:
         update.effective_chat.send_message("Пользователь с таким email не найден")
         return
 
-    user.membership_expires_at += timedelta(days=90)
+    user.membership_expires_at += timedelta(days=30)
     user.save()
 
     update.effective_chat.send_message(
