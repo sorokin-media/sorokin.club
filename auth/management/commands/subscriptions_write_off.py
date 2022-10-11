@@ -16,7 +16,7 @@ from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
 from urllib.request import urlopen
 from urllib.parse import quote
-from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, render_html_message
 
 
 class Command(BaseCommand):
@@ -55,6 +55,7 @@ class Command(BaseCommand):
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user)
+            self.sendAdminMessage(user)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
@@ -175,3 +176,9 @@ class Command(BaseCommand):
         user.save()
         cancel_subscribe_user(user)
         cancel_subscribe_user_email(user)
+
+    def sendAdminMessage(self, user):
+        send_telegram_message(
+            chat=ADMIN_CHAT,
+            text=render_html_message("send_admin_sub.html", user=user),
+        )

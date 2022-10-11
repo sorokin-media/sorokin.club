@@ -40,6 +40,16 @@
 
         {% include "users/widgets/card.html" with user=user %}
 
+        {% if me.is_god %}
+            <p>
+                <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
+            </p>
+            <a href="{% url "profile" user.slug %}" class="profile-user-name u-url">
+                <span class="profile-user-fullname {% if user.is_banned or user.deleted_at %}user-name-is-banned{% endif %} p-name">{{ user.full_name }}</span>
+            </a>
+        {% endif %}
+
+
         {% if me.id == user.id %}
             <div class="block profile-statuses">
                 <div class="profile-status profile-respect">

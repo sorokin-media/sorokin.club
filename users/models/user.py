@@ -148,6 +148,9 @@ class User(models.Model, ModelDiffMixin):
     def membership_days_left(self):
         return (self.membership_expires_at - datetime.utcnow()).total_seconds() // 60 // 60 / 24
 
+    def membership_days_left_round(self):
+        return round((self.membership_expires_at - datetime.utcnow()).total_seconds() // 60 // 60 / 24)
+
     def membership_created_days(self):
         return (datetime.utcnow() - self.created_at).days
 
