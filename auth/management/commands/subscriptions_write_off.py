@@ -150,7 +150,7 @@ class Command(BaseCommand):
             data = response.read().decode('utf-8')
             jsons = json.loads(data)
             # print(jsons)
-            if not jsons['error']:
+            if 'error' in jsons:
                 print("Success")
                 text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
                 send_telegram_message(
