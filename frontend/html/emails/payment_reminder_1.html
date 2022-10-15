@@ -1,0 +1,50 @@
+{% extends "emails/layout.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block css %}
+<style>
+p {
+    font-size: 19px;
+}
+
+ul {
+    list-style: none;
+    font-size: 19px;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+    li {
+        display: block;
+        margin-top: 20px;
+        padding-left: 15px;
+    }
+
+
+</style>
+{% endblock %}
+
+{% block title %}
+Завтра заканчивается участие в Сорокин Клубе 😿
+{% endblock %}
+
+{% block body %}
+
+<p>
+    Привет!
+</p>
+<p>
+    Твоя клубная карта заканчивается уже завтра. Нам будет плохо и грустно без тебя! Оставайся с нами! 😻
+</p>
+<p>
+    Продлить участие можно в профиле: <a href="{% url "profile" user.slug %}">ваш профиль</a>
+</p>
+<p>
+    Твоя администрация ❤️
+</p>
+
+<br><br><br>
+{% endblock %}
+
+{% block unsubscribe %}{% endblock %}

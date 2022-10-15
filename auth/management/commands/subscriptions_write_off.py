@@ -8,10 +8,10 @@ from users.models.user import User
 from payments.models import Payment
 from notifications.email.users import send_subscribe_8_email
 from notifications.email.users import couldnd_withdraw_money_email
-from notifications.email.users import cancel_subscribe_user_email
+from notifications.email.users import cancel_subscribe_user_email, payment_reminder_5_email, payment_reminder_3_email, payment_reminder_1_email
 from notifications.telegram.users import subscribe_8_user
 from notifications.telegram.users import couldnd_withdraw_money
-from notifications.telegram.users import cancel_subscribe_user
+from notifications.telegram.users import cancel_subscribe_user, payment_reminder_5, payment_reminder_3, payment_reminder_1
 from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
 from urllib.request import urlopen
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            self.sendPayUnitpay(user)
+            self.sendPayUnitpay(user, 5)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=3),
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            self.sendPayUnitpay(user)
+            self.sendPayUnitpay(user, 4)
             self.sendAdminMessage(user)
         self.stdout.write("Done 🥙")
 
@@ -65,7 +65,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            self.sendPayUnitpay(user)
+            self.sendPayUnitpay(user, 3)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=1),
@@ -75,7 +75,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            self.sendPayUnitpay(user)
+            self.sendPayUnitpay(user, 2)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=0),
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
-            self.sendPayUnitpay(user)
+            self.sendPayUnitpay(user, 1)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-1),
@@ -109,7 +109,7 @@ class Command(BaseCommand):
             result += inserted + '[' + p + ']=' + str(params[p])
         return result
 
-    def sendPayUnitpay(self, user):
+    def sendPayUnitpay(self, user, daysNum):
         payment_last = Payment.objects.filter(user_id=user.id, status='success',
                                               data__contains='subscriptionId').order_by('created_at').last()
         if payment_last:
@@ -152,6 +152,23 @@ class Command(BaseCommand):
             jsons = json.loads(data)
             # print(jsons)
             if 'error' in jsons:
+                if (daysNum == 5):
+                    payment_reminder_5_email(user)
+                    payment_reminder_5(user)
+                if (daysNum == 3):
+                    payment_reminder_3_email(user)
+                    payment_reminder_3(user)
+                if (daysNum == 1):
+                    payment_reminder_1_email(user)
+                    payment_reminder_1(user)
+                text_send = jsons['error']['message'] + " " + user.email
+                couldnd_withdraw_money(user)
+                couldnd_withdraw_money_email(user)
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text=text_send
+                )
+            else:
                 print("Success")
                 text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
                 send_telegram_message(
@@ -160,14 +177,6 @@ class Command(BaseCommand):
                 )
                 send_telegram_message(
                     chat=ADMIN_CHAT,
-                    text=text_send
-                )
-            else:
-                text_send = jsons['error']['message'] + " " + user.email
-                couldnd_withdraw_money(user)
-                couldnd_withdraw_money_email(user)
-                send_telegram_message(
-                    chat=Chat(id=204349098),
                     text=text_send
                 )
 

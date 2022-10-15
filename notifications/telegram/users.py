@@ -101,6 +101,39 @@ def subscribe_8_user(user, sum, purse):
             text=f"Через три дня мы попытаемся списать оплату, списано будет {sum}, карта { purse } проверь что карта работает и на ней есть денежки.",
         )
 
+def payment_reminder_5(user):
+    user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"🚀Привет!"
+                 f"\n\nМы видим, что через пять дней закончится твое участие в клубе. Нам будет плохо и грустно без тебя! Оставайся с нами! 😻"
+                 f"\n\nПродлить участие можно в профиле:{user_profile_url}"
+                 f"\n\nТвоя администрация ❤️"
+        )
+
+def payment_reminder_3(user):
+    user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"🚀Привет!"
+                 f"\n\nМы видим, что через пять дней закончится твое участие в клубе. Нам будет плохо и грустно без тебя! Оставайся с нами! 😻"
+                 f"\n\nПродлить участие можно в профиле:{user_profile_url}"
+                 f"\n\nТвоя администрация ❤️"
+        )
+
+def payment_reminder_1(user):
+    user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
+    if user.telegram_id:
+        send_telegram_message(
+            chat=Chat(id=user.telegram_id),
+            text=f"🚀Привет!"
+                 f"\n\nТвоя клубная карта заканчивается уже завтра😿 Нам будет плохо и грустно без тебя! Оставайся с нами!"
+                 f"\n\nПродлить участие можно в профиле:{user_profile_url}"
+                 f"\n\nТвоя администрация ❤️"
+        )
+
 def couldnd_withdraw_money(user):
     if user.telegram_id:
         send_telegram_message(

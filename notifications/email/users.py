@@ -132,6 +132,39 @@ def cancel_subscribe_user_email(user: User):
         tags=["subscription"]
     )
 
+def payment_reminder_5_email(user: User):
+    sub_template = loader.get_template("emails/payment_reminder_5.html")
+    send_club_email(
+        recipient=user.email,
+        subject=f"Заканчиваются дни в Сорокин Клубе 😿",
+        html=sub_template.render({
+            "user": user,
+        }),
+        tags=["subscription"]
+    )
+
+def payment_reminder_3_email(user: User):
+    sub_template = loader.get_template("emails/payment_reminder_3.html")
+    send_club_email(
+        recipient=user.email,
+        subject=f"Осталось всего три дня Сорокин Клубе 😿",
+        html=sub_template.render({
+            "user": user,
+        }),
+        tags=["subscription"]
+    )
+
+def payment_reminder_1_email(user: User):
+    sub_template = loader.get_template("emails/payment_reminder_1.html")
+    send_club_email(
+        recipient=user.email,
+        subject=f"Завтра заканчивается участие в Сорокин Клубе 😿",
+        html=sub_template.render({
+            "user": user,
+        }),
+        tags=["subscription"]
+    )
+
 def send_ping_email(user: User, message: str):
     ping_template = loader.get_template("emails/ping.html")
     send_club_email(
