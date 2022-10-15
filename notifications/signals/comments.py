@@ -49,12 +49,6 @@ def async_create_or_update_comment(comment):
                         html=renewal_template.render({"comment": comment}),
                         tags=["comment"]
                     )
-                    send_club_email(
-                        recipient='raskrutka89@gmail.com',
-                        subject=f"Новый коммент к посту!",
-                        html=renewal_template.render({"comment": comment}),
-                        tags=["comment"]
-                    )
     # notify thread author on reply (note: do not notify yourself)
     if comment.reply_to:
         thread_author = comment.reply_to.author
