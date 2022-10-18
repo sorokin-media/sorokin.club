@@ -17,6 +17,7 @@ from payments.unitpay import UnitpayService
 from urllib.request import urlopen
 from urllib.parse import quote
 from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, render_html_message
+from django.urls import reverse
 
 
 class Command(BaseCommand):
@@ -187,7 +188,8 @@ class Command(BaseCommand):
         cancel_subscribe_user_email(user)
 
     def sendAdminMessage(self, user):
+        user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
         send_telegram_message(
             chat=ADMIN_CHAT,
-            text=render_html_message("send_admin_sub.html", user=user),
+            text=render_html_message("send_admin_sub.html", user=user, user_profile_url_a=user_profile_url),
         )
