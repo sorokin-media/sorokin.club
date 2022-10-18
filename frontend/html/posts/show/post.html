@@ -5,7 +5,7 @@
 
 {% block post %}
 <section class="content">
-    <article class="post post-type-post">
+    <article class="post post-type-post upvote-sync">
         {% block post_header %}
             <header class="post-header">
                 <div class="post-info">
@@ -86,7 +86,7 @@
                                     initial-is-voted
                                     initial-upvote-timestamp={{upvoted_at}}
                                  {% endif %}
-                                 {% if not me|can_upvote:post or upvote_disabled %}is-disabled{% endif %}>
+                                 >
                     </post-upvote>
                 {% endblock %}
 
@@ -107,18 +107,15 @@
         {% block post_footer %}
             <div class="post-under-upvote">
                 <p>Если пост зашел, подними в тренды ;)</p>
-                <post-upvote
-                    :initial-upvotes="{{ post.upvotes }}"
-                    :hours-to-retract-vote="{{settings.RETRACT_VOTE_IN_HOURS}}"
-                    upvote-url="{% url "upvote_post" post.slug %}"
-                    retract-vote-url="{% url "retract_post_vote" post.slug %}"
-
-                    {% if is_voted %}
-                        initial-is-voted
-                        initial-upvote-timestamp={{upvoted_at}}
-                    {% endif %}
-
-                    {% if not me|can_upvote:post or upvote_disabled %}is-disabled{% endif %}>
+                <post-upvote :initial-upvotes="{{ post.upvotes }}"
+                                :hours-to-retract-vote="{{settings.RETRACT_VOTE_IN_HOURS}}"
+                                upvote-url="{% url "upvote_post" post.slug %}"
+                                retract-vote-url="{% url "retract_post_vote" post.slug %}"
+                                {% if is_voted %}
+                                initial-is-voted
+                                initial-upvote-timestamp={{upvoted_at}}
+                                {% endif %}
+                                >
                 </post-upvote>
             </div>
             <footer class="post-footer p-author">

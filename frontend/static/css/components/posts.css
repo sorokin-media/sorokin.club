@@ -477,6 +477,11 @@
                 width: 110%;
                 margin: 1em auto 1em -5%;
             }
+
+            .post-type-post .text-body.text-body-type-post--upvote figure {
+                width: calc(100% + 20px);
+                margin: 1em auto 1em -10px;
+            }
         }
 
     .text-body figcaption {
@@ -987,7 +992,7 @@
 .post-under-upvote .upvote {
     display: inline-block;
 
-    position: static;
+    position: relative;
     left: unset;
     top: unset;
 
