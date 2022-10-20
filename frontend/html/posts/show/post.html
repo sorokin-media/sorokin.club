@@ -86,6 +86,7 @@
                                     initial-is-voted
                                     initial-upvote-timestamp={{upvoted_at}}
                                  {% endif %}
+                                 {% if not me|can_upvote:post or upvote_disabled %}is-disabled{% endif %}></post-upvote>
                                  >
                     </post-upvote>
                 {% endblock %}
