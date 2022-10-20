@@ -39,6 +39,13 @@
         position: relative;
     }
 
+    @media (min-width: 1024px) {
+        .post-text {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
     .post-title .post-is-public {
         display: inline-block;
         font-size: initial;
@@ -155,8 +162,25 @@
             position: absolute;
             top: 30px;
             left: -110px;
-            padding-left: 20px;
+
             padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        @media (min-width: 1024px) {
+          .post-type-post .upvote {
+            position: sticky;
+            top: 30px;
+            left: 0;
+
+            display: inline-block;
+            align-self: flex-start;
+
+            margin-bottom: -70px;
+
+            transform: translateX(calc(-100% - 20px));
+            box-sizing: border-box;
+          }
         }
 
         .post-type-post .upvote:not(.upvote-disabled) {
@@ -241,6 +265,10 @@
         line-height: 1.67;
         letter-spacing: 0.01rem;
         padding-top: 30px;
+    }
+
+    .text-body-type-post--upvote {
+        padding-top: 0;
     }
 
         .text-body-layout-notitle {
@@ -448,6 +476,11 @@
             .post-type-post .text-body figure {
                 width: 110%;
                 margin: 1em auto 1em -5%;
+            }
+
+            .post-type-post .text-body.text-body-type-post--upvote figure {
+                width: calc(100% + 20px);
+                margin: 1em auto 1em -10px;
             }
         }
 
@@ -935,3 +968,33 @@
         .post-guide-rules-description ul {
             padding-left: 20px;
         }
+
+.post-under-upvote {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-top: 30px;
+
+    font-size: 16px;
+
+    border-top: 1px solid #979595;
+}
+
+@media (min-width: 1024px) {
+    .post-under-upvote {
+        display: none;
+    }
+}
+
+.post-under-upvote .upvote {
+    display: inline-block;
+
+    position: relative;
+    left: unset;
+    top: unset;
+
+    margin: 0;
+}
