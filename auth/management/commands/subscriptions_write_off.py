@@ -11,7 +11,7 @@ from notifications.email.users import couldnd_withdraw_money_email
 from notifications.email.users import cancel_subscribe_user_email, payment_reminder_5_email, payment_reminder_3_email, payment_reminder_1_email
 from notifications.telegram.users import subscribe_8_user
 from notifications.telegram.users import couldnd_withdraw_money
-from notifications.telegram.users import cancel_subscribe_user, payment_reminder_5, payment_reminder_3, payment_reminder_1
+from notifications.telegram.users import cancel_subscribe_user, payment_reminder_5, payment_reminder_3, payment_reminder_1, cancel_subscribe_admin
 from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
 from urllib.request import urlopen
@@ -184,6 +184,7 @@ class Command(BaseCommand):
     def cancelSubUser(self, user):
         user.unitpay_id = ''
         user.save()
+        cancel_subscribe_admin(user)
         cancel_subscribe_user(user)
         cancel_subscribe_user_email(user)
 

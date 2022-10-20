@@ -152,6 +152,14 @@ def cancel_subscribe_user(user):
             text=f"Мы не смогли списать оплату, подписка отменена бро. Все продления по текущей цене :(",
         )
 
+def cancel_subscribe_admin(user):
+    user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
+    if user.telegram_id:
+        send_telegram_message(
+            chat=ADMIN_CHAT,
+            text=f"#днизакончилисьсовсем {user_profile_url}",
+        )
+
 def notify_admin_user_on_ban(user, days, reason):
     banned_user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
     send_telegram_message(
