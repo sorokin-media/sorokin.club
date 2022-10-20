@@ -159,9 +159,9 @@
         }
 
         .post-type-post .upvote {
-            position: absolute;
+            position: sticky;
             top: 30px;
-            left: -110px;
+            left: 0;
 
             padding-right: 20px;
             padding-left: 20px;
@@ -169,10 +169,6 @@
 
         @media (min-width: 1024px) {
           .post-type-post .upvote {
-            position: sticky;
-            top: 30px;
-            left: 0;
-
             display: inline-block;
             align-self: flex-start;
 
@@ -189,7 +185,7 @@
 
             @media only screen and (max-width : 1024px) {
                 .post-type-post .upvote {
-                    top: 0;
+                    top: 15px;
                     left: auto;
                     right: 0;
                     z-index: 1;
@@ -197,7 +193,6 @@
                     display: block;
                     margin-bottom: 1.5em;
                     margin-left: 1.5em;
-                    position: relative;
                 }
             }
 
