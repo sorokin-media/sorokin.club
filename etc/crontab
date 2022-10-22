@@ -11,3 +11,4 @@
 20 11 * * * * root cd /app && python3 manage.py subscriptions_write_recurrent >/proc/1/fd/1 2>/proc/1/fd/2
 */5 * * * * root cd /app && python3 manage.py subscriptions_write_admin >/proc/1/fd/1 2>/proc/1/fd/2
 */20 * * * * root cd /app && python3 manage.py check_post_upvote >/proc/1/fd/1 2>/proc/1/fd/2
+
