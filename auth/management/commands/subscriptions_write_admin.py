@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 from users.models.user import User
-from notifications.telegram.users import cancel_subscribe_admin
+from notifications.telegram.users import cancel_subscribe_admin, send_telegram_message, Chat
 
 
 class Command(BaseCommand):
@@ -15,6 +15,10 @@ class Command(BaseCommand):
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text=f"Test 123 123 123 123",
+            )
             self.cancelSubUser(user)
         self.stdout.write("Done 🥙")
 

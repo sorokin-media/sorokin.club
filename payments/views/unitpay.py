@@ -158,7 +158,7 @@ def unitpay_webhook(request):
 
         if "params[subscriptionId]" in request.GET:
             user_model = payment.user
-            user_model.unitpay_id = str(request.GET["params[subscriptionId]"])
+            user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
             user_model.save()
 
         product = SubscriptionPlan.objects.filter(code=payment.product_code).last()

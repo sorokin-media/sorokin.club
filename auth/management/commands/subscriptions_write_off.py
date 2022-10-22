@@ -182,7 +182,7 @@ class Command(BaseCommand):
                 )
 
     def cancelSubUser(self, user):
-        user.unitpay_id = ''
+        user.unitpay_id = 0
         user.save()
         cancel_subscribe_admin(user)
         cancel_subscribe_user(user)
