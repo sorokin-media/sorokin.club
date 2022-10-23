@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 
 from posts.models.post import Post
+from comments.models import Comment
 from django.db.models import Q
 from notifications.telegram.common import ADMIN_CHAT, send_telegram_message, render_html_message
 
@@ -24,6 +25,13 @@ class Command(BaseCommand):
             send_telegram_message(
                 chat=ADMIN_CHAT,
                 text=render_html_message("moderator_no_new_announce.html"),
+            )
+        delta = datetime.now() - timedelta(hours=6)
+        comments_query = Comment.objects.filter(created_at__gte=delta)
+        if not comments_query:
+            send_telegram_message(
+                chat=ADMIN_CHAT,
+                text=render_html_message("moderator_no_new_comment.html"),
             )
         # delta_intro = datetime.now() - timedelta(hours=24)
         # posts_query = Post.objects.filter(created_at__gte=delta_intro).filter(type='intro')
