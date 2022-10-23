@@ -1,24 +1,9 @@
 import json
 from datetime import datetime, timedelta
-from uuid import uuid4
-from django.conf import settings
-from base64 import b64encode
 from django.core.management import BaseCommand
 from users.models.user import User
-from payments.models import Payment
-from notifications.email.users import send_subscribe_8_email
-from notifications.email.users import couldnd_withdraw_money_email
-from notifications.email.users import cancel_subscribe_user_email, payment_reminder_5_email, payment_reminder_3_email, payment_reminder_1_email
-from notifications.telegram.users import subscribe_8_user
-from notifications.telegram.users import couldnd_withdraw_money
-from notifications.telegram.users import cancel_subscribe_user, payment_reminder_5, payment_reminder_3, payment_reminder_1, cancel_subscribe_admin
-from users.models.subscription_plan import SubscriptionPlan
-from payments.unitpay import UnitpayService
-from urllib.request import urlopen
-from urllib.parse import quote
-from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, render_html_message
-from django.urls import reverse
-
+from notifications.email.users import payment_reminder_5_email, payment_reminder_3_email, payment_reminder_1_email
+from notifications.telegram.users import payment_reminder_5, payment_reminder_3, payment_reminder_1
 
 class Command(BaseCommand):
     help = "Fetches expiring accounts and tries to renew the subscription"
