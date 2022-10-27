@@ -169,6 +169,10 @@ class Command(BaseCommand):
                     chat=Chat(id=204349098),
                     text=text_send
                 )
+                send_telegram_message(
+                    chat=ADMIN_CHAT,
+                    text=text_send
+                )
             else:
                 print("Success")
                 text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
