@@ -617,6 +617,25 @@
     position: relative;
 }
 
+.comment-markdown-editor__saved-action {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    margin: -10px -7px;
+    margin-bottom: 10px;
+
+    font-size: 1rem;
+}
+
+.comment-markdown-editor__saved-action > * {
+    margin: 10px 7px;
+}
+
+.comment-markdown-editor__saved-action > span {
+    opacity: 0.7;
+}
+
 .comment-markdown-editor--mobile textarea.markdown-editor-invisible,
 .comment-markdown-editor--mobile textarea.markdown-editor-full {
     display: block !important;

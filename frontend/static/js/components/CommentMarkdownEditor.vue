@@ -1,5 +1,28 @@
 <template>
     <div class="comment-markdown-editor" :class="{ 'comment-markdown-editor--mobile' : isMobileMode }">
+        <div
+            v-if="showLoadSavedBtn"
+            class="comment-markdown-editor__saved-action"
+        >
+            <span>Найдено сохранение прошлых данных, загрузить ?</span>
+            <button
+                @click="loadSavedInfo"
+
+                type="button"
+                class="button button-inverted"
+            >
+                Загрузить
+            </button>
+            <button
+                @click="showLoadSavedBtn = false"
+
+                type="button"
+                class="button button-inverted"
+            >
+                Нет
+            </button>
+        </div>
+
         <slot></slot>
         <div
             class="mention-autocomplete-hint"
@@ -62,6 +85,7 @@ export default {
         this.editor.codemirror.on("change", this.handleSuggest);
 
         this.populateCacheWithCommentAuthors();
+        this.checkSavedInfo();
     },
     watch: {
         users: function (val, oldVal) {
@@ -75,6 +99,8 @@ export default {
     },
     data() {
         return {
+            showLoadSavedBtn: false,
+            savedPrevValue: '',
             selectedUserIndex: null,
             postSlug: null,
             users: [],
@@ -286,6 +312,22 @@ export default {
             this.users = [];
             this.editor.codemirror.focus();
         },
+
+        checkSavedInfo () {
+            const postsData = JSON.parse(localStorage.getItem('postsData')) || [];
+            const curPathname = document.location.pathname.split('/').filter(el => el.length).join('/');
+            const savedData = postsData.find(el => el.id == curPathname);
+
+            if (!savedData || this.editor.element.value == savedData.data.md) return;
+
+            this.savedPrevValue = savedData.data.md;
+            this.showLoadSavedBtn = true;
+        },
+
+        loadSavedInfo () {
+            this.editor.value(this.savedPrevValue);
+            this.showLoadSavedBtn = false;
+        }
     },
 };
 </script>
