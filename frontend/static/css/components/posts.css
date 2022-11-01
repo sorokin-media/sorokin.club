@@ -529,28 +529,6 @@
             color: var(--opposite-text-color);
         }
 
-    .text-body table {
-        table-layout: fixed;
-        border-spacing: 10px;
-        border-collapse: collapse;
-    }
-
-        .text-body table thead {
-            text-align: left;
-            font-size: 120%;
-        }
-
-            .text-body table thead th {
-                padding-bottom: 30px;
-            }
-
-        .text-body table td {
-            width: 1%;
-            padding: 0 50px 30px 0;
-            vertical-align: top;
-            box-sizing: border-box;
-        }
-
     .text-body-type-comment {
         font-size: 115%;
         line-height: 1.67;
@@ -976,6 +954,99 @@
     font-size: 16px;
 
     border-top: 1px solid #979595;
+}
+
+/* d-table */
+.d-table {
+    width: 100%;
+    overflow: auto;
+
+    padding-bottom: 1rem;
+
+    scrollbar-width: thin;
+    scrollbar-color: #959595 #DCE6E8;
+}
+
+
+/* Chrome, Edge and Safari */
+.d-table::-webkit-scrollbar {
+width: 10px;
+height: 10px;
+}
+.d-table::-webkit-scrollbar-track {
+border-radius: 4px;
+background-color: #DCE6E8;
+}
+
+.d-table::-webkit-scrollbar-track:hover {
+background-color: #DCE6E8;
+}
+
+.d-table::-webkit-scrollbar-track:active {
+background-color: #DCE6E8;
+}
+
+.d-table::-webkit-scrollbar-thumb {
+border-radius: 5px;
+background-color: #959595;
+border: 2px solid #DAE4E6;
+}
+
+.d-table::-webkit-scrollbar-thumb:hover {
+background-color: #4D5566;
+}
+
+.d-table::-webkit-scrollbar-thumb:active {
+background-color: #282C35;
+}
+
+.d-table table{
+    table-layout: fixed;
+    overflow: hidden;
+
+    font-size: 80%;
+
+    color: #DDD;
+
+    border-spacing: 10px;
+    border-collapse: collapse;
+    border-radius: 15px;
+    background-color: var(--table-bg-color);
+}
+
+.d-table thead {
+    text-align: left;
+}
+
+.d-table tbody tr:nth-child(even) {
+    background-color: var(--tr-even-bg-color);
+}
+
+.d-table th {
+    background-color: var(--th-bg-color);
+}
+
+.d-table td,
+.d-table th {
+    min-width: 135px;
+    padding: 1rem 1.3rem;
+
+    width: 1%;
+    vertical-align: top;
+
+    border-right: 1px solid var(--table-border-color);
+
+    box-sizing: border-box;
+}
+
+.d-table td:first-child,
+.d-tabley th:first-child {
+    padding-left: 1.7rem;
+}
+
+.d-table td:last-child,
+.d-table th:last-child {
+    padding-right: 1.7rem;
 }
 
 @media (min-width: 1024px) {

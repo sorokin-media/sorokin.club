@@ -154,6 +154,12 @@ export default {
                     className: "fas fa-code",
                     title: "Insert code",
                 },
+                {
+                    name: "table",
+                    action: EasyMDE.drawTable,
+                    className: "fas fa-table",
+                    title: "Insert table",
+                },
             ],
         };
     },

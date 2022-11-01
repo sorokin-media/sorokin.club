@@ -52,6 +52,11 @@ html[theme="light"]:root {
     --input-toolbar-button-color: #000;
     --input-link: #7f8c8d;
     --input-selection-color: #d7d4f0;
+
+    --table-bg-color: #3b404c;
+    --th-bg-color: var(--opposite-bg-color);
+    --tr-even-bg-color: #333741;
+    --table-border-color: var(--button-bg-color);
 }
 
 html[theme="dark"],
@@ -92,6 +97,11 @@ html[theme="dark"]:root {
     --input-toolbar-button-color: #eaeaea;
     --input-link: #b3b6ff;
     --input-selection-color: #58537D;
+
+    --table-bg-color: #3f4552;
+    --th-bg-color: #2e333f;
+    --tr-even-bg-color: var(--input-bg-color);
+    --table-border-color: var(--button-color);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -131,6 +141,11 @@ html[theme="dark"]:root {
         --input-toolbar-button-color: #eaeaea;
         --input-link: #b3b6ff;
         --input-selection-color: #58537D;
+
+        --table-bg-color: #3f4552;
+        --th-bg-color: #2e333f;
+        --tr-even-bg-color: var(--input-bg-color);
+        --table-border-color: var(--button-color);
     }
 }
 
