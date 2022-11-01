@@ -3,7 +3,7 @@ class FormAutosave {
     form = document.createElement('form');
     postsData = JSON.parse(localStorage.getItem('postsData')) || [];
     storageData = this.postsData.find(el => el.id === this.id);
-    saveDelay = 7000;
+    saveDelay = 15000;
     lastTryedSavedData = {};
     ignorefillInputNames = [
         'csrfmiddlewaretoken',
