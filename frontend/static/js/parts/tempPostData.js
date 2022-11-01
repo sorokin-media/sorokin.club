@@ -52,7 +52,7 @@ class FormAutosave {
         }
 
         if (!confirm('Найдены старые данные, загрузить ?')) {
-            return
+            return;
         }
 
         for (let i = 0; i < Object.keys(storageData).length; i++) {
@@ -82,7 +82,6 @@ class FormAutosave {
             })
 
             localStorage.setItem('postsData', JSON.stringify(postsData));
-            console.log('-- save');
             return;
         }
 
@@ -90,7 +89,6 @@ class FormAutosave {
 
         postsData[postsData.findIndex(el => el.id === this.id)].data = this.getNewPostsData(storageData.data, curData);
         localStorage.setItem('postsData', JSON.stringify(postsData));
-        console.log('save');
     }
 
     getData () {
