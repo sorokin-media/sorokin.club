@@ -1040,7 +1040,7 @@ background-color: #282C35;
 }
 
 .d-table td:first-child,
-.d-tabley th:first-child {
+.d-table th:first-child {
     padding-left: 1.7rem;
 }
 
