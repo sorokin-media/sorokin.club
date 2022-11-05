@@ -78,7 +78,4 @@ def render_post(request, post, context=None):
         LinkedPost.create_links_from_text(post, post.text)
         return redirect("show_post", post.type, post.slug)
 
-    try:
-        return render(request, f"posts/show/{post.type}.html", context)
-    except TemplateDoesNotExist:
-        return render(request, "posts/show/post.html", context)
+    return render(request, "posts/show/post.html", context)
