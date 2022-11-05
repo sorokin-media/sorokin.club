@@ -14,12 +14,22 @@ from users.models.user import User
 from utils.strings import random_string
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
+import time
 
 def join(request):
     if request.me:
         return redirect("profile", request.me.slug)
-    plan_subcription = Subscription.objects.filter(default=True).last()
-    plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+    if time.time() < 16697734591:
+        cookie_sale = request.COOKIES.get('sale-november')
+        get_sale = request.GET.get("sale-november")
+        if cookie_sale or get_sale:
+            plans = SubscriptionPlan.objects.filter(subscription_id='bedeecd9-0fc8-46ef-89ac-86fb2b4620c8').order_by("created_at")
+        else:
+            plan_subcription = Subscription.objects.filter(default=True).last()
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+    else:
+        plan_subcription = Subscription.objects.filter(default=True).last()
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
     return render(request, "auth/join.html", {
         "plans": plans
     })

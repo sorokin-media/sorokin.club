@@ -10,6 +10,15 @@
                 <div class="pay-package-name">{{ plan.package_name }}</div>
                 <div class="pay-package-image">{{ plan.package_image }}</div>
                 <div class="pay-package-price">{{ plan.package_price }}₽</div>
+                {% if plan.package_price == 10 %}
+                    <div class="pay-package-price-crossed">420₽</div>
+                {% endif %}
+                {% if plan.package_price == 2920 %}
+                    <div class="pay-package-price-crossed">3920</div>
+                {% endif %}
+                {% if plan.package_price == 5920 %}
+                    <div class="pay-package-price-crossed">7920</div>
+                {% endif %}
             </label>
         </div>
     {% endfor %}

@@ -1,6 +1,7 @@
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
 from django.core.management import BaseCommand
+import re
 from users.models.user import User
 from posts.models.post import Post
 from posts.models.subscriptions import PostSubscription
@@ -12,9 +13,11 @@ class Command(BaseCommand):
     help = "Fetches expiring accounts and tries to renew the subscription"
 
     def handle(self, *args, **options):
-        payment_last = Payment.objects.filter(user_id='fadac4b3-152c-4181-8e5f-2269a2df9d95', status='success',
-                                              data__contains='subscriptionId').order_by('created_at').last()
-        print(payment_last)
+        text = re.sub('sale', 'club', 'sale01prod')
+        print(text)
+        # payment_last = Payment.objects.filter(user_id='fadac4b3-152c-4181-8e5f-2269a2df9d95', status='success',
+        #                                       data__contains='subscriptionId').order_by('created_at').last()
+        # print(payment_last)
         # users_query = User.objects.filter(is_email_verified=True)
         # for user in users_query:
         #     post_intro = Post.objects.filter(type='intro', author_id=user.id).last()
@@ -36,17 +39,18 @@ class Command(BaseCommand):
 #                 chat=Chat(id=204349098),
 #                 text=text_send
 #             )
-        subscription = Subscription(name="New08102022", default=False)
+        subscription = Subscription(name="Sale30102022", default=False)
         subscription.save()
-        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 месяц', amount=420,
-                                             description='1 месяц членства в Клубе', code='club1m1022', timedelta=30,
-                                             package_name='На 1 месяц', package_image='🤘', package_price=420)
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 месяц (акция)', amount=10,
+                                             description='1 месяц членства в Клубе потом 420р.', code='sale1m1022', timedelta=30,
+                                             package_name='На 1 месяц', package_image='🤘', package_price=10)
         subscription_plan.save()
-        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 год', amount=3920,
-                                             description='1 год членства в Клубе', code='club12m1022', timedelta=365,
-                                             package_name='На 1 год', package_image='🤘', package_price=3920)
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 год (акция)', amount=120,
+                                             description='1 год членства в Клубе потом 3920р.', code='sale12m1022', timedelta=365,
+                                             package_name='На 1 год', package_image='🤘', package_price=120)
         subscription_plan.save()
-        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 3 года', amount=7920,
-                                             description='3 года членства в Клубе', code='club12m1022', timedelta=1095,
-                                             package_name='На 3 года', package_image='🤘', package_price=7920)
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 3 года (акция)', amount=360,
+                                             description='3 года членства в Клубе потом 7920р.', code='sale12m1022', timedelta=1095,
+                                             package_name='На 3 года', package_image='🤘', package_price=360)
         subscription_plan.save()
+

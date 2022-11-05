@@ -124,6 +124,13 @@
             font-size: 120%;
         }
 
+        .pay-package-price-crossed {
+            font-weight: 700;
+            font-size: 120%;
+            text-decoration: line-through;
+            color: red
+        }
+
 .pay-recurrent {
     display: block;
     padding: 20px;
