@@ -20,7 +20,7 @@
             </div>
         {% elif not post.is_visible %}
             <div class="post-label">
-                {% include "posts/widgets/draft_label.html" %}
+<!--                {% include "posts/widgets/preview_button_footer.html" %}-->
             </div>
         {% endif %}
     </div>
@@ -47,9 +47,15 @@
             </span>
             {% include "posts/widgets/post_actions_line.html" %}
         </div>
+
     </div>
 
     <div class="content">
+        {% if not post.is_visible %}
+            <div class="post-label post_button_footer_size">
+                {% include "posts/widgets/preview_button_footer.html" %}
+            </div>
+        {% endif %}
         <div class="block post post-layout-block post-type-battle">
             <div class="post-upvote">
                 <post-upvote :initial-upvotes="{{ post.upvotes }}"
@@ -72,13 +78,17 @@
                 {% render_post post %}
                     {% endif %}
             </div>
-
             <div class="post-footer">
                 <div class="p-author">
                     {% include "users/widgets/small.html" with user=post.author created_at=post.created_at %}
                 </div>
             </div>
         </div>
+        {% if not post.is_visible %}
+            <div class="post-label post_button_footer_size">
+                {% include "posts/widgets/preview_button_footer.html" %}
+            </div>
+        {% endif %}
     </div>
 
     {% if post.metadata.badges %}

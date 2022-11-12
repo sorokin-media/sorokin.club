@@ -77,18 +77,12 @@ def render_post(request, post, context=None):
         post.publish()
         LinkedPost.create_links_from_text(post, post.text)
         return redirect("show_post", post.type, post.slug)
-    if post.type == 'idea':
-        return render(request, "posts/show/idea.html", context)
     if post.type == 'event':
         return render(request, "posts/show/event.html", context)
-    if post.type == 'question':
-        return render(request, "posts/show/question.html", context)
-    if post.type == 'link':
-        return render(request, "posts/show/link.html", context)
-    if post.type == 'battle':
-        return render(request, "posts/show/battle.html", context)
-    if post.type == 'post':
-        return render(request, "posts/show/post.html", context)
+
+    if post.type == 'idea':
+        return render(request, "posts/show/idea.html", context)
+
     try:
         return render(request, f"posts/show/{post.type}.html", context)
     except TemplateDoesNotExist:

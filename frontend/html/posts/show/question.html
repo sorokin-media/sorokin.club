@@ -47,8 +47,9 @@
                             </span>
                         </div>
                     {% elif not post.is_visible %}
+                    <div class="clear"></div>
                         <div class="post-label">
-                            {% include "posts/widgets/draft_label.html" %}
+                            {% include "posts/widgets/preview_button_footer.html" %}
                         </div>
                     {% endif %}
                 </div>
@@ -75,7 +76,11 @@
                 {% render_post post %}
             </section>
         {% endblock %}
-
+        {% if not post.is_visible %}
+            <div class="post-label post_button_footer_size">
+                {% include "posts/widgets/preview_button_footer.html" %}
+            </div>
+        {% endif %}
         {% block post_footer %}
             <footer class="post-footer p-author">
                 {% include "users/widgets/small.html" with user=post.author created_at=post.created_at %}
