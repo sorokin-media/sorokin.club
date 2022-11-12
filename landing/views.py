@@ -49,11 +49,14 @@ def club(request):
         "stats": stats
     })
 
-def tg_bot(request):
+def tg_bot (request):
     return render(request, "pages/tg-bot.html")
 
-def tg_bot_second(request):
+def tg_bot_second (request):
     return render(request, "pages/tg-bot-second.html")
+
+def tg_bot_second_2 (request):
+    return render(request, "pages/tg-bot-second_2.html")
 
 # Geo targeting pages
 
