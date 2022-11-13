@@ -238,7 +238,6 @@ h1 {
   }
   h1 {
     font-size: 24px;
-    margin-top: 56px;
     margin-bottom: 24px;
   }
   .logo img {
@@ -296,6 +295,21 @@ h1 {
     width: 220px;
     bottom: -30px;
     right: -28px;
+  }
+}
+@media all and (max-height: 800px) {
+  .logo img {
+    width: 72px;
+  }
+  h1 {
+    font-size: 40px;
+    margin-top: 40px;
+  }
+  .list {
+    margin-bottom: 60px;
+  }
+  .list li:not(:last-child) {
+    margin-bottom: 20px;
   }
 }
 /*# sourceMappingURL=styles.css.map */
