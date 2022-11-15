@@ -56,7 +56,6 @@ class Command(BaseCommand):
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
             self.sendPayUnitpay(user, 4)
-            self.sendAdminMessage(user)
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
@@ -156,6 +155,8 @@ class Command(BaseCommand):
                 if (daysNum == 5):
                     payment_reminder_5_email(user)
                     payment_reminder_5(user)
+                if (daysNum == 4):
+                    self.sendAdminMessage(user)
                 if (daysNum == 3):
                     payment_reminder_3_email(user)
                     payment_reminder_3(user)
