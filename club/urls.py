@@ -13,7 +13,7 @@ from club import features
 from comments.views import create_comment, edit_comment, delete_comment, show_comment, upvote_comment, \
     retract_comment_vote, pin_comment
 from common.feature_flags import feature_switch
-from landing.views import landing, club, tg_bot, tg_bot_second, geo_moscow, docs, godmode_network_settings, godmode_digest_settings, godmode_settings, \
+from landing.views import landing, club, tg_bot, tg_bot_second, tg_bot_second_2, geo_moscow, docs, godmode_network_settings, godmode_digest_settings, godmode_settings, \
     godmode_invite
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, render_daily_digest, \
@@ -66,6 +66,7 @@ urlpatterns = [
     path("club/", club, name="club"),
     path("tg_bot/", tg_bot, name="tg_bot"),
     path("tg-club/", tg_bot_second, name="tg-club"),
+    path("tg-second/", tg_bot_second_2, name="tg-second"),
 
     # Geo targeting pages
 
