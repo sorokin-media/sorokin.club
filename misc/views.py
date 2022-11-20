@@ -74,7 +74,7 @@ def stats_gode(request):
             date = str(payment_one.created_at)
             dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
             if payment_one and int(dt.timestamp()) > int(datetime_for):
-                payment_first.extend([user.id,payment_one.amount])
+                payment_first.extend([payment_one.reference,payment_one.amount,payment_one.created_at])
                 sum_first += payment_one.amount
                 count_first += 1
 
