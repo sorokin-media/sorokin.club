@@ -69,7 +69,7 @@ def stats_gode(request):
     sum_first = 0
     count_first = 0
     for user in expiring_users:
-        payment_one = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').first()
+        payment_one = Payment.objects.filter(user_id=user.id, status='success').order_by('created_at').first()
         if payment_one:
             date = str(payment_one.created_at)
             dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
