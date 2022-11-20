@@ -34,9 +34,11 @@
         <div class="block stats-badges-top">
             <table>
                 <tr>
-                    {% for payment_first_one in payment_first %}
-                        {{ payment_first_one }}
-                    {% endfor %}
+                    <td>
+                        {% for payment_first_one in payment_first %}
+                            {{ payment_first_one }}
+                        {% endfor %}
+                    </td>
                 </tr>
             </table>
 
