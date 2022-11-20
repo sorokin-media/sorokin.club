@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlencode
 
 import pytz
+import datetime as DT
 from django.db.models import Count, Q, Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -13,6 +14,7 @@ from badges.models import UserBadge
 from landing.models import GodSettings
 from users.models.achievements import Achievement
 from users.models.user import User
+from payments.models import Payment
 
 
 @auth_required
@@ -55,6 +57,31 @@ def stats(request):
         "top_users": top_users,
         "moderators": moderators,
         "parliament": parliament,
+    })
+
+@auth_required
+def stats_gode(request):
+    # '2022-10-03 00:00:00' and '2022-11-06 23:59:59'
+    payment_first = []
+    dt = DT.datetime.strptime('2022-08-03 00:00:00', '%Y-%m-%d %H:%M:%S')
+    datetime_for = dt.timestamp()
+    expiring_users = User.objects.filter(moderation_status='approved')
+    sum_first = 0
+    count_first = 0
+    for user in expiring_users:
+        payment_one = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').first()
+        if payment_one:
+            date = str(payment_one.created_at)
+            dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
+            if payment_one and int(dt.timestamp()) > int(datetime_for):
+                payment_first.extend([user.id,payment_one.amount])
+                sum_first += payment_one.amount
+                count_first += 1
+
+    return render(request, "pages/stats-gode.html", {
+        "payment_first": payment_first,
+        "sum_first": sum_first,
+        "count_first": count_first,
     })
 
 

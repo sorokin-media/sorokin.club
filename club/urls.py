@@ -15,7 +15,7 @@ from comments.views import create_comment, edit_comment, delete_comment, show_co
 from common.feature_flags import feature_switch
 from landing.views import landing, club, tg_bot, tg_bot_second, tg_bot_second_2, geo_moscow, docs, godmode_network_settings, godmode_digest_settings, godmode_settings, \
     godmode_invite
-from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite
+from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite, stats_gode
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, render_daily_digest, \
     email_digest_switch, link_telegram
 from notifications.webhooks import webhook_event
@@ -119,6 +119,7 @@ urlpatterns = [
     path("people/", people, name="people"),
     path("achievements/", RedirectView.as_view(url="/stats", permanent=True), name="achievements"),
     path("stats/", stats, name="stats"),
+    path("stats-gode/", stats_gode, name="stats-gode"),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),
