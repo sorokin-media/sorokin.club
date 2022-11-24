@@ -66,10 +66,32 @@ class PostTextForm(PostForm):
             }
         ),
     )
+
     coauthors = SimpleArrayField(
         forms.CharField(max_length=32),
         max_length=10,
         label="Соавторы поста",
+        required=False,
+    )
+
+    seoTitle = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Ключевые слова (Keywords)",
         required=False,
     )
 
@@ -546,6 +568,27 @@ class PostGuideForm(PostForm):
         forms.CharField(max_length=32),
         max_length=10,
         label="Соавторы поста",
+        required=False,
+    )
+
+    seoTitle = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = SimpleArrayField(
+        forms.CharField(max_length=32),
+        max_length=10,
+        label="Ключевые слова (Keywords)",
         required=False,
     )
 

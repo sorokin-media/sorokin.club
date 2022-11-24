@@ -13,6 +13,33 @@
             Лучше не делать этого одновременно, ведь изменения одного автора перетирают другого.
         </span>
     </div>
+
+    <div class="form-row compose-form-coauthors">
+        <label for="{{ form.seoTitle.id_for_label }}" class="form-label">{{ form.seoTitle.label }}</label>
+        {{ form.seoTitle }}
+        {% if form.seoTitle.errors %}
+            <span class="form-row-errors">{{ form.seoTitle.errors }}</span>
+        {% endif %}
+        <span class="form-row-help form-row-help-wide"></span>
+    </div>
+
+    <div class="form-row compose-form-coauthors">
+        <label for="{{ form.seoDescription.id_for_label }}" class="form-label">{{ form.seoDescription.label }}</label>
+        {{ form.seoDescription }}
+        {% if form.seoDescription.errors %}
+            <span class="form-row-errors">{{ form.seoDescription.errors }}</span>
+        {% endif %}
+        <span class="form-row-help form-row-help-wide"></span>
+    </div>
+
+    <div class="form-row compose-form-coauthors">
+        <label for="{{ form.seoKeywords.id_for_label }}" class="form-label">{{ form.seoKeywords.label }}</label>
+        {{ form.seoKeywords }}
+        {% if form.seoKeywords.errors %}
+            <span class="form-row-errors">{{ form.seoKeywords.errors }}</span>
+        {% endif %}
+        <span class="form-row-help form-row-help-wide"></span>
+    </div>
 </details>
 {% endif %}
 

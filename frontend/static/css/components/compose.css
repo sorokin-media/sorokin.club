@@ -91,6 +91,10 @@
         font-size: 130%;
     }
 
+    .compose-form-advanced summary + * {
+        margin-top: 40px;
+    }
+
     .compose-vs {
         display: inline-block;
         padding: 5px 10px;
@@ -157,6 +161,15 @@
     padding: 20px;
     margin-bottom: 50px;
 }
+
+    .compose-form-advanced .form-row {
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .compose-form-advanced .form-row input[type=text] {
+        text-align: left;
+    }
 
     .compose-form-coauthors {
         padding-top: 40px;
