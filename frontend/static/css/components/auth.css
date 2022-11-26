@@ -3,6 +3,14 @@
     padding-top: 80px;
 }
 
+.join-title-sale {
+        text-align: center;
+        font-weight: 500;
+        font-size: 200%;
+        padding-top: 20px;
+        color: red
+    }
+
     .join-title {
         text-align: center;
         font-weight: 500;

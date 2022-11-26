@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timedelta
 from uuid import uuid4
 from django.conf import settings
@@ -113,20 +114,23 @@ class Command(BaseCommand):
         payment_last = Payment.objects.filter(user_id=user.id, status='success',
                                               data__contains='subscriptionId').order_by('created_at').last()
         if payment_last:
-            product = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
+            code_product = payment_last.product_code
+            if 'sale' in code_product:
+                code_product = re.sub('sale', 'club', code_product)
+            product = SubscriptionPlan.objects.filter(code=code_product).last()
             order_id = uuid4().hex
             payment_json = json.loads(payment_last.data)
             cash = [{
                 "name": "Sorokin.Club",
                 "count": 1,
-                "price": payment_last.amount,
+                "price": product.amount,
                 "type": "commodity",
             }]
             cash_items = quote(b64encode(json.dumps(cash).encode()))
             data = {
                 "paymentType": payment_json['params[paymentType]'][0],
                 "account": order_id,
-                "sum": str(payment_last.amount),
+                "sum": str(product.amount),
                 "projectId": 439242,
                 "resultUrl": 'https://sorokin.club',
                 "customerEmail": user.email,

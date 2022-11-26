@@ -11,7 +11,11 @@
             <br><br>
             Если вам не подходят наши <a href="{% url "docs" "about" %}" target="_blank">правила</a>, вы боитесь деанона или пришли «просто почитать посты» рекомендуем сэкономить нам всем время и пойти на <a href="https://ok.ru/" rel="nofollow">Одноклассники</a>, там как-то с этим попроще.
         </div>
-
+        {% for plan in plans %}
+            {% if plan.package_price == 10 %}
+                <div class="join-title-sale">Акция закончится 31 ноября.</div>
+            {% endif %}
+        {% endfor %}
         <form action="{% url "unitpay_pay" %}" method="get">
 
         <div class="join-subtitle" id="select_package">Пакет брать будем?</div>
