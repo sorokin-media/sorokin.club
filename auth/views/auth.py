@@ -23,7 +23,7 @@ def join(request):
         cookie_sale = request.COOKIES.get('sale-november')
         get_sale = request.GET.get("sale-november")
         if cookie_sale or get_sale:
-            plans = SubscriptionPlan.objects.filter(subscription_id='6b56a6d2-8fee-4e34-926b-1d834f01ddb7').order_by("created_at")
+            plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
         else:
             plan_subcription = Subscription.objects.filter(default=True).last()
             plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
