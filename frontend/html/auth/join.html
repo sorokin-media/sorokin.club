@@ -11,34 +11,13 @@
             <br><br>
             Если вам не подходят наши <a href="{% url "docs" "about" %}" target="_blank">правила</a>, вы боитесь деанона или пришли «просто почитать посты» рекомендуем сэкономить нам всем время и пойти на <a href="https://ok.ru/" rel="nofollow">Одноклассники</a>, там как-то с этим попроще.
         </div>
-
+        {% for plan in plans %}
+            {% if plan.package_price == 10 %}
+                <div class="join-title-sale">Акция закончится 31 ноября.</div>
+            {% endif %}
+        {% endfor %}
         <form action="{% url "unitpay_pay" %}" method="get">
-        <div class="form_time">
-            <script type="text/javascript">
-                    var upgradeTime = 172801;
-                    var seconds = upgradeTime;
-                    function timer() {
-                      var days        = Math.floor(seconds/24/60/60);
-                      var hoursLeft   = Math.floor((seconds) - (days*86400));
-                      var hours       = Math.floor(hoursLeft/3600);
-                      var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-                      var minutes     = Math.floor(minutesLeft/60);
-                      var remainingSeconds = seconds % 60;
-                      function pad(n) {
-                        return (n < 10 ? "0" + n : n);
-                      }
-                      document.getElementById('countdown').innerHTML = pad(hours) + ":" + pad(minutes) + ":" + pad(remainingSeconds);
-                      if (seconds == 0) {
-                        clearInterval(countdownTimer);
-                        document.getElementById('countdown').innerHTML = "Completed";
-                      } else {
-                        seconds--;
-                      }
-                    }
-                    var countdownTimer = setInterval('timer()', 1000);
-            </script>
-            <span id="countdown" class="timer"></span>
-        </div>
+
         <div class="join-subtitle" id="select_package">Пакет брать будем?</div>
 
         {% include "payments/blocks/packages.html" with plans=plans %}
