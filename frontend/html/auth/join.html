@@ -13,7 +13,7 @@
         </div>
         {% for plan in plans %}
             {% if plan.package_price == 10 %}
-                <div class="join-title-sale">Акция закончится 31 ноября.</div>
+                <div class="join-title-sale">Акция закончится 30 ноября.</div>
             {% endif %}
         {% endfor %}
         <form action="{% url "unitpay_pay" %}" method="get">
