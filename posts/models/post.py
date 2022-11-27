@@ -85,6 +85,9 @@ class Post(models.Model, ModelDiffMixin):
     title = models.TextField(null=False)
     text = models.TextField(null=False)
     html = models.TextField(null=True)
+    seoTitle = models.TextField(null=True)
+    seoDescription = models.TextField(null=True)
+    seoKeywords = models.TextField(null=True)
     url = models.URLField(max_length=1024, null=True)
     image = models.URLField(max_length=1024, null=True)
 
@@ -126,6 +129,9 @@ class Post(models.Model, ModelDiffMixin):
             "view_count",
             "upvotes",
             "upvote_badge",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords",
             "hotness",
             "label_code",
             "is_approved_by_moderator",

@@ -74,30 +74,27 @@ class PostTextForm(PostForm):
         required=False,
     )
 
-    seoTitle = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoTitle = forms.CharField(
+        max_length=100,
         label="Сео заголовок (title)",
         required=False,
     )
 
-    seoDescription = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoDescription = forms.CharField(
+        max_length=300,
         label="Сео описание (description)",
         required=False,
     )
 
-    seoKeywords = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoKeywords = forms.CharField(
+        max_length=1000,
         label="Ключевые слова (Keywords)",
         required=False,
     )
 
     class Meta:
         model = Post
-        fields = ["title", "text", "topic", "is_public", "coauthors"]
+        fields = ["title", "text", "topic", "is_public", "coauthors", "seoTitle", "seoDescription", "seoKeywords"]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -571,30 +568,27 @@ class PostGuideForm(PostForm):
         required=False,
     )
 
-    seoTitle = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoTitle = forms.CharField(
+        max_length=100,
         label="Сео заголовок (title)",
         required=False,
     )
 
-    seoDescription = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoDescription = forms.CharField(
+        max_length=300,
         label="Сео описание (description)",
         required=False,
     )
 
-    seoKeywords = SimpleArrayField(
-        forms.CharField(max_length=32),
-        max_length=10,
+    seoKeywords = forms.CharField(
+        max_length=1000,
         label="Ключевые слова (Keywords)",
         required=False,
     )
 
     class Meta:
         model = Post
-        fields = ["title", "text", "topic", "is_public", "coauthors"]
+        fields = ["title", "text", "topic", "is_public", "coauthors", "seoTitle", "seoDescription", "seoKeywords"]
 
     def clean(self):
         cleaned_data = super().clean()
