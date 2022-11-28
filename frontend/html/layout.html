@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 {% load static %}
+{% load posts %}
+
 <html lang="ru">
 <head>
-    <title>{% block title %}Сорокин.Клуб 🤘✖️👩‍💻‍{% endblock %}</title>
+    <title>
+        {% if not post.seoTitle %}
+            {% block title %}Сорокин.Клуб 🤘✖️👩‍💻‍{% endblock %}
+        {% else %}
+            {{ post.seoTitle }}
+        {% endif %}
+    </title>
+
+    {% block meta %}
+        <meta charset="UTF-8"/>
+
+        {% if post.seoDescription %}
+            <meta name="description" content="{{ post.seoDescription }}">
+        {% else %}
+            <meta name="description" content="{{ settings.APP_DESCRIPTION }}">
+        {% endif %}
+
+        {% if post.seoKeywords %}
+            <meta name="keywords" content="{{ post.seoKeywords }}">
+        {% endif %}
+
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    {% endblock %}
+
     {% block fonts %}
         {% include "common/fonts.html" %}
     {% endblock %}
-    {% block meta %}
-        {% include "common/meta.html" %}
-    {% endblock %}
+
     <script>
         const theme = localStorage.getItem('theme');
         if (theme !== null) {
