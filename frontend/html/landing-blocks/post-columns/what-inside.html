@@ -1,7 +1,12 @@
 {% load static %}
 
 <div class="landing-post">
-    <div class="avatar landing-post-avatar"><img src="{% static "images/home/landing-posts/1/avatar.jpe" %}" alt="Аватар" /></div>
+    <div class="avatar landing-post-avatar">
+        <picture>
+            <source srcset="{% static "images/home/landing-posts/1/avatar.webp" %}" type="image/webp">
+            <img src="{% static "images/home/landing-posts/1/avatar.jpe" %}" alt="Аватар">
+        </picture>
+    </div>
     <div class="landing-post-title">
         Мой опыт: большой мужской чекап 35–40
     </div>
@@ -27,7 +32,12 @@
 </div>
 
 <div class="landing-post" style="left: 6%;">
-    <div class="avatar landing-post-avatar"><img src="{% static "images/home/landing-posts/2/avatar.jpe" %}" alt="Аватар" /></div>
+    <div class="avatar landing-post-avatar">
+        <picture>
+            <source srcset="{% static "images/home/landing-posts/2/avatar.webp" %}" type="image/webp">
+            <img src="{% static "images/home/landing-posts/2/avatar.jpe" %}" alt="Аватар">
+        </picture>
+    </div>
     <div class="landing-post-title">Мастермайнды для участников клуба</div>
     <div class="landing-post-footer">42 комментария</div>
     <div class="landing-post-upvotes">9</div>
@@ -35,7 +45,12 @@
 </div>
 
 <div class="landing-post" style="left: 2%;">
-    <div class="avatar landing-post-avatar"><img src="{% static "images/home/landing-posts/3/avatar.png" %}" alt="Аватар" /></div>
+    <div class="avatar landing-post-avatar">
+        <picture>
+            <source srcset="{% static "images/home/landing-posts/3/avatar.webp" %}" type="image/webp">
+            <img src="{% static "images/home/landing-posts/3/avatar.png" %}" alt="Аватар">
+        </picture>
+    </div>
     <div class="landing-post-title">
         Как я пришел в бег и начал бегать по 100+км за раз?
     </div>
@@ -45,7 +60,12 @@
 </div>
 
 <div class="landing-post" style="left: 8%;">
-    <div class="avatar landing-post-avatar"><img src="{% static "images/home/landing-posts/4/avatar.jpe" %}" alt="Аватар" /></div>
+    <div class="avatar landing-post-avatar">
+        <picture>
+            <source srcset="{% static "images/home/landing-posts/4/avatar.webp" %}" type="image/webp">
+            <img src="{% static "images/home/landing-posts/4/avatar.jpe" %}" alt="Аватар">
+        </picture>
+    </div>
     <div class="landing-post-title">Как я купил авто из Европы через нашего одноклубника</div>
     <div class="landing-post-footer">
         22 комментария
@@ -55,7 +75,12 @@
 </div>
 
 <div class="landing-post" style="left: 1%;">
-    <div class="avatar landing-post-avatar"><img src="{% static "images/home/landing-posts/5/avatar.jpe" %}" alt="Аватар" /></div>
+    <div class="avatar landing-post-avatar">
+        <picture>
+            <source srcset="{% static "images/home/landing-posts/5/avatar.webp" %}" type="image/webp">
+            <img src="{% static "images/home/landing-posts/5/avatar.jpe" %}" alt="Аватар">
+        </picture>
+    </div>
     <div class="landing-post-title">
         Наставничество в клубе: анонс движухи &nbsp;
         <img draggable="false" class="emoji" alt="🚀" src="https://twemoji.maxcdn.com/v/13.0.2/72x72/1f680.png">

@@ -22,7 +22,11 @@ export default {
         return {
             reviews: [
                 {
-                    avatarSrc: 'images/home/reviews/1/avatar.png',
+                    avatarPath: {
+                        webp: '/static/images/home/reviews/1/avatar.webp',
+                        default:'/static/images/home/reviews/1/avatar.png',
+                    },
+
                     name: 'Михаил Шакин',
                     position: 'Интернет-предприниматель, автор блога shakin.ru | Курган',
                     achive: `
@@ -43,7 +47,11 @@ export default {
                 },
 
                 {
-                    avatarSrc: 'images/home/reviews/2/avatar.png',
+                    avatarPath: {
+                        webp: '/static/images/home/reviews/2/avatar.webp',
+                        default:'/static/images/home/reviews/2/avatar.png',
+                    },
+
                     name: 'Елена Завьялова',
                     position: 'Цифровой коуч, вебмастер | Новосибирск',
                     achive: `
@@ -68,7 +76,11 @@ export default {
                 },
 
                 {
-                    avatarSrc: 'images/home/reviews/3/avatar.png',
+                    avatarPath: {
+                        webp: '/static/images/home/reviews/3/avatar.webp',
+                        default:'/static/images/home/reviews/3/avatar.png',
+                    },
+
                     name: 'Андрей Буйлов',
                     position: 'Владелец интернет-агентства Муравейник, автор YuTube-канала SEO без воды, создатель биржи лидов dryleads.com | Уфа',
                     achive: `

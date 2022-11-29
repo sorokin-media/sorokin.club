@@ -219,6 +219,13 @@
         background-size: cover;
         min-height: 500px;
         max-width: 2500px;
+
+        background-image: url('/static/images/landing/map.webp');
+    }
+    @supports not (background-image: url('/static/images/landing/map.webp')) {
+        .map-background {
+            background-image: url('/static/images/landing/map.jpg');
+        }
     }
 
     .map-container {
