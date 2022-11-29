@@ -37,7 +37,7 @@ const App = {
         }
     },
     initializeThemeSwitcher() {
-        const themeSwitch = document.querySelector('.theme-switcher input[type="checkbox"]');
+        const themeSwitch = document.querySelector('.theme-switcher input[type="checkbox"]') || document.createElement('input');
         const mediaQueryList = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
 
         themeSwitch.addEventListener(
