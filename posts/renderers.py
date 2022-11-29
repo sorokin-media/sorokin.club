@@ -42,6 +42,16 @@ def render_post(request, post, context=None):
     if comment_order in POSSIBLE_COMMENT_ORDERS:
         comments = comments.order_by(comment_order, "created_at")  # additionally sort by time to preserve an order
 
+    # seo settings
+    if post.seoTitle :
+        post.seo.title = post.seoTitle
+
+    if post.seoDescription :
+        post.seo.description = post.seoDescription
+
+    if post.seoKeywords :
+        post.seo.keywords = post.seoKeywords
+
     # hide deleted comments for battle (visual junk)
     if post.type == Post.TYPE_BATTLE:
         comments = comments.filter(is_deleted=False)

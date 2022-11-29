@@ -8,21 +8,16 @@
         {% if not post.seoTitle %}
             {% block title %}Сорокин.Клуб 🤘✖️👩‍💻‍{% endblock %}
         {% else %}
-            {{ post.seoTitle }}
+            {{ post.seo.title }}
         {% endif %}
     </title>
 
     {% block meta %}
         <meta charset="UTF-8"/>
+        <meta name="description" content="{{ post.seo.description }}">
 
-        {% if post.seoDescription %}
-            <meta name="description" content="{{ post.seoDescription }}">
-        {% else %}
-            <meta name="description" content="{{ settings.APP_DESCRIPTION }}">
-        {% endif %}
-
-        {% if post.seoKeywords %}
-            <meta name="keywords" content="{{ post.seoKeywords }}">
+        {% if post.seo.keywords %}
+            <meta name="keywords" content="{{ post.seo.keywords }}">
         {% endif %}
 
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -46,9 +41,17 @@
           title="Сорокин.Клуб: Новые посты"
           href="{% url "rss" %}{% if me %}?hash={{ me.secret_hash }}{% endif %}" />
 
-    {% block og_tags %}
-        {% include "common/og.html" %}
-    {% endblock %}
+    <meta property="og:title" content="{{ post.seo.title }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="{{ post.seo.description }}">
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ post.seo.title }}">
+    <meta name="twitter:description" content="{{ post.seo.description }}">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
 
     {% include "common/favicon.html" %}
     {% include "common/css.html" %}

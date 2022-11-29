@@ -73,6 +73,11 @@ class Post(models.Model, ModelDiffMixin):
         TYPE_THREAD: "Тред:",
     }
 
+    class Seo :
+        title: settings.APP_NAME
+        description: settings.APP_DESCRIPTION
+        keywords: ''
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     slug = models.CharField(max_length=128, unique=True, db_index=True)
 
@@ -90,6 +95,7 @@ class Post(models.Model, ModelDiffMixin):
     seoKeywords = models.TextField(null=True)
     url = models.URLField(max_length=1024, null=True)
     image = models.URLField(max_length=1024, null=True)
+    seo = Seo()
 
     metadata = models.JSONField(null=True)
     comment_template = models.TextField(null=True)
@@ -328,4 +334,3 @@ class Post(models.Model, ModelDiffMixin):
     def undelete(self, *args, **kwargs):
         self.deleted_at = None
         self.save()
-
