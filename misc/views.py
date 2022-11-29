@@ -65,7 +65,7 @@ def stats_gode(request):
     payment_first = []
     dt = DT.datetime.strptime('2022-10-07 00:00:00', '%Y-%m-%d %H:%M:%S')
     datetime_for = dt.timestamp()
-    dt = DT.datetime.strptime('2022-10-229 23:59:59', '%Y-%m-%d %H:%M:%S')
+    dt = DT.datetime.strptime('2022-10-29 23:59:59', '%Y-%m-%d %H:%M:%S')
     datetime_to = dt.timestamp()
     expiring_users = User.objects.filter(moderation_status='approved')
     sum_first = 0
