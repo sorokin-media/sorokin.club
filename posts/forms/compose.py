@@ -132,6 +132,24 @@ class PostLinkForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
@@ -139,7 +157,10 @@ class PostLinkForm(PostForm):
             "text",
             "url",
             "topic",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
     def clean(self):
@@ -177,13 +198,34 @@ class PostQuestionForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
             "title",
             "text",
             "topic",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
 
@@ -208,13 +250,34 @@ class PostIdeaForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
             "title",
             "text",
             "topic",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
 
@@ -311,13 +374,34 @@ class PostEventForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
             "title",
             "text",
             "topic",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
     def clean(self):
@@ -408,6 +492,24 @@ class PostProjectForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
@@ -416,7 +518,10 @@ class PostProjectForm(PostForm):
             "topic",
             "url",
             "image",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
 
@@ -457,12 +562,33 @@ class PostBattleForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = [
             "text",
             "topic",
-            "is_public"
+            "is_public",
+            "seoTitle",
+            "seoDescription",
+            "seoKeywords"
         ]
 
     def clean(self):
@@ -628,10 +754,27 @@ class PostThreadForm(PostForm):
         ),
     )
 
+    seoTitle = forms.CharField(
+        max_length=100,
+        label="Сео заголовок (title)",
+        required=False,
+    )
+
+    seoDescription = forms.CharField(
+        max_length=300,
+        label="Сео описание (description)",
+        required=False,
+    )
+
+    seoKeywords = forms.CharField(
+        max_length=1000,
+        label="Ключевые слова (Keywords)",
+        required=False,
+    )
+
     class Meta:
         model = Post
-        fields = ["title", "text", "comment_template", "topic", "is_public"]
-
+        fields = ["title", "text", "comment_template", "topic", "is_public", "seoTitle", "seoDescription", "seoKeywords"]
 
 POST_TYPE_MAP = {
     Post.TYPE_POST: PostTextForm,
