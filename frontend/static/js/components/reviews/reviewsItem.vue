@@ -3,7 +3,7 @@
         <div class="reviews-item__avatar">
             <picture>
                 <source :srcset="data.avatarPath.webp" type="image/webp">
-                <img :src="data.avatarPath.default">
+                <img :src="data.avatarPath.default" alt="">
             </picture>
         </div>
         <div class="reviews-item__main">
@@ -12,7 +12,7 @@
                     <div class="reviews-item__avatar">
                         <picture>
                             <source :srcset="data.avatarPath.webp" type="image/webp">
-                            <img :src="data.avatarPath.default">
+                            <img :src="data.avatarPath.default" alt="">
                         </picture>
                     </div>
                     <div class="reviews-item__title">
