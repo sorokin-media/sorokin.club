@@ -19,7 +19,7 @@ import time
 def join(request):
     if request.me:
         return redirect("profile", request.me.slug)
-    if time.time() < 1669838399:
+    if time.time() < 1659838399:
         cookie_sale = request.COOKIES.get('sale-november')
         get_sale = request.GET.get("sale-november")
         if cookie_sale or get_sale:
