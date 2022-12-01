@@ -47,7 +47,7 @@ def notify_post_approved(post):
         if post.post.is_public is True:
             send_telegram_message(
                 chat=Chat(id=post.author.telegram_id),
-                text=render_html_message("post_approved.html", post=post),
+                text=render_html_message("public_post_approved.html", post=post),
                 parse_mode=telegram.ParseMode.HTML,
             )
         else:
