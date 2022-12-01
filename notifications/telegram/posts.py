@@ -44,12 +44,18 @@ def announce_in_club_chats(post):
 
 def notify_post_approved(post):
     if post.author.telegram_id:
-        send_telegram_message(
-            chat=Chat(id=post.author.telegram_id),
-            text=render_html_message("post_approved.html", post=post),
-            parse_mode=telegram.ParseMode.HTML,
-        )
-
+        if post.post.is_public is True:
+            send_telegram_message(
+                chat=Chat(id=post.author.telegram_id),
+                text=render_html_message("post_approved.html", post=post),
+                parse_mode=telegram.ParseMode.HTML,
+            )
+        else:
+            send_telegram_message(
+                chat=Chat(id=post.author.telegram_id),
+                text=render_html_message("not_public_post_approved.html", post=post),
+                parse_mode=telegram.ParseMode.HTML,
+            )
 
 def notify_post_rejected(post, reason):
     try:
