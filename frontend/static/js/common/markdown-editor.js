@@ -58,6 +58,7 @@ export const imageUploadOptions = {
         "image/png",
         "image/jpg",
         "image/gif",
+        "image/webp",
         "video/mp4",
         "video/quicktime", // .mov (macOS' default record format)
     ],
