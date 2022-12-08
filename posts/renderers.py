@@ -4,7 +4,7 @@ from django.template import TemplateDoesNotExist
 
 from comments.forms import CommentForm, ReplyForm, BattleCommentForm
 from comments.models import Comment
-from posts.models.post import Post
+from posts.models.post import Post, Seo
 from bookmarks.models import PostBookmark
 from posts.models.subscriptions import PostSubscription
 from posts.models.votes import PostVote
@@ -41,15 +41,15 @@ def render_post(request, post, context=None):
     comment_order = request.GET.get("comment_order") or "-upvotes"
     if comment_order in POSSIBLE_COMMENT_ORDERS:
         comments = comments.order_by(comment_order, "created_at")  # additionally sort by time to preserve an order
-
+    post.seo = Seo()
     # seo settings
-    if post.seoTitle :
+    if post.seoTitle:
         post.seo.title = post.seoTitle
 
-    if post.seoDescription :
+    if post.seoDescription:
         post.seo.description = post.seoDescription
 
-    if post.seoKeywords :
+    if post.seoKeywords:
         post.seo.keywords = post.seoKeywords
 
     # hide deleted comments for battle (visual junk)

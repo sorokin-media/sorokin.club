@@ -17,6 +17,12 @@ from users.models.user import User
 from utils.slug import generate_unique_slug
 
 
+class Seo:
+    title: settings.APP_NAME
+    description: settings.APP_DESCRIPTION
+    keywords: ''
+
+
 class Post(models.Model, ModelDiffMixin):
     TYPE_POST = "post"
     TYPE_INTRO = "intro"
@@ -72,11 +78,6 @@ class Post(models.Model, ModelDiffMixin):
         TYPE_GUIDE: "🗺",
         TYPE_THREAD: "Тред:",
     }
-
-    class Seo :
-        title: settings.APP_NAME
-        description: settings.APP_DESCRIPTION
-        keywords: ''
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     slug = models.CharField(max_length=128, unique=True, db_index=True)
@@ -252,9 +253,9 @@ class Post(models.Model, ModelDiffMixin):
 
     @classmethod
     def check_duplicate(cls, user, title, ignore_post_id=None):
-        last_post = Post.objects\
+        last_post = Post.objects \
             .filter(author=user) \
-            .order_by("-created_at")\
+            .order_by("-created_at") \
             .first()
         return last_post and last_post.id != ignore_post_id and last_post.title == title
 
@@ -264,26 +265,26 @@ class Post(models.Model, ModelDiffMixin):
 
     @classmethod
     def objects_for_user(cls, user):
-        return cls.visible_objects()\
+        return cls.visible_objects() \
             .extra({
-                "is_voted": "select 1 from post_votes "
-                            "where post_votes.post_id = posts.id "
-                            f"and post_votes.user_id = '{user.id}'",
-                "upvoted_at": "select ROUND(extract(epoch from created_at) * 1000) from post_votes "
-                              "where post_votes.post_id = posts.id "
-                              f"and post_votes.user_id = '{user.id}'",
-                "unread_comments": f"select unread_comments from post_views "
-                                   f"where post_views.post_id = posts.id "
-                                   f"and post_views.user_id = '{user.id}'"
-            })  # TODO: i've been trying to use .annotate() here for 2 hours and I have no idea why it's not working
+            "is_voted": "select 1 from post_votes "
+                        "where post_votes.post_id = posts.id "
+                        f"and post_votes.user_id = '{user.id}'",
+            "upvoted_at": "select ROUND(extract(epoch from created_at) * 1000) from post_votes "
+                          "where post_votes.post_id = posts.id "
+                          f"and post_votes.user_id = '{user.id}'",
+            "unread_comments": f"select unread_comments from post_views "
+                               f"where post_views.post_id = posts.id "
+                               f"and post_views.user_id = '{user.id}'"
+        })  # TODO: i've been trying to use .annotate() here for 2 hours and I have no idea why it's not working
 
     @classmethod
     def check_rate_limits(cls, user):
         if user.is_moderator:
             return True
 
-        day_post_count = Post.visible_objects()\
-            .filter(author=user, created_at__gte=datetime.utcnow() - timedelta(hours=24))\
+        day_post_count = Post.visible_objects() \
+            .filter(author=user, created_at__gte=datetime.utcnow() - timedelta(hours=24)) \
             .count()
 
         return day_post_count < settings.RATE_LIMIT_POSTS_PER_DAY
