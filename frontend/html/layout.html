@@ -4,30 +4,13 @@
 
 <html lang="ru">
 <head>
-    <title>
-        {% if not post.seoTitle %}
-            {% block title %}Сорокин.Клуб 🤘✖️👩‍💻‍{% endblock %}
-        {% else %}
-            {{ post.seo.title }}
-        {% endif %}
-    </title>
-
-    {% block meta %}
-        <meta charset="UTF-8"/>
-        <meta name="description" content="{{ post.seo.description }}">
-
-        {% if post.seo.keywords %}
-            <meta name="keywords" content="{{ post.seo.keywords }}">
-        {% endif %}
-
-        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    {% endblock %}
+    <title>{% block title %}{{ settings.LAYOUT_TITLE }}‍{% endblock %}</title>
 
     {% block fonts %}
         {% include "common/fonts.html" %}
+    {% endblock %}
+    {% block meta %}
+        {% include "common/meta.html" %}
     {% endblock %}
 
     <script>
@@ -41,18 +24,9 @@
           title="Сорокин.Клуб: Новые посты"
           href="{% url "rss" %}{% if me %}?hash={{ me.secret_hash }}{% endif %}" />
 
-    <meta property="og:title" content="{{ post.seo.title }}">
-    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
-    <meta property="og:url" content="{{ settings.APP_HOST }}">
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="{{ post.seo.description }}">
-    <meta property="og:image" content="{% static "images/share.png" %}">
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ post.seo.title }}">
-    <meta name="twitter:description" content="{{ post.seo.description }}">
-    <meta name="twitter:image" content="{% static "images/share.png" %}">
-
+    {% block og_tags %}
+        {% include "common/og.html" %}
+    {% endblock %}
     {% include "common/favicon.html" %}
     {% include "common/css.html" %}
     {% block css %}{% endblock %}

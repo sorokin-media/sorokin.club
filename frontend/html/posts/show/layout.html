@@ -3,21 +3,33 @@
 {% load posts %}
 {% load text_filters %}
 
-{% block title %}
-    {% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }}{% if post.topic %} [{{ post.topic.name }}]{% endif %} — {{ block.super }}
+{% block title %}{{ post.seo.title }}{% endblock %}
+
+{% block meta %}
+    <meta charset="UTF-8"/>
+    <meta name="description" content="{{ post.seo.description }}">
+
+    {% if post.seo.keywords %}
+        <meta name="keywords" content="{{ post.seo.keywords }}">
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 {% endblock %}
 
 {% block og_tags %}
-    <meta property="og:title" content="{% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }} — {{ settings.APP_NAME }}">
+    <meta property="og:title" content=" {{ post.seo.title }}">
     <meta property="og:site_name" content="{{ settings.APP_NAME }}">
     <meta property="og:url" content="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}">
     <meta property="og:type" content="article" />
-    <meta property="og:description" content="{% if post.is_public %}{{ post.description | truncatechars:150 }}{% else %}🔒 Это закрытый пост, доступный только членам Клуба{% endif %}">
+    <meta property="og:description" content="{{ post.seo.description }}" >
     <meta property="og:image" content="{% og_image post %}">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }} — {{ settings.APP_NAME }}">
-    <meta name="twitter:description" content="{% if post.is_public %}{{ post.description | truncatechars:150 }}{% else %}🔒 Это закрытый пост, доступный только членам Клуба{% endif %}">
+    <meta name="twitter:title" content="{{ post.seo.title }}">
+    <meta name="twitter:description" content="{{ post.seo.description }}">
     <meta name="twitter:image" content="{% og_image post %}">
 {% endblock %}
 

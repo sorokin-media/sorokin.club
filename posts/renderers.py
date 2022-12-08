@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import TemplateDoesNotExist
+from django.conf import settings
 
 from comments.forms import CommentForm, ReplyForm, BattleCommentForm
 from comments.models import Comment
@@ -41,16 +42,29 @@ def render_post(request, post, context=None):
     comment_order = request.GET.get("comment_order") or "-upvotes"
     if comment_order in POSSIBLE_COMMENT_ORDERS:
         comments = comments.order_by(comment_order, "created_at")  # additionally sort by time to preserve an order
-    post.seo = Seo()
+
     # seo settings
+    post.seo = Seo()
+
+    # -- set default
+    post.seo.title = ((post.prefix + ' ') and post.prefix) + post.title + (post.topic and "[" + post.topic.name + "]" or "") + " - " + settings.LAYOUT_TITLE
+    post.seo.title = post.seo.title.strip()
+
+    if post.is_public:
+        post.seo.description = (post.description[:150] + '...') if len(post.description) > 150 else post.description
+        post.seo.description = post.seo.description.strip()
+    else:
+        post.seo.description = "🔒 Это закрытый пост, доступный только членам Клуба"
+
+    # -- check custom settings
     if post.seoTitle:
-        post.seo.title = post.seoTitle
+        post.seo.title = post.seoTitle.strip()
 
     if post.seoDescription:
-        post.seo.description = post.seoDescription
+        post.seo.description = post.seoDescription.strip()
 
     if post.seoKeywords:
-        post.seo.keywords = post.seoKeywords
+        post.seo.keywords = post.seoKeywords.strip()
 
     # hide deleted comments for battle (visual junk)
     if post.type == Post.TYPE_BATTLE:
