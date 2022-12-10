@@ -41,9 +41,8 @@ def stats_gode(request):
                     count_first += 1
 
         auto_payment = Payment.objects.filter(status='success',
-                                              data__contains='params[3ds]',
                                               created_at__gte=date_from_string,
-                                              created_at__lte=date_to_string)
+                                              created_at__lte=date_to_string).exclude(data__contains='params[3ds]')
         for auto in auto_payment:
             payment_exclude.extend([auto.id])
             sum_auto_payment += auto.amount
