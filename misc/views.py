@@ -60,34 +60,6 @@ def stats(request):
     })
 
 @auth_required
-def stats_gode(request):
-    # '2022-11-07 00:00:00' and '2022-12-04 23:59:59'
-    payment_first = []
-    dt = DT.datetime.strptime('2022-11-07 00:00:00', '%Y-%m-%d %H:%M:%S')
-    datetime_for = dt.timestamp()
-    dt = DT.datetime.strptime('2022-12-04 23:59:59', '%Y-%m-%d %H:%M:%S')
-    datetime_to = dt.timestamp()
-    expiring_users = User.objects.filter(moderation_status='approved')
-    sum_first = 0
-    count_first = 0
-    for user in expiring_users:
-        payment_one = Payment.objects.filter(user_id=user.id, status='success').order_by('created_at').first()
-        if payment_one:
-            date = str(payment_one.created_at)
-            dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
-            if payment_one and int(dt.timestamp()) >+ int(datetime_for) and int(dt.timestamp()) <= int(datetime_to):
-                payment_first.extend([payment_one.reference,payment_one.amount,payment_one.created_at])
-                sum_first += payment_one.amount
-                count_first += 1
-
-    return render(request, "pages/stats-gode.html", {
-        "payment_first": payment_first,
-        "sum_first": sum_first,
-        "count_first": count_first,
-    })
-
-
-@auth_required
 def network(request):
     secret_page_html = GodSettings.objects.first().network_page
     return render(request, "pages/network.html", {

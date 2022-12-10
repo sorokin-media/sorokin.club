@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "landing.apps.LandingConfig",
     "payments.apps.PaymentsConfig",
     "posts.apps.PostsConfig",
+    "stats.apps.StatsConfig",
     "users.apps.UsersConfig",
     "notifications.apps.NotificationsConfig",
     "search.apps.SearchConfig",

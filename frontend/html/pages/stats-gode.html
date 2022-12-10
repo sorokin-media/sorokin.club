@@ -26,26 +26,41 @@
 {% if me.is_god %}
     <div class="stats">
         <div class="stats-header">Стата</div>
+        <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label class="form-label">{{ form.date_from.label }}</label>
+                {{ form.date_from }}
+            </div>
+            <div>
+                <label class="form-label">{{ form.date_to.label }}</label>
+                {{ form.date_to }}
+            </div>
 
+            <button type="submit" class="button button-small">Отправить</button>
+        </form>
         <div class="stats-description">
-            2022-11-07 00:00:00 and 2022-11-29 23:59:59
+
         </div>
 
         <div class="block stats-badges-top">
-            <table>
-                <tr>
-                    <td>
-                        {% for payment_first_one in payment_first %}
-                            {{ payment_first_one }}
-                        {% endfor %}
-                    </td>
-                </tr>
-            </table>
-
+            Оплаты от новых
             <br>
             Сумма {{sum_first}}
             <br>
             Кол-во {{count_first}}
+            <br><br>
+            НЕ Автопродления
+            <br>
+            Сумма {{sum_no_auto_payment}}
+            <br>
+            Кол-во {{count_no_auto_payment}}
+            <br><br>
+            Автопродления
+            <br>
+            Сумма {{sum_auto_payment}}
+            <br>
+            Кол-во {{count_auto_payment}}
         </div>
     </div>
 {% else %}
