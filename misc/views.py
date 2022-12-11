@@ -76,6 +76,14 @@ def robots(request):
         "Disallow: /intro/",
         "Disallow: /user/",
         "Disallow: /people/",
+        "Disallow:  /?type=search",
+        "Disallow: /people/",
+        "Disallow: /join",
+        "Disallow: /auth",
+        "Disallow: /monies",
+        "Disallow: /network",
+        "Disallow: /comment/",
+        "Disallow: /announce",        
         "Clean-param: comment_order&goto /",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
