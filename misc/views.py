@@ -83,7 +83,10 @@ def robots(request):
         "Disallow: /monies",
         "Disallow: /network",
         "Disallow: /comment/",
-        "Disallow: /announce",        
+        "Disallow: /announce",
+        "Disallow: /admin",
+        "Disallow: /edit",
+        "Disallow: /god",
         "Clean-param: comment_order&goto /",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
