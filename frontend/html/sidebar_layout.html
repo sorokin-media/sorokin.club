@@ -96,8 +96,13 @@
         <div class="feed-sidebar-header">Стата</div>
         <ul class="feed-sidebar-list feed-sidebar-menu feed-sidebar-menu-small">
             <li>
-                <a href="https://sorokin.club/stats-gode/" class="{% if label_code == "approved" %}feed-sidebar-menu-selected{% endif %}">
-                    📝 Стата
+                <a href="{% url "stats-gode" %}">
+                    📝 Деньги
+                </a>
+            </li>
+            <li>
+                <a href="{% url "stats-content" %}">
+                    📝 Контент
                 </a>
             </li>
         </ul>
