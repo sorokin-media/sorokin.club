@@ -1,7 +1,7 @@
 from django import forms
 
 
-class MoneyForm(forms.Form):
+class DateForm(forms.Form):
     date_from = forms.DateField(
         label="Дата С (формат 2022-12-31)",
         required=True,
