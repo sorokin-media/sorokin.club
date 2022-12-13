@@ -14,7 +14,7 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
-def buddy_get_tusk(update: Update, context: CallbackContext):
+def buddy_get_task(update: Update, context: CallbackContext):
     '''
     Foo registrate time and account of buddy
     who gets obligation to ask question in intro

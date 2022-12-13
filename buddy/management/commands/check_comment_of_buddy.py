@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 time_of_buddy_start = time_zone.localize(post.buddy_comment_start)
                 now = time_zone.localize(datetime.utcnow())
                 delta = now - time_of_buddy_start
-                if delta > timedelta(minutes=3):
+                if delta > timedelta(hours=3):
                     last_name = post.responsible_buddy.telegram_data['last_name']
                     first_name = post.responsible_buddy.telegram_data['first_name']
                     post.reset_buddy_status()

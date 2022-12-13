@@ -28,11 +28,11 @@ def send_to_buddy_group(bot, hours, hours_words, slug, intro_id, lattest_action)
         # if user is authorized in telegram bot
         if User.objects.filter(id=author_id).first().telegram_id:
             utc_comment_time = time_zone.localize(lattest_action)
-            utc_time_to_comment = time_zone.localize(datetime.utcnow()-timedelta(minutes=hours))
+            utc_time_to_comment = time_zone.localize(datetime.utcnow()-timedelta(hours=hours))
             if utc_comment_time < utc_time_to_comment:
                 post = Post.objects.filter(id=intro_id).first()
                 if post.time_task_sended:
-                    time_to_send_tusk = time_zone.localize(datetime.utcnow()-timedelta(minutes=12))
+                    time_to_send_tusk = time_zone.localize(datetime.utcnow()-timedelta(hours=12))
                     time_tusk_was_sended = time_zone.localize(post.time_task_sended)
                     if time_tusk_was_sended < time_to_send_tusk:
                         post.set_time_for_tusk()                
