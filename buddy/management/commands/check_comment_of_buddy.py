@@ -35,9 +35,9 @@ class Command(BaseCommand):
                     first_name = post.responsible_buddy.telegram_data['first_name']
                     post.reset_buddy_status()
                     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-                    bot.send_message(chat_id=446209536,
+                    bot.send_message(chat_id=402891375,
                                      text=f'{first_name} {last_name} не задал вопрос вовремя, поэтому повторяем задачу!')
-                    bot.send_message(chat_id=446209536,
+                    bot.send_message(chat_id=402891375,
                                      parse_mode=ParseMode.HTML,
                                      text=f'Возращаемся к задаче! Давайте зададим вопрос пользователю. '
                                           f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">Ссылка '
