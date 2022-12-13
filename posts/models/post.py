@@ -122,6 +122,14 @@ class Post(models.Model, ModelDiffMixin):
     is_pinned_until = models.DateTimeField(null=True)  # pin on top on the main page
     is_shadow_banned = models.BooleanField(default=False)  # hide from feeds but not for author
 
+    # buddy fields
+
+    buddy_counter = models.IntegerField(default=0)
+    buddy_comment_start = models.DateTimeField(null=True)
+    is_waiting_buddy_comment = models.BooleanField(default=False)
+    responsible_buddy = models.ForeignKey(User, related_name='buddy', null=True, on_delete=models.CASCADE)
+    time_task_sended = models.DateTimeField(null=True)
+
     history = HistoricalRecords(
         user_model=User,
         table_name="posts_history",
@@ -147,6 +155,11 @@ class Post(models.Model, ModelDiffMixin):
             "is_pinned_until",
             "is_shadow_banned",
             "topic",
+            "buddy_counter",
+            "buddy_comment_start",
+            "is_waiting_buddy_comment",
+            "responsible_buddy",
+            "time_task_sended"
         ],
     )
 
@@ -334,4 +347,33 @@ class Post(models.Model, ModelDiffMixin):
 
     def undelete(self, *args, **kwargs):
         self.deleted_at = None
+        self.save()
+
+    # buddy functions. please write your code above
+
+    def increment_buddy_counter(self):
+        self.buddy_counter += 1
+        self.save()
+
+    def set_time_start_buddy(self):
+        self.buddy_comment_start = datetime.utcnow()
+        self.save()
+
+    def post_waits_buddy(self):
+        self.is_waiting_buddy_comment = True
+        self.save()
+
+    def appoint_as_responsible_buddy(self, responsible_buddy):
+        self.responsible_buddy = responsible_buddy
+        self.save()
+
+    def reset_buddy_status(self):
+        self.buddy_comment_start = None
+        self.is_waiting_buddy_comment = False
+        self.responsible_buddy = None
+        self.buddy_comment_start = None
+        self.save()
+
+    def set_time_for_tusk(self):
+        self.time_task_sended = datetime.utcnow()
         self.save()
