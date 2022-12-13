@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_q",
     "webpack_loader",
+    "buddy"
 ]
 
 MIDDLEWARE = [
