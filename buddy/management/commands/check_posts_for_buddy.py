@@ -42,9 +42,9 @@ def send_to_buddy_group(bot, hours, hours_words, slug, intro_id, lattest_action)
                                             parse_mode=ParseMode.HTML,
                                             text=f'Пользователю никто не написал по итогу предыдущего задания! \n'
                                                 'Давайте расспросим его!\n'
-                                                f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
+                                                f'<a href=\"{settings.TELEGRAM_BOT_WEBHOOK_HOST}/intro/{slug}\">Ссылка '
                                                 'на интро</a>',
-                                            reply_markup=telegram.InlineKeyboardMarkup([
+                                                reply_markup=telegram.InlineKeyboardMarkup([
                                                 *[
                                                 [telegram.InlineKeyboardButton("Я задам! 💪",
                                                 callback_data=f'buddy_get_intro {intro_id}')]]]))
@@ -93,8 +93,8 @@ class Command(BaseCommand):
                                             .annotate(Max('created_at'))
             lattest_action = lattest_action[0]['created_at__max']
             send_to_buddy_group(bot=bot,
-                                hours=9,
-                                hours_words='Пользователь уже девять часов',
+                                hours=7,
+                                hours_words='Пользователь уже семь часов',
                                 slug=intro.slug,
                                 intro_id=intro.id,
                                 lattest_action=lattest_action)
