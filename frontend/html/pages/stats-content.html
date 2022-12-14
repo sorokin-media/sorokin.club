@@ -28,13 +28,12 @@
         <div class="stats-header">Стата (Контент)</div>
         <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
             {% csrf_token %}
-            <div>
-                <label class="form-label">{{ form.date_from.label }}</label>
-                {{ form.date_from }}
-            </div>
-            <div>
-                <label class="form-label">{{ form.date_to.label }}</label>
-                {{ form.date_to }}
+            <div class="date-range">
+                <input type="text" name="dates" class="date-range__input"/>
+                <div class="date-range__inputs">
+                    {{ form.date_from }}
+                    {{ form.date_to }}
+                </div>
             </div>
 
             <button type="submit" class="button button-small">Отправить</button>
