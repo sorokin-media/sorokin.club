@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
+import pytz
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
@@ -162,6 +163,13 @@ class User(models.Model, ModelDiffMixin):
 
     def get_avatar(self):
         return self.avatar or settings.DEFAULT_AVATAR
+
+    def buddy_increase_membership(self):
+        time_zone = pytz.UTC
+        membership_expires_at = time_zone.localize(self.membership_expires_at)
+        membership_expires_at += timedelta(days=1)
+        self.membership_expires_at = membership_expires_at
+        self.save()
 
     @property
     def is_banned(self):
