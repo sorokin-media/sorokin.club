@@ -42,7 +42,7 @@ def send_to_buddy_group(bot, hours, hours_words, slug, intro_id, lattest_action)
                                             parse_mode=ParseMode.HTML,
                                             text=f'Пользователю никто не написал по итогу предыдущего задания! \n'
                                                 'Давайте расспросим его!\n'
-                                                f'<a href=\"{settings.TELEGRAM_BOT_WEBHOOK_HOST}/intro/{slug}\">Ссылка '
+                                                f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
                                                 'на интро</a>',
                                                 reply_markup=telegram.InlineKeyboardMarkup([
                                                 *[
