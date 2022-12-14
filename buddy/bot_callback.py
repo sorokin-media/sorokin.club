@@ -30,7 +30,10 @@ def buddy_get_task(update: Update, context: CallbackContext):
     post.appoint_as_responsible_buddy(responsible_buddy)  # set User on field
     post.set_time_start_buddy()
     update.effective_chat.send_message(text='Теперь у тебя есть 3 часа, чтобы задать вопрос. '
-                                            'Если вопрос задан, жмакни кнопку. ',
+                                            'Если вопрос задан, жмакни кнопку. '
+                                            f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">Ссылка '
+                                            'на интро</a>',
+                                            parse_mode=ParseMode.HTML,
                                        reply_markup=telegram.InlineKeyboardMarkup([*[
                                             [telegram.InlineKeyboardButton(text="Готово!",
                                              callback_data=f"comment_done {post.id}"
@@ -56,6 +59,7 @@ def start_buddy(update: Update, context: CallbackContext):
                 update.effective_chat.id = user_buddy.telegram_id
                 post.reset_buddy_status()
                 post.increment_buddy_counter()
+                update.callback_query.edit_message_reply_markup(reply_markup=None)
                 update.effective_chat.send_message(text='Спасибо! В благодарность мы на день продлили твое участие в клубе!')
             else:
                 user_buddy = User.objects.filter(id=user_buddy).first()
