@@ -35,7 +35,8 @@ def approve_post(update: Update, context: CallbackContext) -> None:
     post.save()
 
     notify_post_approved(post)
-    announce_in_club_chats(post)
+    # Убираем пока по просьбе Леши
+    # announce_in_club_chats(post)
 
     post_url = settings.APP_HOST + reverse("show_post", kwargs={
         "post_type": post.type,

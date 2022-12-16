@@ -19,11 +19,11 @@ from telegram.ext import CallbackContext
 def send_to_buddy_group(bot, slug, intro_id, lattest_action):
     '''Foo for sending message to group '''
     time_zone = pytz.UTC
+    # if user is created after 02.12.2022 (2 December 2022)
     author_id = Post.objects.filter(id=intro_id).first().author.id
     time_user_created = User.objects.filter(id=author_id).first().created_at
     time_user_created = time_zone.localize(time_user_created)
     time_start_buddy_project = time_zone.localize(datetime(year=2022, month=12, day=2))
-    # if user is created after 2.12.2022 (2 December 2022)
     if time_user_created > time_start_buddy_project:
         time_membership_expires = User.objects.filter(id=author_id).first().membership_expires_at
         time_membership_expires = time_zone.localize(time_membership_expires)

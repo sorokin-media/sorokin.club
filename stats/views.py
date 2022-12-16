@@ -38,7 +38,7 @@ def stats_gode(request):
                 payment_exclude.extend([payment_one.id])
                 date = str(payment_one.created_at)
                 dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
-                if payment_one and int(dt.timestamp()) > + int(datetime_for) and int(dt.timestamp()) <= int(
+                if payment_one and int(dt.timestamp()) > int(datetime_for) and int(dt.timestamp()) <= int(
                     datetime_to):
                     payment_first.extend([payment_one.reference, payment_one.amount, payment_one.created_at])
                     sum_first += payment_one.amount
