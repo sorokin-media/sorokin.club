@@ -93,7 +93,6 @@ def main() -> None:
 
     # buddy bot
     dispatcher.add_handler(CallbackQueryHandler(buddy_get_task, pattern=r"^buddy_get_intro.+"))
-    dispatcher.add_handler(CallbackQueryHandler(start_buddy, pattern=r"^comment_done.+"))
 
     # Start the bot
     if settings.DEBUG:
