@@ -19,7 +19,7 @@ from bot.cache import cached_telegram_users
 from bot.handlers import moderation, comments, upvotes, auth, whois, fun, top
 
 # buddy imports
-from buddy.bot_callback import buddy_get_task, start_buddy
+from buddy.bot_callback import buddy_get_task
 
 log = logging.getLogger(__name__)
 
