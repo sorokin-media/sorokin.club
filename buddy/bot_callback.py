@@ -34,8 +34,8 @@ def buddy_get_task(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
     message_to_buddy = bot.send_message(chat_id=post.responsible_buddy.telegram_id,
                                         text='Теперь у тебя есть 3 часа, чтобы задать вопрос. '
-                                            f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">Ссылка '
-                                            'на интро</a>',
-                                            parse_mode=ParseMode.HTML)
+                                             f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">Ссылка '
+                                             'на интро</a>',
+                                        parse_mode=ParseMode.HTML)
     post.message_id_to_responsible_buddy_user_from_bot = message_to_buddy['message_id']
     post.save()

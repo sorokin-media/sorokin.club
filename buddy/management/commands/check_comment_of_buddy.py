@@ -69,8 +69,10 @@ class Command(BaseCommand):
                         post.increment_buddy_counter()
                         bot.delete_message(chat_id=-1001638622431, message_id=message_id_in_group)
                         bot.delete_message(chat_id=telegram_id, message_id=message_id_on_bot)
+                        buddy_days = str(user_buddy.membership_days_left_for_tg())
+                        bot.send_message(chat_id=telegram_id,
+                                         text='Спасибо, твой вопрос принят! В благодарность мы на день продлили твое участие в клубе! '
+                                              f'Теперь у тебя их {buddy_days} ❤️')
                         bot.send_message(chat_id=-1001638622431,
                                          parse_mode=ParseMode.HTML,
-                                         text=f'Пользователь {first_name} {last_name} написал комментарий '
-                                         f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">в интро</a>. \n'
-                                         'В благодарность мы на день продлили участие в клубе!')
+                                         text=f'Новый успешный вопрос от {first_name} {last_name}. Спасибо, ты красава! ❤️ Так держать! 🚀')
