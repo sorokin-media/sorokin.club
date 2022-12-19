@@ -131,6 +131,8 @@ class Post(models.Model, ModelDiffMixin):
     time_task_sended = models.DateTimeField(null=True)
     message_id_to_buddy_group_from_bot = models.CharField(max_length=128, null=True)
     message_id_to_responsible_buddy_user_from_bot = models.CharField(max_length=128, null=True)
+    task_done = models.BooleanField(default=False)
+    time_task_finished = models.DateTimeField(null=True)
 
     history = HistoricalRecords(
         user_model=User,
@@ -163,7 +165,9 @@ class Post(models.Model, ModelDiffMixin):
             "responsible_buddy",
             "time_task_sended",
             "message_id_to_buddy_group_from_bot",
-            "message_id_to_responsible_buddy_user_from_bot"
+            "message_id_to_responsible_buddy_user_from_bot",
+            'task_done',
+            'time_task_finished'
         ],
     )
 
@@ -371,16 +375,21 @@ class Post(models.Model, ModelDiffMixin):
         self.responsible_buddy = responsible_buddy
         self.save()
 
-    def reset_buddy_status(self):
+    def reset_buddy_status(self, task_status):
         self.buddy_comment_start = None
         self.is_waiting_buddy_comment = False
         self.responsible_buddy = None
-        self.buddy_comment_start = None
         self.message_id_to_buddy_group_from_bot = None
         self.message_id_to_responsible_buddy_user_from_bot = None
+        self.task_done = task_status
+        if task_status is True:
+            self.time_task_finished = datetime.utcnow()
+        else:
+            self.time_task_finished = None
         self.save()
 
     def set_time_for_tusk(self):
         self.time_task_sended = datetime.utcnow()
         self.save()
+
         

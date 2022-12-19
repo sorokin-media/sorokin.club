@@ -38,7 +38,7 @@ class Command(BaseCommand):
                     last_name = post.responsible_buddy.telegram_data['last_name']
                     first_name = post.responsible_buddy.telegram_data['first_name']
                     telegram_id = post.responsible_buddy.telegram_id
-                    post.reset_buddy_status()
+                    post.reset_buddy_status(task_status=False)
                     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
                     bot.send_message(chat_id=-1001638622431,
                                      text=f'{first_name} {last_name} не задал вопрос вовремя, поэтому повторяем задачу!')
@@ -65,11 +65,11 @@ class Command(BaseCommand):
                         user_buddy.buddy_increase_membership()
                         last_name = post.responsible_buddy.telegram_data['last_name']
                         first_name = post.responsible_buddy.telegram_data['first_name']
-                        post.reset_buddy_status()
+                        post.reset_buddy_status(task_status=True)
                         post.increment_buddy_counter()
                         bot.delete_message(chat_id=-1001638622431, message_id=message_id_in_group)
                         bot.delete_message(chat_id=telegram_id, message_id=message_id_on_bot)
-                        buddy_days = str(user_buddy.membership_days_left_for_tg())
+                        buddy_days = user_buddy.membership_days_left_for_tg()
                         bot.send_message(chat_id=telegram_id,
                                          text='Спасибо, твой вопрос принят! В благодарность мы на день продлили твое участие в клубе! '
                                               f'Теперь у тебя их {buddy_days} ❤️')
