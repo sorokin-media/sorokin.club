@@ -42,7 +42,7 @@ from users.views.muted import toggle_mute, muted
 from users.views.profile import profile, toggle_tag, add_expertise, delete_expertise, profile_comments, profile_posts, \
     profile_badges
 from users.views.settings import profile_settings, edit_profile, edit_account, edit_notifications, edit_payments, \
-    edit_bot, edit_data, request_data
+    edit_bot, edit_data, request_data, edit_payments_sale
 from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
@@ -110,6 +110,7 @@ urlpatterns = [
     path("user/<slug:user_slug>/edit/bot/", edit_bot, name="edit_bot"),
     path("user/<slug:user_slug>/edit/notifications/", edit_notifications, name="edit_notifications"),
     path("user/<slug:user_slug>/edit/monies/", edit_payments, name="edit_payments"),
+    path("user/<slug:user_slug>/edit/monies-sale/", edit_payments_sale, name="edit_payments_sale"),
     path("user/<slug:user_slug>/edit/data/", edit_data, name="edit_data"),
     path("user/<slug:user_slug>/edit/data/request/", request_data, name="request_user_data"),
     path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),

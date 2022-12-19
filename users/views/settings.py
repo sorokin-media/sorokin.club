@@ -18,6 +18,7 @@ from users.models.subscription_plan import SubscriptionPlan
 from utils.strings import random_hash
 from payments.models import Payment
 import json
+import time
 
 
 @auth_required
@@ -139,6 +140,28 @@ def edit_payments(request, user_slug):
         "user": user,
         "subscriptions": subscriptions,
         "top_users": top_users,
+        "plans": plans
+    })
+
+def edit_payments_sale(request, user_slug):
+    if user_slug == "me":
+        return redirect("edit_payments", request.me.slug, permanent=False)
+
+    user = get_object_or_404(User, slug=user_slug)
+    if user.id != request.me.id and not request.me.is_moderator:
+        raise Http404()
+
+    subscriptions = []
+    #распродажа нг
+    if time.time() < 1671998399:
+        plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
+    else:
+        plan_subcription = Subscription.objects.filter(default=True).last()
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+
+    return render(request, "users/edit/payments_sale.html", {
+        "user": user,
+        "subscriptions": subscriptions,
         "plans": plans
     })
 

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block title %}
+    Клубные взносы — {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="content user-edit">
+        <div class="form-title">🎩<br>Клубные взносы</div>
+
+        <div class="block-subheader">
+            Клубная карта активна до <strong>{{ me.membership_expires_at | date:"j E Y" }}</strong> — это <span class="badge-price">💎 {{ me.membership_days_left|floor }} {{ me.membership_days_left|rupluralize:"день,дня,дней" }}</span>
+        </div>
+
+        <div class="join-title-sale">Распродажа до 25 декабря!</div>
+
+        <div class="block-description block-description-center">
+            О любых проблемах с оплатой сразу пишите на <a href="mailto:monies@sorokin.club">monies@sorokin.club</a>.<br>
+            Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.<br>Вы можете остановить подписку в любой момент, написав нам на <a href="mailto:club@sorokin.club">club@sorokin.club</a> или связавшись с командой модерации в <a href="https://t.me/+oScnL38uCqE3NmIy">телеграм-чате клуба</a>.</p>
+        </div>
+
+        <form action="{% url "unitpay_pay" %}" method="get">
+
+        <div class="block-header" id="select_package">На сколько еще пополняем?</div>
+
+        <br>
+
+        {% include "payments/blocks/packages.html" with plans=plans %}
+        <button type="submit" class="button button-big join-button">Продлить членство 🤙</button>
+
+        </form>
+
+        <br><br>
+
+        <div class="block-description block-description-center">
+            Пополняйте когда вам удобно — новые дни будут просто суммироваться.
+        </div>
+
+        <div class="block-description block-description-center">
+            Даже годовые подписки можно покупать каждый месяц — это специальная фича для диких, кто хочет еще больше поддерживать Клуб!
+        </div>
+
+    </div>
+
+{% endblock %}
