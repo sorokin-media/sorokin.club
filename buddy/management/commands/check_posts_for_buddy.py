@@ -42,7 +42,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                             time_tusk_was_sended = time_zone.localize(post.time_task_sended)
                             if time_tusk_was_sended < time_to_send_tusk:
                                 post.set_time_for_tusk()                
-                                message = bot.send_message(chat_id=-720612660,
+                                message = bot.send_message(chat_id=-1001638622431,
                                                            parse_mode=ParseMode.HTML,
                                                            text=f'Пользователю никто не написал по итогу предыдущего задания! \n'
                                                                 'Давайте расспросим его!\n'
@@ -56,7 +56,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                                 post.save()
                         else:
                             post.set_time_for_tusk()
-                            message = bot.send_message(chat_id=-720612660,
+                            message = bot.send_message(chat_id=-1001638622431,
                                                        parse_mode=ParseMode.HTML,
                                                        text='Пользователь два часа без комментариев 😮\n'
                                                             'Давайте расспросим его!\n'
