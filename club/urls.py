@@ -47,7 +47,7 @@ from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content
+from stats.views import stats_gode, stats_content, edit_payments_sale
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -122,6 +122,7 @@ urlpatterns = [
     path("stats/", stats, name="stats"),
     path("stats-gode/", stats_gode, name="stats-gode"),
     path("stats-content/", stats_content, name="stats-content"),
+    path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),
