@@ -42,12 +42,12 @@ from users.views.muted import toggle_mute, muted
 from users.views.profile import profile, toggle_tag, add_expertise, delete_expertise, profile_comments, profile_posts, \
     profile_badges
 from users.views.settings import profile_settings, edit_profile, edit_account, edit_notifications, edit_payments, \
-    edit_bot, edit_data, request_data, edit_payments_sale
+    edit_bot, edit_data, request_data
 from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content
+from stats.views import stats_gode, stats_content, edit_payments_sale
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -110,7 +110,6 @@ urlpatterns = [
     path("user/<slug:user_slug>/edit/bot/", edit_bot, name="edit_bot"),
     path("user/<slug:user_slug>/edit/notifications/", edit_notifications, name="edit_notifications"),
     path("user/<slug:user_slug>/edit/monies/", edit_payments, name="edit_payments"),
-    path("user/<slug:user_slug>/edit/monies-sale/", edit_payments_sale, name="edit_payments_sale"),
     path("user/<slug:user_slug>/edit/data/", edit_data, name="edit_data"),
     path("user/<slug:user_slug>/edit/data/request/", request_data, name="request_user_data"),
     path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),
@@ -123,6 +122,7 @@ urlpatterns = [
     path("stats/", stats, name="stats"),
     path("stats-gode/", stats_gode, name="stats-gode"),
     path("stats-content/", stats_content, name="stats-content"),
+    path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),

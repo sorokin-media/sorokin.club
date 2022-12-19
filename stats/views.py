@@ -9,6 +9,11 @@ from payments.models import Payment
 from posts.models.post import Post
 from stats.forms.money import DateForm
 from comments.models import Comment
+from users.models.subscription import Subscription
+from users.models.subscription_plan import SubscriptionPlan
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
+import time
 
 
 # Create your views here.
@@ -112,4 +117,28 @@ def stats_content(request):
         "publish_post": publish_post,
         "count_comments": count_comments,
         "form": form,
+    })
+
+
+@auth_required
+def edit_payments_sale(request):
+    if request.me.slug == "me":
+        return redirect("edit_payments", request.me.slug, permanent=False)
+
+    user = get_object_or_404(User, slug=request.me.slug)
+    if user.id != request.me.id and not request.me.is_moderator:
+        raise Http404()
+
+    subscriptions = []
+    #распродажа нг
+    if time.time() < 1671998399:
+        plans = SubscriptionPlan.objects.filter(subscription_id='8ea7819e-d83f-448a-a3e8-41f9744cd957').order_by("created_at")
+    else:
+        plan_subcription = Subscription.objects.filter(default=True).last()
+        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+
+    return render(request, "pages/payments_sale.html", {
+        "user": user,
+        "subscriptions": subscriptions,
+        "plans": plans
     })
