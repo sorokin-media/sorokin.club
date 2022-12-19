@@ -154,7 +154,7 @@ def edit_payments_sale(request, user_slug):
     subscriptions = []
     #распродажа нг
     if time.time() < 1671998399:
-        plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
+        plans = SubscriptionPlan.objects.filter(subscription_id='8ea7819e-d83f-448a-a3e8-41f9744cd957').order_by("created_at")
     else:
         plan_subcription = Subscription.objects.filter(default=True).last()
         plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
