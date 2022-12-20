@@ -87,7 +87,6 @@ def stats_gode(request):
 
 @auth_required
 def stats_content(request):
-
     if request.method == "POST":
         form = DateForm(request.POST)
         date_from_string = request.POST.get('date_from') + ' 00:00:00'
@@ -121,6 +120,17 @@ def stats_content(request):
 
 
 @auth_required
+def stats_buddy(request):
+    intro_posts = Post.objects.filter(type='intro',
+                                      is_approved_by_moderator=True,
+                                      buddy_counter__gte=1)
+
+    return render(request, "pages/stats-buddy.html", {
+        "buddys": intro_posts
+    })
+
+
+@auth_required
 def edit_payments_sale(request):
     if request.me.slug == "me":
         return redirect("edit_payments", request.me.slug, permanent=False)
@@ -130,9 +140,10 @@ def edit_payments_sale(request):
         raise Http404()
 
     subscriptions = []
-    #распродажа нг
+    # распродажа нг
     if time.time() < 1671998399:
-        plans = SubscriptionPlan.objects.filter(subscription_id='8ea7819e-d83f-448a-a3e8-41f9744cd957').order_by("created_at")
+        plans = SubscriptionPlan.objects.filter(subscription_id='8ea7819e-d83f-448a-a3e8-41f9744cd957').order_by(
+            "created_at")
     else:
         plan_subcription = Subscription.objects.filter(default=True).last()
         plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
