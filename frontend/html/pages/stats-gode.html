@@ -2,47 +2,40 @@
 {% load static %}
 {% load users %}
 {% load text_filters %}
-
 {% block title %}
-    Статистика
+Статистика
 {% endblock %}
-
 {% block og_tags %}
-    <meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
-    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
-    <meta property="og:url" content="{{ settings.APP_HOST }}">
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="">
-    <meta property="og:image" content="{% static "images/share.png" %}">
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
-    <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="{% static "images/share.png" %}">
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static "images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static "images/share.png" %}">
 {% endblock %}
-
-
 {% block content %}
 {% if me.is_god %}
-    <div class="stats">
+<div class="stats">
+    <div class="container">
         <div class="stats-header">Стата</div>
         <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
             {% csrf_token %}
-            <div>
-                <label class="form-label">{{ form.date_from.label }}</label>
-                {{ form.date_from }}
+            <div class="date-range">
+                <label class="form-label">Диапозон дат</label>
+                <input type="text" name="date-range" class="date-range__input" />
+                <div class="date-range__inputs">
+                    {{ form.date_from }}
+                    {{ form.date_to }}
+                </div>
             </div>
-            <div>
-                <label class="form-label">{{ form.date_to.label }}</label>
-                {{ form.date_to }}
-            </div>
-
             <button type="submit" class="button button-small">Отправить</button>
         </form>
         <div class="stats-description">
-
         </div>
-
         <div class="block stats-badges-top">
             Оплаты от новых
             <br>
@@ -63,9 +56,10 @@
             Кол-во {{count_auto_payment}}
         </div>
     </div>
+</div>
 {% else %}
-    <div class="stats">
-        Не для тебя
-    </div>
+<div class="stats">
+    Не для тебя
+</div>
 {% endif %}
 {% endblock %}

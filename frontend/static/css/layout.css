@@ -5,6 +5,13 @@
     --normal-content-width: 900px;
 }
 
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
 .menu {
     display: grid;
     max-width: var(--max-content-width);

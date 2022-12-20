@@ -47,6 +47,10 @@
         margin: 0 auto;
     }
 
+.stats--single {
+    min-height: 73vh;
+}
+
 .stats-top-users {
     max-width: var(--max-content-width);
     margin: 0 auto 50px;

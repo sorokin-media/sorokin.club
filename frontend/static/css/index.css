@@ -30,6 +30,7 @@
 @import "./components/badges.css";
 @import "./components/slider.css";
 @import "./components/reviews.css";
+@import "./components/daterangepicker.css";
 
 /* Modals */
 @import "./components/modal.css";
