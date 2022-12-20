@@ -104,7 +104,7 @@ class Command(BaseCommand):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         # get intros with <= 7 buddy_counter
         zero_buddy_counter = Post.objects.all().filter(type='intro') \
-                                               .filter(buddy_counter__lte=7) \
+                                               .filter(buddy_counter__lt=7) \
                                                .filter(is_waiting_buddy_comment=False)
         for intro in zero_buddy_counter:
             # get time of latest comment
