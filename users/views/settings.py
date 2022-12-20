@@ -18,6 +18,7 @@ from users.models.subscription_plan import SubscriptionPlan
 from utils.strings import random_hash
 from payments.models import Payment
 import json
+import time
 
 
 @auth_required
@@ -141,7 +142,6 @@ def edit_payments(request, user_slug):
         "top_users": top_users,
         "plans": plans
     })
-
 
 @auth_required
 def edit_bot(request, user_slug):

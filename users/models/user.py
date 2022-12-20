@@ -151,7 +151,15 @@ class User(models.Model, ModelDiffMixin):
 
     def membership_days_left_round(self):
         return round((self.membership_expires_at - datetime.utcnow()).total_seconds() // 60 // 60 / 24)
+        # time_zone = pytz.UTC return round((self.membership_expires_at - time_zone.localize(datetime.utcnow(
+        # ))).total_seconds() // 60 // 60 / 24)
 
+    def membership_days_left_for_tg(self):
+        tz_info = self.membership_expires_at.tzinfo
+        now = datetime.now(tz_info)
+        delta = self.membership_expires_at - now
+        return delta.days
+        
     def membership_created_days(self):
         return (datetime.utcnow() - self.created_at).days
 

@@ -19,7 +19,10 @@ from bot.cache import cached_telegram_users
 from bot.handlers import moderation, comments, upvotes, auth, whois, fun, top
 
 # buddy imports
-from buddy.bot_callback import buddy_get_task, start_buddy
+from buddy.bot_callback import buddy_get_task
+
+#new_year
+from new_year import buddy_countering
 
 log = logging.getLogger(__name__)
 
@@ -72,6 +75,7 @@ def main() -> None:
     dispatcher.add_handler(CallbackQueryHandler(moderation.approve_user_profile, pattern=r"^approve_user:.+"))
     dispatcher.add_handler(CallbackQueryHandler(moderation.reject_user_profile, pattern=r"^reject_user.+"))
     dispatcher.add_handler(CommandHandler("promote", moderation.command_promote_user))
+    dispatcher.add_handler(CommandHandler("buddy", buddy_countering))
 
     # Public + private chats
     dispatcher.add_handler(CommandHandler("help", command_help))
@@ -93,7 +97,6 @@ def main() -> None:
 
     # buddy bot
     dispatcher.add_handler(CallbackQueryHandler(buddy_get_task, pattern=r"^buddy_get_intro.+"))
-    dispatcher.add_handler(CallbackQueryHandler(start_buddy, pattern=r"^comment_done.+"))
 
     # Start the bot
     if settings.DEBUG:
