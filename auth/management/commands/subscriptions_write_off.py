@@ -171,20 +171,12 @@ class Command(BaseCommand):
                 couldnd_withdraw_money(user)
                 couldnd_withdraw_money_email(user)
                 send_telegram_message(
-                    chat=Chat(id=204349098),
-                    text=text_send
-                )
-                send_telegram_message(
                     chat=ADMIN_CHAT,
                     text=text_send
                 )
             else:
                 print("Success")
-                text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
-                send_telegram_message(
-                    chat=Chat(id=204349098),
-                    text=text_send
-                )
+                text_send = '#Автосписание ' + user.email + " " + str(product.amount)
                 send_telegram_message(
                     chat=ADMIN_CHAT,
                     text=text_send
