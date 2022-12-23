@@ -1,6 +1,6 @@
 import $ from "jquery";
 import moment from "moment";
-import daterangepicker from "daterangepicker";
+import daterangepicker from "../plugins/daterangepicker";
 
 const daterangepickerOptions = {
     opens: "right",
@@ -39,6 +39,7 @@ const datepicker = () => {
             const fromVal = inputFrom.val();
             const toVal = inputTo.val();
 
+            // Setup form date inputs
             if (fromVal && toVal) {
                 $(input).val(`${fromVal} - ${toVal}`);
             } else {
@@ -46,6 +47,7 @@ const datepicker = () => {
                 inputTo.val(moment().format("YYYY-MM-DD"));
             }
 
+            // Add callback on change
             $(input).daterangepicker(daterangepickerOptions, (start, end) => {
                 inputFrom.val(start.format("YYYY-MM-DD"));
                 inputTo.val(end.format("YYYY-MM-DD"));
