@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import re
 import stripe
 from django.conf import settings
 from django.http import Http404
@@ -115,11 +116,17 @@ def edit_payments(request, user_slug):
     subscriptions = []
     if user.unitpay_id:
         payment_last = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').last()
+        code_product = payment_last.product_code
+        sum_code = payment_last.amount
+        if 'sale' in code_product:
+            code_product = re.sub('sale', 'club', code_product)
+            plan_no_sale = SubscriptionPlan.objects.filter(code=code_product).last()
+            sum_code = plan_no_sale.amount
         payment_json = json.loads(payment_last.data)
         subscriptions = [dict(
             id='asdsadad',
             next_charge_at=datetime.date(user.membership_expires_at - timedelta(days=5)),
-            amount=payment_last.amount,
+            amount=sum_code,
             purse=payment_json['params[purse]']
         )]
         plan_query = SubscriptionPlan.objects.filter(code=payment_last.product_code).last()
