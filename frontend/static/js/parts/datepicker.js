@@ -38,6 +38,7 @@ const datepicker = () => {
             const inputTo = parent.find('input[name="date_to"]');
             const fromVal = inputFrom.val();
             const toVal = inputTo.val();
+            const doSubmit = input.dataset.submit;
 
             // Setup form date inputs
             if (fromVal && toVal) {
@@ -48,10 +49,14 @@ const datepicker = () => {
             }
 
             // Add callback on change
-            $(input).daterangepicker(daterangepickerOptions, (start, end) => {
-                inputFrom.val(start.format("YYYY-MM-DD"));
-                inputTo.val(end.format("YYYY-MM-DD"));
-            });
+            $(input).daterangepicker(daterangepickerOptions);
+            $(input).on('apply.daterangepicker', (e, picker) => {
+                inputFrom.val(picker.startDate.format("YYYY-MM-DD"));
+                inputTo.val(picker.endDate.format("YYYY-MM-DD"));
+
+                if (!doSubmit) return
+                input.closest('form')?.submit();
+            })
         });
     });
 };
