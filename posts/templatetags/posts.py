@@ -53,6 +53,7 @@ def render_post(context, post):
     for link in rows:
         flag_link = True
         href_link = link.get('href')
+        href_text = link.get_text()
         if 'http' not in href_link:
             flag_link = False
         for setting_link in settings.LINKS_WHITE_LIST:
@@ -64,7 +65,7 @@ def render_post(context, post):
             href_link_encode = base64.b64encode(href_in_byte)
             href_in_string_decode = href_link_encode.decode("UTF-8")
             new_tag_span = soup.new_tag('span', attrs={'class': 'hlink', 'data-href': href_in_string_decode})
-            new_tag_span.string = href_link
+            new_tag_span.string = href_text
             link.replace_with(new_tag_span)
 
     return mark_safe(str(soup) or "")
