@@ -86,7 +86,8 @@ def robots(request):
         "Disallow: /announce",
         "Disallow: /admin",
         "Disallow: /edit",
-        "Disallow: /god",
+        "Disallow: /stat",
+        "Disallow: /static/js/parts/initHideLinks.js",
         "Clean-param: comment_order&goto /",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
