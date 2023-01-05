@@ -36,7 +36,7 @@ def command_random(update: Update, context: CallbackContext) -> None:
             muted_users.append(row.user_to_id)
         post = Post.visible_objects() \
             .filter(is_approved_by_moderator=True) \
-            .filter(published_at__lte=random_date, published_at__gte=random_date - timedelta(seconds=2)) \
+            .filter(published_at__lte=random_date, published_at__gte=random_date - timedelta(days=2)) \
             .exclude(type__in=[Post.TYPE_INTRO, Post.TYPE_WEEKLY_DIGEST]) \
             .order_by("?") \
             .exclude(author__in=muted_users) \
