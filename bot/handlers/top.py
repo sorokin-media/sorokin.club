@@ -17,7 +17,6 @@ TOP_TIMEDELTA = timedelta(days=3)
 
 @is_club_member
 def command_top(update: Update, context: CallbackContext) -> None:
-    
     telegram_id = update.effective_user.id
     user = User.objects.filter(telegram_id=telegram_id).first()
     muted_relations = Muted.objects.filter(user_from_id=user.id).all()
@@ -25,7 +24,6 @@ def command_top(update: Update, context: CallbackContext) -> None:
     for row in muted_relations:
         muted_users.append(row.user_to_id)
 
-    
     # Top posts
     top_posts = Post.visible_objects()\
         .filter(published_at__gte=datetime.utcnow() - TOP_TIMEDELTA)\
