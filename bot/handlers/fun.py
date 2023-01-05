@@ -29,30 +29,22 @@ def command_random(update: Update, context: CallbackContext) -> None:
         )
 
         telegram_id = update.effective_user.id
-        print(f'\nTELEGRAM ID: {telegram_id}\n')
         user = User.objects.filter(telegram_id=telegram_id).first()
-        print(f'\nUSER: {user}\n')
-        print(f'\nTYPE OF USER: {type(user)}\n')
-        print(f'\nUSER ID BLIAT: {user.id}\n')
         muted_relations = Muted.objects.filter(user_from_id=user.id).all()
         muted_users = []
         for row in muted_relations:
             muted_users.append(row.user_to_id)
         post = Post.visible_objects() \
             .filter(is_approved_by_moderator=True) \
+            .filter(published_at__lte=random_date, published_at__gte=random_date - timedelta(seconds=2)) \
             .exclude(type__in=[Post.TYPE_INTRO, Post.TYPE_WEEKLY_DIGEST]) \
             .order_by("?") \
             .exclude(author__in=muted_users) \
             .first()
 
-#            .filter(published_at__lte=random_date, published_at__gte=random_date - timedelta(seconds=2)) \
-
-        print(f"POST: {post}")
     if post:
         update.effective_chat.send_message(
             render_html_message("channel_post_announce.html", post=post),
             parse_mode=ParseMode.HTML,
             disable_web_page_preview=True,
         )
-    else:
-        print("\n\nHA HA HA \n\n")
