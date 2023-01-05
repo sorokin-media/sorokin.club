@@ -9,8 +9,9 @@ from users.models.user import User
 class Muted(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    # who mute
     user_from = models.ForeignKey(User, related_name="muted_from", db_index=True, on_delete=models.CASCADE)
+    # who is muted
     user_to = models.ForeignKey(User, related_name="muted_to", on_delete=models.CASCADE)
 
     comment = models.TextField(null=True)
