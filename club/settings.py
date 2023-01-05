@@ -339,3 +339,5 @@ GEO_MOSCOW_TITLE = "Московский клуб"
 GEO_MOSCOW_DESC = "Описание московского клуба"
 GEO_MOSCOW_KEYWORDS = "Клуб, Москва, круто"
 GEO_MOSCOW_URL = "http://127.0.0.1:8000/club-moscow/"
+
+LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com', 'google.ru', 'google.com', 'gosuslugi.ru', 'sorokin.club']

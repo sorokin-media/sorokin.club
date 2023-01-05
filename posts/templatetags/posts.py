@@ -13,6 +13,9 @@ from common.regexp import FAVICON_RE
 from common.markdown.markdown import markdown_text, markdown_plain
 from posts.helpers import extract_any_image
 from posts.models.post import Post
+from bs4 import BeautifulSoup
+import base64
+from pprint import pprint
 
 register = template.Library()
 
@@ -44,7 +47,28 @@ def render_post(context, post):
             post.html = new_html
             post.save()
 
-    return mark_safe(post.html or "")
+    soup = BeautifulSoup(post.html, 'html.parser')
+    rows = soup.find_all('a')
+
+    for link in rows:
+        flag_link = True
+        href_link = link.get('href')
+        href_text = link.get_text()
+        if 'http' not in href_link:
+            flag_link = False
+        for setting_link in settings.LINKS_WHITE_LIST:
+            if setting_link in href_link:
+                flag_link = False
+
+        if flag_link:
+            href_in_byte = href_link.encode("UTF-8")
+            href_link_encode = base64.b64encode(href_in_byte)
+            href_in_string_decode = href_link_encode.decode("UTF-8")
+            new_tag_span = soup.new_tag('span', attrs={'class': 'hlink', 'data-href': href_in_string_decode})
+            new_tag_span.string = href_text
+            link.replace_with(new_tag_span)
+
+    return mark_safe(str(soup) or "")
 
 
 @register.simple_tag(takes_context=True)

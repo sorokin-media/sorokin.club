@@ -17,6 +17,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="canonical" href="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}"/>
 {% endblock %}
 
 {% block og_tags %}

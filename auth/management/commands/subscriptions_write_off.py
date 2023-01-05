@@ -35,8 +35,12 @@ class Command(BaseCommand):
             self.stdout.write(f"Checking user: {user.slug}")
             payment_last = Payment.objects.filter(user_id=user.id, status='success').last()
             payment_json = json.loads(payment_last.data)
-            send_subscribe_8_email(user, payment_last.amount, payment_json['params[purse]'])
-            subscribe_8_user(user, payment_last.amount, payment_json['params[purse]'])
+            code_product = payment_last.product_code
+            if 'sale' in code_product:
+                code_product = re.sub('sale', 'club', code_product)
+            product = SubscriptionPlan.objects.filter(code=code_product).last()
+            send_subscribe_8_email(user, product.amount, payment_json['params[purse]'])
+            subscribe_8_user(user, product.amount, payment_json['params[purse]'])
         self.stdout.write("Done 🥙")
 
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=4),
@@ -171,20 +175,12 @@ class Command(BaseCommand):
                 couldnd_withdraw_money(user)
                 couldnd_withdraw_money_email(user)
                 send_telegram_message(
-                    chat=Chat(id=204349098),
-                    text=text_send
-                )
-                send_telegram_message(
                     chat=ADMIN_CHAT,
                     text=text_send
                 )
             else:
                 print("Success")
-                text_send = '#Автосписание ' + user.email + " " + str(payment_last.amount)
-                send_telegram_message(
-                    chat=Chat(id=204349098),
-                    text=text_send
-                )
+                text_send = '#Автосписание ' + user.email + " " + str(product.amount)
                 send_telegram_message(
                     chat=ADMIN_CHAT,
                     text=text_send

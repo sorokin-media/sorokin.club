@@ -5,6 +5,7 @@
 @import "./fonts.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @import 'slick-carousel/slick/slick.css';
+@import "daterangepicker/daterangepicker.css";
 
 @import "./theme.css";
 @import "./base.css";
@@ -29,6 +30,7 @@
 @import "./components/badges.css";
 @import "./components/slider.css";
 @import "./components/reviews.css";
+@import "./components/daterangepicker.css";
 
 /* Modals */
 @import "./components/modal.css";
