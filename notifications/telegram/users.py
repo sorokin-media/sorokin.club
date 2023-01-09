@@ -95,11 +95,11 @@ def notify_user_auth(user, code):
             text=f"<code>{code.code}</code> — ваш одноразовый код для входа в Клуб",
         )
 
-def subscribe_8_user(user, sum, purse):
+def subscribe_8_user(user, sum):
     if user.telegram_id:
         send_telegram_message(
             chat=Chat(id=user.telegram_id),
-            text=f"Через три дня мы попытаемся списать оплату, списано будет {sum}, карта { purse } проверь что карта работает и на ней есть денежки.",
+            text=f"Через три дня мы попытаемся списать оплату, списано будет {sum}, проверь что карта работает и на ней есть денежки.",
         )
 
 def payment_reminder_5(user):
