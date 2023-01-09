@@ -97,15 +97,14 @@ def send_banned_email(user: User, days: int, reason: str):
         tags=["banned"]
     )
 
-def send_subscribe_8_email(user: User, sum: int, purse: str):
+def send_subscribe_8_email(user: User, sum: int):
     sub_template = loader.get_template("emails/subscriptions_8.html")
     send_club_email(
         recipient=user.email,
         subject=f"Оплата подписки",
         html=sub_template.render({
             "user": user,
-            "sum": sum,
-            "purse": purse,
+            "sum": sum
         }),
         tags=["subscription"]
     )
