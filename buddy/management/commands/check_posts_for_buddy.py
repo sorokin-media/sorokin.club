@@ -101,23 +101,29 @@ class Command(BaseCommand):
     messages with links to the group about such intros
     '''
     def handle(self, *args, **options):
+        print("\n\nFIRSTLY COME HERE BITCH\n\n")
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         # get intros with <= 7 buddy_counter
         zero_buddy_counter = Post.objects.all().filter(type='intro') \
                                                .filter(buddy_counter__lt=7) \
                                                .filter(is_waiting_buddy_comment=False)
         for intro in zero_buddy_counter:
-            # get time of latest comment
-            lattest_action = Comment.objects.filter(post_id=intro) \
-                                            .values('id') \
-                                            .annotate(Max('created_at'))
-            # if there is a comment
-            if lattest_action:
-                lattest_action = lattest_action[0]['created_at__max']
-            # if there is no, than get time of intro was created at
-            else:
-                lattest_action = intro.created_at
-            send_to_buddy_group(bot=bot,
-                                slug=intro.slug,
-                                intro_id=intro.id,
-                                lattest_action=lattest_action)
+            # if user membership isn't expired
+            time_zone = pytz.UTC
+            now = time_zone.localize(datetime.utcnow())
+            membership_of_user_expires_in = time_zone.localize(intro.author.membership_expires_at)
+            if now < membership_of_user_expires_in:
+                # get time of latest comment
+                lattest_action = Comment.objects.filter(post_id=intro) \
+                                                .values('id') \
+                                                .annotate(Max('created_at'))
+                # if there is a comment
+                if lattest_action:
+                    lattest_action = lattest_action[0]['created_at__max']
+                # if there is no, than get time of intro was created at
+                else:
+                    lattest_action = intro.created_at
+                send_to_buddy_group(bot=bot,
+                                    slug=intro.slug,
+                                    intro_id=intro.id,
+                                    lattest_action=lattest_action)
