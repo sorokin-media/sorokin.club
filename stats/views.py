@@ -14,7 +14,10 @@ from users.models.subscription_plan import SubscriptionPlan
 from django.shortcuts import redirect, get_object_or_404, render
 from django.http import Http404
 import time
-
+from datetime import datetime
+import pytz
+import json
+from club.settings import APP_HOST as host
 
 # Create your views here.
 @auth_required
@@ -153,3 +156,27 @@ def edit_payments_sale(request):
         "subscriptions": subscriptions,
         "plans": plans
     })
+
+@auth_required
+def posts_rating(request):
+    if request.method == 'POST':
+        time_zone = pytz.UTC
+        range_date = request.POST['date-range']
+        range_date = range_date.replace(' ', '').replace('-', ' ')
+        range_date = range_date.split()
+        start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
+        finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+        # __range from Django ORM don't resolve task, because of doesn't include dates
+        # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+        posts = Post.objects.filter(created_at__date__gte=time_zone.localize(
+            datetime(start_year, start_month, start_day))).filter(
+            created_at__date__lte=time_zone.localize(
+                datetime(finish_year, finish_month, finish_day))).exclude(type='intro').all()
+    else:
+        posts = Post.objects.exclude(type='intro').all()
+    posts_data = []
+    for post in posts:
+        points = (post.upvotes*10) + (post.comment_count*5)
+        posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
+    newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
+    return render(request, "pages/posts-rating.html", {"posts": newlist}, {'host': host})

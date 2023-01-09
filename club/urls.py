@@ -47,7 +47,8 @@ from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy
+from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating
+
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -63,7 +64,7 @@ urlpatterns = [
         yes=RedirectView.as_view(url="/", permanent=False),
         no=landing,
     ), name="landing"),
-
+    
     path("club/", club, name="club"),
     path("tg_bot/", tg_bot, name="tg_bot"),
     path("tg-club/", tg_bot_second, name="tg-club"),
@@ -123,6 +124,7 @@ urlpatterns = [
     path("stats-gode/", stats_gode, name="stats-gode"),
     path("stats-buddy/", stats_buddy, name="stats-buddy"),
     path("stats-content/", stats_content, name="stats-content"),
+    path("posts_rating", posts_rating, name='posts_rating'),
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),

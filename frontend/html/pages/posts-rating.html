@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static "images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+<div class="stats stats--single">
+    <div class="container">
+        <div class="stats-header">Рейтинг постов</div>
+        <form action="" method="post" class="stat-money-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="date-range">
+                <label class="form-label">Диапозон дат</label>
+                <input type="text" name="date-range" class="date-range__input" data-submit="true" />
+                <div class="date-range__inputs">
+                    {{ form.date_from }}
+                    {{ form.date_to }}
+                </div>
+            </div>
+            <button type="submit" class="button button-small">Отправить</button>
+        </form>
+        <div class="stats-description">
+        </div>
+        <div class="block stats-badges-top">
+            <ul>
+            {% for post in posts %}
+            <li>
+            <a href="{{ host }}/post/{{ post.id }}">{{ post.title }}: {{ post.points }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+{% endif %}
+{% endblock %}
