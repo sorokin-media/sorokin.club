@@ -157,9 +157,18 @@ def edit_payments_sale(request):
         "plans": plans
     })
 
+def rating_helper(posts):
+    posts_data = []
+    for post in posts:
+        points = (post.upvotes*10) + (post.comment_count*5)
+        posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
+    newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
+    return newlist
+
 @auth_required
 def posts_rating(request):
     if request.method == 'POST':
+        form = DateForm(request.POST)
         time_zone = pytz.UTC
         range_date = request.POST['date-range']
         range_date = range_date.replace(' ', '').replace('-', ' ')
@@ -172,11 +181,12 @@ def posts_rating(request):
             datetime(start_year, start_month, start_day))).filter(
             created_at__date__lte=time_zone.localize(
                 datetime(finish_year, finish_month, finish_day))).exclude(type='intro').all()
+        newlist = rating_helper(posts)
+        return render(request, "pages/posts-rating.html",
+                      {"posts": newlist, "form": form})
     else:
+        form = DateForm
         posts = Post.objects.exclude(type='intro').all()
-    posts_data = []
-    for post in posts:
-        points = (post.upvotes*10) + (post.comment_count*5)
-        posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
-    newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
-    return render(request, "pages/posts-rating.html", {"posts": newlist})
+        newlist = rating_helper(posts)
+        return render(request, "pages/posts-rating.html",
+                      {"posts": newlist, 'form': form})
