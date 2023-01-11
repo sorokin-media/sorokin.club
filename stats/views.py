@@ -168,7 +168,7 @@ def posts_rating(request):
         finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
         # __range from Django ORM don't resolve task, because of doesn't include dates
         # note that there are posts without date "created_at" in DB. But that one means that post was deleted
-        posts = Post.objects.filter(created_at__date__gte=time_zone.localize(
+        posts = Post.objects.filter(published_at__date__gte=time_zone.localize(
             datetime(start_year, start_month, start_day))).filter(
             created_at__date__lte=time_zone.localize(
                 datetime(finish_year, finish_month, finish_day))).exclude(type='intro').all()
