@@ -179,4 +179,4 @@ def posts_rating(request):
         points = (post.upvotes*10) + (post.comment_count*5)
         posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
     newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
-    return render(request, "pages/posts-rating.html", {"posts": newlist}, {'host': host})
+    return render(request, "pages/posts-rating.html", {"posts": newlist})
