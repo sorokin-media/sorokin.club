@@ -160,7 +160,7 @@ def edit_payments_sale(request):
 def rating_helper(posts):
     posts_data = []
     for post in posts:
-        points = (post.upvotes*10) + (post.comment_count*5)
+        points = (post.upvotes*10) + (post.comment_count*3)
         posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
     newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
     return newlist
@@ -179,7 +179,7 @@ def posts_rating(request):
         # note that there are posts without date "created_at" in DB. But that one means that post was deleted
         posts = Post.objects.filter(published_at__date__gte=time_zone.localize(
             datetime(start_year, start_month, start_day))).filter(
-            created_at__date__lte=time_zone.localize(
+            published_at__date__lte=time_zone.localize(
                 datetime(finish_year, finish_month, finish_day))).exclude(type='intro').all()
         newlist = rating_helper(posts)
         return render(request, "pages/posts-rating.html",
