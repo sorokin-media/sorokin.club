@@ -20,6 +20,7 @@
 {% endblock %}
 {% block content %}
 {% if me.is_god %}
+<div class="container">
 <div class="stats-header">Рейтинг постов</div>
 <form action="" method="post" class="stat-money-form" enctype="multipart/form-data">
     {% csrf_token %}
@@ -33,13 +34,13 @@
     </div>
     <button type="submit" class="button button-small">Отправить</button>
 </form>
+</div>
 {% for object in posts %}
 <div class="container">
     <article class="block feed-post h-entry feed-post-post">
         <div class="feed-post-header">
             <div class="feed-post-title">
-                <a href="{% url 'show_post' object.post.type object.post.slug %}" class="p-name post-title-link"> {{
-                    object.post.title | rutypography }}: {{ object.post. }} {{ object.points }} </a>
+                <a href="{% url 'show_post' object.post.type object.post.slug %}" class="p-name post-title-link"> {{ object.post.title | rutypography }}: {{ object.post. }} {{ object.points }} </a>
             </div>
         </div>
         <div class="feed-post-author">
@@ -59,8 +60,7 @@
         <div class="feed-post-footer">
             <a href="{% url 'show_post' object.post.type object.post.slug %}?comment_order=-created_at#comments"
                 class="feed-post-comments">
-                {{ object.post.comment_count }} {{ object.post.comment_count |
-                rupluralize:"комментарий,комментария,комментариев" }}
+                {{ object.post.comment_count }} {{ object.post.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
             </a>
         </div>
 </div>
