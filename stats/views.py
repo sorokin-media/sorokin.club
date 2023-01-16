@@ -159,9 +159,10 @@ def edit_payments_sale(request):
 
 def rating_helper(posts):
     posts_data = []
+
     for post in posts:
         points = (post.upvotes*10) + (post.comment_count*3)
-        posts_data.append({'id': post.slug, 'title': post.title, 'link': post.url, 'points': points})
+        posts_data.append({'post': post, 'points': points})
     newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
     return newlist
 
