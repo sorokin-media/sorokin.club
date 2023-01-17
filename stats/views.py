@@ -161,7 +161,7 @@ def rating_helper(posts):
     posts_data = []
 
     for post in posts:
-        points = (post.upvotes*10) + (post.comment_count*3)
+        points = (post.upvotes*10) + (post.comment_count*3) + post.view_count
         posts_data.append({'post': post, 'points': points})
     newlist = sorted(posts_data, key=lambda post: post['points'], reverse=True)
     return newlist
@@ -187,7 +187,6 @@ def posts_rating(request):
                       {"posts": newlist, "form": form})
     else:
         form = DateForm
-        posts = Post.objects.exclude(type='intro').all()
-        newlist = rating_helper(posts)
+        newlist = []
         return render(request, "pages/posts-rating.html",
                       {"posts": newlist, 'form': form})
