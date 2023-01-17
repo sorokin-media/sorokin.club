@@ -37,7 +37,7 @@ def async_create_or_update_comment(comment):
             # respect subscription type (i.e. all comments vs top level only)
             if post_subscriber.type == PostSubscription.TYPE_ALL_COMMENTS \
                     or (post_subscriber.type == PostSubscription.TYPE_TOP_LEVEL_ONLY and not comment.reply_to_id):
-                if mute_check(user_from=post_subscriber.user, user_to=comment.author):
+                if mute_check(user_from=post_subscriber.user, user_to=comment.author) is False:
                     send_telegram_message(
                         chat=Chat(id=post_subscriber.user.telegram_id),
                         text=render_html_message("comment_to_post.html", comment=comment),
