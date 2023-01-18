@@ -101,7 +101,6 @@ class Command(BaseCommand):
     messages with links to the group about such intros
     '''
     def handle(self, *args, **options):
-        print("\n\nFIRSTLY COME HERE BITCH\n\n")
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         # get intros with <= 7 buddy_counter
         zero_buddy_counter = Post.objects.all().filter(type='intro') \
@@ -112,7 +111,9 @@ class Command(BaseCommand):
             time_zone = pytz.UTC
             now = time_zone.localize(datetime.utcnow())
             membership_of_user_expires_in = time_zone.localize(intro.author.membership_expires_at)
-            if now < membership_of_user_expires_in:
+            user_get_started = time_zone.localize(intro.author.created_at)
+            user_ready_for_buddy = now - timedelta(hours=6)
+            if now < membership_of_user_expires_in and user_ready_for_buddy > user_get_started:
                 # get time of latest comment
                 lattest_action = Comment.objects.filter(post_id=intro) \
                                                 .values('id') \
