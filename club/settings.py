@@ -25,6 +25,8 @@ ADMINS = [
 ]
 
 INSTALLED_APPS = [
+    "django.contrib.sessions",
+    "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.sitemaps",
@@ -44,14 +46,18 @@ INSTALLED_APPS = [
     "simple_history",
     "django_q",
     "webpack_loader",
-    "buddy"
+    "buddy",
+    "telegramessage"
 ]
 
 MIDDLEWARE = [
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "club.middleware.me",
     "club.middleware.ExceptionMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware"
 ]
 
 ROOT_URLCONF = "club.urls"
@@ -74,6 +80,7 @@ TEMPLATES = [
                 "club.context_processors.telegram_add_processor",
                 "auth.context_processors.users.me",
                 "posts.context_processors.topics.topics",
+                "django.contrib.messages.context_processors.messages"
             ]
         },
     }
@@ -256,7 +263,9 @@ OG_IMAGE_GENERATOR_DEFAULTS = {
     "bg": "#FFFFFF",
 }
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+ngrok = 'https://7f26-217-76-12-13.eu.ngrok.io'
+
+TELEGRAM_TOKEN = '5646587414:AAH5_rkjGJvt8kIDSuCq32f477kPtffr2MQ'
 TELEGRAM_BOT_URL = os.getenv("TELEGRAM_BOT_URL") or "https://t.me/vas3k_club_bot"
 TELEGRAM_ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID")
 TELEGRAM_CLUB_CHANNEL_URL = os.getenv("TELEGRAM_CLUB_CHANNEL_URL")
@@ -265,7 +274,7 @@ TELEGRAM_CLUB_CHAT_URL = os.getenv("TELEGRAM_CLUB_CHAT_URL")
 TELEGRAM_CLUB_CHAT_ID = os.getenv("TELEGRAM_CLUB_CHAT_ID")
 TELEGRAM_ONLINE_CHANNEL_URL = os.getenv("TELEGRAM_ONLINE_CHANNEL_URL")
 TELEGRAM_ONLINE_CHANNEL_ID = os.getenv("TELEGRAM_ONLINE_CHANNEL_ID")
-TELEGRAM_BOT_WEBHOOK_URL = "https://sorokin.club/telegram/webhook/"
+TELEGRAM_BOT_WEBHOOK_URL = f"{ngrok}/telegram/webhook/"
 TELEGRAM_BOT_WEBHOOK_HOST = "0.0.0.0"
 TELEGRAM_BOT_WEBHOOK_PORT = 8816
 
