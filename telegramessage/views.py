@@ -41,8 +41,14 @@ def create_message_helper(days, hours, minutes,
                           is_archived=is_archived, image_url=image_url)
     if test == 'on':
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+        if image_url is not None:
+            bot.send_photo(
+                chat_id=204349098,
+                photo=image_url
+            )
         bot.send_message(chat_id=204349098,
-                         text=text)
+                         text=f'Паша, тебе сообщение на проверку!\n\nНазвание сообщения: {name}\n\nТекст сообщения: {text}',
+                         )
 
 def check_uniqie_helper(name, id):
     # True if not unique, else False

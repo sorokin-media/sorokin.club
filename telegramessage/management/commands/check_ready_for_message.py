@@ -36,8 +36,13 @@ def send_message_helper(message, message_queue):
         message_queue.last_message = message
         message_queue.save_time_message_sended()
         message_queue.save()
+    if message.image_url is not None:
+        bot.send_photo(
+            chat_id=message_queue.user_to.telegram_id,
+            photo=message.image_url
+        )
     bot.send_message(chat_id=message_queue.user_to.telegram_id,
-                     text=message.name)
+                     text=message.text)
     return
 
 class Command(BaseCommand):

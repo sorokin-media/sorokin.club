@@ -350,5 +350,5 @@ LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com', 'goog
 MESSAGE_QUEUE_DATETIME = datetime(year=2023, month=1, day=1)
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 60
+SESSION_COOKIE_AGE = 60 * 60
 SESSION_SAVE_EVERY_REQUEST = True
