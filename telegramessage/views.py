@@ -41,7 +41,7 @@ def create_message_helper(days, hours, minutes,
                           is_archived=is_archived, image_url=image_url)
     if test == 'on':
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        if image_url is not None:
+        if image_url != '':
             bot.send_photo(
                 chat_id=204349098,
                 photo=image_url
