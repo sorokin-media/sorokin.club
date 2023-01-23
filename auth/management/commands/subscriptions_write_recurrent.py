@@ -13,6 +13,7 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=4),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=5),
                                              moderation_status='approved',
+                                             unitpay_id__gt=0,
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
@@ -22,6 +23,7 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=2),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=3),
                                              moderation_status='approved',
+                                             unitpay_id__gt=0,
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
@@ -31,6 +33,7 @@ class Command(BaseCommand):
         expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=0),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=1),
                                              moderation_status='approved',
+                                             unitpay_id__gt=0,
                                              deleted_at__isnull=True)
         for user in expiring_users:
             self.stdout.write(f"Checking user: {user.slug}")
