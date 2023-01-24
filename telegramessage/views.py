@@ -8,7 +8,7 @@ from .models import TelegramMesage
 
 from club import settings
 
-from bot.decorators import is_moderator
+from auth.helpers import auth_required
 
 import telegram
 from telegram import Update, ParseMode
@@ -16,7 +16,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardB
 from telegram.ext import CallbackContext
 
 # 204349098
-@is_moderator
+@auth_required
 def show_telegram_messages(request):
     request.session['status'] = 'create'
     if TelegramMesage.objects.all().exists():
@@ -25,7 +25,7 @@ def show_telegram_messages(request):
     else:
         return render(request, 'message/show_messages.html')
 
-@is_moderator
+@auth_required
 def create_message_helper(days, hours, minutes,
                           name, text, is_finish_of_queue,
                           is_archived, image_url, test):
@@ -51,7 +51,7 @@ def check_uniqie_helper(name, id):
 
 # this view create message ot modify
 # depending on session['status']
-@is_moderator
+@auth_required
 def create_telegram_message(request):
     if request.method == 'POST':
         # get data from form
@@ -95,7 +95,7 @@ def create_telegram_message(request):
     form = CreateMessage
     return render(request, 'message/create_message.html', {"form": form})
 
-@is_moderator
+@auth_required
 def modify_telegram_message(request, message_id):
     tgmessage = TelegramMesage.objects.filter(id=message_id).first()
     request.session['id'] = str(message_id)
@@ -103,7 +103,7 @@ def modify_telegram_message(request, message_id):
     form = CreateMessage(instance=tgmessage)
     return render(request, 'message/create_message.html', {"form": form, "status": "modify"})
 
-@is_moderator
+@auth_required
 def delete_telegram_message(request):
     id = request.session['id']
     TelegramMesage.objects.filter(id=id).delete()
