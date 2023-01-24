@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load posts %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+
+<div class="container">
+
+    <div class="form-row compose-form-title">
+
+        {% if messages %}
+        {% for message in messages %}
+        <h1>{{ message }}</h1>
+        {% endfor %}
+        {% endif %}
+
+    <form action="/create_telegram_message" method="post">
+
+        {% csrf_token %}
+        {% for field in form %}
+        {{ field.label_tag }}
+        {{ field }}
+
+        <br>
+        {% endfor %}
+        {% for field in timedelay %}
+        {{ field.label_tag }}
+        {{ field }}
+        <br>
+        {% endfor %}
+        <label>
+            <input type="checkbox" name="test">
+            Отправить Паше на проверку
+          </label>
+        <br><br>
+        <input type="submit" value="Сохранить!">
+        <div class="menu">
+<!--            <a class="" href="{% url 'delete_telegram_message' %}">Удалить сообщение</a>. -->
+{% if status == 'modify' %}
+<a href="{% url 'delete_telegram_message' %}" onclick="return confirm('Are you sure you want to delete this item?');">Удалить сообщение</a>
+        </div>
+{% endif %}
+    </form>
+</div>
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+{% endif %}
+
+{% endblock %}
+
+</html>

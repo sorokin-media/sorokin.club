@@ -25,6 +25,8 @@ ADMINS = [
 ]
 
 INSTALLED_APPS = [
+    "django.contrib.sessions",
+    "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.sitemaps",
@@ -44,14 +46,18 @@ INSTALLED_APPS = [
     "simple_history",
     "django_q",
     "webpack_loader",
-    "buddy"
+    "buddy",
+    "telegramessage"
 ]
 
 MIDDLEWARE = [
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "club.middleware.me",
     "club.middleware.ExceptionMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware"
 ]
 
 ROOT_URLCONF = "club.urls"
@@ -74,6 +80,7 @@ TEMPLATES = [
                 "club.context_processors.telegram_add_processor",
                 "auth.context_processors.users.me",
                 "posts.context_processors.topics.topics",
+                "django.contrib.messages.context_processors.messages"
             ]
         },
     }
@@ -339,3 +346,9 @@ GEO_MOSCOW_KEYWORDS = "Клуб, Москва, круто"
 GEO_MOSCOW_URL = "http://127.0.0.1:8000/club-moscow/"
 
 LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com', 'google.ru', 'google.com', 'gosuslugi.ru', 'sorokin.club']
+
+MESSAGE_QUEUE_DATETIME = datetime(year=2022, month=1, day=1)
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60 * 60
+SESSION_SAVE_EVERY_REQUEST = True
