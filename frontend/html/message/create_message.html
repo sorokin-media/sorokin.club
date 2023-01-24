@@ -53,9 +53,10 @@
         <input type="submit" value="Сохранить!">
         <div class="menu">
 <!--            <a class="" href="{% url 'delete_telegram_message' %}">Удалить сообщение</a>. -->
-            <a href="{% url 'delete_telegram_message' %}" onclick="return confirm('Are you sure you want to delete this item?');">Удалить сообщение</a>
+{% if status == 'modify' %}
+<a href="{% url 'delete_telegram_message' %}" onclick="return confirm('Are you sure you want to delete this item?');">Удалить сообщение</a>
         </div>
-
+{% endif %}
     </form>
 </div>
 {% else %}

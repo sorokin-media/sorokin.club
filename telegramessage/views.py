@@ -15,15 +15,6 @@ from telegram.ext import CallbackContext
 
 # 204349098
 
-def get_data_for_html(tgmessage):
-    initial_dict = {
-        'days': tgmessage.time_delay.day,
-        'hours': tgmessage.time_delay.hour,
-        'minutes': tgmessage.time_delay
-    }
-    form = CreateMessage(instance=tgmessage)
-    return form
-
 def show_telegram_messages(request):
     request.session['status'] = 'create'
     if TelegramMesage.objects.all().exists():
@@ -41,19 +32,18 @@ def create_message_helper(days, hours, minutes,
                           is_archived=is_archived, image_url=image_url)
     if test == 'on':
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        if image_url != '':
-            bot.send_photo(
-                chat_id=204349098,
-                photo=image_url
-            )
         bot.send_message(chat_id=204349098,
-                         text=f'Паша, тебе сообщение на проверку!\n\nНазвание сообщения: {name}\n\nТекст сообщения: {text}',
-                         )
+                         text=text)
 
+# None when create
 def check_uniqie_helper(name, id):
-    # True if not unique, else False
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
+    if id is None and name in name_list:
+        return True
     id_in_db = TelegramMesage.objects.filter(name=name).exists()  # если есть такой
+    print(f'\n\nname in name_list: {name in name_list}\n\n')
+    # True if not unique, else False
+    print(f'\n\nid in db: {id_in_db}\n\n')
     return True if name in name_list and not id_in_db else False
 
 # this view create message ot modify
@@ -76,9 +66,9 @@ def create_telegram_message(request):
             # if there is similar name in DB already
             if check_uniqie_helper(name, id) is True:
                 tgmessage = TelegramMesage.objects.filter(id=id).first()
-                form = get_data_for_html(tgmessage)
+                form = CreateMessage(request.POST)
                 messages.error(request, "Сообщение с таким названием уже имеется")
-                return render(request, 'message/create_message.html', {"form": form}, messages)
+                return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
             else:
                 message = TelegramMesage.objects.get(id=id)
                 message.save_data(days=days, hours=hours, minutes=minutes,
@@ -87,16 +77,19 @@ def create_telegram_message(request):
                 del request.session['id']
                 request.session['status'] = 'create'
                 return redirect('show_telegram_messages')
+        # if we create new message
         elif request.session['status'] == 'create':
+            if check_uniqie_helper(name, id=None) is True:
+                form = CreateMessage(request.POST)
+                messages.error(request, "Сообщение с таким названием уже имеется")
+                return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
             create_message_helper(days=days, hours=hours, minutes=minutes,
                                   name=name, text=text, is_finish_of_queue=is_finish_of_queue,
                                   is_archived=is_archived, image_url=image_url, test=test)
             tgmessages = TelegramMesage.objects.all()
             return redirect('show_telegram_messages')
-
     form = CreateMessage
     return render(request, 'message/create_message.html', {"form": form})
-    # create word
 
 
 def modify_telegram_message(request, message_id):
@@ -104,7 +97,7 @@ def modify_telegram_message(request, message_id):
     request.session['id'] = str(message_id)
     request.session['status'] = 'modify'
     form = CreateMessage(instance=tgmessage)
-    return render(request, 'message/create_message.html', {"form": form})
+    return render(request, 'message/create_message.html', {"form": form, "status": "modify"})
 
 def delete_telegram_message(request):
     id = request.session['id']
