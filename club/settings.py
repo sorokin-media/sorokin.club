@@ -347,7 +347,7 @@ GEO_MOSCOW_URL = "http://127.0.0.1:8000/club-moscow/"
 
 LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com', 'google.ru', 'google.com', 'gosuslugi.ru', 'sorokin.club']
 
-MESSAGE_QUEUE_DATETIME = datetime(year=2023, month=1, day=1)
+MESSAGE_QUEUE_DATETIME = datetime(year=2022, month=1, day=1)
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 60 * 60

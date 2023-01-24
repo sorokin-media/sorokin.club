@@ -62,27 +62,29 @@ class Command(BaseCommand):
             telegram_id__isnull=True).all()
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
         for user in users:
-            if not user.is_banned and user.moderation_status != User.MODERATION_STATUS_DELETED:
-                # if there is no record with user in table messagequeue, than create
-                if not TelegramMesageQueue.objects.filter(user_to=user).exists():
-                    _ = TelegramMesageQueue()
-                    _.user_to = user
-                    _.save()
-                if TelegramMesageQueue.objects.filter(
-                        user_to=user).first().is_series_finished is not True:
-                    for message in telegram_messages:
-                        delay_time_values = timedelta(
-                            days=message.days,
-                            hours=message.hours,
-                            minutes=message.minutes
-                        )
-                        # the time at which the message should have been sent
-                        time_to_send = time_zone.localize(user.created_at) + delay_time_values
-                        message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
-                        if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
-                            message_queue.push_new_id(str(message.id))
-                            message_queue.save_time_message_sended()
-                            send_message_helper(message=message, message_queue=message_queue)
-                            WebhookEvent(type='private_bot_message',
-                                         recipient=message_queue.user_to, data=message.text).save()
-                            break
+            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
+            if user.slug in pasha_me_alex_slugs:
+                if not user.is_banned and user.moderation_status != User.MODERATION_STATUS_DELETED:
+                    # if there is no record with user in table messagequeue, than create
+                    if not TelegramMesageQueue.objects.filter(user_to=user).exists():
+                        _ = TelegramMesageQueue()
+                        _.user_to = user
+                        _.save()
+                    if TelegramMesageQueue.objects.filter(
+                            user_to=user).first().is_series_finished is not True:
+                        for message in telegram_messages:
+                            delay_time_values = timedelta(
+                                days=message.days,
+                                hours=message.hours,
+                                minutes=message.minutes
+                            )
+                            # the time at which the message should have been sent
+                            time_to_send = time_zone.localize(user.created_at) + delay_time_values
+                            message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
+                            if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
+                                message_queue.push_new_id(str(message.id))
+                                message_queue.save_time_message_sended()
+                                send_message_helper(message=message, message_queue=message_queue)
+                                WebhookEvent(type='private_bot_message',
+                                             recipient=message_queue.user_to, data=message.text).save()
+                                break
