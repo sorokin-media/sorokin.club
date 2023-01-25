@@ -58,9 +58,9 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
         message_queue_start_datetime = time_zone.localize(settings.MESSAGE_QUEUE_DATETIME)
-        users = User.objects.filter(created_at__gte=message_queue_start_datetime).exclude(
-            telegram_id__isnull=True).exclude(
-            is_archived__isnull=True).all()
+        users = User.objects.filter(created_at__gte=message_queue_start_datetime).filter(
+            is_archived=False).exclude(
+            telegram_id__isnull=True).all()
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
         for user in users:
             pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
