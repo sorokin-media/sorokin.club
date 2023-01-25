@@ -60,7 +60,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                             post.save()
                     elif post.time_task_sended is not None and post.task_done is True:
                         time_task_was_finished = time_zone.localize(post.time_task_finished)
-                        if time_task_was_finished < time_to_send_tusk:
+                        if time_task_was_finished < time_to_send_tusk and lattest_action < time_to_send_tusk:
                             post.set_time_for_tusk()
                             try:
                                 bot.delete_message(chat_id=-1001638622431,
