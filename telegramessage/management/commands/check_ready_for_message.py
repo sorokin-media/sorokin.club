@@ -30,7 +30,7 @@ def send_message_helper(message, message_queue):
                          text=message.text)
         if message.image_url != '':
             bot.send_photo(
-                chat_id=204349098,
+                chat_id=263982754,
                 photo=message.image_url
             )
     # stop loop because of first relevant messang is enough
@@ -43,7 +43,7 @@ def send_message_helper(message, message_queue):
                      text=message.text)
     if message.image_url != '':
         bot.send_photo(
-            chat_id=204349098,
+            chat_id=263982754,
             photo=message.image_url
         )
     return
@@ -59,7 +59,8 @@ class Command(BaseCommand):
         now = time_zone.localize(datetime.utcnow())
         message_queue_start_datetime = time_zone.localize(settings.MESSAGE_QUEUE_DATETIME)
         users = User.objects.filter(created_at__gte=message_queue_start_datetime).exclude(
-            telegram_id__isnull=True).all()
+            telegram_id__isnull=True).exclude(
+            is_archived__isnull=True).all()
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
         for user in users:
             pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']

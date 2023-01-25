@@ -28,7 +28,7 @@ class TelegramMesage(models.Model):
                                              default=False)
     is_archived = models.BooleanField(null=False,
                                       choices=TRUE_FALSE_CHOICES,
-                                      verbose_name='Заархивировать',
+                                      verbose_name='Сохранить как черновик',
                                       default=False)
     days = models.PositiveIntegerField(null=False, blank=False, verbose_name='Дни задержки', default=0)
     hours = models.PositiveBigIntegerField(null=False, blank=False, verbose_name='Часы задержки', default=0)

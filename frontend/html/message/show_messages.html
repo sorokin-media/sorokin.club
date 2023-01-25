@@ -33,6 +33,10 @@
     <article class="block feed-post h-entry feed-post-post">
         <div class="feed-post-header">
             <div class="feed-post-title">
+                {% if message.is_archived == True %}
+                <small><font color="red">Черновик</font></small>
+                <br>
+                {% endif %}
                 <a href="{% url 'modify_telegram_message' message.id %}" class="p-name post-title-link"> {{ message.name }}.  Дни: {{ message.days }}, часы: {{ message.hours }}, минуты: {{ message.minutes }}</a>
             </div>
         </div>
