@@ -25,7 +25,6 @@ def show_telegram_messages(request):
     else:
         return render(request, 'message/show_messages.html')
 
-@auth_required
 def create_message_helper(days, hours, minutes,
                           name, text, is_finish_of_queue,
                           is_archived, image_url, test):
