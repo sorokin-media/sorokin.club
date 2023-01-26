@@ -827,11 +827,143 @@
         z-index: 2;
     }
 
+    .feed-post-available-icon {
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        padding: 10px;
+
+        opacity: 0.7;
+    }
+
     .feed-post-header {
         padding-bottom: 10px;
         max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+        .feed-post-header--event {
+            display: flex;
+            width: 100%;
+
+            padding-bottom: 0;
+            margin-bottom: 20px;
+        }
+
+        .feed-post-header--event .feed-post-title-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .feed-post-header--event .feed-post-title-container .post-event-date {
+            width: auto;
+            height: auto;
+            width: 65px;
+            flex-shrink: 0;
+
+            margin-right: 15px;
+
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        @media (min-width: 900px) {
+            .feed-post-header--event .feed-post-title-container .post-event-date {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .feed-post-header--event .feed-post-title-container .post-event-date {
+                width: 55px;
+                margin-right: 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .feed-post-header--event .feed-post-title-container .post-event-date {
+                position: absolute;
+                right: -5px;
+                top: -5px;
+
+                margin: 0;
+
+                max-height: 70px;
+                overflow: hidden;
+            }
+        }
+
+    .feed-post-header-icon {
+        width: 100%;
+        max-width: 71px;
+    }
+
+        @media (max-width: 900px) {
+            .feed-post-header-icon {
+                display: none;
+            }
+        }
+
+    .feed-post-header-icon .post-event-date {
+        width: auto;
+        height: auto;
+        font-size: 14.5px;
+        border-radius: 10px;
+    }
+
+    .feed-post-header-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+        @media (min-width: 900px) {
+            .feed-post-header-content {
+                display: block;
+                padding-left: 20px;
+            }
+        }
+
+        @media (max-width: 900px) {
+          .feed-post-header-content .feed-post-title-container {
+            order: -1;
+            margin-bottom: 15px;
+          }
+
+          .feed-post-header-content .feed-post-header-additiona-info {
+            margin-bottom: 0;
+          }
+        }
+
+    .feed-post-header-additiona-info {
+        display: flex;
+        align-items: center;
+
+        margin-bottom: 10px;
+
+        font-size: 100%;
+        opacity: 0.8;
+    }
+        @media (max-width: 900px) {
+          .feed-post-header-additiona-info {
+            flex-wrap: wrap;
+          }
+
+          .feed-post-header-additiona-info .post-event-location {
+            margin-bottom: 5px;
+          }
+        }
+
+    .feed-post-header-additiona-info .post-event-location {
+        margin-right: 15px;
+        padding-bottom: 0;
+    }
+
+    .feed-post-header-additiona-info .post-event-title {
+        padding: 0;
+        font-size: 120%;
     }
 
     .feed-post-title {
@@ -918,6 +1050,28 @@
         opacity: 0.6;
     }
 
+    .feed-post-footer .post-event-calendar {
+        padding: 0;
+        margin-bottom: 10px;
+        font-size: 110%;
+
+        opacity: 0.8;
+    }
+        @media (max-width: 900px) {
+          .feed-post-footer .post-event-calendar {
+            display: flex;
+            flex-direction: column;
+
+            margin: -5px 0;
+            margin-bottom: 10px;
+          }
+
+          .feed-post-footer .post-event-calendar > * {
+            margin: 5px 0;
+          }
+        }
+
+
     .feed-post-is-pinned {
         background-color: var(--opposite-block-bg-color);
         color: var(--opposite-text-color);
@@ -961,6 +1115,18 @@
                 height: 36px;
             }
     }
+
+    @media (max-width: 430px) {
+        .feed-post-event {
+            padding-top: 25px;
+        }
+
+        .feed-post-event .feed-post-votes {
+            padding: 40px 0;
+            padding-left: 10px;
+        }
+    }
+
 
 .feed-post-type-intro,
 .feed-post-type-weekly_digest {
