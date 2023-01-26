@@ -19,6 +19,7 @@ from telegram.ext import CallbackContext
 def send_to_buddy_group(bot, slug, intro_id, lattest_action):
     '''Foo for sending message to group '''
     time_zone = pytz.UTC
+    lattest_action = time_zone.localize(lattest_action)
     author_id = Post.objects.filter(id=intro_id).first().author.id
     time_user_created = User.objects.filter(id=author_id).first().created_at
     time_user_created = time_zone.localize(time_user_created)
