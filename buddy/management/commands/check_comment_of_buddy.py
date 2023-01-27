@@ -25,6 +25,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+        # all posts, that was getting by any of buddies
         posts = Post.objects.filter(is_waiting_buddy_comment=True).all()
         if len(posts) > 0:
             for post in posts:
