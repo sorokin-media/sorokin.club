@@ -2,17 +2,61 @@
 {% load static %}
 {% load text_filters %}
 <div class="block feed-post h-entry {% css_classes post %}">
-    <div class="feed-post-header">
-        <div class="feed-post-title">
-            {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
-
-            <span class="p-name">
-                📅 <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
-            </span>
-
-            {% if post.label %}
-                {% include "posts/widgets/label.html" with label=post.label %}
+    <div class="feed-post-available-icon">
+        <span class="post-is-public">
+            {% if post.is_public %}
+                <i class="fas fa-globe-americas" title="Публичный ивент"></i>
+            {% else %}
+                <i class="fas fa-lock" title="Только для своих"></i>
             {% endif %}
+        </span>
+    </div>
+    <div class="feed-post-header feed-post-header--event">
+        <div class="feed-post-header-icon">
+            <div class="post-event-date">
+                <div class="post-event-date-day">
+                    {{ post.event_datetime|date:"d" }}
+                </div>
+                <div class="post-event-date-month">
+                    {{ post.event_datetime|date:"E"|lower  }}
+                </div>
+            </div>
+        </div>
+
+        <div class="feed-post-header-content">
+            <div class="feed-post-header-additiona-info">
+                <div class="post-event-location">
+                    {% if post.metadata.event.location %}
+                        <i class="fas fa-map-marker-alt"></i>&nbsp;{{ post.metadata.event.location | urlize }}
+                    {% endif %}
+                </div>
+                <div class="post-event-title">
+                    {{ post.event_datetime|date:"l" }}, в {{ post.event_datetime|date:"H" }}:{{ post.event_datetime|date:"i" }} по {% if post.metadata.event.timezone == "UTC" %}UTC{% else %}Москве{% endif %}
+                </div>
+            </div>
+
+            <div class="feed-post-title-container">
+                <div class="post-event-date">
+                    <div class="post-event-date-day">
+                        {{ post.event_datetime|date:"d" }}
+                    </div>
+                    <div class="post-event-date-month">
+                        {{ post.event_datetime|date:"E"|lower  }}
+                    </div>
+                </div>
+
+                <div class="feed-post-title">
+                    {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
+
+                    <span class="p-name">
+                        <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
+                    </span>
+
+                    {% if post.label %}
+                        {% include "posts/widgets/label.html" with label=post.label %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -34,6 +78,12 @@
     </div>
 
     <div class="feed-post-footer">
+        <div class="post-event-calendar">
+            Добавить в&nbsp;
+            <a class="button button-small" href="{% url "generate_ical_invite" %}?title={{ post.title|urlencode }}&date={{ post.event_datetime|date:"c"|urlencode }}&timezone={{ post.metadata.event.timezone|urlencode }}{% if post.metadata.event.location %}&location={{ post.metadata.event.location|urlencode }}{% endif %}&url={{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}" target="_blank"><i class="fab fa-apple"></i>&nbsp;Apple Календарь</a>
+            <a class="button button-small" href="{% url "generate_google_invite" %}?title={{ post.title|urlencode }}&date={{ post.event_datetime|date:"c"|urlencode }}&timezone={{ post.metadata.event.timezone|urlencode }}{% if post.metadata.event.location %}&location={{ post.metadata.event.location|urlencode }}{% endif %}&url={{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}" target="_blank"><i class="fab fa-google"></i>&nbsp;Google Календарь</a>
+        </div>
+
         {% if post.topic %}
             <span class="feed-post-topic">
                 {% include "posts/widgets/topic.html" with topic=post.topic type="inline" %}
