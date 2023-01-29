@@ -304,6 +304,13 @@
     justify-content: stretch;
 }
 
+    @media (max-width: 576px) {
+      .comment-form {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+    }
+
     .comment-form-avatar {
         grid-column-start: 1;
         grid-column-end: 2;
@@ -311,6 +318,13 @@
         grid-row-end: 3;
         justify-self: start;
     }
+
+        @media (max-width: 576px) {
+          .comment-form-avatar {
+            grid-column: unset;
+            grid-row: unset;
+          }
+        }
 
     .comment-form-body {
         grid-column-start: 2;

@@ -893,6 +893,7 @@
 
                 max-height: 70px;
                 overflow: hidden;
+                z-index: 2;
             }
         }
 
@@ -1246,13 +1247,26 @@
     padding-top: 80px;
 }
 
+    @media (max-width: 576px) {
+      .post-comments {
+        padding-top: 40px;
+      }
+    }
+
     .post-comments-title {
         font-size: 110%;
         font-weight: 500;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        flex-wrap: wrap;
+        margin: -8px -12px;
+
         scroll-margin-top: 20px;
+    }
+
+    .post-comments-title .post-comments-title-left {
+        margin: 8px 12px;
     }
 
     .post-comments-count {
@@ -1276,6 +1290,12 @@
         padding-top: 30px;
         padding-left: 10px;
     }
+
+        @media (max-width: 576px) {
+          .post-comments-form {
+            padding-left: 0;
+          }
+        }
 
     .post-comments-rules {
         padding-top: 50px;
