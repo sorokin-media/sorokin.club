@@ -1,13 +1,13 @@
 {% load posts %}
 {% load static %}
 {% load text_filters %}
-<article class="block feed-post h-entry {% css_classes post %}">
+<div class="block feed-post h-entry {% css_classes post %}">
     <div class="feed-post-header">
         <div class="feed-post-title">
             {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
 
             <span class="p-name">
-                💡 Идея: <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
+                📅 <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
             </span>
 
             {% if post.label %}
@@ -37,7 +37,7 @@
         <div class="feed-post-available-icon">
             <span class="post-is-public">
                 {% if post.is_public %}
-                    <i class="fas fa-globe-americas" title="Публичная идея"></i>
+                    <i class="fas fa-globe-americas" title="Публичный ивент"></i>
                 {% else %}
                     <i class="fas fa-lock" title="Только для своих"></i>
                 {% endif %}
@@ -72,4 +72,4 @@
         {% include "posts/widgets/bookmark_controls.html" %}
 
     </div>
-</article>
+</div>

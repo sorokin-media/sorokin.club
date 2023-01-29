@@ -2,15 +2,6 @@
 {% load static %}
 {% load text_filters %}
 <div class="block feed-post h-entry {% css_classes post %}">
-    <div class="feed-post-available-icon">
-        <span class="post-is-public">
-            {% if post.is_public %}
-                <i class="fas fa-globe-americas" title="Публичный ивент"></i>
-            {% else %}
-                <i class="fas fa-lock" title="Только для своих"></i>
-            {% endif %}
-        </span>
-    </div>
     <div class="feed-post-header feed-post-header--event">
         <div class="feed-post-header-icon">
             <div class="post-event-date">
@@ -82,6 +73,16 @@
             Добавить в&nbsp;
             <a class="button button-small" href="{% url "generate_ical_invite" %}?title={{ post.title|urlencode }}&date={{ post.event_datetime|date:"c"|urlencode }}&timezone={{ post.metadata.event.timezone|urlencode }}{% if post.metadata.event.location %}&location={{ post.metadata.event.location|urlencode }}{% endif %}&url={{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}" target="_blank"><i class="fab fa-apple"></i>&nbsp;Apple Календарь</a>
             <a class="button button-small" href="{% url "generate_google_invite" %}?title={{ post.title|urlencode }}&date={{ post.event_datetime|date:"c"|urlencode }}&timezone={{ post.metadata.event.timezone|urlencode }}{% if post.metadata.event.location %}&location={{ post.metadata.event.location|urlencode }}{% endif %}&url={{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}" target="_blank"><i class="fab fa-google"></i>&nbsp;Google Календарь</a>
+        </div>
+
+        <div class="feed-post-available-icon">
+            <span class="post-is-public">
+                {% if post.is_public %}
+                    <i class="fas fa-globe-americas" title="Публичный ивент"></i>
+                {% else %}
+                    <i class="fas fa-lock" title="Только для своих"></i>
+                {% endif %}
+            </span>
         </div>
 
         {% if post.topic %}

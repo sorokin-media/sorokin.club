@@ -2,16 +2,6 @@
 {% load static %}
 {% load text_filters %}
 <article class="block feed-post h-entry {% css_classes post %}">
-    <div class="feed-post-available-icon">
-        <span class="post-is-public">
-            {% if post.is_public %}
-                <i class="fas fa-globe-americas" title="Публичная ссылка"></i>
-            {% else %}
-                <i class="fas fa-lock" title="Только для своих"></i>
-            {% endif %}
-        </span>
-    </div>
-
     <div class="feed-post-header">
         <div class="feed-post-title">
             {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
@@ -42,6 +32,16 @@
     </div>
 
     <div class="feed-post-footer">
+        <div class="feed-post-available-icon">
+            <span class="post-is-public">
+                {% if post.is_public %}
+                    <i class="fas fa-globe-americas" title="Публичная ссылка"></i>
+                {% else %}
+                    <i class="fas fa-lock" title="Только для своих"></i>
+                {% endif %}
+            </span>
+        </div>
+
         {% if post.topic %}
             <span class="feed-post-topic">
                 {% include "posts/widgets/topic.html" with topic=post.topic type="inline" %}
