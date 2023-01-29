@@ -508,6 +508,12 @@
         }
     }
 
+    @media (max-width: 576px) {
+      .feed {
+        padding-bottom: 20px;
+      }
+    }
+
     .feed-sidebar {
         padding-top: 30px;
         padding-right: 30px;

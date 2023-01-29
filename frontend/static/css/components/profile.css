@@ -140,6 +140,12 @@
             text-decoration: none;
         }
 
+    @media (max-width: 576px) {
+        .profile .profile-header {
+            padding-top: 20px;
+        }
+    }
+
     .profile-more {
         text-align: center;
         font-size: 90%;
@@ -443,10 +449,21 @@
         padding-bottom: 30px;
     }
 
+        @media (max-width: 576px) {
+          .profile-tags {
+            padding-top: 25px;
+            padding-bottom: 25px;
+          }
+        }
+
         .profile-tags-group {
             padding-top: 20px;
             padding-bottom: 50px;
         }
+
+            .profile-tags-group:last-child {
+                padding-bottom: 0;
+            }
 
         .user-tags {
             display: flex;
@@ -454,6 +471,13 @@
             justify-content: center;
             align-items: flex-start;
         }
+            @media (max-width: 576px) {
+                .user-tags {
+                    flex: 1 1 150px;
+                    margin: -7.5px;
+                    align-items: stretch;
+                }
+            }
 
             .user-tag {
                 cursor: pointer;
@@ -468,6 +492,18 @@
                 text-align: center;
                 opacity: 0.6;
             }
+
+                @media (max-width: 576px) {
+                  .user-tag {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex: 1 1 150px;
+
+                    margin: 7.5px;
+                    padding: 7px 10px;
+                  }
+                }
 
                 .user-tag:hover,
                 .user-tag-active {
