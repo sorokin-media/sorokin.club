@@ -22,7 +22,6 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
     '''Foo for sending message to group '''
 
     time_zone = pytz.UTC
-    lattest_action = time_zone.localize(lattest_action)
     author_id = Post.objects.filter(id=intro_id).first().author.id
     time_user_created = User.objects.filter(id=author_id).first().created_at
     time_user_created = time_zone.localize(time_user_created)
@@ -121,7 +120,7 @@ class Command(BaseCommand):
             now = time_zone.localize(datetime.utcnow())
             membership_of_user_expires_in = time_zone.localize(intro.author.membership_expires_at)
             user_get_started = time_zone.localize(intro.author.created_at)
-            user_ready_for_buddy = now - timedelta(minutes=6)
+            user_ready_for_buddy = now - timedelta(hours=6)
 
             if now < membership_of_user_expires_in and user_ready_for_buddy > user_get_started:
                 # get time of latest comment
