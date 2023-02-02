@@ -2,17 +2,41 @@
 {% load static %}
 {% load text_filters %}
 <div class="block feed-post h-entry {% css_classes post %}">
-    <div class="feed-post-header">
-        <div class="feed-post-title">
-            {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
+    <div class="feed-post-header feed-post-header--event feed-post-header--event-short">
+        <div class="feed-post-header-icon">
+            <div class="post-event-date">
+                <div class="post-event-date-day">
+                    {{ post.event_datetime|date:"d" }}
+                </div>
+                <div class="post-event-date-month">
+                    {{ post.event_datetime|date:"E"|lower  }}
+                </div>
+            </div>
+        </div>
 
-            <span class="p-name">
-                📅 <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
-            </span>
+        <div class="feed-post-header-content">
+            <div class="feed-post-title-container">
+                <div class="post-event-date">
+                    <div class="post-event-date-day">
+                        {{ post.event_datetime|date:"d" }}
+                    </div>
+                    <div class="post-event-date-month">
+                        {{ post.event_datetime|date:"E"|lower  }}
+                    </div>
+                </div>
 
-            {% if post.label %}
-                {% include "posts/widgets/label.html" with label=post.label %}
-            {% endif %}
+                <div class="feed-post-title">
+                    {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
+
+                    <span class="p-name">
+                        <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
+                    </span>
+
+                    {% if post.label %}
+                        {% include "posts/widgets/label.html" with label=post.label %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

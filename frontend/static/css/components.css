@@ -901,6 +901,11 @@
             }
         }
 
+        .feed-post-header--event-short {
+            padding-bottom: 0;
+            align-items: center;
+        }
+
     .feed-post-header-icon {
         width: 100%;
         max-width: 71px;
