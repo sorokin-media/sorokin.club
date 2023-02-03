@@ -30,10 +30,10 @@ def send_message_helper(message, message_queue):
                          text=message.text)
         if message.image_url != '':
             bot.send_photo(
-                chat_id=263982754,
+                chat_id=442442997,
                 photo=message.image_url
             )
-    # stop loop because of first relevant messang is enough
+    # stop loop because of first relevant message is enough
         return
     else:
         message_queue.last_message = message
@@ -43,7 +43,7 @@ def send_message_helper(message, message_queue):
                      text=message.text)
     if message.image_url != '':
         bot.send_photo(
-            chat_id=263982754,
+            chat_id=442442997,
             photo=message.image_url
         )
     return
@@ -58,12 +58,12 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
         message_queue_start_datetime = time_zone.localize(settings.MESSAGE_QUEUE_DATETIME)
-        users = User.objects.filter(created_at__gte=message_queue_start_datetime).filter(
-            is_archived=False).exclude(
+        users = User.objects.filter(created_at__gte=message_queue_start_datetime).exclude(
             telegram_id__isnull=True).all()
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
         for user in users:
-            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
+#            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
+            pasha_me_alex_slugs = ['romashovdmitryo']
             if user.slug in pasha_me_alex_slugs:
                 if not user.is_banned and user.moderation_status != User.MODERATION_STATUS_DELETED:
                     # if there is no record with user in table messagequeue, than create
@@ -83,9 +83,10 @@ class Command(BaseCommand):
                             time_to_send = time_zone.localize(user.created_at) + delay_time_values
                             message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
                             if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
-                                message_queue.push_new_id(str(message.id))
-                                message_queue.save_time_message_sended()
-                                send_message_helper(message=message, message_queue=message_queue)
-                                WebhookEvent(type='private_bot_message',
-                                             recipient=message_queue.user_to, data=message.text).save()
-                                break
+                                if message.is_archived is not True:
+                                    message_queue.push_new_id(str(message.id))
+                                    message_queue.save_time_message_sended()
+                                    send_message_helper(message=message, message_queue=message_queue)
+                                    WebhookEvent(type='private_bot_message',
+                                                 recipient=message_queue.user_to, data=message.text).save()
+                                    break
