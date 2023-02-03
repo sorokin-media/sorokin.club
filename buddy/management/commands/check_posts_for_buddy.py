@@ -80,21 +80,22 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                     # if task was sended and done already. so if task not first.
                     elif post.time_task_sended is not None and post.task_done is True:
                         time_task_was_finished = time_zone.localize(post.time_task_finished)
-                        if time_task_was_finished < time_to_send_tusk and lattest_action < time_to_send_tusk:
-                            post.set_time_for_tusk()
-                            post.message_id_to_buddy_group_from_bot = message['message_id']
-                            post.task_done = False
-                            post.save()
-                            message = bot.send_message(chat_id=-1001638622431,
-                                                       parse_mode=ParseMode.HTML,
-                                                       text='Пользователь девять часов без комментариев 😮\n'
-                                                       'Давайте расспросим его!\n'
-                                                       f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
-                                                            'на интро</a>',
-                                                       reply_markup=telegram.InlineKeyboardMarkup([
-                                                           *[
-                                                            [telegram.InlineKeyboardButton("Я задам! 💪",
-                                                                                           callback_data=f'buddy_get_intro {intro_id}')]]]))
+                        if time_task_was_finished < time_to_send_tusk: 
+                            if lattest_action < time_to_send_tusk:
+                                post.set_time_for_tusk()
+                                post.message_id_to_buddy_group_from_bot = message['message_id']
+                                post.task_done = False
+                                post.save()
+                                message = bot.send_message(chat_id=-1001638622431,
+                                                           parse_mode=ParseMode.HTML,
+                                                           text='Пользователь девять часов без комментариев 😮\n'
+                                                           'Давайте расспросим его!\n'
+                                                           f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
+                                                                'на интро</a>',
+                                                           reply_markup=telegram.InlineKeyboardMarkup([
+                                                               *[
+                                                                [telegram.InlineKeyboardButton("Я задам! 💪",
+                                                                                               callback_data=f'buddy_get_intro {intro_id}')]]]))
 
 
 class Command(BaseCommand):
