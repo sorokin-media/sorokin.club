@@ -6,6 +6,12 @@
     max-width: var(--post-width);
     margin: 70px auto 0;
 }
+    @media (max-width: 576px) {
+      .post {
+        margin: 25px auto 0;
+      }
+    }
+
 
     .post-edit-button {
         display: inline-block;
@@ -18,8 +24,12 @@
         position: relative;
     }
 
+    .post-data {
+        margin: -5px -7.5px;
+    }
+
     .post-actions-line {
-        opacity: 0.6;
+        opacity: 1;
     }
 
         .post-actions-line a {
@@ -28,7 +38,19 @@
         }
 
         .post-actions-line-item {
-            padding-right: 15px;
+            display: inline-block;
+            padding: 5px 7.5px;
+            margin: 5px 7.5px;
+
+            opacity: 0.6;
+        }
+
+        a.post-actions-line-item {
+            transition: opacity .2s;
+        }
+
+        a.post-actions-line-item:hover {
+            opacity: 0.8;
         }
 
     .post-image {
@@ -82,7 +104,14 @@
             line-height: 1.3em;
             font-weight: 700;
             margin: 0;
+            margin-bottom: 0.5em;
         }
+
+            @media (max-width: 576px) {
+                .post-type-post .post-title {
+                    font-size: 200%;
+                }
+            }
 
         .post-title-link::before {
             bottom: 0;
@@ -133,7 +162,7 @@
         .post-type-post .post-actions-line {
             padding-top: 20px;
             padding-bottom: 20px;
-            max-width: 100%;
+            margin: -5px -15px;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -200,6 +229,19 @@
             padding: 40px 0;
             margin-top: 70px;
         }
+
+            @media (max-width: 576px) {
+                .post-type-post .post-footer {
+                    padding-top: 0;
+                    margin-top: 35px;
+                }
+
+                .post-type-post .post-footer:last-child {
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                }
+            }
+
 
     .post-layout-block {
         width: 100%;
@@ -769,7 +811,7 @@
 
         .post-event-date-month {
             font-weight: 500;
-            background-color: #FB1324;
+            background-color: #EC0417;
             color: #FFF;
             padding: 3px;
         }

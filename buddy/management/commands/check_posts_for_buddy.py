@@ -22,7 +22,6 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
     '''Foo for sending message to group '''
 
     time_zone = pytz.UTC
-    lattest_action = time_zone.localize(lattest_action)
     author_id = Post.objects.filter(id=intro_id).first().author.id
     time_user_created = User.objects.filter(id=author_id).first().created_at
     time_user_created = time_zone.localize(time_user_created)
@@ -81,27 +80,24 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                     # if task was sended and done already. so if task not first.
                     elif post.time_task_sended is not None and post.task_done is True:
                         time_task_was_finished = time_zone.localize(post.time_task_finished)
-                        if time_task_was_finished < time_to_send_tusk and lattest_action < time_to_send_tusk:
-                            post.set_time_for_tusk()
-                            try:
-                                bot.delete_message(chat_id=-1001638622431,
-                                                   message_id=post.message_id_to_buddy_group_from_bot)
-                            except Exception:
-                                pass
-                            message = bot.send_message(chat_id=-1001638622431,
-                                                       parse_mode=ParseMode.HTML,
-                                                       text='Пользователь девять часов без комментариев 😮\n'
-                                                       'Давайте расспросим его!\n'
-                                                       f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
-                                                            'на интро</a>',
-                                                       reply_markup=telegram.InlineKeyboardMarkup([
-                                                           *[
-                                                            [telegram.InlineKeyboardButton("Я задам! 💪",
-                                                                                           callback_data=f'buddy_get_intro {intro_id}')]]]))
-                            post.message_id_to_buddy_group_from_bot = message['message_id']
-                            post.task_done = False
-                            post.save()
-
+                        if time_task_was_finished < time_to_send_tusk: 
+                            lattest_action = time_zone.localize(lattest_action)
+                            if lattest_action < time_to_send_tusk:
+                                post.set_time_for_tusk()
+                                message = bot.send_message(chat_id=-1001638622431,
+                                                           parse_mode=ParseMode.HTML,
+                                                           text='Пользователь девять часов без комментариев 😮\n'
+                                                           'Давайте расспросим его!\n'
+                                                           f'<a href=\"{settings.APP_HOST}/intro/{slug}\">Ссылка '
+                                                                'на интро</a>',
+                                                           reply_markup=telegram.InlineKeyboardMarkup([
+                                                               *[
+                                                                [telegram.InlineKeyboardButton("Я задам! 💪",
+                                                                                               callback_data=f'buddy_get_intro {intro_id}')]]]))
+                                post.message_id_to_buddy_group_from_bot = message['message_id']
+                                post.task_done = False
+                                post.save()
+                                
 class Command(BaseCommand):
     '''
     Foo finds the necessary intros and sends
@@ -121,7 +117,7 @@ class Command(BaseCommand):
             now = time_zone.localize(datetime.utcnow())
             membership_of_user_expires_in = time_zone.localize(intro.author.membership_expires_at)
             user_get_started = time_zone.localize(intro.author.created_at)
-            user_ready_for_buddy = now - timedelta(minutes=6)
+            user_ready_for_buddy = now - timedelta(hours=6)
 
             if now < membership_of_user_expires_in and user_ready_for_buddy > user_get_started:
                 # get time of latest comment

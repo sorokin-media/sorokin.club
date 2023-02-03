@@ -8,6 +8,10 @@
     border-radius: var(--block-border-radius);
 }
 
+    .block:last-child {
+        margin-bottom: 0;
+    }
+
     .block-description {
         display: block;
         margin: 0 auto;
