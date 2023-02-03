@@ -68,11 +68,15 @@ def create_telegram_message(request, message_id=None):
                 messages.error(request, "Сообщение с таким названием уже имеется")
                 return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
             else:
-                message = TelegramMesage.objects.get(id=id)
-                message.save_data(days=days, hours=hours, minutes=minutes,
-                                  name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                                  is_archived=is_archived, image_url=image_url)
-                return redirect('show_telegram_messages')
+                if test == 'on':
+                    bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+                    bot.send_message(chat_id=442442997,
+                                     text=text)
+                    message = TelegramMesage.objects.get(id=id)
+                    message.save_data(days=days, hours=hours, minutes=minutes,
+                                      name=name, text=text, is_finish_of_queue=is_finish_of_queue,
+                                      is_archived=is_archived, image_url=image_url)
+                    return redirect('show_telegram_messages')
         # if we create new message
         elif message_id is None:
             if check_uniqie_helper(name, id=None) is True:
@@ -91,8 +95,8 @@ def create_telegram_message(request, message_id=None):
 def modify_telegram_message(request, message_id):
     tgmessage = TelegramMesage.objects.filter(id=message_id).first()
     form = CreateMessage(instance=tgmessage)
-    return render(request, 'message/create_message.html', {"form": form, 
-                                                           "status": "modify", 
+    return render(request, 'message/create_message.html', {"form": form,
+                                                           "status": "modify",
                                                            'message_id': message_id})
 
 @auth_required
