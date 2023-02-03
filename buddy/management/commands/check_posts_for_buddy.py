@@ -81,6 +81,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                     elif post.time_task_sended is not None and post.task_done is True:
                         time_task_was_finished = time_zone.localize(post.time_task_finished)
                         if time_task_was_finished < time_to_send_tusk: 
+                            lattest_action = time_zone.localize(lattest_action)
                             if lattest_action < time_to_send_tusk:
                                 post.set_time_for_tusk()
                                 post.message_id_to_buddy_group_from_bot = message['message_id']
