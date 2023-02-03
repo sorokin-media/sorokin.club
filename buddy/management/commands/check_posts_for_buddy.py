@@ -82,11 +82,9 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                         time_task_was_finished = time_zone.localize(post.time_task_finished)
                         if time_task_was_finished < time_to_send_tusk and lattest_action < time_to_send_tusk:
                             post.set_time_for_tusk()
-                            try:
-                                bot.delete_message(chat_id=-1001638622431,
-                                                   message_id=post.message_id_to_buddy_group_from_bot)
-                            except Exception:
-                                pass
+                            post.message_id_to_buddy_group_from_bot = message['message_id']
+                            post.task_done = False
+                            post.save()
                             message = bot.send_message(chat_id=-1001638622431,
                                                        parse_mode=ParseMode.HTML,
                                                        text='Пользователь девять часов без комментариев 😮\n'
@@ -97,9 +95,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                                                            *[
                                                             [telegram.InlineKeyboardButton("Я задам! 💪",
                                                                                            callback_data=f'buddy_get_intro {intro_id}')]]]))
-                            post.message_id_to_buddy_group_from_bot = message['message_id']
-                            post.task_done = False
-                            post.save()
+
 
 class Command(BaseCommand):
     '''
