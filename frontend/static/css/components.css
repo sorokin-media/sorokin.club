@@ -693,7 +693,7 @@
             .feed-ordering-item {
                 padding: 10px;
                 text-decoration: none;
-                opacity: 0.5;
+                opacity: 0.9;
             }
 
                 select.feed-ordering-item {
@@ -1050,7 +1050,7 @@
 
     .feed-post-comments {
         text-decoration: none;
-        color: #999;
+        color: var(--feed-post-comment-color);
         white-space: nowrap;
     }
 
@@ -1175,7 +1175,7 @@
     .feed-post-type-intro .feed-post-comments {
         font-weight: 400;
         font-size: 80%;
-        opacity: 0.5;
+        opacity: 0.9;
     }
 
     .feed-post-comments.feed-post-comments-unread-title {

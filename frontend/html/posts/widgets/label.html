@@ -1,5 +1,10 @@
 <a href="{% url "feed_label" label.code %}" title="{{ label.description }}" class="label" style="background-color: {{ label.color }};">
-    <span class="label-title">
+    <span
+      class="label-title"
+      {% if label.text_color %}
+        style="color: {{ label.text_color }};"
+      {% endif %}
+    >
         {% if label.emoji %}{{ label.emoji }}&nbsp;{% endif %}{{ label.title }}
     </span>
 </a>
