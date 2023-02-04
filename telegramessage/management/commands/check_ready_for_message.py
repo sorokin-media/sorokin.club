@@ -29,8 +29,8 @@ def send_message_helper(message, message_queue):
         bot.send_message(chat_id=message_queue.user_to.telegram_id,
                          text=message.text)
         if message.image_url != '':
-            bot.send_photo(
-                chat_id=442442997,
+            bot.send_telegram_image(
+                chat_id=message_queue.user_to.telegram_id,
                 photo=message.image_url
             )
     # stop loop because of first relevant message is enough
@@ -42,8 +42,8 @@ def send_message_helper(message, message_queue):
     bot.send_message(chat_id=message_queue.user_to.telegram_id,
                      text=message.text)
     if message.image_url != '':
-        bot.send_photo(
-            chat_id=442442997,
+        bot.send_telegram_image(
+            chat_id=message_queue.user_to.telegram_id,
             photo=message.image_url
         )
     return
@@ -62,8 +62,7 @@ class Command(BaseCommand):
             telegram_id__isnull=True).all()
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
         for user in users:
-#            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
-            pasha_me_alex_slugs = ['romashovdmitryo']
+            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
             if user.slug in pasha_me_alex_slugs:
                 if not user.is_banned and user.moderation_status != User.MODERATION_STATUS_DELETED:
                     # if there is no record with user in table messagequeue, than create

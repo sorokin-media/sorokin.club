@@ -33,8 +33,13 @@ def create_message_helper(days, hours, minutes,
                           is_archived=is_archived, image_url=image_url)
     if test == 'on':
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        bot.send_message(chat_id=442442997,
+        bot.send_message(chat_id=204349098,
                          text=text)
+        if image_url != '':
+            bot.send_photo(
+                chat_id=204349098,
+                photo=image_url
+            )
 
 # None when create
 def check_uniqie_helper(name, id):
@@ -70,8 +75,13 @@ def create_telegram_message(request, message_id=None):
             else:
                 if test == 'on':
                     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-                    bot.send_message(chat_id=442442997,
+                    bot.send_message(chat_id=204349098,
                                      text=text)
+                    if image_url != '':
+                        bot.send_photo(
+                            chat_id=204349098,
+                            photo=image_url
+                        )
                     message = TelegramMesage.objects.get(id=id)
                     message.save_data(days=days, hours=hours, minutes=minutes,
                                       name=name, text=text, is_finish_of_queue=is_finish_of_queue,
