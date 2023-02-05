@@ -1,0 +1,191 @@
+{% extends "emails/layout.html" %}
+{% load static %}
+{% load text_filters %}
+{% load comments %}
+{% load users %}
+{% load emails %}
+
+{% block og_meta %}
+    <meta property="og:site_name" content="Сорокин.Клуб" />
+    <meta property="og:title" content="Лучшие посты и новички за сутки." />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="{{ og_image_url }}" />
+{% endblock %}
+
+{% block css %}
+<style>
+    h1, h2, header {
+        text-align: center;
+    }
+
+    .achievement {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px 7px 10px;
+        color: #FFF;
+        text-decoration: none;
+        font-size: 100% !important;
+        border-radius: 20px;
+    }
+
+        .achievement-image {
+            display: inline-block;
+            height: 35px;
+            width: 35px;
+            min-width: 35px;
+            vertical-align: middle;
+        }
+
+    .badges {
+        display: block;
+        overflow: hidden;
+    }
+
+        .badge {
+            display: block;
+            float: left;
+            width: 120px;
+            height: 200px;
+            text-align: center;
+            text-decoration: none;
+            margin: 20px 10px 0;
+            font-weight: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 90%;
+            line-height: 1.2em;
+        }
+
+            .badge-image {
+                display: inline-block;
+                width: 80px;
+                height: 80px;
+                min-width: auto;
+                min-height: auto;
+                margin-bottom: 10px;
+            }
+
+            .badge-title {
+                display: block;
+                font-size: 100%;
+                font-weight: 500;
+                margin-bottom: 3px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .badge-info {
+                display: block;
+                font-size: 80%;
+                line-height: 1.1em;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+    .zoom-on-hover:hover {
+        transform: scale(1.05);
+        transition: transform .2s;
+    }
+</style>
+{% endblock %}
+
+{% block logo %}
+    <a href="https://sorokin.club">
+        <center><img src="{{ settings.APP_HOST }}{% static "images/logo/logo-256.png" %}" alt="" height="80" width="80" style="display:inline-block;width: 80px;height: 80px;min-width: 80px; margin-top: 30px;"></center>
+    </a>
+{% endblock %}
+
+{% block title %}
+    Лучшие интро и посты за прошедшие сутки<br>
+{% endblock %}
+
+{% block body %}
+{% if posts %}
+
+<h2>Лучшие посты 🤟</h2>
+
+{% for post in posts %}
+<p>
+<div class="block post">
+    <span class="upvotes">
+        👍{{ post.upvotes }}
+    </span>
+
+    <h3>
+
+        {% if post.type != "post" %}
+            {{ post.emoji }}
+        {% endif %}
+
+        {{ post.prefix }}
+
+
+        <a href="{{ settings.APP_HOST }}{% url 'show_post' post.type post.slug %}?utm_source=email" target='_blank'>{{ post.title }}</a>
+        {% if post.label %}
+            &nbsp;{% include "posts/widgets/label.html" with label=post.label %}
+        {% endif %}
+    </h3>
+
+    <p>
+        {{ post.text | markdown | striptags | truncatechars:400 }}
+    </p>
+
+    <span class="post-footer">
+        <a href="{{ settings.APP_HOST }}{% url 'profile' post.author.slug %}?utm_source=email" style="text-decoration: none; color: #999;">
+            <img src="{{ post.author.get_avatar }}" alt="" width="24" height="24" class="avatar-small">
+            &nbsp;{{ post.author.full_name }}
+        </a>
+        | {{ post.view_count }}&nbsp;{{ post.view_count | rupluralize:"просмотр,просмотра,просмотров" }}
+        | {{ post.comment_count }}&nbsp;{{ post.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
+    </span>
+</div>
+</p>
+{% endfor %}
+{% endif %}
+
+{% if intros %}
+<h2>Лучшие новички 👩‍🎓🧑‍🎓</h2>
+
+{% for intro in intros %}
+
+<p>
+    <div class="block post">
+        <span class="upvotes">
+            👍{{ intro.upvotes }}
+        </span>
+    
+        <h3>
+    
+            {% if intro.type != "post" %}
+                {{ intro.emoji }}
+            {% endif %}
+    
+            {{ intro.prefix }}
+    
+    
+            <a href="{{ settings.APP_HOST }}{% url 'show_post' intro.type intro.slug %}?utm_source=email" target='_blank'>{{ intro.title }}</a>
+            {% if intro.label %}
+                &nbsp;{% include "posts/widgets/label.html" with label=intro.label %}
+            {% endif %}
+        </h3>
+    
+        <p>
+            {{ intro.text | markdown | striptags | truncatechars:400 }}
+        </p>
+    
+        <span class="post-footer">
+            <a href="{{ settings.APP_HOST }}{% url 'profile' intro.author.slug %}?utm_source=email" style="text-decoration: none; color: #999;">
+                <img src="{{ intro.author.get_avatar }}" alt="" width="24" height="24" class="avatar-small">
+                &nbsp;{{ intro.author.full_name }}
+            </a>
+            | {{ intro.view_count }}&nbsp;{{ intro.view_count | rupluralize:"просмотр,просмотра,просмотров" }}
+            | {{ intro.comment_count }}&nbsp;{{ intro.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
+        </span>
+    </div>
+    </p>
+
+    {% endfor %}
+    
+{% endif %}
+{% endblock %}
+
