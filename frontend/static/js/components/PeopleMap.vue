@@ -37,7 +37,7 @@ export default {
             accessToken: "pk.eyJ1IjoidmFzM2siLCJhIjoiY2thZ254NXVwMDhkbjJ5dDk5eGh5Y21wbyJ9.wYXG58PrErQfRHTflvdSfA",
             mapStyle: "mapbox://styles/vas3k/ckagmhzm90tkd1inu8pg76p9s/draft",
             coordinates: [18.3, 51.06],
-            defaultAvatar: "https://i.sorokin.club/v.png",
+            defaultAvatar: "https://sorokin.club/static/images/default_avatar.svg",
         };
     },
     created() {
