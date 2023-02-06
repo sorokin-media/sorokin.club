@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sitemaps",
     "club",
+    "bot",
     "auth.apps.AuthConfig",
     "bookmarks.apps.BookmarksConfig",
     "comments.apps.CommentsConfig",
