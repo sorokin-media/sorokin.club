@@ -83,13 +83,13 @@ class Command(BaseCommand):
             points = (post.upvotes*10) + (post.comment_count*3) + post.view_count
             posts_data.append({'post': post, 'points': points})
         posts_list = sorted(posts_data, key=lambda post: post['points'], reverse=True)
-        posts_list = posts_list[:2]
+        posts_list = posts_list[:3]
 
         for intro in intros:
             points = (intro.upvotes*10) + (intro.comment_count*3) + intro.view_count
             intros_data.append({'intro': intro, 'points': points})
         intros_list = sorted(intros_data, key=lambda intro: intro['points'], reverse=True)
-        intros_list = intros_list[:2]
+        intros_list = intros_list[:3]
 
 #   берём только посты пока
 
