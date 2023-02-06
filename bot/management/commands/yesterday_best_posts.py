@@ -70,7 +70,7 @@ def construct_message(objects, date_month, date_day):
 
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
-    me = User.objects.filter(slug='dev').first().telegram_id
+    me = User.objects.filter(slug='romashovdmitryo').first().telegram_id
     date_month = dict_of_year[date_month]
 
     if posts_list:
