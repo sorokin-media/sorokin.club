@@ -1,3 +1,7 @@
 import datepicker from './parts/datepicker';
+import initLazyLoading from './parts/lazyloading';
 
-datepicker();
+document.addEventListener("DOMContentLoaded", function () {
+    datepicker();
+    initLazyLoading();
+});
