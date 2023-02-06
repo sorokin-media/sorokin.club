@@ -27,11 +27,16 @@ def send_email_helper(posts_list, intros_list):
     posts = [x['post'] for x in posts_list]
     intros = [x['intro'] for x in intros_list]
     renewal_template = loader.get_template("emails/everyday_best_posts.html")
-    send_club_email(recipient='romashov.dmitry.o@gmail.com',
-                    subject=f"Лучшие интро и новички прошедшой недели.",
-                    html=renewal_template.render({'intros': intros,
-                                                  'posts': posts}),
-                    tags=["comment"])
+
+    test_users = ['romashov.dmitry.o@gmail.com', 'bigsmart@gmail.com']
+
+    for user in test_users:
+        send_club_email(recipient=user,
+                        subject=f"Лучшие интро и новички прошедшой недели.",
+                        html=renewal_template.render({'intros': intros,
+                                                      'posts': posts}),
+                        tags=["comment"])
+
 
     # можно передавать аргументы в render() в виде ключ + значение
 '''
@@ -57,7 +62,7 @@ class Command(BaseCommand):
             minute=0,
             second=0
         ))
-        yesterday_start = yesterday_dinner - timedelta(days=1)
+        yesterday_start = yesterday_dinner - timedelta(days=30)
 # для теста пока оставляю
 #        yesterday_dinner = time_zone.localize(datetime.utcnow())
 # для теста оставляю пока что
@@ -88,5 +93,5 @@ class Command(BaseCommand):
 
 #   берём только посты пока
 
-        if True is True:
+        if intros or posts:
             send_email_helper(posts_list, intros_list)
