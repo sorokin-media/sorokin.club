@@ -95,8 +95,11 @@ def check_user_permissions(request, **context):
             log.info("User on review. Redirecting to 'on_review' page...")
             return redirect("on_review")
 
-        if not request.me.telegram_id:
-            return render(request, "users/edit/plug_bot.html", {"user": request.me})
+        if settings.APP_HOST != 'http://127.0.0.1:8000':
+            if request.me.slug != 'dev':
+
+                if not request.me.telegram_id:
+                    return render(request, "users/edit/plug_bot.html", {"user": request.me})
 
     return None
 
