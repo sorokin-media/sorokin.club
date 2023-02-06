@@ -107,6 +107,9 @@ class Command(BaseCommand):
             second=0
         ))
         yesterday_start = yesterday_dinner - timedelta(days=1)
+        yesterday_start.hour = 0
+        yesterday_start.minute = 0
+        yesterday_start.second = 0
 
         posts = Post.objects.filter(published_at__gte=yesterday_start
                                     ).filter(published_at__lte=yesterday_dinner
