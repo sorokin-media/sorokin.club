@@ -26,6 +26,7 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+import re
 
 dict_of_year = {1: 'Января',
                 2: 'Февраля',
@@ -52,8 +53,10 @@ def point_counter(objects):
 def construct_message(objects, date_month, date_day):
     return_string = ''
     for object in objects:
-        title_of_message = f'<a href="{settings.APP_HOST}/post/{object.slug}">{object.title}</a>'
+        title_of_message = f'<strong><a href="{settings.APP_HOST}/post/{object.slug}">{object.title}</a></strong>'
         text_of_post = object.text[:250] + '...'
+        text_of_post = re.sub(r'http\S+', '', text_of_post)
+        text_of_post = text_of_post.replace('![](', '')
         author = object.author.full_name
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}">{author}</a>'
 
@@ -65,9 +68,8 @@ def construct_message(objects, date_month, date_day):
         comments = str(object.comment_count) + rupluralize(value=object.comment_count,
                                                            arg='комментарий, коментарии, комментариев')
         return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
-            '|' + views + '|' + upvotes + '|' + comments
+            ' | ' + views + ' | ' + upvotes + ' | ' + comments
     return return_string
-
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
     me = User.objects.filter(slug='romashovdmitryo').first().telegram_id
@@ -77,22 +79,24 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
     if posts_list:
         posts = [x['post'] for x in posts_list]
-        posts_string_for_bot = f'<strong>🤟Лучшие посты за {date_day} {date_month}😎</strong>'
+        posts_string_for_bot = f'<strong>🤟 Лучшие посты за {date_day} {date_month} 😎</strong>'
         posts_string_for_bot = posts_string_for_bot + construct_message(posts, date_month, date_day)
         for _ in me_and_alex:
             bot.send_message(text=posts_string_for_bot,
                              chat_id=_,
                              parse_mode=ParseMode.HTML,
+                             disable_web_page_preview=True
                              )
 
     if intros_list:
         intros = [x['post'] for x in intros_list]
-        intros_string_for_bot = f'<strong>👩‍🎓Самые интересные интро {date_day} {date_month}🧑‍🎓</strong>'
+        intros_string_for_bot = f'<strong>👩‍🎓 Самые интересные интро {date_day} {date_month} 🧑‍🎓</strong>'
         intros_string_for_bot = intros_string_for_bot + construct_message(intros, date_month, date_day)
         for _ in me_and_alex:
             bot.send_message(text=intros_string_for_bot,
                              chat_id=_,
                              parse_mode=ParseMode.HTML,
+                             disable_web_page_preview=True
                              )
 
 class Command(BaseCommand):
