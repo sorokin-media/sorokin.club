@@ -31,6 +31,9 @@
         {% endfor %}
         {% endif %}
 
+        <small><a href="{% url 'show_telegram_messages' %}">Вернуться</a></small>
+        <br>
+
         {% if status == 'modify' %}
         <form action="{% url 'create_telegram_message' message_id %}" method="post">
         {% else %}

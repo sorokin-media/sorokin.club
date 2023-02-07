@@ -82,11 +82,11 @@ def create_telegram_message(request, message_id=None):
                             chat_id=204349098,
                             photo=image_url
                         )
-                    message = TelegramMesage.objects.get(id=id)
-                    message.save_data(days=days, hours=hours, minutes=minutes,
-                                      name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                                      is_archived=is_archived, image_url=image_url)
-                    return redirect('show_telegram_messages')
+                message = TelegramMesage.objects.get(id=id)
+                message.save_data(days=days, hours=hours, minutes=minutes,
+                                  name=name, text=text, is_finish_of_queue=is_finish_of_queue,
+                                  is_archived=is_archived, image_url=image_url)
+                return redirect('show_telegram_messages')
         # if we create new message
         elif message_id is None:
             if check_uniqie_helper(name, id=None) is True:
