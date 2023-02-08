@@ -6,7 +6,7 @@ from datetime import date
 class CreateMessage(ModelForm):
     class Meta:
         model = TelegramMesage
-        fields = ('name', 'text', 'image_url', 'is_finish_of_queue', 'is_archived', 'days', 'hours', 'minutes')
+        fields = ('name', 'text', 'image_url', 'is_finish_of_queue', 'days', 'hours', 'minutes')
 
         widgets = {
             'name': TextInput(attrs={'placeholder': 'Название сообщения'}),

@@ -106,23 +106,29 @@ class Command(BaseCommand):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
         yesterday = now - timedelta(days=1)
-        yesterday_dinner = time_zone.localize(datetime(
+        yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
             day=yesterday.day,
-            hour=14,
+            hour=0,
             minute=0,
             second=0
         ))
-        yesterday_start = yesterday_dinner - timedelta(days=1)
-
+        yesterday_finish = time_zone.localize(datetime(
+            year=yesterday.year,
+            month=yesterday.month,
+            day=yesterday.day,
+            hour=23,
+            minute=59,
+            second=59
+        ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_dinner
+                                    ).filter(published_at__lte=yesterday_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).filter(type='post').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=yesterday_dinner
+                                     ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
