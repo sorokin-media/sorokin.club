@@ -13,5 +13,5 @@
 */20 * * * * root cd /app && python3 manage.py check_post_upvote  >/proc/1/fd/1 2>/proc/1/fd/2
 * * * * * root cd /app && python3 manage.py check_posts_for_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
 * * * * * root cd /app && python3 manage.py check_comment_of_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
-0 8 * * * root cd /app && python3 manage.py check_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
+0 8 * * * root cd /app && python3 manage.py yesterday_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
 # * * * * * root cd /app && python3 manage.py check_ready_for_message  >/proc/1/fd/1 2>/proc/1/fd/2

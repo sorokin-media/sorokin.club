@@ -31,6 +31,9 @@
         {% endfor %}
         {% endif %}
 
+        <small><a href="{% url 'show_telegram_messages' %}">Вернуться к списку</a></small>
+        <br>
+
         {% if status == 'modify' %}
         <form action="{% url 'create_telegram_message' message_id %}" method="post">
         {% else %}
@@ -49,12 +52,10 @@
         {{ field }}
         <br>
         {% endfor %}
-        <label>
-            <input type="checkbox" name="test">
-            Отправить тест Алексею
-          </label>
         <br><br>
-        <input type="submit" value="Сохранить!">
+        <button type="submit" name="Сохранить!">Сохранить!</button>
+        <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>    
+        <button type="'submit" name="Отправить тест Алексею">Отправить тест Алексею</button>       
         <div class="menu">
 {% if status == 'modify' %}
 <a href="{% url 'delete_telegram_message' message_id %}" onclick="return confirm('Are you sure you want to delete this item?');">Удалить сообщение</a>

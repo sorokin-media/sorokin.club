@@ -24,23 +24,6 @@ def show_telegram_messages(request):
     else:
         return render(request, 'message/show_messages.html')
 
-def create_message_helper(days, hours, minutes,
-                          name, text, is_finish_of_queue,
-                          is_archived, image_url, test):
-    new_message = TelegramMesage()
-    new_message.save_data(days=days, hours=hours, minutes=minutes,
-                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                          is_archived=is_archived, image_url=image_url)
-    if test == 'on':
-        bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        bot.send_message(chat_id=204349098,
-                         text=text)
-        if image_url != '':
-            bot.send_photo(
-                chat_id=204349098,
-                photo=image_url
-            )
-
 # None when create
 def check_uniqie_helper(name, id):
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
@@ -50,11 +33,36 @@ def check_uniqie_helper(name, id):
     # True if not unique, else False
     return True if name in name_list and not id_in_db else False
 
+def save_data_helper(request, message, days, hours, minutes, name, text,
+                     is_finish_of_queue, image_url=''):
+    if "Отправить тест Алексею" in request.POST:
+        bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+        bot.send_message(chat_id=204349098,
+                         text=text)
+        if image_url != '':
+            bot.send_photo(
+                chat_id=204349098,
+                photo=image_url
+            )
+        message.save_data(days=days, hours=hours, minutes=minutes,
+                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
+                          is_archived=True, image_url=image_url)
+
+    elif "Сохранить как черновик" in request.POST:
+        message.save_data(days=days, hours=hours, minutes=minutes,
+                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
+                          is_archived=True, image_url=image_url)
+
+    else:
+        message.save_data(days=days, hours=hours, minutes=minutes,
+                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
+                          is_archived=False, image_url=image_url)
+
 @auth_required
 def create_telegram_message(request, message_id=None):
     if request.method == 'POST':
+
         # get data from form
-        test = str(request.POST.get('test'))
         days = int(request.POST.get('days'))
         hours = int(request.POST.get('hours'))
         minutes = int(request.POST.get('minutes'))
@@ -62,42 +70,32 @@ def create_telegram_message(request, message_id=None):
         text = request.POST.get('text')
         is_finish_of_queue = request.POST.get('is_finish_of_queue')
         image_url = request.POST.get('image_url')
-        is_archived = request.POST.get('is_archived')
+
         # modify word
         if message_id is not None:
             id = message_id
             # if there is similar name in DB already
             if check_uniqie_helper(name, id) is True:
-                tgmessage = TelegramMesage.objects.filter(id=id).first()
                 form = CreateMessage(request.POST)
                 messages.error(request, "Сообщение с таким названием уже имеется")
                 return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
-            else:
-                if test == 'on':
-                    bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-                    bot.send_message(chat_id=204349098,
-                                     text=text)
-                    if image_url != '':
-                        bot.send_photo(
-                            chat_id=204349098,
-                            photo=image_url
-                        )
-                    message = TelegramMesage.objects.get(id=id)
-                    message.save_data(days=days, hours=hours, minutes=minutes,
-                                      name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                                      is_archived=is_archived, image_url=image_url)
-                    return redirect('show_telegram_messages')
+
+            message = TelegramMesage.objects.get(id=id)
+            save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
+                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
+
         # if we create new message
         elif message_id is None:
             if check_uniqie_helper(name, id=None) is True:
                 form = CreateMessage(request.POST)
                 messages.error(request, "Сообщение с таким названием уже имеется")
                 return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
-            create_message_helper(days=days, hours=hours, minutes=minutes,
-                                  name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                                  is_archived=is_archived, image_url=image_url, test=test)
-            tgmessages = TelegramMesage.objects.all()
-            return redirect('show_telegram_messages')
+            message = TelegramMesage()
+            save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
+                             name=name, text=text, is_finish_of_queue=is_finish_of_queue)
+    
+        return redirect('show_telegram_messages')
+    
     form = CreateMessage
     return render(request, 'message/create_message.html', {"form": form})
 
