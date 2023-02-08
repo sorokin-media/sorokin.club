@@ -53,20 +53,20 @@ def point_counter(objects):
 def construct_message(objects, date_month, date_day):
     return_string = ''
     for object in objects:
-        title_of_message = f'<strong><a href="{settings.APP_HOST}/post/{object.slug}">{object.title}</a></strong>'
+        title_of_message = f'📝<strong><a href="{settings.APP_HOST}/post/{object.slug}">{object.title}</a></strong>'
         text_of_post = object.text[:250] + '...'
         text_of_post = re.sub(r'http\S+', '', text_of_post)
+        text_of_post = re.sub(r'@\S+', '', text_of_post)
         text_of_post = text_of_post.replace('![](', '')
         author = object.author.full_name
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}">{author}</a>'
 
-        views = str(object.view_count) + rupluralize(value=object.view_count, arg='просмотр, просмотры, просмотров')
+        views = str(object.view_count) + ' 👀'
         if object.upvote_badge is not False:
-            upvotes = str(object.upvote_badge) + rupluralize(value=object.upvote_badge, arg='плюс, плюсы, плюсов')
+            upvotes = str(object.upvote_badge) + ' 👍'
         else:
-            upvotes = '0 плюсов'
-        comments = str(object.comment_count) + rupluralize(value=object.comment_count,
-                                                           arg='комментарий, коментарии, комментариев')
+            upvotes = '0 👍'
+        comments = str(object.comment_count) + ' 💬'
         return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
             ' | ' + views + ' | ' + upvotes + ' | ' + comments
     return return_string
@@ -79,7 +79,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
     if posts_list:
         posts = [x['post'] for x in posts_list]
-        posts_string_for_bot = f'<strong>🤟 Лучшие посты за {date_day} {date_month} 😎</strong>'
+        posts_string_for_bot = f'<strong>🔥 Лучшие посты за {date_day} {date_month} 🚀</strong>'
         posts_string_for_bot = posts_string_for_bot + construct_message(posts, date_month, date_day)
         for _ in me_and_alex:
             bot.send_message(text=posts_string_for_bot,
@@ -90,7 +90,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
     if intros_list:
         intros = [x['post'] for x in intros_list]
-        intros_string_for_bot = f'<strong>👩‍🎓 Самые интересные интро {date_day} {date_month} 🧑‍🎓</strong>'
+        intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
         intros_string_for_bot = intros_string_for_bot + construct_message(intros, date_month, date_day)
         for _ in me_and_alex:
             bot.send_message(text=intros_string_for_bot,
@@ -125,12 +125,12 @@ class Command(BaseCommand):
         posts = Post.objects.filter(published_at__gte=yesterday_start
                                     ).filter(published_at__lte=yesterday_finish
                                              ).filter(is_approved_by_moderator=True
-                                                      ).all()
+                                                      ).exclude(type='intro').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
                                      ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
-                                                       ).all()
+                                                       ).filter(type='intro').all()
 
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
