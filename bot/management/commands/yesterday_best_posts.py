@@ -88,17 +88,16 @@ def construct_message(objects):
         text_of_post = text_of_post.replace("```", "")
         text_of_post = text_of_post.replace("#", "")
 
-        type_of_post = object.type
-        emoji = dict_of_emoji[type_of_post]
+        author = object.author.full_name
 
         if object.type == 'intro':
-            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{object.full_name}</a></strong>'
+            title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>'
         else:
+            emoji = dict_of_emoji[object.type]
             title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
                 f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
 
-        author = object.author.full_name
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
 
         views = str(object.view_count) + ' 👀'
@@ -113,8 +112,8 @@ def construct_message(objects):
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
     me = User.objects.filter(slug='romashovdmitryo').first().telegram_id
-    #alex = User.objects.filter(slug='bigsmart').first().telegram_id
-    me_and_alex = [me]  # , alex]
+    alex = User.objects.filter(slug='bigsmart').first().telegram_id
+    me_and_alex = [me, alex]
     date_month = dict_of_year[date_month]
 
     if posts_list:

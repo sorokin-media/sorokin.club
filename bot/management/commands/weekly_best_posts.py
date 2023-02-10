@@ -28,6 +28,15 @@ from telegram.ext import CallbackContext
 
 import re
 
+dict_of_emoji = {
+    'post': '📝',
+    'event': '📅',
+    'link': '🔗',
+    'question': '🤔',
+    'idea': '💡',
+    'thread': '🗄️'
+}
+
 def point_counter(objects):
     objects_data = []
     for object in objects:
@@ -59,8 +68,6 @@ def construct_message(objects):
                 new_string = new_string + text_of_post[:start] + formating_text
                 text_of_post = text_of_post[finish:]
             text_of_post = new_string + text_of_post
-        title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/post/' \
-            f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
         text_of_post = re.sub(r' @\S+ ', '', text_of_post)
         text_of_post = re.sub(r'@\S+ ', '', text_of_post)
         text_of_post = text_of_post.replace('![](', '')
@@ -69,6 +76,15 @@ def construct_message(objects):
         text_of_post = text_of_post.replace("#", "")
 
         author = object.author.full_name
+
+        if object.type == 'intro':
+            title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>'
+        else:
+            emoji = dict_of_emoji[object.type]
+            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
+
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
 
         views = str(object.view_count) + ' 👀'
@@ -82,7 +98,7 @@ def construct_message(objects):
     return return_string
 
 def send_email_helper(posts_list, intros_list, bot):
-    me = User.objects.filter(slug='romashovdmitryo').first().telegram_id
+    me = User.objects.filter(slug='dev').first().telegram_id
 #    alex = User.objects.filter(slug='bigsmart').first().telegram_id
     me_and_alex = [me]#, alex]
 
