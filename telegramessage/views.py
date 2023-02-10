@@ -5,6 +5,7 @@ import uuid
 
 from .forms import CreateMessage
 from .models import TelegramMesage
+from users.models.user import User
 
 from club import settings
 
@@ -37,11 +38,12 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
     if "Отправить тест Алексею" in request.POST:
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        bot.send_message(chat_id=204349098,
+        tg_id_of_alex = User.objects.filter(slug='bigsmart').first().telegram_id
+        bot.send_message(chat_id=tg_id_of_alex,
                          text=text)
         if image_url != '':
             bot.send_photo(
-                chat_id=204349098,
+                chat_id=tg_id_of_alex,
                 photo=image_url
             )
         message.save_data(days=days, hours=hours, minutes=minutes,

@@ -40,25 +40,27 @@ def point_counter(objects):
 def construct_message(objects):
     return_string = ''
     for object in objects:
-        obj_text = object.text
-        if '](https' in obj_text:
+        text_of_post = object.text
+        text_of_post = text_of_post[:250] + '...'
+        text_of_post = re.sub(r'\!\[\]\(https\S+', '', text_of_post)
+        text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
+        if '](https' in text_of_post:
             new_string = ''
-            how_much = re.findall(r']\(http\S+', obj_text)
+            how_much = re.findall(r']\(http\S+', text_of_post)
             for _ in range(len(how_much)):
-                link = re.search(r']\(http\S+', obj_text)
-                text = re.search(r'\[[\D|\s|]+]', obj_text)
+                link = re.search(r']\(http\S+', text_of_post)
+                text = re.search(r'\[[\D|\s|]+]', text_of_post)
                 start = text.start()
                 finish = link.end()
                 link = link.group()
                 link = link[2:-1]
-                formating_text = f'<strong><a href="{link}">{text.group()}?utm_source=private_bot_newsletter</a></strong>'
-                new_string = new_string + obj_text[:start] + formating_text
-                obj_text = obj_text[finish:]
-            obj_text = new_string + obj_text
+                print(f'LINK:{link}')
+                formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
+                new_string = new_string + text_of_post[:start] + formating_text
+                text_of_post = text_of_post[finish:]
+            text_of_post = new_string + text_of_post
         title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/post/' \
             f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
-        text_of_post = obj_text[:250] + '...'
-        text_of_post = re.sub(r' http\S+', '', text_of_post)
         text_of_post = re.sub(r' @\S+ ', '', text_of_post)
         text_of_post = re.sub(r'@\S+ ', '', text_of_post)
         text_of_post = text_of_post.replace('![](', '')
@@ -121,7 +123,7 @@ class Command(BaseCommand):
             minute=0,
             second=0
         ))
-        sunday = now - timedelta(day=1)
+        sunday = now - timedelta(days=1)
         # today is Monday by Crontab.
         week_ago_finish = time_zone.localize(datetime(
             year=sunday.year,
