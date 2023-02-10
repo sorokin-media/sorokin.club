@@ -121,7 +121,7 @@ class Command(BaseCommand):
             minute=0,
             second=0
         ))
-        sunday = now - timedelta(day=1)
+        sunday = now - timedelta(days=1)
         # today is Monday by Crontab.
         week_ago_finish = time_zone.localize(datetime(
             year=sunday.year,
