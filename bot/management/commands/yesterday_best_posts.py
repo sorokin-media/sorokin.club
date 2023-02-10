@@ -41,6 +41,15 @@ dict_of_year = {1: 'января',
                 11: 'ноября',
                 12: 'декабря'}
 
+dict_of_emoji = {
+    'post': '📝',
+    'event': '📅',
+    'link': '🔗',
+    'question': '🤔',
+    'idea': '💡',
+    'thread': '🗄️'
+}
+
 def point_counter(objects):
     objects_data = []
     for object in objects:
@@ -72,14 +81,22 @@ def construct_message(objects):
                 new_string = new_string + text_of_post[:start] + formating_text
                 text_of_post = text_of_post[finish:]
             text_of_post = new_string + text_of_post
-        title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/post/' \
-            f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
         text_of_post = re.sub(r' @\S+ ', '', text_of_post)
         text_of_post = re.sub(r'@\S+ ', '', text_of_post)
         text_of_post = text_of_post.replace('![](', '')
         text_of_post = text_of_post.replace("*", "")
         text_of_post = text_of_post.replace("```", "")
         text_of_post = text_of_post.replace("#", "")
+
+        type_of_post = object.type
+        emoji = dict_of_emoji[type_of_post]
+
+        if object.type == 'intro':
+            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                f'{object.slug}?utm_source=private_bot_newsletter">{object.full_name}</a></strong>'
+        else:
+            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
 
         author = object.author.full_name
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'

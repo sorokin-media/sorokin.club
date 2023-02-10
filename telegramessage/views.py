@@ -39,13 +39,17 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
     if "Отправить тест Алексею" in request.POST:
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         tg_id_of_alex = User.objects.filter(slug='bigsmart').first().telegram_id
-        bot.send_message(chat_id=tg_id_of_alex,
-                         text=text)
-        if image_url != '':
-            bot.send_photo(
-                chat_id=tg_id_of_alex,
-                photo=image_url
-            )
+        tg_id_of_dima = User.objects.filter(slug='romashovdmitryo').first().telegram_id
+        tg_ids = [tg_id_of_alex, tg_id_of_dima]
+        for _ in tg_ids:
+            if image_url != '':
+                bot.send_photo(
+                    chat_id=_,
+                    photo=image_url
+                )
+            bot.send_message(chat_id=_,
+                             text=text,
+                             parse_mode=ParseMode.HTML)
         message.save_data(days=days, hours=hours, minutes=minutes,
                           name=name, text=text, is_finish_of_queue=is_finish_of_queue,
                           is_archived=True, image_url=image_url)
@@ -95,9 +99,9 @@ def create_telegram_message(request, message_id=None):
             message = TelegramMesage()
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue)
-    
+
         return redirect('show_telegram_messages')
-    
+
     form = CreateMessage
     return render(request, 'message/create_message.html', {"form": form})
 
