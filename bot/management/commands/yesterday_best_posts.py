@@ -20,6 +20,7 @@ from django.dispatch import receiver
 
 from club import settings
 from users.models.user import User
+from users.models.subscription import SubscriptionUserChoise
 
 import telegram
 from telegram import Update, ParseMode
@@ -111,33 +112,38 @@ def construct_message(objects):
     return return_string
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
-    me = User.objects.filter(slug='romashovdmitryo').first().telegram_id
-    alex = User.objects.filter(slug='bigsmart').first().telegram_id
-    me_and_alex = [me, alex]
+
+    users_for_yesterday_digest = SubscriptionUserChoise.objects.filter(tg_yesterday_best_posts=True).values("user_id")
+    telegram_ids = []
+    for user_id in users_for_yesterday_digest:
+        telegram_id = User.objects.filter(id=user_id['user_id']).first().telegram_id
+        telegram_ids.append(telegram_id)
+
     date_month = dict_of_year[date_month]
 
-    if posts_list:
-        posts = [x['post'] for x in posts_list]
-        posts_string_for_bot = f'<strong>🔥 Лучшие посты за {date_day} {date_month} 🚀</strong>'
-        posts_string_for_bot = posts_string_for_bot + construct_message(posts)
-        for _ in me_and_alex:
-            bot.send_message(text=posts_string_for_bot,
-                             chat_id=_,
-                             parse_mode=ParseMode.HTML,
-                             disable_web_page_preview=True,
+    if len(telegram_ids) > 0:
 
-                             )
+        if posts_list:
+            posts = [x['post'] for x in posts_list]
+            posts_string_for_bot = f'<strong>🔥 Лучшие посты за {date_day} {date_month} 🚀</strong>'
+            posts_string_for_bot = posts_string_for_bot + construct_message(posts)
+            for _ in telegram_ids:
+                bot.send_message(text=posts_string_for_bot,
+                                 chat_id=_,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True,
+                                 )
 
-    if intros_list:
-        intros = [x['post'] for x in intros_list]
-        intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
-        intros_string_for_bot = intros_string_for_bot + construct_message(intros, date_month, date_day)
-        for _ in me_and_alex:
-            bot.send_message(text=intros_string_for_bot,
-                             chat_id=_,
-                             parse_mode=ParseMode.HTML,
-                             disable_web_page_preview=True
-                             )
+        if intros_list:
+            intros = [x['post'] for x in intros_list]
+            intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
+            intros_string_for_bot = intros_string_for_bot + construct_message(intros, date_month, date_day)
+            for _ in telegram_ids:
+                bot.send_message(text=intros_string_for_bot,
+                                 chat_id=_,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True
+                                 )
 
 class Command(BaseCommand):
 
