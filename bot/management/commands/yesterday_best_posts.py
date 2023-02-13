@@ -125,7 +125,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
         if posts_list:
             posts = [x['post'] for x in posts_list]
-            posts_string_for_bot = f'<strong>🔥 Лучшие посты за {date_day} {date_month} 🚀</strong>'
+            posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за {date_day} {date_month} 🚀</strong>'
             posts_string_for_bot = posts_string_for_bot + construct_message(posts)
             for _ in telegram_ids:
                 bot.send_message(text=posts_string_for_bot,

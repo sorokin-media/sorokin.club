@@ -44,7 +44,7 @@ def point_counter(objects):
         points = (object.upvotes*10) + (object.comment_count*3) + object.view_count
         objects_data.append({'post': object, 'points': points})
     objects_list = sorted(objects_data, key=lambda post: post['points'], reverse=True)
-    objects_list = objects_list[:3]
+    objects_list = objects_list[:5]
     return objects_list
 
 def construct_message(objects):
@@ -110,7 +110,7 @@ def send_email_helper(posts_list, intros_list, bot):
 
         if posts_list:
             posts = [x['post'] for x in posts_list]
-            posts_string_for_bot = f'<strong>🔥 Лучшие посты за прошедшую неделю 🚀</strong>'
+            posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за прошедшую неделю 🚀</strong>'
             posts_string_for_bot = posts_string_for_bot + construct_message(posts)
             for _ in telegram_ids:
                 bot.send_message(text=posts_string_for_bot,
