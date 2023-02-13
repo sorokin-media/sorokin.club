@@ -46,11 +46,15 @@ class SubscriptionUserChoise(models.Model):
             sub_list = SubscriptionUserChoise.objects.get(user_id=user)
             sub_list.tg_yesterday_best_posts = request.POST.get('tg_yesterday_best_posts')
             sub_list.tg_weekly_best_posts = request.POST.get('tg_weekly_best_posts')
+            sub_list.daily_email_digest = request.POST.get('daily_email_digest')
+            sub_list.weekly_email_digest = request.POST.get('weekly_email_digest')
             sub_list.save()
         else:
             sub_list = SubscriptionUserChoise()
             sub_list.user_id = user
             sub_list.tg_yesterday_best_posts = request.POST.get('tg_yesterday_best_posts')
             sub_list.tg_weekly_best_posts = request.POST.get('tg_weekly_best_posts')
+            sub_list.daily_email_digest = request.POST.get('daily_email_digest')
+            sub_list.weekly_email_digest = request.POST.get('weekly_email_digest')
 
             sub_list.save()
