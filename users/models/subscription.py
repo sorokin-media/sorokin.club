@@ -23,14 +23,21 @@ class SubscriptionUserChoise(models.Model):
         (False, 'No')
     )
 
+    user_id = models.ForeignKey(User, related_name='subscription_user_choises',
+                                on_delete=models.CASCADE, db_column='user_id'),
+
     tg_yesterday_best_posts = models.BooleanField(default=False,
                                                   verbose_name='Лучшие посты и самые интересные интро за вчерашний день',
                                                   choices=TRUE_FALSE_CHOICES)
     tg_weekly_best_posts = models.BooleanField(default=False,
                                                verbose_name="Лучшие посты и интересные интро за прошедшую неделю",
                                                choices=TRUE_FALSE_CHOICES)
-    user_id = models.ForeignKey(User, related_name='subscription_user_choises',
-                                on_delete=models.CASCADE, db_column='user_id')
+    daily_email_digest = models.BooleanField(default=False,
+                                             verbose_name='Ежедневная e-mail рассылка',
+                                             choices=TRUE_FALSE_CHOICES)
+    weekly_email_digest = models.BooleanField(default=False,
+                                              verbose_name='Еженедельная e-mail рассылка',
+                                              choices=TRUE_FALSE_CHOICES)
 
     class Meta:
         db_table = 'subscription_user_choises'
@@ -47,5 +54,5 @@ class SubscriptionUserChoise(models.Model):
             sub_list.user_id = user
             sub_list.tg_yesterday_best_posts = request.POST.get('tg_yesterday_best_posts')
             sub_list.tg_weekly_best_posts = request.POST.get('tg_weekly_best_posts')
-            
+
             sub_list.save()
