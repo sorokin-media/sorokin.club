@@ -64,8 +64,9 @@ def construct_message(objects):
     return_string = ''
     for object in objects:
         text_of_post = object.text
-        text_of_post = text_of_post[:250] + '...'
-        text_of_post = re.sub(r'\!\[\]\(https\S+', '', text_of_post)
+        if len(text_of_post) > 250:
+            text_of_post = text_of_post[:250] + '...'
+        text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
         text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
         if '](https' in text_of_post:
             new_string = ''
@@ -77,7 +78,6 @@ def construct_message(objects):
                 finish = link.end()
                 link = link.group()
                 link = link[2:-1]
-                print(f'LINK:{link}')
                 formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
                 new_string = new_string + text_of_post[:start] + formating_text
                 text_of_post = text_of_post[finish:]
@@ -88,6 +88,9 @@ def construct_message(objects):
         text_of_post = text_of_post.replace("*", "")
         text_of_post = text_of_post.replace("```", "")
         text_of_post = text_of_post.replace("#", "")
+
+        while text_of_post[0].isspace():
+            text_of_post = text_of_post[1:]
 
         author = object.author.full_name
 
@@ -102,10 +105,7 @@ def construct_message(objects):
         author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
 
         views = str(object.view_count) + ' 👀'
-        if object.upvote_badge is not False:
-            upvotes = str(object.upvote_badge) + ' 👍'
-        else:
-            upvotes = '0 👍'
+        upvotes = str(object.upvotes) + ' 👍'
         comments = str(object.comment_count) + ' 💬'
         return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
             ' | ' + views + ' | ' + upvotes + ' | ' + comments
@@ -137,7 +137,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
         if intros_list:
             intros = [x['post'] for x in intros_list]
             intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
-            intros_string_for_bot = intros_string_for_bot + construct_message(intros, date_month, date_day)
+            intros_string_for_bot = intros_string_for_bot + construct_message(intros)
             for _ in telegram_ids:
                 bot.send_message(text=intros_string_for_bot,
                                  chat_id=_,
