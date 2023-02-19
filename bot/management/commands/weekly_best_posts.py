@@ -51,8 +51,6 @@ def construct_message(objects):
     return_string = ''
     for object in objects:
         text_of_post = object.text
-        if len(text_of_post) > 250:
-            text_of_post = text_of_post[:250] + '...'
         text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
         text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
         if '](https' in text_of_post:
@@ -65,7 +63,6 @@ def construct_message(objects):
                 finish = link.end()
                 link = link.group()
                 link = link[2:-1]
-                print(f'LINK:{link}')
                 formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
                 new_string = new_string + text_of_post[:start] + formating_text
                 text_of_post = text_of_post[finish:]
@@ -76,6 +73,10 @@ def construct_message(objects):
         text_of_post = text_of_post.replace("*", "")
         text_of_post = text_of_post.replace("```", "")
         text_of_post = text_of_post.replace("#", "")
+        text_of_post = text_of_post.replace("\r", "")
+        text_of_post = text_of_post.replace("\n\n", "\n")
+        if len(text_of_post) > 250:
+            text_of_post = text_of_post[:250] + '...'
 
         while text_of_post[0].isspace():
             text_of_post = text_of_post[1:]
