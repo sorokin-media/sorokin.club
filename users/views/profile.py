@@ -42,6 +42,7 @@ def profile(request, user_slug):
     soup = BeautifulSoup(user.bio, 'html.parser')
     rows = soup.find_all('a')
 
+    #тест заливки
     for link in rows:
         flag_link = True
         href_link = link.get('href')

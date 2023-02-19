@@ -71,7 +71,7 @@ def render_comment(context, comment):
 
     soup = BeautifulSoup(comment.html, 'html.parser')
     rows = soup.find_all('a')
-
+    # тест заливки
     for link in rows:
         flag_link = True
         href_link = link.get('href')
