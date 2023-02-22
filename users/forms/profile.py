@@ -60,23 +60,6 @@ class ProfileEditForm(ModelForm):
             "contact",
         ]
 
-
-class NotificationsEditForm(ModelForm):
-    email_digest_type = forms.ChoiceField(
-        label="Тип email-дайджеста",
-        required=True,
-        choices=User.EMAIL_DIGEST_TYPES,
-        initial=User.EMAIL_DIGEST_TYPE_WEEKLY,
-        widget=forms.RadioSelect(),
-    )
-
-    class Meta:
-        model = User
-        fields = [
-            "email_digest_type",
-        ]
-
-
 class ExpertiseForm(ModelForm):
     expertise = forms.ChoiceField(
         label="Область",

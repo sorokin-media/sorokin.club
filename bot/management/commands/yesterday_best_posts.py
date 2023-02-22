@@ -5,7 +5,7 @@ from django.core.management import BaseCommand
 
 from posts.templatetags.text_filters import rupluralize
 
-from posts.models.post import Post
+from posts.models.post import Post, PostExceptions
 from users.models.user import User
 from comments.models import Comment
 
@@ -60,45 +60,19 @@ def point_counter(objects):
     objects_list = objects_list[:3]
     return objects_list
 
+
 def construct_message(objects):
     return_string = ''
     for object in objects:
-        text_of_post = object.text
-        text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
-        text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
-        if '](https' in text_of_post:
-            new_string = ''
-            how_much = re.findall(r']\(http\S+', text_of_post)
-            for _ in range(len(how_much)):
-                link = re.search(r']\(http\S+', text_of_post)
-                text = re.search(r'\[[\D|\s|]+]', text_of_post)
-                start = text.start()
-                finish = link.end()
-                link = link.group()
-                link = link[2:-1]
-                formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
-                new_string = new_string + text_of_post[:start] + formating_text
-                text_of_post = text_of_post[finish:]
-            text_of_post = new_string + text_of_post
-        text_of_post = re.sub(r' @\S+ ', '', text_of_post)
-        text_of_post = re.sub(r'@\S+ ', '', text_of_post)
-        text_of_post = text_of_post.replace('![](', '')
-        text_of_post = text_of_post.replace("*", "")
-        text_of_post = text_of_post.replace("```", "")
-        text_of_post = text_of_post.replace("#", "")
-        text_of_post = text_of_post.replace("\r", "")
-        text_of_post = text_of_post.replace("\n\n", "\n")
-        if len(text_of_post) > 250:
-            text_of_post = text_of_post[:250] + '...'
-
-        while text_of_post[0].isspace():
-            text_of_post = text_of_post[1:]
+        text_of_post = object.html
 
         author = object.author.full_name
+        profession = object.author.position
 
         if object.type == 'intro':
             title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>'
+                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
+                f'       {profession}'  # spaces left on purpose, don't touch
         else:
             emoji = dict_of_emoji[object.type]
             title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
@@ -112,6 +86,7 @@ def construct_message(objects):
         return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
             ' | ' + views + ' | ' + upvotes + ' | ' + comments
     return return_string
+
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
@@ -128,24 +103,28 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
         if posts_list:
             posts = [x['post'] for x in posts_list]
             posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за {date_day} {date_month} 🚀</strong>'
-            posts_string_for_bot = posts_string_for_bot + construct_message(posts)
-            for _ in telegram_ids:
-                bot.send_message(text=posts_string_for_bot,
-                                 chat_id=_,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
-                                 )
+            _ = construct_message(posts)
+            if _:
+                posts_string_for_bot += _
+                for _ in telegram_ids:
+                    bot.send_message(text=posts_string_for_bot,
+                                     chat_id=_,
+                                     parse_mode=ParseMode.HTML,
+                                     disable_web_page_preview=True,
+                                     )
 
         if intros_list:
             intros = [x['post'] for x in intros_list]
             intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
-            intros_string_for_bot = intros_string_for_bot + construct_message(intros)
-            for _ in telegram_ids:
-                bot.send_message(text=intros_string_for_bot,
-                                 chat_id=_,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True
-                                 )
+            _ = construct_message(intros)
+            if _:
+                intros_string_for_bot += _
+                for _ in telegram_ids:
+                    bot.send_message(text=intros_string_for_bot,
+                                     chat_id=_,
+                                     parse_mode=ParseMode.HTML,
+                                     disable_web_page_preview=True
+                                     )
 
 class Command(BaseCommand):
 
@@ -153,7 +132,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
+        yesterday = now - timedelta(days=3)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
@@ -171,12 +150,12 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+                                    ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=yesterday_finish
+                                     ).filter(published_at__lte=now
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 

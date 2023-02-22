@@ -50,54 +50,89 @@ def point_counter(objects):
 def construct_message(objects):
     return_string = ''
     for object in objects:
-        text_of_post = object.text
-        text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
-        text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
-        if '](https' in text_of_post:
-            new_string = ''
-            how_much = re.findall(r']\(http\S+', text_of_post)
-            for _ in range(len(how_much)):
-                link = re.search(r']\(http\S+', text_of_post)
-                text = re.search(r'\[[\D|\s|]+]', text_of_post)
-                start = text.start()
-                finish = link.end()
-                link = link.group()
-                link = link[2:-1]
-                formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
-                new_string = new_string + text_of_post[:start] + formating_text
-                text_of_post = text_of_post[finish:]
-            text_of_post = new_string + text_of_post
-        text_of_post = re.sub(r' @\S+ ', '', text_of_post)
-        text_of_post = re.sub(r'@\S+ ', '', text_of_post)
-        text_of_post = text_of_post.replace('![](', '')
-        text_of_post = text_of_post.replace("*", "")
-        text_of_post = text_of_post.replace("```", "")
-        text_of_post = text_of_post.replace("#", "")
-        text_of_post = text_of_post.replace("\r", "")
-        text_of_post = text_of_post.replace("\n\n", "\n")
-        if len(text_of_post) > 250:
-            text_of_post = text_of_post[:250] + '...'
+        try:
+            text_of_post = object.text
+            text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
+            text_of_post = re.sub(r'\!\[[\w\s]+\]\(https\S+\)', '', text_of_post)
+            text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
+            if '](https' in text_of_post:
+                new_string = ''
+                while len(re.findall(r']\(http\S+\)', text_of_post)) > 0:
+                    link = re.search(r']\(http\S+\)', text_of_post)
+                    text = re.search(r'\[[\s\w\«\»\.\,\!\?\*\#\%\(\)\-\=\+\_\\\"\'\;\:\<\>\/\}\{\]\[]+\]', text_of_post)
+                    start = text.start()
+                    finish = link.end()
+                    link = link.group()
+                    link = link[2:-1]
+                    text = text.group()
+                    text = text[1:-1]
+                    formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text}</a></strong>'
+                    new_string += (text_of_post[0:start] + formating_text)
+                    text_of_post = text_of_post[finish:]
+                text_of_post = new_string + text_of_post
+            if '~~' in text_of_post:
+                new_string = ''
+                while len(re.findall(r'\~\~[\w\s]+\~\~', text_of_post)) > 0:
+                    text = re.search(r'\~\~[\w\s]+\~\~', text_of_post)
+                    start = text.start()
+                    finish = text.end()
+                    text = text.group()
+                    formating_text = f'<s>{text[2:-2]}</s>'
+                    new_string += (text_of_post[0:start] + formating_text)
+                    text_of_post = text_of_post[finish:]
+                text_of_post = new_string + text_of_post
+            text_of_post = re.sub(r' @\S+ ', '', text_of_post)
+            text_of_post = re.sub(r'@\S+ ', '', text_of_post)
+            text_of_post = text_of_post.replace('![](', '')
+            text_of_post = text_of_post.replace("```", "")
+            text_of_post = text_of_post.replace("# ", "")
+            text_of_post = text_of_post.replace("#", "")
+            text_of_post = text_of_post.replace("**", "")
+            text_of_post = text_of_post.replace("\r", "")
+            text_of_post = text_of_post.replace("\n\n", "\n")
+            len_of_text = 250
+            if len(text_of_post) > len_of_text:
+                if len(re.findall(r'\<\S', text_of_post[:len_of_text])) > len(re.findall('\<\\\S', text_of_post[:len_of_text])):
+                    len_of_text += 9
+                    while len(re.findall(r'<strong>', text_of_post[:len_of_text])) > len(re.findall(r'</strong>', text_of_post[:len_of_text])) or \
+                            len(re.findall(r'<s>', text_of_post[:len_of_text])) > len(re.findall(r'</s>', text_of_post[:len_of_text])):
+                        len_of_text += 9
+                    text_of_post = text_of_post[:len_of_text] + '...'
+            while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
+                text_of_post = text_of_post[:-1]
+            if len_of_text >= 250:
+                text_of_post = text_of_post[:len_of_text] + '...'
 
-        while text_of_post[0].isspace():
-            text_of_post = text_of_post[1:]
+            print(f'\n\nGOGOGO {text_of_post}\n\n')
 
-        author = object.author.full_name
+            while text_of_post[0].isspace():
+                text_of_post = text_of_post[1:]
 
-        if object.type == 'intro':
-            title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>'
-        else:
-            emoji = dict_of_emoji[object.type]
-            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
+            author = object.author.full_name
+            profession = object.author.position
 
-        author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+            if object.type == 'intro':
+                title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
+                    f'{profession}'
+            else:
+                emoji = dict_of_emoji[object.type]
+                title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
 
-        views = str(object.view_count) + ' 👀'
-        upvotes = str(object.upvotes) + ' 👍'
-        comments = str(object.comment_count) + ' 💬'
-        return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
-            ' | ' + views + ' | ' + upvotes + ' | ' + comments
+            author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+
+            views = str(object.view_count) + ' 👀'
+            upvotes = str(object.upvotes) + ' 👍'
+            comments = str(object.comment_count) + ' 💬'
+            return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
+                ' | ' + views + ' | ' + upvotes + ' | ' + comments
+        except Exception:
+            if not PostExceptions.objects.filter().exists:
+                post_exception = PostExceptions()
+                post_exception.post_slug = object.slug
+                post_exception.foo_name = 'yesterday best posts'
+                post_exception.save()
     return return_string
 
 def send_email_helper(posts_list, intros_list, bot):
