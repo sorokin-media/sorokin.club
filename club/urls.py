@@ -49,7 +49,6 @@ from users.views.people import people
 from search.api import api_search_users
 from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating
 from telegramessage.views import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
-from users.views.subscription import subscription_user_choise, success_subscription
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -117,8 +116,6 @@ urlpatterns = [
     path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),
     path("user/<slug:user_slug>/delete/", request_delete_account, name="request_delete_account"),
     path("user/<slug:user_slug>/delete/confirm/", confirm_delete_account, name="confirm_delete_account"),
-    path("user/<slug:user>/subscription_choise", subscription_user_choise, name='subscription_user_choise'),
-    path("user/success_subscription", success_subscription ,name='success_subscription'),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),

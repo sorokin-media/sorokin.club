@@ -11,7 +11,7 @@ from auth.helpers import auth_required
 from gdpr.archive import generate_data_archive
 from gdpr.models import DataRequests
 from search.models import SearchIndex
-from users.forms.profile import ProfileEditForm, NotificationsEditForm
+from users.forms.profile import ProfileEditForm
 from users.models.geo import Geo
 from users.models.user import User
 from users.models.subscription import Subscription
@@ -21,6 +21,8 @@ from payments.models import Payment
 import json
 import time
 
+from users.models.subscription import SubscriptionUserChoise as sub_model
+from users.forms.subscription_choises import ChooseSubscription as sub_form
 
 @auth_required
 def profile_settings(request, user_slug):
@@ -75,7 +77,6 @@ def edit_account(request, user_slug):
 
     return render(request, "users/edit/account.html", {"user": user})
 
-
 @auth_required
 def edit_notifications(request, user_slug):
     if user_slug == "me":
@@ -85,16 +86,14 @@ def edit_notifications(request, user_slug):
     if user.id != request.me.id and not request.me.is_moderator:
         raise Http404()
 
-    if request.method == "POST":
-        form = NotificationsEditForm(request.POST, instance=user)
+    if request.method == "POST":        
+        form = sub_form(request.POST, instance=user)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
             return redirect("profile", user.slug)
-    else:
-        form = NotificationsEditForm(instance=user)
-
-    return render(request, "users/edit/notifications.html", {"form": form, "user": user})
+    form = sub_form()
+    return render(request, 'users/profile/subscription_choise.html', {'form': form, 'user': user_slug})
 
 
 @auth_required
@@ -115,7 +114,8 @@ def edit_payments(request, user_slug):
 
     subscriptions = []
     if user.unitpay_id:
-        payment_last = Payment.objects.filter(user_id=user.id, status='success', data__contains='subscriptionId').order_by('created_at').last()
+        payment_last = Payment.objects.filter(user_id=user.id, status='success',
+                                              data__contains='subscriptionId').order_by('created_at').last()
         code_product = payment_last.product_code
         sum_code = payment_last.amount
         if 'sale' in code_product:

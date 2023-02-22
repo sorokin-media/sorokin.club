@@ -112,6 +112,30 @@ class User(models.Model, ModelDiffMixin):
 
     deleted_at = models.DateTimeField(null=True)
 
+    # new subscription page.23.02.2023.
+
+    TRUE_FALSE_CHOICES = (
+        (True, 'Yes'),
+        (False, 'No')
+    )
+
+    daily_email_digest = models.BooleanField(default=False,
+                                             verbose_name='Ежедневная e-mail рассылка',
+                                             choices=TRUE_FALSE_CHOICES,
+                                             null=True)
+    weekly_email_digest = models.BooleanField(default=False,
+                                              verbose_name='Еженедельная e-mail рассылка',
+                                              choices=TRUE_FALSE_CHOICES,
+                                              null=True)
+    tg_yesterday_best_posts = models.BooleanField(default=False,
+                                                  verbose_name='Лучшие посты и самые интересные интро за вчерашний день',
+                                                  choices=TRUE_FALSE_CHOICES,
+                                                  null=True)
+    tg_weekly_best_posts = models.BooleanField(default=False,
+                                               verbose_name="Лучшие посты и интересные интро за прошедшую неделю",
+                                               choices=TRUE_FALSE_CHOICES,
+                                               null=True)
+
     class Meta:
         db_table = "users"
 
@@ -159,7 +183,7 @@ class User(models.Model, ModelDiffMixin):
         now = datetime.now(tz_info)
         delta = self.membership_expires_at - now
         return delta.days
-        
+
     def membership_created_days(self):
         return (datetime.utcnow() - self.created_at).days
 
@@ -200,8 +224,8 @@ class User(models.Model, ModelDiffMixin):
     @property
     def is_club_member(self):
         return self.moderation_status == User.MODERATION_STATUS_APPROVED \
-               and not self.is_banned \
-               and self.deleted_at is None
+            and not self.is_banned \
+            and self.deleted_at is None
 
     @property
     def is_paid_member(self):
