@@ -29,19 +29,6 @@ from telegram.ext import CallbackContext
 
 import re
 
-dict_of_year = {1: 'января',
-                2: 'февраля',
-                3: 'марта',
-                4: 'апреля',
-                5: 'мая',
-                6: 'июня',
-                7: 'июля',
-                8: 'августа',
-                9: 'сентября',
-                10: 'октября',
-                11: 'ноября',
-                12: 'декабря'}
-
 dict_of_emoji = {
     'post': '📝',
     'event': '📅',
@@ -57,7 +44,7 @@ def point_counter(objects):
         points = (object.upvotes*10) + (object.comment_count*3) + object.view_count
         objects_data.append({'post': object, 'points': points})
     objects_list = sorted(objects_data, key=lambda post: post['points'], reverse=True)
-    objects_list = objects_list[:3]
+    objects_list = objects_list[:5]
     return objects_list
 
 def construct_message(objects):
@@ -113,27 +100,25 @@ def construct_message(objects):
             ' | ' + views + ' | ' + upvotes + ' | ' + comments
     return return_string
 
-def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
+def send_email_helper(posts_list, intros_list, bot):
 
-    users_for_yesterday_digest = SubscriptionUserChoise.objects.filter(tg_yesterday_best_posts=True).values("user_id")
+    users_for_weekly_digest = SubscriptionUserChoise.objects.filter(tg_weekly_best_posts=True).values("user_id")
     telegram_ids = []
-    for user_id in users_for_yesterday_digest:
+    for user_id in users_for_weekly_digest:
         telegram_id = User.objects.filter(id=user_id['user_id']).first().telegram_id
         telegram_ids.append(telegram_id)
-
-    date_month = dict_of_year[date_month]
 
     if len(telegram_ids) > 0:
 
         if posts_list:
             posts = [x['post'] for x in posts_list]
-            posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за {date_day} {date_month} 🚀</strong>'
+            posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за прошедшую неделю 🚀</strong>'
             posts_string_for_bot = posts_string_for_bot + construct_message(posts)
             for _ in telegram_ids:
                 bot.send_message(text=posts_string_for_bot,
                                  chat_id=_,
                                  parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
+                                 disable_web_page_preview=True
                                  )
 
         if intros_list:
@@ -153,30 +138,32 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
-        yesterday_start = time_zone.localize(datetime(
-            year=yesterday.year,
-            month=yesterday.month,
-            day=yesterday.day,
+        week_ago = now - timedelta(days=7)
+        week_ago_start = time_zone.localize(datetime(
+            year=week_ago.year,
+            month=week_ago.month,
+            day=week_ago.day,
             hour=0,
             minute=0,
             second=0
         ))
-        yesterday_finish = time_zone.localize(datetime(
-            year=yesterday.year,
-            month=yesterday.month,
-            day=yesterday.day,
+        sunday = now - timedelta(days=1)
+        # today is Monday by Crontab.
+        week_ago_finish = time_zone.localize(datetime(
+            year=sunday.year,
+            month=sunday.month,
+            day=sunday.day,
             hour=23,
             minute=59,
             second=59
         ))
-        posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+        posts = Post.objects.filter(published_at__gte=week_ago_start
+                                    ).filter(published_at__lte=week_ago_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro').all()
 
-        intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=yesterday_finish
+        intros = Post.objects.filter(published_at__gte=week_ago_start
+                                     ).filter(published_at__lte=week_ago_finish
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
@@ -184,6 +171,4 @@ class Command(BaseCommand):
         intros_list = point_counter(intros)
 
         if intros or posts:
-            date_day = yesterday_start.day
-            day_month = yesterday_start.month
-            send_email_helper(posts_list, intros_list, bot, date_day, day_month)
+            send_email_helper(posts_list, intros_list, bot)

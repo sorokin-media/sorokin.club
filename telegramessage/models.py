@@ -106,13 +106,3 @@ class TelegramMesageQueue(models.Model):
         string_of_ids = string_of_ids + id_of_message
         self.id_of_sended_messages = string_of_ids
         self.save()
-
-        # если есть, то сначала забираем УЖЕ списокм
-        # Добавляем нужное
-        # сохраняем СТРОКОЙ
-
-
-#    def check_unique(name, id):
-#        name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
-#        id_in_db = TelegramMesage.objects.filter(name=name).first()['id']
-#        return False if name in name_list and id != id_in_db else True
