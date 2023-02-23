@@ -1,7 +1,7 @@
-from django.core.management import BaseCommand
+from club import settings
+from users.models.user import User
 
-# from django.db.models import Max
-# from club import settings
+from django.core.management import BaseCommand
 
 from posts.templatetags.text_filters import rupluralize
 
@@ -18,8 +18,6 @@ from django.template import loader
 from notifications.email.sender import send_club_email
 from django.dispatch import receiver
 
-from club import settings
-from users.models.user import User
 from users.models.subscription import SubscriptionUserChoise
 
 import telegram
@@ -183,7 +181,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=10)
+        yesterday = now - timedelta(days=1)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
@@ -201,12 +199,12 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=now
+                                    ).filter(published_at__lte=yesterday_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=now
+                                     ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
