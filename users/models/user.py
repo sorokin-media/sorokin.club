@@ -114,26 +114,13 @@ class User(models.Model, ModelDiffMixin):
 
     # new subscription page.23.02.2023.
 
-    TRUE_FALSE_CHOICES = (
-        (True, 'Yes'),
-        (False, 'No')
-    )
-
-    daily_email_digest = models.BooleanField(default=False,
-                                             verbose_name='Ежедневная e-mail рассылка',
-                                             choices=TRUE_FALSE_CHOICES,
+    daily_email_digest = models.BooleanField(verbose_name='Ежедневная e-mail рассылка',
                                              null=True)
-    weekly_email_digest = models.BooleanField(default=False,
-                                              verbose_name='Еженедельная e-mail рассылка',
-                                              choices=TRUE_FALSE_CHOICES,
+    weekly_email_digest = models.BooleanField(verbose_name='Еженедельная e-mail рассылка',
                                               null=True)
-    tg_yesterday_best_posts = models.BooleanField(default=False,
-                                                  verbose_name='Лучшие посты и самые интересные интро за вчерашний день',
-                                                  choices=TRUE_FALSE_CHOICES,
+    tg_yesterday_best_posts = models.BooleanField(verbose_name='Лучшие посты и самые интересные интро за вчерашний день',
                                                   null=True)
-    tg_weekly_best_posts = models.BooleanField(default=False,
-                                               verbose_name="Лучшие посты и интересные интро за прошедшую неделю",
-                                               choices=TRUE_FALSE_CHOICES,
+    tg_weekly_best_posts = models.BooleanField(verbose_name="Лучшие посты и интересные интро за прошедшую неделю",
                                                null=True)
 
     class Meta:

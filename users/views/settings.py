@@ -87,11 +87,17 @@ def edit_notifications(request, user_slug):
         raise Http404()
 
     if request.method == "POST":        
-        form = sub_form(request.POST, instance=user)
+        form = sub_form(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+            user = User.objects.get(slug=user_slug)
+            user.daily_email_digest = form.cleaned_data['daily_email_digest']
+            user.weekly_email_digest = form.cleaned_data['weekly_email_digest']
+            user.tg_yesterday_best_posts = form.cleaned_data['tg_yesterday_best_posts']
+            user.tg_weekly_best_posts = form.cleaned_data['tg_weekly_best_posts']
             user.save()
             return redirect("profile", user.slug)
+        form = sub_form()
+        return render(request, 'users/profile/subscription_choise.html', {'form': form, 'user': user_slug})
     form = sub_form()
     return render(request, 'users/profile/subscription_choise.html', {'form': form, 'user': user_slug})
 
