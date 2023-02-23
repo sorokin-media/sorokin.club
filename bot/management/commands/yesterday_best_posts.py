@@ -64,36 +64,87 @@ def point_counter(objects):
 def construct_message(objects):
     return_string = ''
     for object in objects:
-        text_of_post = object.html
+        try:
+            text_of_post = object.html
+            text_of_post = text_of_post.replace('</a></h1>', '').replace('</a></h2>', '').replace('</a></h3>', '')
+            text_of_post = text_of_post.replace('</a> </h1>', '').replace('</a> </h2>', '').replace('</a> </h3>', '')
+            text_of_post = re.sub(r'\<\/[^a]\>', '', text_of_post)
+            text_of_post = text_of_post.replace('&quot;', '-')
 
-        author = object.author.full_name
-        profession = object.author.position
+            text_of_post = re.sub(r'\<[^a/][\w\s\d\=\"\:\/\.\?\-\&\%\;]+\>|<\S>|\<\/[^a]\w+\>', '', text_of_post)
+            text_of_post = re.sub(r'<h[123] id=\"\S+\"><a href=\"\#\S+\">', '', text_of_post)
 
-        if object.type == 'intro':
-            title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                f'       {profession}'  # spaces left on purpose, don't touch
-        else:
-            emoji = dict_of_emoji[object.type]
-            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
+            text_of_post = re.sub(r'<a href="#\S+\"\>', '', text_of_post)
 
-        author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+            text_of_post = re.sub(r'\@[\w\d]+', '', text_of_post)
 
-        views = str(object.view_count) + ' 👀'
-        upvotes = str(object.upvotes) + ' 👍'
-        comments = str(object.comment_count) + ' 💬'
-        return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
-            ' | ' + views + ' | ' + upvotes + ' | ' + comments
+            while text_of_post[0].isspace():
+                text_of_post = text_of_post[1:]
+
+            author = object.author.full_name
+            profession = object.author.position
+
+            if object.type == 'intro':
+                title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
+                    f'       {profession}'  # spaces left on purpose, don't touch
+            else:
+                emoji = dict_of_emoji[object.type]
+                title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
+
+            author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+
+            views = str(object.view_count) + ' 👀'
+            upvotes = str(object.upvotes) + ' 👍'
+            comments = str(object.comment_count) + ' 💬'
+            while '\n\n' in text_of_post:
+                text_of_post = text_of_post.replace('\n\n', '\n')
+            while text_of_post[-1] == ' ':
+                text_of_post = text_of_post[:-1]
+            len_of_text = 300
+            if len(text_of_post) > len_of_text:
+                while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall(r'\<\/a', text_of_post[:len_of_text])):
+                    print('pizda')
+                    len_of_text += 10
+                while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
+                    text_of_post = text_of_post[:-1]
+                if len_of_text >= 300:
+                    text_of_post = text_of_post[:len_of_text] + '...'
+
+            new_string = ''
+            while 'https://sorokin' in text_of_post:
+                x = re.search(r'https://sorokin[\w\s\d\=\:\/\.\?\-\&\%\;]+', text_of_post)
+                start = x.start()
+                finish = x.end()
+                y = x.group()
+                new_string = new_string + text_of_post[0:start] + y + '?utm_source=private_bot_newsletter'
+                text_of_post = text_of_post[finish:]
+            new_string += text_of_post
+
+            print(f'\n{new_string}\n')
+
+            return_string = return_string + '\n\n' + title_of_message + '\n\n' + new_string + '\n\n' + author_link + \
+                ' | ' + views + ' | ' + upvotes + ' | ' + comments
+        except:
+            if not PostExceptions.objects.filter().exists:
+                post_exception = PostExceptions()
+                post_exception.post_slug = object.slug
+                post_exception.foo_name = 'yesterday best posts'
+                post_exception.save()            
     return return_string
+
+#        while len(re.findall(r'<strong>', text_of_post[:len_of_text])) > len(re.findall(r'</strong>', text_of_post[:len_of_text])) or \
+#            len(re.findall(r'<s>', text_of_post[:len_of_text])) > len(re.findall(r'</s>', text_of_post[:len_of_text])):
+#                len_of_text += 9
 
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
-    users_for_yesterday_digest = SubscriptionUserChoise.objects.filter(tg_yesterday_best_posts=True).values("user_id")
+    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).values("id")
     telegram_ids = []
-    for user_id in users_for_yesterday_digest:
-        telegram_id = User.objects.filter(id=user_id['user_id']).first().telegram_id
+    for user in users_for_yesterday_digest:
+        telegram_id = User.objects.filter(id=user['id']).first().telegram_id
         telegram_ids.append(telegram_id)
 
     date_month = dict_of_year[date_month]
@@ -132,7 +183,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=3)
+        yesterday = now - timedelta(days=10)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
