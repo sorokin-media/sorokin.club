@@ -1,7 +1,7 @@
-from club import settings
-from users.models.user import User
-
 from django.core.management import BaseCommand
+
+from users.models.user import User
+from club import settings
 
 from posts.templatetags.text_filters import rupluralize
 
