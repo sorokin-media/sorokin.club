@@ -1,0 +1,17 @@
+.settings-section {
+    padding: 2rem 0;
+}
+
+.settings-section__title {
+    margin: 0;
+    margin-bottom: 2.5rem;
+
+    font-size: 2rem;
+}
+
+@media (max-width: 576px) {
+    .settings-section__title {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
+}
