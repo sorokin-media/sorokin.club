@@ -5,7 +5,7 @@ from django.core.management import BaseCommand
 
 from posts.templatetags.text_filters import rupluralize
 
-from posts.models.post import Post
+from posts.models.post import Post, PostExceptions
 from users.models.user import User
 from comments.models import Comment
 
@@ -51,59 +51,20 @@ def construct_message(objects):
     return_string = ''
     for object in objects:
         try:
-            text_of_post = object.text
-            text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
-            text_of_post = re.sub(r'\!\[[\w\s]+\]\(https\S+\)', '', text_of_post)
-            text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
-            if '](https' in text_of_post:
-                new_string = ''
-                while len(re.findall(r']\(http\S+\)', text_of_post)) > 0:
-                    link = re.search(r']\(http\S+\)', text_of_post)
-                    text = re.search(r'\[[\s\w\«\»\.\,\!\?\*\#\%\(\)\-\=\+\_\\\"\'\;\:\<\>\/\}\{\]\[]+\]', text_of_post)
-                    start = text.start()
-                    finish = link.end()
-                    link = link.group()
-                    link = link[2:-1]
-                    text = text.group()
-                    text = text[1:-1]
-                    formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text}</a></strong>'
-                    new_string += (text_of_post[0:start] + formating_text)
-                    text_of_post = text_of_post[finish:]
-                text_of_post = new_string + text_of_post
-            if '~~' in text_of_post:
-                new_string = ''
-                while len(re.findall(r'\~\~[\w\s]+\~\~', text_of_post)) > 0:
-                    text = re.search(r'\~\~[\w\s]+\~\~', text_of_post)
-                    start = text.start()
-                    finish = text.end()
-                    text = text.group()
-                    formating_text = f'<s>{text[2:-2]}</s>'
-                    new_string += (text_of_post[0:start] + formating_text)
-                    text_of_post = text_of_post[finish:]
-                text_of_post = new_string + text_of_post
-            text_of_post = re.sub(r' @\S+ ', '', text_of_post)
-            text_of_post = re.sub(r'@\S+ ', '', text_of_post)
-            text_of_post = text_of_post.replace('![](', '')
-            text_of_post = text_of_post.replace("```", "")
-            text_of_post = text_of_post.replace("# ", "")
-            text_of_post = text_of_post.replace("#", "")
-            text_of_post = text_of_post.replace("**", "")
-            text_of_post = text_of_post.replace("\r", "")
-            text_of_post = text_of_post.replace("\n\n", "\n")
-            len_of_text = 250
-            if len(text_of_post) > len_of_text:
-                if len(re.findall(r'\<\S', text_of_post[:len_of_text])) > len(re.findall('\<\\\S', text_of_post[:len_of_text])):
-                    len_of_text += 9
-                    while len(re.findall(r'<strong>', text_of_post[:len_of_text])) > len(re.findall(r'</strong>', text_of_post[:len_of_text])) or \
-                            len(re.findall(r'<s>', text_of_post[:len_of_text])) > len(re.findall(r'</s>', text_of_post[:len_of_text])):
-                        len_of_text += 9
-                    text_of_post = text_of_post[:len_of_text] + '...'
-            while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
-                text_of_post = text_of_post[:-1]
-            if len_of_text >= 250:
-                text_of_post = text_of_post[:len_of_text] + '...'
+            text_of_post = object.html
+            text_of_post = text_of_post.replace('</a></h1>', '').replace('</a></h2>', '').replace('</a></h3>', '')
+            text_of_post = text_of_post.replace('</a> </h1>', '').replace('</a> </h2>', '').replace('</a> </h3>', '')
+            
+            text_of_post = re.sub(r'\<\/[^a]\>', '', text_of_post)
+            text_of_post = text_of_post.replace('&quot;', '-')
+            
 
-            print(f'\n\nGOGOGO {text_of_post}\n\n')
+            text_of_post = re.sub(r'\<[^a/][\w\s\d\=\"\:\/\.\?\-\&\%\;]+\>|<\S>|\<\/[^a]\w+\>', '', text_of_post)
+            text_of_post = re.sub(r'<h[123] id=\"\S+\"><a href=\"\#\S+\">', '', text_of_post)
+
+            text_of_post = re.sub(r'<a href="#\S+\"\>', '', text_of_post)
+
+            text_of_post = re.sub(r'\@[\w\d]+', '', text_of_post)
 
             while text_of_post[0].isspace():
                 text_of_post = text_of_post[1:]
@@ -114,7 +75,7 @@ def construct_message(objects):
             if object.type == 'intro':
                 title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
                     f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                    f'{profession}'
+                    f'       {profession}'  # spaces left on purpose, don't touch
             else:
                 emoji = dict_of_emoji[object.type]
                 title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
@@ -125,9 +86,33 @@ def construct_message(objects):
             views = str(object.view_count) + ' 👀'
             upvotes = str(object.upvotes) + ' 👍'
             comments = str(object.comment_count) + ' 💬'
-            return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
+            while '\n\n' in text_of_post:
+                text_of_post = text_of_post.replace('\n\n', '\n')
+            while text_of_post[-1] == ' ':
+                text_of_post = text_of_post[:-1]
+            text_of_post = re.sub(
+                r'\<img src="[\w\s\d\=\:\/\.\?\-\&\%\;]+\"{1}\salt="[\w\s\!\-\.\,\?\+\=\:\;\'\"\%\*\(\)]+\"\>', '', text_of_post)
+            len_of_text = 300
+            if len(text_of_post) > len_of_text:
+                while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall(r'\<\/a', text_of_post[:len_of_text])):
+                    len_of_text += 10
+                while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
+                    text_of_post = text_of_post[:-1]
+                if len_of_text >= 300:
+                    text_of_post = text_of_post[:len_of_text] + '...'
+            new_string = ''
+            while 'https://sorokin' in text_of_post:
+                x = re.search(r'https://sorokin[\w\s\d\=\:\/\.\?\-\&\%\;]+', text_of_post)
+                start = x.start()
+                finish = x.end()
+                y = x.group()
+                new_string = new_string + text_of_post[0:start] + y + '?utm_source=private_bot_newsletter'
+                text_of_post = text_of_post[finish:]
+            new_string += text_of_post
+
+            return_string = return_string + '\n\n' + title_of_message + '\n\n' + new_string + '\n\n' + author_link + \
                 ' | ' + views + ' | ' + upvotes + ' | ' + comments
-        except Exception:
+        except:
             if not PostExceptions.objects.filter().exists:
                 post_exception = PostExceptions()
                 post_exception.post_slug = object.slug

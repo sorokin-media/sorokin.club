@@ -66,8 +66,10 @@ def construct_message(objects):
             text_of_post = object.html
             text_of_post = text_of_post.replace('</a></h1>', '').replace('</a></h2>', '').replace('</a></h3>', '')
             text_of_post = text_of_post.replace('</a> </h1>', '').replace('</a> </h2>', '').replace('</a> </h3>', '')
+            
             text_of_post = re.sub(r'\<\/[^a]\>', '', text_of_post)
             text_of_post = text_of_post.replace('&quot;', '-')
+            
 
             text_of_post = re.sub(r'\<[^a/][\w\s\d\=\"\:\/\.\?\-\&\%\;]+\>|<\S>|\<\/[^a]\w+\>', '', text_of_post)
             text_of_post = re.sub(r'<h[123] id=\"\S+\"><a href=\"\#\S+\">', '', text_of_post)
@@ -100,16 +102,16 @@ def construct_message(objects):
                 text_of_post = text_of_post.replace('\n\n', '\n')
             while text_of_post[-1] == ' ':
                 text_of_post = text_of_post[:-1]
+            text_of_post = re.sub(
+                r'\<img src="[\w\s\d\=\:\/\.\?\-\&\%\;]+\"{1}\salt="[\w\s\!\-\.\,\?\+\=\:\;\'\"\%\*\(\)]+\"\>', '', text_of_post)
             len_of_text = 300
             if len(text_of_post) > len_of_text:
                 while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall(r'\<\/a', text_of_post[:len_of_text])):
-                    print('pizda')
                     len_of_text += 10
                 while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
                     text_of_post = text_of_post[:-1]
                 if len_of_text >= 300:
                     text_of_post = text_of_post[:len_of_text] + '...'
-
             new_string = ''
             while 'https://sorokin' in text_of_post:
                 x = re.search(r'https://sorokin[\w\s\d\=\:\/\.\?\-\&\%\;]+', text_of_post)
@@ -120,8 +122,6 @@ def construct_message(objects):
                 text_of_post = text_of_post[finish:]
             new_string += text_of_post
 
-            print(f'\n{new_string}\n')
-
             return_string = return_string + '\n\n' + title_of_message + '\n\n' + new_string + '\n\n' + author_link + \
                 ' | ' + views + ' | ' + upvotes + ' | ' + comments
         except:
@@ -129,12 +129,8 @@ def construct_message(objects):
                 post_exception = PostExceptions()
                 post_exception.post_slug = object.slug
                 post_exception.foo_name = 'yesterday best posts'
-                post_exception.save()            
+                post_exception.save()
     return return_string
-
-#        while len(re.findall(r'<strong>', text_of_post[:len_of_text])) > len(re.findall(r'</strong>', text_of_post[:len_of_text])) or \
-#            len(re.findall(r'<s>', text_of_post[:len_of_text])) > len(re.findall(r'</s>', text_of_post[:len_of_text])):
-#                len_of_text += 9
 
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
@@ -181,7 +177,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
+        yesterday = now - timedelta(days=10)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
