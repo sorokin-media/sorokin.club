@@ -116,7 +116,7 @@ def construct_message(objects):
             if not PostExceptions.objects.filter().exists:
                 post_exception = PostExceptions()
                 post_exception.post_slug = object.slug
-                post_exception.foo_name = 'yesterday best posts'
+                post_exception.foo_name = 'weekly best posts'
                 post_exception.save()
     return return_string
 
@@ -143,7 +143,7 @@ def send_email_helper(posts_list, intros_list, bot):
 
         if intros_list:
             intros = [x['post'] for x in intros_list]
-            intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
+            intros_string_for_bot = f'<strong>😺 Самые интересные интро клуба за прошедшую неделю ❤️</strong>'
             intros_string_for_bot = intros_string_for_bot + construct_message(intros)
             for _ in telegram_ids:
                 bot.send_message(text=intros_string_for_bot,
