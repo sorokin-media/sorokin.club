@@ -5,6 +5,19 @@
     Привет — {{ block.super }}
 {% endblock %}
 
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+
 {% block content %}
     <div class="content intro">
         <form action="{% url "intro" %}" method="post" id="intro-start-form" class="intro-form" enctype="multipart/form-data">
@@ -149,6 +162,7 @@
                 </p>
                 
 <p>
+    
                    Интро - очень важная часть клуба. Фактически, это ваше знакомство со всеми остальными участниками, ваша визитная карточка. Если вы не расскажете о себе или расскажете слишком мало - зачем другим ребятам с вами знакомиться?</p><p>
     С другой стороны, помните о том, что интро всегда можно отредактировать, дополнить или сократить - так что <strong>не упарывайтесь, напишите самое важное. Допишете потом!</strong> Мы уже ждем вас внутри!
                 </p>
@@ -184,15 +198,82 @@
             </div>
 
             <div class="block-header">📫<br>Как удобнее следить за происходящим?</div>
-            {{ form.daily_email_digest.label_tag }}
-            {{ form.daily_email_digest }}
-            {{ form.weekly_email_digest.label_tag }}
-            {{ form.weekly_email_digest }}
-            {{ form.tg_yesterday_best_posts.label_tag }}
-            {{ form.tg_yesterday_best_posts }}
-            {{ form.tg_weekly_best_posts.label_tag }}
-            {{ form.tg_weekly_best_posts }}
-    
+<!--       START    -->
+<form class="settings-form">
+    <section class="settings-section">
+        <div class="content">
+            <div class="settings-form">
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ form.daily_email_digest.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ form.daily_email_digest }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-form">
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ form.weekly_email_digest.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ form.weekly_email_digest }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-form">
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ form.tg_yesterday_best_posts.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ form.tg_yesterday_best_posts }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-form">
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ form.tg_weekly_best_posts.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ form.tg_weekly_best_posts }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+    <!--       FINISH    -->
             <div class="block-header">Еще способы быть в курсе 👇</div>
 
             <div class="clearfix20"></div>
