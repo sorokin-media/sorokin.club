@@ -37,7 +37,10 @@ def delete_user_data(user: User):
     user.geo = None
     user.bio = None
     user.contact = None
-    user.email_digest_type = User.EMAIL_DIGEST_TYPE_NOPE
+    user.daily_email_digest = None
+    user.weekly_email_digest = None
+    user.tg_weekly_best_posts = None
+    user.tg_yesterday_best_posts = None
     user.telegram_id = None
     user.telegram_data = None
     user.membership_platform_data = None
