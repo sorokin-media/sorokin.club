@@ -51,7 +51,7 @@ def email_unsubscribe(request, user_id, secret):
                    "Если захотите подписаться заново — напишите нам в поддержку."
     })
 
-# is not using absolutely, I didn't found
+# now is not user
 def email_digest_switch(request, digest_type, user_id, secret):
     try:
         # dirty hack to support legacy non-base64 codes

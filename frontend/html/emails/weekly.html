@@ -339,9 +339,9 @@
 {% endblock %}
 
 {% block footer %}
-    <p>
-        Напоминаем, что вы всегда можете <a href="{{ settings.APP_HOST }}/notifications/switch/daily/%user_id%/%secret_code%/">перейти на ежедневный дайджест</a> чтобы получать контент чаще или <a href="{{ settings.APP_HOST }}/notifications/switch/nope/%user_id%/%secret_code%/">вообще отписаться от них</a> и жить в темноте и грусти.
-    </p>
+<p>
+    Если ежедневный дайджест слишком надоедает, вы всегда можете <a href="{{ settings.APP_HOST }}/user/{{user.slug}}/edit/notifications/">перейти на еженедельный</a> или вообще отписаться от дайджестов и жить в темноте и грусти.
+</p>
 {% endblock %}
 
 {% block unsubscribe %}
