@@ -48,7 +48,6 @@ def email_unsubscribe(request, user_id, secret):
                    "Если захотите подписаться заново — напишите нам в поддержку."
     })
 
-
 def email_digest_switch(request, digest_type, user_id, secret):
     try:
         # dirty hack to support legacy non-base64 codes

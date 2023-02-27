@@ -24,6 +24,9 @@ from buddy.bot_callback import buddy_get_task
 #new_year
 from new_year import buddy_countering
 
+# random coffee imports
+from bot.bot_callback import no_random, coffee_feedback, coffee_grade
+
 log = logging.getLogger(__name__)
 
 
@@ -97,6 +100,12 @@ def main() -> None:
 
     # buddy bot
     dispatcher.add_handler(CallbackQueryHandler(buddy_get_task, pattern=r"^buddy_get_intro.+"))
+
+    # random coffee
+    dispatcher.add_handler(CallbackQueryHandler(no_random, pattern=r"^no_random_coffee.+"))
+    dispatcher.add_handler(CallbackQueryHandler(coffee_feedback, pattern=r"^coffee_feedback.+"))
+    dispatcher.add_handler(CallbackQueryHandler(coffee_grade, pattern=r"^coffee_grade.+"))
+    
 
     # Start the bot
     if settings.DEBUG:

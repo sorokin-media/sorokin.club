@@ -59,3 +59,6 @@ gdpr/downloads/*.zip
 # Frontend
 package-copy.json
 webpack.config-copy.js
+
+# for tests on local machine
+ngrok.exe
