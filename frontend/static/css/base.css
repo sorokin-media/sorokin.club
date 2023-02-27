@@ -32,6 +32,10 @@
             padding-bottom: 0.8em;
         }
 
+        .block-description__footer:last-child {
+            margin-top: 2em;
+        }
+
     .block-header {
         display: block;
         font-size: 200%;
@@ -180,6 +184,8 @@
     cursor: pointer;
     line-height: 1em;
     font-weight: 500;
+
+    transition: color .2s, background-color .2s, border .2s;
 }
 
     .button-round {
@@ -213,11 +219,15 @@
             color: var(--button-color);
         }
 
-    .button-big {
-        padding: 15px 30px;
+    .button-l {
+        padding: 0.8em 2em;
+    }
+
+    .button-xl {
+        padding: 0.7em 1.4em;
         font-size: 160%;
         font-weight: bold;
-        margin: 50px auto 0;
+        margin: 1.6em auto 0;
     }
 
     .button-small {
@@ -227,11 +237,13 @@
     }
 
     .button-red {
+        color: #fff;
         background-color: #ff1917;
         border-color: #ff1917;
     }
 
     .button-blue {
+        color: #fff;
         background-color: #0088cc;
         border-color: #0088cc;
     }
