@@ -17,7 +17,7 @@ from landing.views import landing, club, tg_bot, tg_bot_second, tg_bot_second_2,
     godmode_invite
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, render_daily_digest, \
-    email_digest_switch, link_telegram
+    email_digest_switch, link_telegram  # email_digest_switch is not user now
 from notifications.webhooks import webhook_event
 from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, stop_subscription_test
@@ -49,7 +49,6 @@ from users.views.people import people
 from search.api import api_search_users
 from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating
 from telegramessage.views import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
-from users.views.subscription import subscription_user_choise, success_subscription, random_coffee
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -117,9 +116,6 @@ urlpatterns = [
     path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),
     path("user/<slug:user_slug>/delete/", request_delete_account, name="request_delete_account"),
     path("user/<slug:user_slug>/delete/confirm/", confirm_delete_account, name="confirm_delete_account"),
-    path("user/<slug:user>/subscription_choise", subscription_user_choise, name='subscription_user_choise'),
-    path("user/success_subscription", success_subscription, name='success_subscription'),
-    path("user/<slug:user>/edit/coffee", random_coffee, name='random_coffee'),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
@@ -184,7 +180,7 @@ urlpatterns = [
     path("notifications/confirm/<str:secret>/<str:legacy_code>/", email_confirm, name="email_confirm_legacy"),
     path("notifications/unsubscribe/<str:user_id>/<str:secret>/", email_unsubscribe, name="email_unsubscribe"),
     path("notifications/switch/<str:digest_type>/<str:user_id>/<str:secret>/", email_digest_switch,
-         name="email_digest_switch"),
+         name="email_digest_switch"),  # now is not used
     path("notifications/renderer/digest/weekly/", render_weekly_digest, name="render_weekly_digest"),
     path("notifications/renderer/digest/daily/<slug:user_slug>/", render_daily_digest, name="render_daily_digest"),
     path("notifications/webhook/<slug:event_type>", webhook_event, name="webhook_event"),

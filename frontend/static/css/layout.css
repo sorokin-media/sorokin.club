@@ -166,10 +166,6 @@
         justify-self: start;
         align-self: start;
         z-index: 1;
-
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
     }
 
 .profile-card {

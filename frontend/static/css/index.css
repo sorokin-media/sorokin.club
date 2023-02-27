@@ -31,6 +31,8 @@
 @import "./components/slider.css";
 @import "./components/reviews.css";
 @import "./components/daterangepicker.css";
+@import "./components/settings-form.css";
+@import "./components/settings-section.css";
 
 /* Modals */
 @import "./components/modal.css";

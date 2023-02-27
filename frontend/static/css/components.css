@@ -711,13 +711,116 @@
                     opacity: 1.0;
                 }
 
+.column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .intro {
     padding-top: 50px;
     font-size: 110%;
 }
 
+    @media (max-width: 768px) {
+        .intro {
+            padding-top: 0;
+        }
+    }
+
     .intro .form-title {
         font-size: 300%;
+        padding-bottom: 0.2em;
+    }
+
+        @media (max-width: 768px) {
+          .intro .form-title {
+            font-size: 230%;
+          }
+        }
+
+    .intro .intro-form {
+        text-align: initial;
+    }
+
+    .intro .sub-title {
+        margin-bottom: 1.5em;
+
+        font-size: 1.5em;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .intro .inner-section {
+        margin: 0;
+    }
+
+    .intro .inner-section:not(:last-child) {
+        margin-bottom: 4.5rem;
+    }
+
+        @media (max-width: 768px) {
+            .intro .inner-section:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+
+            .intro .inner-section:last-child {
+                margin-top: 2rem;
+            }
+        }
+
+    .intro .block-description {
+        max-width: 100%;
+    }
+
+        @media (max-width: 768px) {
+            .intro .block-description {
+                font-size: 115%;
+            }
+        }
+
+    .intro .block-description:not(:last-child) {
+        margin-bottom: 2em;
+    }
+
+    .intro .block-description p {
+        margin: 0;
+        margin-bottom: 0.6em;
+    }
+
+    .intro .block-description p.sub-title {
+        margin-bottom: 1.5em;
+    }
+
+    .intro .block-description p:last-child {
+        margin-bottom: 0;
+    }
+
+    .intro .block-description ul,
+    .intro .block-description ol {
+        font-size: 0.9em;
+    }
+
+    .intro .block-description li {
+        padding-bottom: 0;
+    }
+
+    .intro .intro-form textarea,
+    .intro .intro-form .CodeMirror {
+        min-height: 400px;
+    }
+        @media (max-width: 768px) {
+            .intro .intro-form textarea,
+            .intro .intro-form .CodeMirror {
+                min-height: unset;
+            }
+        }
+
+
+    @media (max-width: 768px) {
+      .intro .intro-form {
+        padding-top: 1rem;
+      }
     }
 
     .intro-form {
@@ -794,6 +897,58 @@
                 color: #53AA68;
             }
 
+    .intro-form-rows {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem 1.5rem;
+    }
+
+    .intro-form-rows:not(:last-child) {
+        margin-bottom: 4.5em;
+    }
+
+    .intro-form-rows .form-row {
+        flex: 1 1 400px;
+        max-width: 100%;
+        margin-inline: 0;
+        padding: 0;
+    }
+
+    .intro-form-rows .form-row > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-inline: 0;
+    }
+
+    .intro-form-rows .form-row-help br {
+        display: none;
+    }
+
+    .intro-form-rows input {
+        padding-inline: 2rem;
+    }
+
+    .intro-form-rows input[type="text"],
+    .intro-form-rows input[type="email"] {
+        text-align: inherit;
+    }
+
+    .intro-form-rows--last:not(:last-child) {
+        margin-bottom: 0;
+    }
+
+.form-input-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    gap: 0.5rem;
+}
+
+.form-input-row > * {
+    flex: 1 1 120px;
+}
+
 .feed-post {
     position: relative;
     padding-left: 40px;
@@ -861,6 +1016,13 @@
             align-items: center;
         }
 
+            @media (max-width: 430px) {
+                .feed-post-header--event .feed-post-title-container {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+            }
+
         .feed-post-header--event .feed-post-title-container .post-event-date {
             width: auto;
             height: auto;
@@ -889,15 +1051,43 @@
 
         @media (max-width: 430px) {
             .feed-post-header--event .feed-post-title-container .post-event-date {
-                position: absolute;
-                right: -5px;
-                top: -5px;
+                position: static;
+                display: flex;
+                order: 2;
 
-                margin: 0;
+                max-width: unset;
+                width: unset;
+                max-height: unset;
+                height: unset;
 
-                max-height: 70px;
-                overflow: hidden;
-                z-index: 2;
+                border-radius: 0;
+            }
+
+            .feed-post-header--event .post-event-date-day {
+                height: unset;
+
+                padding: 8px;
+                margin-right: 10px;
+
+                font-size: 145%;
+
+                border-radius: 5px;
+            }
+
+            .feed-post-header--event .post-event-date-month {
+                display: flex;
+                align-items: center;
+
+                padding: 7px 15px;
+
+                font-size: 135%;
+                line-height: initial;
+
+                border-radius: 5px;
+            }
+
+            .feed-post-header--event .feed-post-title {
+                margin-bottom: 15px;
             }
         }
 
@@ -905,6 +1095,12 @@
             padding-bottom: 0;
             align-items: center;
         }
+
+            .feed-post-header--event-short .feed-post-footer {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
 
     .feed-post-header-icon {
         width: 100%;
@@ -939,11 +1135,11 @@
         @media (max-width: 900px) {
           .feed-post-header-content .feed-post-title-container {
             order: -1;
-            margin-bottom: 15px;
           }
 
           .feed-post-header-content .feed-post-header-additiona-info {
             margin-bottom: 0;
+            margin-top: 15px;
           }
         }
 
@@ -1126,9 +1322,20 @@
             }
     }
 
+    .feed-post-event--past .post-event-date {
+        opacity: 0.5;
+    }
+
+    .feed-post-event--past .post-event-date-month,
+    .feed-post-event--past .post-event-date-day {
+        color: #fff;
+        background-color: var(--visited-link-color);
+    }
+
     @media (max-width: 430px) {
         .feed-post-event {
             padding-top: 25px;
+            padding-bottom: 25px;
         }
 
         .feed-post-event .feed-post-votes {

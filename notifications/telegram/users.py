@@ -135,6 +135,15 @@ def payment_reminder_1(user):
                  f"\n\nТвоя администрация ❤️"
         )
 
+def check_user_14_days(user):
+    user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
+    if user.telegram_id:
+        send_telegram_message(
+            chat=ADMIN_CHAT,
+            text=f"#14ДНЕЙ"
+                 f"\n\nЮзер {user_profile_url} в клубе уже 14 дней, время провести контроль качества."
+        )
+
 def couldnd_withdraw_money(user):
     if user.telegram_id:
         send_telegram_message(

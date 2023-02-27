@@ -139,11 +139,18 @@ class UserInfoAdminForm(ModelForm):
         choices=User.MEMBERSHIP_PLATFORMS,
         required=True,
     )
-    email_digest_type = forms.ChoiceField(
-        label="Тип email-дайджеста",
-        required=True,
-        choices=User.EMAIL_DIGEST_TYPES,
-    )
+    daily_email_digest = forms.BooleanField(label='Ежедневная e-mail рассылка',
+                                            required=False,
+                                            widget=forms.CheckboxInput())
+    weekly_email_digest = forms.BooleanField(label='Еженедельная e-mail рассылка',
+                                             required=False,
+                                             widget=forms.CheckboxInput())
+    tg_yesterday_best_posts = forms.BooleanField(label='Лучшие посты и самые интересные интро за вчерашний день в Telegram',
+                                                 required=False,
+                                                 widget=forms.CheckboxInput())
+    tg_weekly_best_posts = forms.BooleanField(label="Лучшие посты и интересные интро за прошедшую неделю в Telegram",
+                                              required=False,
+                                              widget=forms.CheckboxInput())
     telegram_id = forms.CharField(
         label="Телеграм",
         required=False,
@@ -174,7 +181,10 @@ class UserInfoAdminForm(ModelForm):
             "position",
             "contact",
             "membership_platform_type",
-            "email_digest_type",
+            "daily_email_digest",
+            "weekly_email_digest",
+            "tg_yesterday_best_posts",
+            "tg_weekly_best_posts",
             "telegram_id",
             "stripe_id",
             "is_email_verified",

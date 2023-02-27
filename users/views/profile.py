@@ -38,30 +38,6 @@ def profile(request, user_slug):
         if goto and goto.startswith(settings.APP_HOST):
             return redirect(goto)
 
-    #замена ссылок в профиле
-    soup = BeautifulSoup(user.bio, 'html.parser')
-    rows = soup.find_all('a')
-
-    for link in rows:
-        flag_link = True
-        href_link = link.get('href')
-        href_text = link.get_text()
-        if 'http' not in href_link:
-            flag_link = False
-        for setting_link in settings.LINKS_WHITE_LIST:
-            if setting_link in href_link:
-                flag_link = False
-
-        if flag_link:
-            href_in_byte = href_link.encode("UTF-8")
-            href_link_encode = base64.b64encode(href_in_byte)
-            href_in_string_decode = href_link_encode.decode("UTF-8")
-            new_tag_span = soup.new_tag('span', attrs={'class': 'hlink', 'data-href': href_in_string_decode})
-            new_tag_span.string = href_text
-            link.replace_with(new_tag_span)
-
-    user.bio = str(soup)
-
     # select user tags and calculate similarity with me
     tags = Tag.objects.filter(is_visible=True).all()
     active_tags = {t.tag_id for t in UserTag.objects.filter(user=user).all()}

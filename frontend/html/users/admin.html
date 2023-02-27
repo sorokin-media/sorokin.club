@@ -56,9 +56,23 @@
                 </div>
 
                 <div class="form-row">
-                    {{ info_form.email_digest_type.label_tag }}
-                    {{ info_form.email_digest_type }}
-                    {% if info_form.email_digest_type.errors %}<span class="form-row-errors">{{ info_form.email_digest_type.errors }}</span>{% endif %}
+                    {{ form.daily_email_digest.label_tag }}
+                    {{ form.daily_email_digest }}
+                </div>
+
+                <div class="form-row">
+                    {{ form.weekly_email_digest.label_tag }}
+                    {{ form.weekly_email_digest }}
+                </div>
+
+                <div class="form-row">
+                    {{ form.tg_yesterday_best_posts.label_tag }}
+                    {{ form.tg_yesterday_best_posts }}
+                </div>
+
+                <div class="form-row">
+                    {{ form.tg_weekly_best_posts.label_tag }}
+                    {{ form.tg_weekly_best_posts }}
                 </div>
 
                 <div class="form-row">

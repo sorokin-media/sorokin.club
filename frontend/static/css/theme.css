@@ -57,6 +57,9 @@ html[theme="light"]:root {
     --th-bg-color: var(--opposite-bg-color);
     --tr-even-bg-color: #333741;
     --table-border-color: var(--button-bg-color);
+    --table-row-bg-color: #f7f7f7;
+    --table-row-even-bg-color: #ffffff;
+    --table-ceil-border-color: #d9d9d9;
 
     --feed-post-comment-color: #242424;
 }
@@ -104,6 +107,9 @@ html[theme="dark"]:root {
     --th-bg-color: #2e333f;
     --tr-even-bg-color: var(--input-bg-color);
     --table-border-color: var(--button-color);
+    --table-row-bg-color: #252830;
+    --table-row-even-bg-color: #2e323c;
+    --table-ceil-border-color: #5e5e5e;
 
     --feed-post-comment-color: #d0d0d0;
 }
@@ -150,6 +156,9 @@ html[theme="dark"]:root {
         --th-bg-color: #2e333f;
         --tr-even-bg-color: var(--input-bg-color);
         --table-border-color: var(--button-color);
+        --table-row-bg-color: #252830;
+        --table-row-even-bg-color: #2e323c;
+        --table-ceil-border-color: #5e5e5e;
 
         --feed-post-comment-color: #d0d0d0;
     }

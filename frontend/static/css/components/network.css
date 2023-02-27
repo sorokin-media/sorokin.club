@@ -32,7 +32,7 @@
     }
 
     .network-block {
-        padding-bottom: 40px;
+        padding: 1rem;
     }
 
     .network-channels {
@@ -50,12 +50,21 @@
             box-sizing: border-box;
             text-align: center;
             text-decoration: none;
+
+            opacity: 0.85;
+
+            transition: opacity .2s;
         }
+
+            .network-channel:hover {
+                opacity: 1;
+            }
 
             .network-channel-icon {
                 display: block;
-                width: 140px;
-                height: 140px;
+                width: 120px;
+                height: 120px;
+                margin: 0 auto;
                 background-color: #FFFFFF;
             }
 
@@ -75,20 +84,16 @@
             .network-channel-name {
                 display: block;
                 padding-top: 10px;
-                text-decoration: underline;
             }
 
             .network-channel-description {
                 display: block;
                 padding-top: 10px;
-                font-size: 70%;
+                font-size: 14px;
                 opacity: 0.8;
             }
 
         @media only screen and (max-width : 570px) {
-            .network-block {
-                padding: 10px;
-            }
 
             .network-channels {
                 justify-content: center;
@@ -96,7 +101,6 @@
 
                 .network-channel {
                     max-width: 160px;
-                    padding: 10px;
                 }
 
                     .network-channel-icon {

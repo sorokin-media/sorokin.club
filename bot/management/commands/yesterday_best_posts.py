@@ -1,12 +1,12 @@
 from django.core.management import BaseCommand
 
-# from django.db.models import Max
-# from club import settings
+from club import settings
 
 from posts.templatetags.text_filters import rupluralize
 
-from posts.models.post import Post
+from posts.models.post import Post, PostExceptions
 from users.models.user import User
+from users.models.mute import Muted
 from comments.models import Comment
 
 from datetime import datetime
@@ -17,10 +17,6 @@ from django.template import loader
 
 from notifications.email.sender import send_club_email
 from django.dispatch import receiver
-
-from club import settings
-from users.models.user import User
-from users.models.subscription import SubscriptionUserChoise
 
 import telegram
 from telegram import Update, ParseMode
@@ -60,45 +56,34 @@ def point_counter(objects):
     objects_list = objects_list[:3]
     return objects_list
 
-def construct_message(objects):
+
+def construct_message(object):
     return_string = ''
-    for object in objects:
-        text_of_post = object.text
-        text_of_post = re.sub(r'\!\[\]\(https\S+\)', '', text_of_post)
-        text_of_post = re.sub(r'\[\]\(https\S+', '', text_of_post)
-        if '](https' in text_of_post:
-            new_string = ''
-            how_much = re.findall(r']\(http\S+', text_of_post)
-            for _ in range(len(how_much)):
-                link = re.search(r']\(http\S+', text_of_post)
-                text = re.search(r'\[[\D|\s|]+]', text_of_post)
-                start = text.start()
-                finish = link.end()
-                link = link.group()
-                link = link[2:-1]
-                formating_text = f'<strong><a href="{link}?utm_source=private_bot_newsletter">{text.group()}</a></strong>'
-                new_string = new_string + text_of_post[:start] + formating_text
-                text_of_post = text_of_post[finish:]
-            text_of_post = new_string + text_of_post
-        text_of_post = re.sub(r' @\S+ ', '', text_of_post)
-        text_of_post = re.sub(r'@\S+ ', '', text_of_post)
-        text_of_post = text_of_post.replace('![](', '')
-        text_of_post = text_of_post.replace("*", "")
-        text_of_post = text_of_post.replace("```", "")
-        text_of_post = text_of_post.replace("#", "")
-        text_of_post = text_of_post.replace("\r", "")
-        text_of_post = text_of_post.replace("\n\n", "\n")
-        if len(text_of_post) > 250:
-            text_of_post = text_of_post[:250] + '...'
+    try:
+        text_of_post = object.html
+        text_of_post = text_of_post.replace('</a></h1>', '').replace('</a></h2>', '').replace('</a></h3>', '')
+        text_of_post = text_of_post.replace('</a> </h1>', '').replace('</a> </h2>', '').replace('</a> </h3>', '')
+
+        text_of_post = re.sub(r'\<\/[^a]\>', '', text_of_post)
+        text_of_post = text_of_post.replace('&quot;', '-')
+
+        text_of_post = re.sub(r'\<[^a/][\w\s\d\=\"\:\/\.\?\-\&\%\;]+\>|<\S>|\<\/[^a]\w+\>', '', text_of_post)
+        text_of_post = re.sub(r'<h[123] id=\"\S+\"><a href=\"\#\S+\">', '', text_of_post)
+
+        text_of_post = re.sub(r'<a href="#\S+\"\>', '', text_of_post)
+
+        text_of_post = re.sub(r'\@[\w\d]+', '', text_of_post)
 
         while text_of_post[0].isspace():
             text_of_post = text_of_post[1:]
 
         author = object.author.full_name
+        profession = object.author.position
 
         if object.type == 'intro':
             title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>'
+                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
+                f'       {profession}'  # spaces left on purpose, don't touch
         else:
             emoji = dict_of_emoji[object.type]
             title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
@@ -109,43 +94,81 @@ def construct_message(objects):
         views = str(object.view_count) + ' 👀'
         upvotes = str(object.upvotes) + ' 👍'
         comments = str(object.comment_count) + ' 💬'
-        return_string = return_string + '\n\n' + title_of_message + '\n\n' + text_of_post + '\n\n' + author_link + \
+        while '\n\n' in text_of_post:
+            text_of_post = text_of_post.replace('\n\n', '\n')
+        while text_of_post[-1] == ' ':
+            text_of_post = text_of_post[:-1]
+        text_of_post = re.sub(
+            r'\<img src="[\w\s\d\=\:\/\.\?\-\&\%\;]+\"{1}\salt="[\w\s\!\-\.\,\?\+\=\:\;\'\"\%\*\(\)]+\"\>', '', text_of_post)
+        len_of_text = 300
+        if len(text_of_post) > len_of_text:
+            while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall(r'\<\/a', text_of_post[:len_of_text])):
+                len_of_text += 10
+            while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
+                text_of_post = text_of_post[:-1]
+            if len_of_text >= 300:
+                text_of_post = text_of_post[:len_of_text] + '...'
+        new_string = ''
+        while 'https://sorokin' in text_of_post:
+            x = re.search(r'https://sorokin[\w\s\d\=\:\/\.\?\-\&\%\;]+', text_of_post)
+            start = x.start()
+            finish = x.end()
+            y = x.group()
+            new_string = new_string + text_of_post[0:start] + y + '?utm_source=private_bot_newsletter'
+            text_of_post = text_of_post[finish:]
+        new_string += text_of_post
+
+        return_string = return_string + '\n\n' + title_of_message + '\n\n' + new_string + '\n\n' + author_link + \
             ' | ' + views + ' | ' + upvotes + ' | ' + comments
+    except:
+        if not PostExceptions.objects.filter().exists:
+            post_exception = PostExceptions()
+            post_exception.post_slug = object.slug
+            post_exception.foo_name = 'yesterday best posts'
+            post_exception.save()
     return return_string
+
+
+def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_for_bot):
+    start_len = len(string_for_bot)
+    for user in users_for_yesterday_digest:
+        for author_and_text in dict_list:
+            author_slug = author_and_text['slug'].pop()
+            author = User.objects.get(slug=author_slug)
+            is_muted = Muted.is_muted(
+                user_from=user,
+                user_to=author
+            )
+            if not is_muted:
+                string_for_bot += author_and_text['text']
+        if start_len != len(string_for_bot):
+            bot.send_message(text=string_for_bot,
+                             chat_id=user.telegram_id,
+                             parse_mode=ParseMode.HTML,
+                             disable_web_page_preview=True,
+                             )
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
-    users_for_yesterday_digest = SubscriptionUserChoise.objects.filter(tg_yesterday_best_posts=True).values("user_id")
-    telegram_ids = []
-    for user_id in users_for_yesterday_digest:
-        telegram_id = User.objects.filter(id=user_id['user_id']).first().telegram_id
-        telegram_ids.append(telegram_id)
-
     date_month = dict_of_year[date_month]
+    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).all()
+    if posts_list:
+        posts = [x['post'] for x in posts_list]
+        dict_list_of_posts = []
+        for object in posts:
+            dict_list_of_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
+        posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за {date_day} {date_month} 🚀</strong>'
 
-    if len(telegram_ids) > 0:
+        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_posts, posts_string_for_bot)
 
-        if posts_list:
-            posts = [x['post'] for x in posts_list]
-            posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за {date_day} {date_month} 🚀</strong>'
-            posts_string_for_bot = posts_string_for_bot + construct_message(posts)
-            for _ in telegram_ids:
-                bot.send_message(text=posts_string_for_bot,
-                                 chat_id=_,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
-                                 )
+    if intros_list:
+        intros = [x['post'] for x in intros_list]
+        intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
+        dict_list_of_intros = []
+        for object in intros:
+            dict_list_of_intros.append({'text': construct_message(object), 'slug': {object.author.slug}})
 
-        if intros_list:
-            intros = [x['post'] for x in intros_list]
-            intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
-            intros_string_for_bot = intros_string_for_bot + construct_message(intros)
-            for _ in telegram_ids:
-                bot.send_message(text=intros_string_for_bot,
-                                 chat_id=_,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True
-                                 )
+        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_intros, intros_string_for_bot)
 
 class Command(BaseCommand):
 

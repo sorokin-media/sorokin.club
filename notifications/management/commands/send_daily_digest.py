@@ -20,11 +20,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--production", type=bool, required=False, default=False)
 
+
+# 
     def handle(self, *args, **options):
         # select daily subscribers
         subscribed_users = User.objects\
             .filter(
-                email_digest_type=User.EMAIL_DIGEST_TYPE_DAILY,
+                daily_email_digest=True,
                 is_email_verified=True,
                 membership_expires_at__gte=datetime.utcnow() - timedelta(days=14),
                 moderation_status=User.MODERATION_STATUS_APPROVED,
