@@ -21,7 +21,6 @@ from payments.models import Payment
 import json
 import time
 
-from users.models.subscription import SubscriptionUserChoise as sub_model
 from users.forms.subscription_choises import ChooseSubscription as sub_form
 
 @auth_required
@@ -96,7 +95,8 @@ def edit_notifications(request, user_slug):
             user.tg_weekly_best_posts = form.cleaned_data['tg_weekly_best_posts']
             user.save()
             return redirect("profile", user.slug)
-    form = sub_form()
+    user = User.objects.get(slug=user_slug)
+    form = sub_form(instance=user)
     return render(request, 'users/profile/subscription_choise.html', {'form': form, 'user': user_slug})
 
 

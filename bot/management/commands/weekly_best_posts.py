@@ -21,7 +21,6 @@ from django.dispatch import receiver
 
 from club import settings
 from users.models.user import User
-from users.models.subscription import SubscriptionUserChoise
 
 import telegram
 from telegram import Update, ParseMode

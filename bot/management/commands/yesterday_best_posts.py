@@ -18,8 +18,6 @@ from django.template import loader
 from notifications.email.sender import send_club_email
 from django.dispatch import receiver
 
-from users.models.subscription import SubscriptionUserChoise
-
 import telegram
 from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton

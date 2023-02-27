@@ -114,13 +114,15 @@ class User(models.Model, ModelDiffMixin):
 
     # new subscription page.23.02.2023.
 
-    daily_email_digest = models.BooleanField(verbose_name='Ежедневная e-mail рассылка',
+    daily_email_digest = models.BooleanField(verbose_name='Ежедневная e-mail рассылка ',
                                              default=False)
-    weekly_email_digest = models.BooleanField(verbose_name='Еженедельная e-mail рассылка',
+    weekly_email_digest = models.BooleanField(verbose_name='Еженедельная e-mail рассылка ',
                                               default=False)
-    tg_yesterday_best_posts = models.BooleanField(verbose_name='Лучшие посты и самые интересные интро за вчерашний день',
+    tg_yesterday_best_posts = models.BooleanField(verbose_name='Лучшие посты и самые '
+                                                  'интересные интро клуба за вчерашний день в Telegram',
                                                   default=False)
-    tg_weekly_best_posts = models.BooleanField(verbose_name="Лучшие посты и интересные интро за прошедшую неделю",
+    tg_weekly_best_posts = models.BooleanField(verbose_name='Лучшие посты и интересные '
+                                               'интро клуба за прошедшую неделю в Telegram',
                                                default=False)
 
     class Meta:
