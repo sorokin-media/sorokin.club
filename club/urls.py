@@ -17,7 +17,7 @@ from landing.views import landing, club, tg_bot, tg_bot_second, tg_bot_second_2,
     godmode_invite
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, render_daily_digest, \
-    email_digest_switch, link_telegram
+    email_digest_switch, link_telegram  # email_digest_switch is not user now
 from notifications.webhooks import webhook_event
 from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, stop_subscription_test
@@ -180,7 +180,7 @@ urlpatterns = [
     path("notifications/confirm/<str:secret>/<str:legacy_code>/", email_confirm, name="email_confirm_legacy"),
     path("notifications/unsubscribe/<str:user_id>/<str:secret>/", email_unsubscribe, name="email_unsubscribe"),
     path("notifications/switch/<str:digest_type>/<str:user_id>/<str:secret>/", email_digest_switch,
-         name="email_digest_switch"),
+         name="email_digest_switch"),  # now is not used
     path("notifications/renderer/digest/weekly/", render_weekly_digest, name="render_weekly_digest"),
     path("notifications/renderer/digest/daily/<slug:user_slug>/", render_daily_digest, name="render_daily_digest"),
     path("notifications/webhook/<slug:event_type>", webhook_event, name="webhook_event"),

@@ -30,6 +30,7 @@ def join(request):
     else:
         plan_subcription = Subscription.objects.filter(default=True).last()
         plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+    print(plans)
     return render(request, "auth/join.html", {
         "plans": plans
     })

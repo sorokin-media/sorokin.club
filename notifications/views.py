@@ -38,7 +38,10 @@ def email_unsubscribe(request, user_id, secret):
     user = get_object_or_404(User, id=user_id, secret_hash=secret)
 
     user.is_email_unsubscribed = True
-    user.email_digest_type = User.EMAIL_DIGEST_TYPE_NOPE
+    user.daily_email_digest = None
+    user.weekly_email_digest = None
+    user.tg_weekly_best_posts = None
+    user.tg_yesterday_best_posts = None
     user.save()
 
     return render(request, "message.html", {
@@ -48,7 +51,7 @@ def email_unsubscribe(request, user_id, secret):
                    "Если захотите подписаться заново — напишите нам в поддержку."
     })
 
-
+# now is not user
 def email_digest_switch(request, digest_type, user_id, secret):
     try:
         # dirty hack to support legacy non-base64 codes
@@ -89,7 +92,6 @@ def email_digest_switch(request, digest_type, user_id, secret):
             "title": "👍 Данные подписки изменены",
             "message": ""
         })
-
 
 def render_daily_digest(request, user_slug):
     user = get_object_or_404(User, slug=user_slug)
