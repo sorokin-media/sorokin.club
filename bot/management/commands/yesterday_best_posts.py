@@ -132,9 +132,15 @@ def construct_message(object):
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_for_bot):
     start_len = len(string_for_bot)
     for user in users_for_yesterday_digest:
+        print(f'\nTELEGRAM ID: {user.telegram_id}\n')
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
+            # bruteforce resolvinf of problem getting value from set with one value
+            for b in author_slug:
+                author_slug = str(b)
+            print(f'SLUG: {author_slug}\n')
             author = User.objects.get(slug=author_slug)
+            print(f'\nAUTHOR: {author}\n')
             is_muted = Muted.is_muted(
                 user_from=user,
                 user_to=author
@@ -151,7 +157,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
     date_month = dict_of_year[date_month]
-    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).all()
+    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).exclude(telegram_id=None).all()
     if posts_list:
         posts = [x['post'] for x in posts_list]
         dict_list_of_posts = []
@@ -176,7 +182,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
+        yesterday = now - timedelta(days=10)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
@@ -194,12 +200,12 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+                                    ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=yesterday_finish
+                                     ).filter(published_at__lte=now
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
