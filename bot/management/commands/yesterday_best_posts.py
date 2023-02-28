@@ -133,7 +133,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
     start_len = len(string_for_bot)
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
-            author_slug = author_and_text['slug'].pop()
+            author_slug = author_and_text['slug']
             author = User.objects.get(slug=author_slug)
             is_muted = Muted.is_muted(
                 user_from=user,
