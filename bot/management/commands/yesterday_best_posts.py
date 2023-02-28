@@ -200,12 +200,12 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=now
+                                    ).filter(published_at__lte=yesterday_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro').all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=now
+                                     ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
