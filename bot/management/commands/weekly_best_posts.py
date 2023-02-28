@@ -118,8 +118,8 @@ def construct_message(object):
             post_exception.save()
     return return_string
 
-def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_for_bot):
-    start_len = len(string_for_bot)
+def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
+    start_len = len(header_of_message)
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
@@ -134,6 +134,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
             if not is_muted:
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
+            string_for_bot = header_of_message + string_for_bot
             bot.send_message(text=string_for_bot,
                              chat_id=user.telegram_id,
                              parse_mode=ParseMode.HTML,
@@ -170,7 +171,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        week_ago = now - timedelta(days=7)
+        week_ago = now - timedelta(days=30)
         week_ago_start = time_zone.localize(datetime(
             year=week_ago.year,
             month=week_ago.month,
