@@ -46,6 +46,7 @@ from users.views.settings import profile_settings, edit_profile, edit_account, e
 from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
+from users.views.profile import random_coffee
 from search.api import api_search_users
 from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating
 from telegramessage.views import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
@@ -116,6 +117,7 @@ urlpatterns = [
     path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),
     path("user/<slug:user_slug>/delete/", request_delete_account, name="request_delete_account"),
     path("user/<slug:user_slug>/delete/confirm/", confirm_delete_account, name="confirm_delete_account"),
+    path("user/<slug:user_slug>/edit/coffee", random_coffee, name="random_coffee"),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
