@@ -153,6 +153,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
                              parse_mode=ParseMode.HTML,
                              disable_web_page_preview=True,
                              )
+        string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
@@ -182,7 +183,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=10)
+        yesterday = now - timedelta(days=1)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,

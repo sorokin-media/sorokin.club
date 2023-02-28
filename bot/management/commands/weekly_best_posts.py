@@ -142,6 +142,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
                              parse_mode=ParseMode.HTML,
                              disable_web_page_preview=True,
                              )
+        string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot):
 
