@@ -24,8 +24,7 @@ class RandomCoffee(models.Model):
                                              verbose_name='Ваш Телеграм для связи с собеседником')
     random_coffee_today = models.BooleanField(default=True)
     random_coffee_past_partners = models.TextField(null=True)
-    random_coffee_last_partner_id = models.UUIDField(null=True,
-                                                     default=uuid4)
+    random_coffee_last_partner_id = models.UUIDField(null=True)
 
 class RandomCoffeeLogs(models.Model):
 

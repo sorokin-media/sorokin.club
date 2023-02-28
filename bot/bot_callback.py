@@ -55,7 +55,6 @@ def coffee_grade(update: Update, context: CallbackContext):
     logs_string = RandomCoffeeLogs.objects.filter(user=user).filter(date=max_date_of_user).first()
     logs_string.feedback['second_reaction'] = feedback
     logs_string.save()
-    print(logs_string.feedback)
     message_id = update.callback_query.message.message_id
     bot.delete_message(chat_id=user_telegram_id, message_id=message_id)
 

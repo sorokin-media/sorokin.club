@@ -78,18 +78,6 @@ class UserIntroForm(ModelForm):
             }
         ),
     )
-    daily_email_digest = forms.BooleanField(label='Ежедневная e-mail рассылка',
-                                            required=False,
-                                            widget=forms.CheckboxInput())
-    weekly_email_digest = forms.BooleanField(label='Еженедельная e-mail рассылка',
-                                             required=False,
-                                             widget=forms.CheckboxInput())
-    tg_yesterday_best_posts = forms.BooleanField(label='Лучшие посты и самые интересные интро за вчерашний день в Telegram',
-                                                 required=False,
-                                                 widget=forms.CheckboxInput())
-    tg_weekly_best_posts = forms.BooleanField(label="Лучшие посты и интересные интро за прошедшую неделю в Telegram",
-                                              required=False,
-                                              widget=forms.CheckboxInput())
     privacy_policy_accepted = forms.BooleanField(
         label="Даю согласие на обработку своих персональных данных", required=True
     )
@@ -106,11 +94,7 @@ class UserIntroForm(ModelForm):
             "city",
             "country",
             "bio",
-            "contact",
-            "daily_email_digest",
-            "weekly_email_digest",
-            "tg_yesterday_best_posts",
-            "tg_weekly_best_posts"
+            "contact"
         ]
 
     def clean_slug(self):

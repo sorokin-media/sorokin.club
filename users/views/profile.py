@@ -17,6 +17,8 @@ from users.models.friends import Friend
 from users.models.mute import Muted
 from users.models.tags import Tag, UserTag
 from users.models.user import User
+from users.forms.profile import CoffeeForm
+from users.models.random_coffee import RandomCoffee
 from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
@@ -197,4 +199,20 @@ def delete_expertise(request, expertise):
 
     return {"status": "ok"}
 
-
+@auth_required
+def random_coffee(request, user_slug):
+    if request.method == 'POST':
+        form = CoffeeForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(slug=user_slug)
+            if RandomCoffee.objects.filter(user=user).exists():
+                random_string = RandomCoffee.objects.get(user=user)
+            else:
+                random_string = RandomCoffee()
+                random_string.user = user
+            random_string.random_coffee_is = form.cleaned_data['random_coffee_is']
+            random_string.random_coffee_tg_link = form.cleaned_data['random_coffee_tg_link']
+            random_string.save()
+            return redirect('/')
+    form = CoffeeForm()
+    return render(request, 'users/profile/random_coffee.html', {'form': form, 'user_slug': user_slug})

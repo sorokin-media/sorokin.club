@@ -7,6 +7,7 @@ from common.data.expertise import EXPERTISE
 from users.models.user import User
 from users.models.expertise import UserExpertise
 from common.forms import ImageUploadField
+from users.models.random_coffee import RandomCoffee
 
 
 class ProfileEditForm(ModelForm):
@@ -99,3 +100,11 @@ class ExpertiseForm(ModelForm):
             instance.name = custom_expertise
         return instance
 
+class CoffeeForm(ModelForm):
+
+    class Meta:
+        model = RandomCoffee
+        fields = {
+            'random_coffee_is',
+            'random_coffee_tg_link'
+        }

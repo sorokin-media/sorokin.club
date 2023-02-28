@@ -82,7 +82,7 @@ def send_message_helper(user_1, user_2, bot):
                      'Мы подобрали тебе собеседника на эту неделю!'
                      f'Это {user_2.user.full_name}!\n\n'
                      f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'
-                     'Вот его Телеграм для связи: TELEGRA HUY\n'
+                     f'Вот его Телеграм для связи: {user_2.random_coffee_tg_link}\n'
                      f'{text_finish}')
 
     bot.send_message(chat_id=user_2.user.telegram_id,
@@ -91,15 +91,17 @@ def send_message_helper(user_1, user_2, bot):
                      'Мы подобрали тебе собеседника на эту неделю!'
                      f'Это {user_1.user.full_name}!\n\n'
                      f'Вот его интро: {settings.APP_HOST}/intro/{intro_1.slug}\n\n'
-                     'Вот его Телеграм для связи: TELEGRA HUY\n\n'
+                     f'Вот его Телеграм для связи: {user_1.random_coffee_tg_link}\n\n'
                      f'{text_finish}')
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+#        coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=False).filter(random_coffee_is=True).all())
         coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all())
         k = 1
+        # random_coffee_today True - user is not busy
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
                 if coffee_users[k].random_coffee_past_partners is not None \
