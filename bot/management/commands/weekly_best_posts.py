@@ -121,15 +121,12 @@ def construct_message(object):
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_for_bot):
     start_len = len(string_for_bot)
     for user in users_for_yesterday_digest:
-        print(f'\nTELEGRAM ID: {user.telegram_id}\n')
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
             # bruteforce resolvinf of problem getting value from set with one value
             for b in author_slug:
                 author_slug = str(b)
-            print(f'SLUG: {author_slug}\n')
             author = User.objects.get(slug=author_slug)
-            print(f'\nAUTHOR: {author}\n')
             is_muted = Muted.is_muted(
                 user_from=user,
                 user_to=author
@@ -142,7 +139,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, string_fo
                              parse_mode=ParseMode.HTML,
                              disable_web_page_preview=True,
                              )
-        string_for_bot = ''
+            string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot):
 
