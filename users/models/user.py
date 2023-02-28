@@ -120,10 +120,10 @@ class User(models.Model, ModelDiffMixin):
                                               default=False)
     tg_yesterday_best_posts = models.BooleanField(verbose_name='Лучшие посты и самые '
                                                   'интересные интро клуба за вчерашний день в Telegram',
-                                                  default=False)
+                                                  default=True)
     tg_weekly_best_posts = models.BooleanField(verbose_name='Лучшие посты и интересные '
                                                'интро клуба за прошедшую неделю в Telegram',
-                                               default=False)
+                                               default=True)
 
     class Meta:
         db_table = "users"
