@@ -6,7 +6,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardB
 from telegram.ext import CallbackContext
 
 from users.models.user import User
-from users.models.random_coffee import RandomCoffeeLogs
+from users.models.random_coffee import RandomCoffeeLogs, RandomCoffee
 
 
 from django.db.models import Max
@@ -14,9 +14,11 @@ from django.db.models import Max
 def no_random(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
     callback_data = str(update.callback_query.data).replace("no_random_coffee ", "")
+    print(f'\n\n{callback_data}\n\n')
     user = User.objects.get(telegram_id=callback_data)
-    user.random_coffee_today = False
-    user.save()
+    random_coffee_string = RandomCoffee.objects.get(user=user.id)
+    random_coffee_string.random_coffee_today = False
+    random_coffee_string.save()
     message_id = update.callback_query.message.message_id
     chat_id = update.effective_user.id
     bot.delete_message(chat_id=chat_id, message_id=message_id)
