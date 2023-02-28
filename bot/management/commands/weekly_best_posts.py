@@ -120,6 +120,7 @@ def construct_message(object):
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
     start_len = len(header_of_message)
+    string_for_bot = ''
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
