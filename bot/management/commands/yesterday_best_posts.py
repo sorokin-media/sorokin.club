@@ -148,7 +148,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             bot.send_message(text=string_for_bot,
-                             chat_id=user.telegram_id,
+                             chat_id=settings.TG_ME,
                              parse_mode=ParseMode.HTML,
                              disable_web_page_preview=True,
                              )
