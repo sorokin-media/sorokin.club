@@ -160,7 +160,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                  )
             else:
                 limit_count = 0
-                time.sleep(60)
+                time.sleep(180)
             string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
