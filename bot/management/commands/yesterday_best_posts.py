@@ -151,7 +151,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(0.500)
+                time.sleep(0.100)
                 limit_count += 1
                 bot.send_message(text=string_for_bot,
                                  chat_id=settings.TG_ME,
@@ -160,13 +160,17 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                  )
             else:
                 limit_count = 0
-                time.sleep(300)
+                time.sleep(60)
             string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
+    time_zone = pytz.UTC
+    now = time_zone.localize(datetime.utcnow())
     date_month = dict_of_year[date_month]
-    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).exclude(telegram_id=None).all()
+    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True
+                                                     ).filter(membership_expires_at__gte=now
+                                                              ).exclude(telegram_id=None).all()
     if posts_list:
         posts = [x['post'] for x in posts_list]
         dict_list_of_posts = []

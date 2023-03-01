@@ -264,7 +264,9 @@ OG_IMAGE_GENERATOR_DEFAULTS = {
     "bg": "#FFFFFF",
 }
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+ngrok = 'https://df93-217-76-10-93.eu.ngrok.io'
+
+TELEGRAM_TOKEN = '5646587414:AAH5_rkjGJvt8kIDSuCq32f477kPtffr2MQ'
 TELEGRAM_BOT_URL = os.getenv("TELEGRAM_BOT_URL") or "https://t.me/vas3k_club_bot"
 TELEGRAM_ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID")
 TELEGRAM_CLUB_CHANNEL_URL = os.getenv("TELEGRAM_CLUB_CHANNEL_URL")
@@ -346,7 +348,8 @@ GEO_MOSCOW_DESC = "Описание московского клуба"
 GEO_MOSCOW_KEYWORDS = "Клуб, Москва, круто"
 GEO_MOSCOW_URL = "http://127.0.0.1:8000/club-moscow/"
 
-LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com', 'google.ru', 'google.com', 'gosuslugi.ru', 'sorokin.club']
+LINKS_WHITE_LIST = ['vk.com', 't.me', 'fb.com', 'yandex.ru', 'yandex.com',
+                    'google.ru', 'google.com', 'gosuslugi.ru', 'sorokin.club']
 
 MESSAGE_QUEUE_DATETIME = datetime(year=2022, month=1, day=1)
 
