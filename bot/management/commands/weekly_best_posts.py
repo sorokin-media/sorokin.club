@@ -28,6 +28,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardB
 from telegram.ext import CallbackContext
 
 import re
+import time
 
 dict_of_emoji = {
     'post': '📝',
@@ -119,6 +120,7 @@ def construct_message(object):
     return return_string
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
+    limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
     for user in users_for_yesterday_digest:
@@ -136,16 +138,27 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            bot.send_message(text=string_for_bot,
-                             chat_id=user.telegram_id,
-                             parse_mode=ParseMode.HTML,
-                             disable_web_page_preview=True,
-                             )
+            if limit_count < 50:
+                time.sleep(0.500)
+                limit_count += 1
+                bot.send_message(text=string_for_bot,
+                                 chat_id=settings.TG_ME,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True,
+                                 )
+            else:
+                limit_count = 0
+                time.sleep(180)
             string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot):
 
-    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True).all()
+    time_zone = pytz.UTC
+    now = time_zone.localize(datetime.utcnow())
+
+    users_for_yesterday_digest = User.objects.filter(tg_weekly_best_posts=True
+                                                     ).filter(membership_expires_at__gte=now
+                                                              ).exclude(telegram_id=None).all()
 
     if posts_list:
         posts = [x['post'] for x in posts_list]
