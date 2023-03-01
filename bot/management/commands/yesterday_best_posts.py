@@ -25,6 +25,8 @@ from telegram.ext import CallbackContext
 
 import re
 
+import time
+
 dict_of_year = {1: 'января',
                 2: 'февраля',
                 3: 'марта',
@@ -147,6 +149,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
+            time.sleep(0.500)
             bot.send_message(text=string_for_bot,
                              chat_id=settings.TG_ME,
                              parse_mode=ParseMode.HTML,
