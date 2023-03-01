@@ -132,6 +132,7 @@ def construct_message(object):
 
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
+    limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
     for user in users_for_yesterday_digest:
@@ -149,12 +150,17 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            time.sleep(0.500)
-            bot.send_message(text=string_for_bot,
-                             chat_id=settings.TG_ME,
-                             parse_mode=ParseMode.HTML,
-                             disable_web_page_preview=True,
-                             )
+            if limit_count < 50:
+                time.sleep(0.500)
+                limit_count += 1
+                bot.send_message(text=string_for_bot,
+                                 chat_id=settings.TG_ME,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True,
+                                 )
+            else:
+                limit_count = 0
+                time.sleep(300)
             string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
