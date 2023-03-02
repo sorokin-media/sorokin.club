@@ -362,6 +362,9 @@
      * @return {Boolean} if the event was handled
      */
     inlineAttachment.prototype.onPaste = function (e) {
+        console.group('== Paste object');
+        console.log(e);
+
         var result = false,
             clipboardData = e.clipboardData,
             items;
@@ -375,6 +378,11 @@
                     result = true;
                     this.onFileInserted(item.getAsFile());
                     this.uploadFile(item.getAsFile());
+                    console.group('file ' + i);
+                    console.log('insered');
+                    console.log(item);
+                    console.log(item.getAsFile());
+                    console.groupEnd();
                 }
             }
         }
@@ -383,6 +391,7 @@
             e.preventDefault();
         }
 
+        console.groupEnd('== END');
         return result;
     };
 
@@ -392,31 +401,60 @@
      * @return {Boolean} if the event was handled
      */
     inlineAttachment.prototype.onDrop = function (e) {
-        var result = false;
-        for (var i = 0; i < e.dataTransfer.files.length; i++) {
-            var file = e.dataTransfer.files[i];
+        console.group('== DROP object');
+        console.log(e);
+
+        let result = false;
+        const dataTransfer = e.dataTransfer;
+
+        if (!dataTransfer.files?.length) {
+            return result;
+        }
+
+        result = true;
+
+        for (let i = 0; i < dataTransfer.files.length; i++) {
+            let file = dataTransfer.files[i];
             if (this.isFileAllowed(file)) {
-                result = true;
                 this.onFileInserted(file);
                 this.uploadFile(file);
+                console.group('file ' + i);
+                console.log('insered');
+                console.log(file);
+                console.groupEnd();
             }
         }
+
+        console.groupEnd();
 
         return result;
     };
 
     // onFileInput
     inlineAttachment.prototype.onFileInput = function (e) {
-        var result = false;
-        for (var i = 0; i < e.target.files.length; i++) {
-            var file = e.target.files[i];
+        console.group('== INPUT object');
+        console.log(e);
+
+        let result = false;
+        const files = e.target.files;
+
+        if (!files?.length) return result;
+
+        result = true;
+
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
             if (this.isFileAllowed(file)) {
-                result = true;
                 this.onFileInserted(file);
                 this.uploadFile(file);
+                console.group('file ' + i);
+                console.log('insered');
+                console.log(file);
+                console.groupEnd();
             }
         }
 
+        console.groupEnd();
         return result;
     };
 
