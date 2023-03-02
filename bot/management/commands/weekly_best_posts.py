@@ -139,7 +139,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(0.500)
+                time.sleep(3.100)
                 limit_count += 1
                 bot.send_message(text=string_for_bot,
                                  chat_id=settings.TG_DEVELOPER_DMITRY,
@@ -148,7 +148,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                  )
             else:
                 limit_count = 0
-                time.sleep(180)
+#                time.sleep(180)
             string_for_bot = ''
 
 def send_email_helper(posts_list, intros_list, bot):
