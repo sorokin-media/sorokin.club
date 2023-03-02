@@ -414,7 +414,8 @@
         result = true;
 
         for (let i = 0; i < dataTransfer.files.length; i++) {
-            let file = dataTransfer.files[i];
+            const file = dataTransfer.files[i];
+
             if (this.isFileAllowed(file)) {
                 this.onFileInserted(file);
                 this.uploadFile(file);
