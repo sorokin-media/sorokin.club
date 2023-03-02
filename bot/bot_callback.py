@@ -14,7 +14,6 @@ from django.db.models import Max
 def no_random(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
     callback_data = str(update.callback_query.data).replace("no_random_coffee ", "")
-    print(f'\n\n{callback_data}\n\n')
     user = User.objects.get(telegram_id=callback_data)
     random_coffee_string = RandomCoffee.objects.get(user=user.id)
     random_coffee_string.random_coffee_today = False
