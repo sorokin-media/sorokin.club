@@ -1052,7 +1052,7 @@
         @media (max-width: 430px) {
             .feed-post-header--event .feed-post-title-container .post-event-date {
                 position: static;
-                display: flex;
+                display: inline-flex;
                 order: 2;
 
                 max-width: unset;
@@ -1060,18 +1060,20 @@
                 max-height: unset;
                 height: unset;
 
-                border-radius: 0;
+                margin-right: auto;
+
+                border-radius: 4px;
             }
 
             .feed-post-header--event .post-event-date-day {
                 height: unset;
 
                 padding: 8px;
-                margin-right: 10px;
+                margin-right: 0;
 
                 font-size: 145%;
 
-                border-radius: 5px;
+                border-radius: 0;
             }
 
             .feed-post-header--event .post-event-date-month {
@@ -1083,7 +1085,7 @@
                 font-size: 135%;
                 line-height: initial;
 
-                border-radius: 5px;
+                border-radius: 0;
             }
 
             .feed-post-header--event .feed-post-title {

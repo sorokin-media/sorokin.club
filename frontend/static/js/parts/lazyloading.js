@@ -36,8 +36,6 @@ const initLazyLoading = () => {
     const lazySources = document.querySelectorAll('img[data-src],source[data-srcset]');
     const lazyPositions = getLazySourcesPos(lazySources);
 
-    console.log(lazySources);
-
     window.addEventListener('scroll', () => {
         checkLazyLoadPositions(lazyPositions, lazySources, 150);
     });

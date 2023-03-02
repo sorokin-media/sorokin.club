@@ -362,9 +362,6 @@
      * @return {Boolean} if the event was handled
      */
     inlineAttachment.prototype.onPaste = function (e) {
-        console.group('== Paste object');
-        console.log(e);
-
         var result = false,
             clipboardData = e.clipboardData,
             items;
@@ -378,11 +375,6 @@
                     result = true;
                     this.onFileInserted(item.getAsFile());
                     this.uploadFile(item.getAsFile());
-                    console.group('file ' + i);
-                    console.log('insered');
-                    console.log(item);
-                    console.log(item.getAsFile());
-                    console.groupEnd();
                 }
             }
         }
@@ -390,8 +382,6 @@
         if (result) {
             e.preventDefault();
         }
-
-        console.groupEnd('== END');
         return result;
     };
 
@@ -401,9 +391,6 @@
      * @return {Boolean} if the event was handled
      */
     inlineAttachment.prototype.onDrop = function (e) {
-        console.group('== DROP object');
-        console.log(e);
-
         let result = false;
         const dataTransfer = e.dataTransfer;
 
@@ -419,23 +406,14 @@
             if (this.isFileAllowed(file)) {
                 this.onFileInserted(file);
                 this.uploadFile(file);
-                console.group('file ' + i);
-                console.log('insered');
-                console.log(file);
-                console.groupEnd();
             }
         }
-
-        console.groupEnd();
 
         return result;
     };
 
     // onFileInput
     inlineAttachment.prototype.onFileInput = function (e) {
-        console.group('== INPUT object');
-        console.log(e);
-
         let result = false;
         const files = e.target.files;
 
@@ -448,14 +426,9 @@
             if (this.isFileAllowed(file)) {
                 this.onFileInserted(file);
                 this.uploadFile(file);
-                console.group('file ' + i);
-                console.log('insered');
-                console.log(file);
-                console.groupEnd();
             }
         }
 
-        console.groupEnd();
         return result;
     };
 

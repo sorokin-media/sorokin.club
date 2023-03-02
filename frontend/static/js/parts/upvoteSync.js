@@ -42,7 +42,6 @@ function synchronizeUpvote(target, targetValue) {
         const btn = allBtns[i];
 
         if (btn === target) {
-            console.log('continue');
             continue;
         }
 
