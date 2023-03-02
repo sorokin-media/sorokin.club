@@ -132,6 +132,9 @@ def construct_message(object):
 
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
+
+    COUNT_FOR_DMITRY = 0
+
     limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
@@ -151,17 +154,31 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(3.100)
+                time.sleep(6.100)
                 limit_count += 1
-                bot.send_message(text=string_for_bot,
-                                 chat_id=settings.TG_DEVELOPER_DMITRY,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
-                                 )
+                try:
+                    bot.send_message(text=string_for_bot,
+                                     chat_id=user.telegram_id,
+                                     parse_mode=ParseMode.HTML,
+                                     disable_web_page_preview=True,
+                                     )
+                    COUNT_FOR_DMITRY += 1
+                except:
+                    time.sleep(300)
+                    bot.send_message(text=string_for_bot,
+                                     chat_id=user.telegram_id,
+                                     parse_mode=ParseMode.HTML,
+                                     disable_web_page_preview=True,
+                                     )
+                    COUNT_FOR_DMITRY += 1
             else:
                 limit_count = 0
 #                time.sleep(180)
             string_for_bot = ''
+    time.sleep(300)
+    bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
+                     chat_id=settings.TG_DEVELOPER_DMITRY
+                     )
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
