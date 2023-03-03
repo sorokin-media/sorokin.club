@@ -158,7 +158,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 limit_count += 1
                 try:
                     bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
+                                     chat_id=settings.TG_DEVELOPER_DMITRY,
                                      parse_mode=ParseMode.HTML,
                                      disable_web_page_preview=True,
                                      )
@@ -166,7 +166,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 except:
                     time.sleep(300)
                     bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
+                                     chat_id=settings.TG_DEVELOPER_DMITRY,
                                      parse_mode=ParseMode.HTML,
                                      disable_web_page_preview=True,
                                      )
