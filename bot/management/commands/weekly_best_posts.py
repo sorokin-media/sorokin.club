@@ -160,15 +160,15 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                     COUNT_FOR_DMITRY += 1
                 except:
                     time.sleep(300)
-                    bot.send_message(text=string_for_bot,
-                                     chat_id=settings.TG_DEVELOPER_DMITRY,
-                                     parse_mode=ParseMode.HTML,
-                                     disable_web_page_preview=True,
-                                     )
                     bot.send_message(text='я поспал, я вернулся'
                                      f'\nЮзер: {user.slug}:'
                                      f'\nАвтор статьи: {author}',
                                      chat_id=settings.TG_DEVELOPER_DMITRY
+                                     )
+                    bot.send_message(text=string_for_bot,
+                                     chat_id=settings.TG_DEVELOPER_DMITRY,
+                                     parse_mode=ParseMode.HTML,
+                                     disable_web_page_preview=True,
                                      )
                     COUNT_FOR_DMITRY += 1
                     counting.increment()
