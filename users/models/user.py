@@ -247,4 +247,4 @@ class Delete(models.Model):
 
     def increment(self):
         self.dima_count += 1
-        self.dima_count.save()
+        self.save()
