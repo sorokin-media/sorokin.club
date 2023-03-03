@@ -154,7 +154,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(6.100)
+                time.sleep(0.100)
                 limit_count += 1
                 try:
                     bot.send_message(text=string_for_bot,
