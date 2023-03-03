@@ -5,7 +5,7 @@ from club import settings
 from posts.templatetags.text_filters import rupluralize
 
 from posts.models.post import Post, PostExceptions
-from users.models.user import User
+from users.models.user import User, Delete
 from users.models.mute import Muted
 from comments.models import Comment
 
@@ -135,6 +135,12 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
 
     COUNT_FOR_DMITRY = 0
 
+    counting = Delete()
+    counting.dima_count = 0
+    counting.save()
+
+    counting = Delete.objects.get(name='dima')
+
     limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
@@ -154,23 +160,30 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(6.100)
+                time.sleep(0.100)
                 limit_count += 1
                 try:
                     bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
+                                     chat_id=settings.TG_DEVELOPER_DMITRY,
                                      parse_mode=ParseMode.HTML,
                                      disable_web_page_preview=True,
                                      )
+                    counting.increment()
                     COUNT_FOR_DMITRY += 1
                 except:
                     time.sleep(300)
                     bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
+                                     chat_id=settings.TG_DEVELOPER_DMITRY,
                                      parse_mode=ParseMode.HTML,
                                      disable_web_page_preview=True,
                                      )
+                    bot.send_message(text='я поспал, я вернулся'
+                                     f'\nЮзер: {user.slug}:'
+                                     f'\nАвтор статьи: {author}',
+                                     chat_id=settings.TG_DEVELOPER_DMITRY
+                                     )
                     COUNT_FOR_DMITRY += 1
+                    counting.increment()
             else:
                 limit_count = 0
 #                time.sleep(180)
