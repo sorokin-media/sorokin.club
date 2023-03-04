@@ -50,6 +50,7 @@ dict_of_emoji = {
 }
 
 def point_counter(objects):
+    '''foo counting points for determing best posts and intros '''
     objects_data = []
     for object in objects:
         points = (object.upvotes*10) + (object.comment_count*3) + object.view_count
@@ -60,6 +61,7 @@ def point_counter(objects):
 
 
 def construct_message(object):
+    '''foo formates text for message from html type '''
     return_string = ''
     try:
         text_of_post = object.html
@@ -132,7 +134,7 @@ def construct_message(object):
 
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
-
+    ''' foo send messages to user'''
     COUNT_FOR_DMITRY = 0
 
     counting = Delete()
@@ -160,9 +162,9 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             if limit_count < 50:
-                time.sleep(0.100)
+                time.sleep(0.100)  # beacuse of API Telegram rules
                 limit_count += 1
-                try:
+                try:  # if reason in DB to an other, but in API rules
                     bot.send_message(text=string_for_bot,
                                      chat_id=user.telegram_id,
                                      parse_mode=ParseMode.HTML,
@@ -170,20 +172,29 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                      )
                     counting.increment()
                     COUNT_FOR_DMITRY += 1
-                except:
-                    time.sleep(300)
-                    bot.send_message(text='я поспал, я вернулся'
-                                     f'\nЮзер: {user.slug}:'
-                                     f'\nАвтор статьи: {author}',
-                                     chat_id=settings.TG_DEVELOPER_DMITRY
-                                     )
-                    bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
-                                     parse_mode=ParseMode.HTML,
-                                     disable_web_page_preview=True,
-                                     )
-                    COUNT_FOR_DMITRY += 1
-                    counting.increment()
+                except Exception as error:
+                    try:  # if reason in DB to an other, but in API rules
+                        time.sleep(300)
+                        bot.send_message(text=string_for_bot,
+                                         chat_id=settings.TG_DEVELOPER_DMITRY,  # user.telegram_id,
+                                         parse_mode=ParseMode.HTML,
+                                         disable_web_page_preview=True,
+                                         )
+                        bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
+                                         f'\nЮзер: {user.slug}:'
+                                         f'\nАвтор статьи: {author}',
+                                         chat_id=settings.TG_DEVELOPER_DMITRY
+                                         )
+                        COUNT_FOR_DMITRY += 1
+                        counting.increment()
+                    except:  # if message was not sended as result
+                        bot.send_message(text='Я вляпался в доупщит!'
+                                         f'Вот ошибка: {error}\n\n'
+                                         f'\nПроблемный юзер: {user.slug}:'
+                                         f'\nАвтор статьи: {author}',
+                                         chat_id=settings.TG_DEVELOPER_DMITRY
+                                         )
+                        continue
             else:
                 limit_count = 0
 #                time.sleep(180)
@@ -194,6 +205,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                      )
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
+    ''' foo creates users list and basic text of message like Title, etc'''
 
     time_zone = pytz.UTC
     now = time_zone.localize(datetime.utcnow())
@@ -221,6 +233,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
         compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_intros, intros_string_for_bot)
 
 class Command(BaseCommand):
+    '''Foo creates list if best posts '''
 
     def handle(self, *args, **options):
         time_zone = pytz.UTC
