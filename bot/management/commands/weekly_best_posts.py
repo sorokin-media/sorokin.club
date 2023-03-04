@@ -153,7 +153,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
             if limit_count < 50:
                 time.sleep(0.100)  # beacuse of API Telegram rules
                 limit_count += 1
-                try:
+                try:  # if reason in DB to an other, but in API rules
                     bot.send_message(text=string_for_bot,
                                      chat_id=user.telegram_id,
                                      parse_mode=ParseMode.HTML,
