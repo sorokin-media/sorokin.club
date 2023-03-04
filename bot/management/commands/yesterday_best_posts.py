@@ -200,7 +200,8 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
     date_month = dict_of_year[date_month]
     users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True
                                                      ).filter(membership_expires_at__gte=now
-                                                              ).exclude(telegram_id=None).all()
+                                                              ).exclude(telegram_id=None
+                                                                        ).exclude(telegram_id='').all()
     if posts_list:
         posts = [x['post'] for x in posts_list]
         dict_list_of_posts = []
