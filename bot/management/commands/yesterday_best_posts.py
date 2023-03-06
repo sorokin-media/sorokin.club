@@ -137,12 +137,6 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     ''' foo send messages to user'''
     COUNT_FOR_DMITRY = 0
 
-    counting = Delete()
-    counting.dima_count = 0
-    counting.save()
-
-    counting = Delete.objects.get(name='dima')
-
     limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
@@ -161,45 +155,38 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            if limit_count < 50:
-                time.sleep(0.100)  # beacuse of API Telegram rules
-                limit_count += 1
+            time.sleep(0.100)  # beacuse of API Telegram rules
+            limit_count += 1
+            try:  # if reason in DB to an other, but in API rules
+                bot.send_message(text=string_for_bot,
+                                 chat_id=user.telegram_id,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True,
+                                 )
+                COUNT_FOR_DMITRY += 1
+            except Exception as error:
                 try:  # if reason in DB to an other, but in API rules
+                    time.sleep(300)
                     bot.send_message(text=string_for_bot,
                                      chat_id=user.telegram_id,
                                      parse_mode=ParseMode.HTML,
                                      disable_web_page_preview=True,
                                      )
-                    counting.increment()
+                    bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
+                                     f'\nЮзер: {user.slug}:'
+                                     f'\nАвтор статьи: {author}',
+                                     chat_id=settings.TG_DEVELOPER_DMITRY
+                                     )
                     COUNT_FOR_DMITRY += 1
-                except Exception as error:
-                    try:  # if reason in DB to an other, but in API rules
-                        time.sleep(300)
-                        bot.send_message(text=string_for_bot,
-                                         chat_id=user.telegram_id,
-                                         parse_mode=ParseMode.HTML,
-                                         disable_web_page_preview=True,
-                                         )
-                        bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                         f'\nЮзер: {user.slug}:'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                        COUNT_FOR_DMITRY += 1
-                        counting.increment()
-                    except:  # if message was not sended as result
-                        string_for_bot = ''
-                        bot.send_message(text='Я вляпался в доупщит!'
-                                         f'Вот ошибка: {error}\n\n'
-                                         f'\nПроблемный юзер: {user.slug}:'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                        continue
-            else:
-                limit_count = 0
-#                time.sleep(180)
-            string_for_bot = ''
+                except:  # if message was not sended as result
+                    string_for_bot = ''
+                    bot.send_message(text='Я вляпался в доупщит!'
+                                     f'Вот ошибка: {error}\n\n'
+                                     f'\nПроблемный юзер: {user.slug}:'
+                                     f'\nЕго Telegram_id: {user.telegram_id}'
+                                     f'\nАвтор статьи: {author}',
+                                     chat_id=settings.TG_DEVELOPER_DMITRY
+                                     )
     time.sleep(300)
     bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
                      chat_id=settings.TG_DEVELOPER_DMITRY
@@ -266,6 +253,8 @@ class Command(BaseCommand):
                                      ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
+
+        print(yesterday_start)
 
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
