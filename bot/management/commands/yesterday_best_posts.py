@@ -188,6 +188,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                         COUNT_FOR_DMITRY += 1
                         counting.increment()
                     except:  # if message was not sended as result
+                        string_for_bot = ''
                         bot.send_message(text='Я вляпался в доупщит!'
                                          f'Вот ошибка: {error}\n\n'
                                          f'\nПроблемный юзер: {user.slug}:'
