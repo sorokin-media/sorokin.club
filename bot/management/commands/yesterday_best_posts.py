@@ -83,11 +83,12 @@ def construct_message(object):
 
         author = object.author.full_name
         profession = object.author.position
+        company = object.author.company
 
         if object.type == 'intro':
             title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
                 f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                f'       {profession}'  # spaces left on purpose, don't touch
+                f'{profession} - {company}'  # spaces left on purpose, don't touch
         else:
             emoji = dict_of_emoji[object.type]
             title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
