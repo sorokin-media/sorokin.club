@@ -165,7 +165,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 COUNT_FOR_DMITRY += 1
             except Exception as error:
                 try:  # if reason not in DB or an other, but in API rules
-                    time.sleep(300)
+                    time.sleep(10)
                     bot.send_message(text=string_for_bot,
                                      chat_id=user.telegram_id,
                                      parse_mode=ParseMode.HTML,
@@ -186,7 +186,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                      f'\nАвтор статьи: {author}',
                                      chat_id=settings.TG_DEVELOPER_DMITRY
                                      )
-    time.sleep(300)
+    time.sleep(10)
     bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
                      chat_id=settings.TG_DEVELOPER_DMITRY
                      )
