@@ -141,7 +141,6 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     start_len = len(header_of_message)
     string_for_bot = ''
     for user in users_for_yesterday_digest:
-        print(f'\nSLUG: {user.slug}\n')
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
             # bruteforce resolving of problem getting value from set with one value
@@ -167,18 +166,30 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 COUNT_FOR_DMITRY += 1
             except Exception as error:
                 try:  # if reason not in DB or an other, but in API rules
-                    time.sleep(300)
-                    bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
-                                     parse_mode=ParseMode.HTML,
-                                     disable_web_page_preview=True,
-                                     )
-                    bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                     f'\nЮзер: {user.slug}:'
-                                     f'\nАвтор статьи: {author}',
-                                     chat_id=settings.TG_DEVELOPER_DMITRY
-                                     )
-                    COUNT_FOR_DMITRY += 1
+                    if 'bot was blocked by the user' in str(error):
+                        time.sleep(0.100)
+                        string_for_bot = ''
+                        bot.send_message(text='Я вляпался в доупщит!'
+                                         f'Вот ошибка: {error}\n\n'
+                                         f'\nПроблемный юзер: {user.slug}:'
+                                         f'\nЕго Telegram_id: {user.telegram_id}'
+                                         f'\nTELEGRAM DATA: {user.telegram_data}'
+                                         f'\nАвтор статьи: {author}',
+                                         chat_id=settings.TG_DEVELOPER_DMITRY
+                                         )
+                    else:
+                        time.sleep(300)
+                        bot.send_message(text=string_for_bot,
+                                         chat_id=user.telegram_id,
+                                         parse_mode=ParseMode.HTML,
+                                         disable_web_page_preview=True,
+                                         )
+                        bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
+                                         f'\nЮзер: {user.slug}:'
+                                         f'\nАвтор статьи: {author}',
+                                         chat_id=settings.TG_DEVELOPER_DMITRY
+                                         )
+                        COUNT_FOR_DMITRY += 1
                 except:  # if message was not sended as result
                     string_for_bot = ''
                     bot.send_message(text='Я вляпался в доупщит!'
