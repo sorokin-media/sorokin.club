@@ -183,6 +183,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                      f'Вот ошибка: {error}\n\n'
                                      f'\nПроблемный юзер: {user.slug}:'
                                      f'\nЕго Telegram_id: {user.telegram_id}'
+                                     f'\nTELEGRAM DATA: {user.telegram_data}'
                                      f'\nАвтор статьи: {author}',
                                      chat_id=settings.TG_DEVELOPER_DMITRY
                                      )
