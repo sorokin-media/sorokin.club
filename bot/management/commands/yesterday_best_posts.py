@@ -200,7 +200,6 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                      f'\nАвтор статьи: {author}',
                                      chat_id=settings.TG_DEVELOPER_DMITRY
                                      )
-    time.sleep(300)
     bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
                      chat_id=settings.TG_DEVELOPER_DMITRY
                      )
@@ -224,7 +223,7 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 
         compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_posts, posts_string_for_bot)
 
-    if intros_list:
+    if len(intros_list) > 0:
         intros = [x['post'] for x in intros_list]
         intros_string_for_bot = f'<strong>😺 Самые интересные интро {date_day} {date_month} ❤️</strong>'
         dict_list_of_intros = []
