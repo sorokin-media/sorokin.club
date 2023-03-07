@@ -137,13 +137,12 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     ''' foo send messages to user'''
     COUNT_FOR_DMITRY = 0
 
-    limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
-            # bruteforce resolvinf of problem getting value from set with one value
+            # bruteforce resolving of problem getting value from set with one value
             for b in author_slug:
                 author_slug = str(b)
             author = User.objects.get(slug=author_slug)
@@ -156,7 +155,6 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
             time.sleep(0.100)  # beacuse of API Telegram rules
-            limit_count += 1
             try:  # if reason in DB to an other, but in API rules
                 bot.send_message(text=string_for_bot,
                                  chat_id=user.telegram_id,
@@ -165,7 +163,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                  )
                 COUNT_FOR_DMITRY += 1
             except Exception as error:
-                try:  # if reason in DB to an other, but in API rules
+                try:  # if reason not in DB or an other, but in API rules
                     time.sleep(300)
                     bot.send_message(text=string_for_bot,
                                      chat_id=user.telegram_id,
@@ -227,7 +225,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
+        yesterday = now - timedelta(days=2)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
