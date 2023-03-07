@@ -161,6 +161,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                  parse_mode=ParseMode.HTML,
                                  disable_web_page_preview=True,
                                  )
+                string_for_bot = ''
                 COUNT_FOR_DMITRY += 1
             except Exception as error:
                 try:  # if reason not in DB or an other, but in API rules
