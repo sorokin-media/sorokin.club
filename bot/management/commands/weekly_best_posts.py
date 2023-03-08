@@ -73,11 +73,12 @@ def construct_message(object):
 
         author = object.author.full_name
         profession = object.author.position
+        company = object.author.company
 
         if object.type == 'intro':
             title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
                 f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                f'       {profession}'  # spaces left on purpose, don't touch
+                f'{profession} - {company}'  # spaces left on purpose, don't touch
         else:
             emoji = dict_of_emoji[object.type]
             title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
@@ -126,19 +127,12 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     ''' foo send messages to user'''
     COUNT_FOR_DMITRY = 0
 
-    counting = Delete()
-    counting.dima_count = 0
-    counting.save()
-
-    counting = Delete.objects.get(name='dima')
-
-    limit_count = 0
     start_len = len(header_of_message)
     string_for_bot = ''
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
-            # bruteforce resolvinf of problem getting value from set with one value
+            # bruteforce resolving of problem getting value from set with one value
             for b in author_slug:
                 author_slug = str(b)
             author = User.objects.get(slug=author_slug)
@@ -150,19 +144,29 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            if limit_count < 50:
-                time.sleep(0.100)  # beacuse of API Telegram rules
-                limit_count += 1
-                try:  # if reason in DB to an other, but in API rules
-                    bot.send_message(text=string_for_bot,
-                                     chat_id=user.telegram_id,
-                                     parse_mode=ParseMode.HTML,
-                                     disable_web_page_preview=True,
-                                     )
-                    counting.increment()
-                    COUNT_FOR_DMITRY += 1
-                except Exception as error:
-                    try:  # if reason in DB to an other, but in API rules
+            time.sleep(0.100)  # beacuse of API Telegram rules
+            try:  # if reason in DB to an other, but in API rules
+                bot.send_message(text=string_for_bot,
+                                 chat_id=user.telegram_id,
+                                 parse_mode=ParseMode.HTML,
+                                 disable_web_page_preview=True,
+                                 )
+                string_for_bot = ''
+                COUNT_FOR_DMITRY += 1
+            except Exception as error:
+                try:  # if reason not in DB or an other, but in API rules
+                    if 'bot was blocked by the user' in str(error):
+                        time.sleep(0.100)
+                        string_for_bot = ''
+                        bot.send_message(text='Я вляпался в доупщит!'
+                                         f'Вот ошибка: {error}\n\n'
+                                         f'\nПроблемный юзер: {user.slug}:'
+                                         f'\nЕго Telegram_id: {user.telegram_id}'
+                                         f'\nTELEGRAM DATA: {user.telegram_data}'
+                                         f'\nАвтор статьи: {author}',
+                                         chat_id=settings.TG_DEVELOPER_DMITRY
+                                         )
+                    else:
                         time.sleep(300)
                         bot.send_message(text=string_for_bot,
                                          chat_id=user.telegram_id,
@@ -175,19 +179,16 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                                          chat_id=settings.TG_DEVELOPER_DMITRY
                                          )
                         COUNT_FOR_DMITRY += 1
-                        counting.increment()
-                    except:  # if message was not sended as result
-                        bot.send_message(text='Я вляпался в доупщит!'
-                                         f'Вот ошибка: {error}\n\n'
-                                         f'\nПроблемный юзер: {user.slug}:'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                        continue
-            else:
-                limit_count = 0
-            string_for_bot = ''
-    time.sleep(300)
+                except:  # if message was not sended as result
+                    string_for_bot = ''
+                    bot.send_message(text='Я вляпался в доупщит!'
+                                     f'Вот ошибка: {error}\n\n'
+                                     f'\nПроблемный юзер: {user.slug}:'
+                                     f'\nЕго Telegram_id: {user.telegram_id}'
+                                     f'\nTELEGRAM DATA: {user.telegram_data}'
+                                     f'\nАвтор статьи: {author}',
+                                     chat_id=settings.TG_DEVELOPER_DMITRY
+                                     )
     bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
                      chat_id=settings.TG_DEVELOPER_DMITRY
                      )

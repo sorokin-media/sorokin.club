@@ -266,8 +266,6 @@ class Command(BaseCommand):
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro').all()
 
-        print(yesterday_start)
-
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
 
