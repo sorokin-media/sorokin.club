@@ -239,12 +239,3 @@ class User(models.Model, ModelDiffMixin):
             moderation_status=User.MODERATION_STATUS_APPROVED,
             membership_expires_at__gte=datetime.utcnow()
         )
-
-class Delete(models.Model):
-
-    name = models.CharField(default='dima', max_length=128)
-    dima_count = models.IntegerField(null=True)
-
-    def increment(self):
-        self.dima_count += 1
-        self.save()
