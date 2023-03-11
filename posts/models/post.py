@@ -201,6 +201,9 @@ class Post(models.Model, ModelDiffMixin):
             self.published_at = datetime.utcnow()
 
         self.updated_at = datetime.utcnow()
+
+        # if self.type == Post.TYPE_EVENT and self.is_approved_by_moderator:
+        #     self.event_time_start = self.event_datetime
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
