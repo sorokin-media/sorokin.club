@@ -100,14 +100,14 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
 
     # split results into pinned and unpinned posts on main page
     pinned_posts = []
-    # event_feature_posts = []
+    event_feature_posts = []
     if ordering == ORDERING_ACTIVITY:
         pinned_posts = posts.filter(is_pinned_until__gte=datetime.utcnow())
         posts = posts.exclude(id__in=[p.id for p in pinned_posts])
 
-    # if post_type == 'event':
-    #     event_feature_posts = posts.filter(created_at__lte=datetime.utcnow())
-    #     posts = posts.exclude(id__in=[p.id for p in event_feature_posts])
+    if post_type == 'event':
+        event_feature_posts = posts.filter(event_time_start__gte=datetime.utcnow()).order_by("event_time_start")
+        posts = posts.exclude(id__in=[p.id for p in event_feature_posts])
 
     return render(request, "feed.html", {
         "post_type": post_type or POST_TYPE_ALL,
@@ -116,6 +116,6 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
         "label_code": label_code,
         "posts": paginate(request, posts),
         "pinned_posts": pinned_posts,
-        # "event_feature_posts": event_feature_posts,
+        "event_feature_posts": event_feature_posts,
         "date_month_ago": datetime.utcnow() - timedelta(days=30),
     })
