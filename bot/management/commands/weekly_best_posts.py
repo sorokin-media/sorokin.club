@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from posts.templatetags.text_filters import rupluralize
 
 from posts.models.post import Post, PostExceptions
-from users.models.user import User, Delete
+from users.models.user import User
 from users.models.mute import Muted
 from comments.models import Comment
 
