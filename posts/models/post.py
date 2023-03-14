@@ -133,6 +133,8 @@ class Post(models.Model, ModelDiffMixin):
     message_id_to_responsible_buddy_user_from_bot = models.CharField(max_length=128, null=True)
     task_done = models.BooleanField(default=False)
     time_task_finished = models.DateTimeField(null=True)
+    event_time_start = models.DateTimeField(null=True)
+
 
     history = HistoricalRecords(
         user_model=User,
@@ -167,7 +169,8 @@ class Post(models.Model, ModelDiffMixin):
             "message_id_to_buddy_group_from_bot",
             "message_id_to_responsible_buddy_user_from_bot",
             'task_done',
-            'time_task_finished'
+            'time_task_finished',
+            'event_time_start'
         ],
     )
 
@@ -198,6 +201,9 @@ class Post(models.Model, ModelDiffMixin):
             self.published_at = datetime.utcnow()
 
         self.updated_at = datetime.utcnow()
+
+        if self.type == Post.TYPE_EVENT and self.is_approved_by_moderator:
+            self.event_time_start = self.event_datetime
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -391,11 +397,11 @@ class Post(models.Model, ModelDiffMixin):
     def set_time_for_tusk(self):
         self.time_task_sended = datetime.utcnow()
         self.save()
-        
+
 class PostExceptions(models.Model):
 
     class Meta:
         db_table = 'post_exceptions'
-    
+
     post_slug = models.CharField(max_length=128, null=True, db_column='post_slug')
     foo_name = models.CharField(max_length=128, null=True, db_column='foo_name')

@@ -85,9 +85,23 @@
         {% include "posts/items/items.html" %}
     {% endfor %}
 
-    {% for post in posts %}
-        {% include "posts/items/items.html" %}
-    {% endfor %}
+    {% if event_feature_posts %}
+        <p class="feed-post-title">Запланировано:</p>
+        {% for post in event_feature_posts %}
+            {% include "posts/items/event.html" %}
+        {% endfor %}
+    {% endif %}
+
+    {% if post_type == 'event' %}
+    <p class="feed-post-title">Прошло:</p>
+        {% for post in posts %}
+            {% include "posts/items/event.html" %}
+        {% endfor %}
+    {% else %}
+        {% for post in posts %}
+            {% include "posts/items/items.html" %}
+        {% endfor %}
+    {% endif %}
 
     <div class="feed-paginator">
         {% paginator posts %}
