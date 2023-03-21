@@ -33,13 +33,10 @@ def coffee_feedback(update: Update, context: CallbackContext):
     logs_string.feedback = feedback
     logs_string.save()
     message_id = update.callback_query.message.message_id
-    print(message_id)
     bot.delete_message(chat_id=user_telegram_id, message_id=message_id)
     if feedback['first_reaction'] == 'Звонок состоялся':
         coffee_string = RandomCoffee.objects.get(user=user)
-        print(coffee_string)
         coffee_string.coffee_done += 1
-        print(coffee_string.coffee_done)
         coffee_string.save()
         bot.send_message(text='Как тебе собеседник? \n'
                          'Мы никому не расскажем, ответ нужен чтобы лучше подбирать тебе новых знакомых',
@@ -55,7 +52,7 @@ def coffee_feedback(update: Update, context: CallbackContext):
     else:
         coffee_string = RandomCoffee.objects.get(user=user)
         coffee_string.coffee_deny += 1
-        coffee_string.save()        
+        coffee_string.save()
 
 def coffee_grade(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
@@ -68,6 +65,12 @@ def coffee_grade(update: Update, context: CallbackContext):
     logs_string.save()
     message_id = update.callback_query.message.message_id
     bot.delete_message(chat_id=user_telegram_id, message_id=message_id)
+    bot.send_message(chat_id=user_telegram_id,
+                     parse_mode=ParseMode.HTML,
+                     text='Спасибо, что делишься результатами! Это позволит мне обучиться и подбирать'
+                     ' тебе самых интересных ребят для знакомства!\n\nНа следующей неделе я вернусь '
+                     'с новым собеседником!')
+
 
 '''
     message_id = update.callback_query.message.message_id

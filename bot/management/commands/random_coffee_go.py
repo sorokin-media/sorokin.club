@@ -3,7 +3,8 @@ from django.core.management import BaseCommand
 # from django.db.models import Max
 # from club import settings
 
-from users.models.user import User
+
+from users.models.mute import Muted
 from posts.models.post import Post
 from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
 
@@ -79,7 +80,7 @@ def send_message_helper(user_1, user_2, bot):
     bot.send_message(chat_id=user_1.user.telegram_id,
                      parse_mode=ParseMode.HTML,
                      text='<strong>Привет! Это система Рандом Кофе!</strong>\n\n'
-                     'Мы подобрали тебе собеседника на эту неделю!'
+                     'Мы подобрали тебе собеседника на эту неделю! '
                      f'Это {user_2.user.full_name}!\n\n'
                      f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'
                      f'Вот его Телеграм для связи: {user_2.random_coffee_tg_link}\n'
@@ -106,7 +107,14 @@ class Command(BaseCommand):
             if k < len(coffee_users):
                 if coffee_users[k].random_coffee_past_partners is not None \
                         and coffee_users[0].random_coffee_past_partners is not None\
-                        and coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners:
+                        and coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners\
+                        and (Muted.is_muted(
+                            user_from=coffee_users[k].user,
+                            user_to=coffee_users[0].user
+                        ) or Muted.is_muted(
+                            user_from=coffee_users[0].user,
+                            user_to=coffee_users[k].user
+                        )):
                     k += 1
                 else:
                     coffee_partners_hepler(coffee_users[0], coffee_users[k])
@@ -130,13 +138,3 @@ class Command(BaseCommand):
             bot.send_message(chat_id=u.user.telegram_id,
                              text='Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'
                              'На следующей неделе мы постараемся исправиться! ❤️')
-
-
-'''
-select slug, random_coffee_today, random_coffee_past_partners, id, random_coffee_last_partner_id from;
-update random_coffee set random_coffee_is=True;
-update random_coffee set random_coffee_today=True;
-update random_coffee set random_coffee_past_partners=Null;
-update random_coffee set random_coffee_last_partner_id=Null;
-update random_coffee set slug='Lena' where slug='random_TaHpaaHQ2m';
-'''
