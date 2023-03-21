@@ -1,33 +1,48 @@
 {% extends "layout.html" %}
-{% load posts %}
 {% load static %}
 {% load users %}
 {% load text_filters %}
+
 {% block title %}
-Статистика
+    Статистика
 {% endblock %}
+
 {% block og_tags %}
-<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
-<meta property="og:site_name" content="{{ settings.APP_NAME }}">
-<meta property="og:url" content="{{ settings.APP_HOST }}">
-<meta property="og:type" content="website" />
-<meta property="og:description" content="">
-<meta property="og:image" content="{% static " images/share.png" %}">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="{% static " images/share.png" %}">
+    <meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="">
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
 {% endblock %}
+
+
 {% block content %}
 {% if me.is_god %}
-{% for coffee in coffee_list %}
-{{ coffee.user.slug }} : {{ coffee.coffee_activation_time }} : {{ coffee.coffee_done }}
-<br>
-{% endfor %}
+    <div class="stats">
+        <div class="stats-header">Стата buddy</div>
+
+        <div class="stats-description"></div>
+
+        <div class="block stats-badges-top">
+            {% for coffee in coffee_list %}
+            Пользователь: {{ coffee.user.slug }}. Дата старта: {{ coffee.coffee_activation_time }}. 
+            <br>
+            Успешных созвонов: {{ coffee.coffee_done }}. Неуспешных: {{ coffee.coffee_deny }}
+            <br><br>
+            {% endfor %}
+        </div>
+    </div>
 {% else %}
-<div class="stats">
-    Не для тебя
-</div>
-</article>
+    <div class="stats">
+        Не для тебя
+    </div>
 {% endif %}
 {% endblock %}
+
+
