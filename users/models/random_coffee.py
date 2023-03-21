@@ -6,6 +6,8 @@ from datetime import timedelta
 
 from users.models.user import User
 
+import pytz
+
 class RandomCoffee(models.Model):
 
     class Meta:
@@ -25,6 +27,19 @@ class RandomCoffee(models.Model):
     random_coffee_today = models.BooleanField(default=True)
     random_coffee_past_partners = models.TextField(null=True)
     random_coffee_last_partner_id = models.UUIDField(null=True)
+    coffee_activation_time = models.DateTimeField(verbose_name='Время активации опции',
+                                                  null=True)
+    coffee_done = models.IntegerField(default=0)
+    coffee_deny = models.IntegerField(default=0)
+
+
+
+    def set_activation_coffee_time(self):
+        time_zone = pytz.UTC
+        now = datetime.now(time_zone)
+        self.coffee_activation_time = now
+        self.save()
+
 
 class RandomCoffeeLogs(models.Model):
 
@@ -32,11 +47,11 @@ class RandomCoffeeLogs(models.Model):
         db_table = 'random_coffee_logs'
 
     user = models.ForeignKey(User, related_name="random_coffee_logs_user",
-                                   on_delete=models.CASCADE,
-                                   db_column='user')
+                             on_delete=models.CASCADE,
+                             db_column='user')
     user_buddy = models.ForeignKey(User, related_name="random_coffee_logs_user_buddy",
-                                    on_delete=models.CASCADE,
-                                    db_column='user_buddy')
+                                   on_delete=models.CASCADE,
+                                   db_column='user_buddy')
     feedback = models.JSONField(null=True)
     date = models.DateField(null=True)
 

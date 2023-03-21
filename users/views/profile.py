@@ -201,18 +201,21 @@ def delete_expertise(request, expertise):
 
 @auth_required
 def random_coffee(request, user_slug):
+    user = User.objects.get(slug=user_slug)
+    if RandomCoffee.objects.filter(user=user).exists(): 
+        random_string = RandomCoffee.objects.get(user=user)
+        form = CoffeeForm(instance=random_string)
+    else:
+        random_string = RandomCoffee()
+        random_string.user = user
     if request.method == 'POST':
         form = CoffeeForm(request.POST)
         if form.is_valid():
-            user = User.objects.get(slug=user_slug)
-            if RandomCoffee.objects.filter(user=user).exists():
-                random_string = RandomCoffee.objects.get(user=user)
-            else:
-                random_string = RandomCoffee()
-                random_string.user = user
             random_string.random_coffee_is = form.cleaned_data['random_coffee_is']
             random_string.random_coffee_tg_link = form.cleaned_data['random_coffee_tg_link']
+            if random_string.random_coffee_is is True:
+                random_string.set_activation_coffee_time()
             random_string.save()
             return redirect('/')
-    form = CoffeeForm()
+    form = CoffeeForm(instance=random_string)
     return render(request, 'users/profile/random_coffee.html', {'form': form, 'user_slug': user_slug})

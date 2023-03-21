@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 
 from auth.helpers import auth_required
 from users.models.user import User
+from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
 from payments.models import Payment
 from posts.models.post import Post
 from stats.forms.money import DateForm
@@ -190,3 +191,12 @@ def posts_rating(request):
         newlist = []
         return render(request, "pages/posts-rating.html",
                       {"posts": newlist, 'form': form})
+
+@auth_required
+def random_coffee_stat(request):
+    coffee_list = RandomCoffee.objects.filter(random_coffee_is=True).all()
+    return render(
+        request,
+        'pages/coffee-rating.html',
+        {'coffee_list': coffee_list}
+    )

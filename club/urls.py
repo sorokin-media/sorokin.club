@@ -48,7 +48,7 @@ from users.views.admin import admin_profile
 from users.views.people import people
 from users.views.profile import random_coffee
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating
+from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat
 from telegramessage.views import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
@@ -127,7 +127,10 @@ urlpatterns = [
     path("stats-buddy/", stats_buddy, name="stats-buddy"),
     path("stats-content/", stats_content, name="stats-content"),
     path("posts_rating", posts_rating, name='posts_rating'),
+    path("random_coffee_stat", random_coffee_stat, name='random_coffee_stat'),
+
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
+
     path("create_telegram_message/", create_telegram_message, name='create_telegram_message'),
     path("create_telegram_message/<message_id>/", create_telegram_message, name='create_telegram_message'),
     path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
