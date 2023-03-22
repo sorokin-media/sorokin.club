@@ -267,8 +267,9 @@ class Command(BaseCommand):
         intros = Post.objects.filter(published_at__gte=yesterday_start
                                      ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
-                                                       ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
-                                                                ).all()
+                                                       ).filter(type='intro'
+                                                                ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
+                                                                         ).all()
 
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
