@@ -71,11 +71,13 @@
                         <span class="profile-status-text">{{ user.membership_days_left | days_to_years | rupluralize:"год,года,лет" }}</span>
                     {% endif %}
                 </a>
+<!--
                 <a href="{% url "edit_notifications" user.slug %}" class="profile-status">
                     <span class="profile-status-icon">☕</span>
                     <span class="profile-status-status">
                             Подключение рандом-кофе
                     </span>
+-->
                 </a>
                 <a href="{% url "random_coffee" user.slug %}" class="profile-status">
                     <span class="profile-status-icon"></span>
