@@ -1,15 +1,22 @@
+# imports for getting config data
 from club import settings
 
+# Telegram imports
 import telegram
 from telegram import Update, ParseMode
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
+# import Models
 from users.models.user import User
 from users.models.random_coffee import RandomCoffeeLogs, RandomCoffee
 
-
+# Django ORM import
 from django.db.models import Max
+
+# import custom class for sending message
+from bot.sending_message import TelegramCustomMessage
+
 
 def no_random(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
@@ -38,17 +45,32 @@ def coffee_feedback(update: Update, context: CallbackContext):
         coffee_string = RandomCoffee.objects.get(user=user)
         coffee_string.coffee_done += 1
         coffee_string.save()
-        bot.send_message(text='Как тебе собеседник? \n'
-                         'Мы никому не расскажем, ответ нужен чтобы лучше подбирать тебе новых знакомых',
-                         chat_id=user_telegram_id,
-                         reply_markup=telegram.InlineKeyboardMarkup([*[
-                             [telegram.InlineKeyboardButton("Очень интересный 🔥❤️🚀",
-                                                            callback_data=f'coffee_grade:Очень интересный')],
-                             [telegram.InlineKeyboardButton("Нормально 👍",
-                                                            callback_data=f'coffee_grade:Нормально')],
-                             [telegram.InlineKeyboardButton("Ничего особенного 🤷🏻‍♂️",
-                                                            callback_data=f'coffee_grade:Ничего особенного')]
-                         ]]))
+
+        text = 'Как тебе собеседник? \n'\
+            'Мы никому не расскажем, ответ нужен чтобы лучше подбирать тебе новых знакомых'
+
+        buttons = [
+            {
+                'text': 'Очень интересный 🔥❤️🚀',
+                'callback': 'coffee_grade:Очень интересный'
+            },
+            {
+                'text': 'Нормально 👍',
+                'callback': 'coffee_grade:Нормально'
+            },
+            {
+                'text': 'Ничего особенного 🤷🏻‍♂️',
+                'callback': 'coffee_grade:Ничего особенного'
+            }
+        ]
+
+        custom_message = TelegramCustomMessage(
+            user=user,
+            string_for_bot=text,
+            buttons=buttons
+        )
+        custom_message.send_message()
+        custom_message.COUNT_FOR_DMITRY()
     else:
         coffee_string = RandomCoffee.objects.get(user=user)
         coffee_string.coffee_deny += 1
@@ -65,11 +87,18 @@ def coffee_grade(update: Update, context: CallbackContext):
     logs_string.save()
     message_id = update.callback_query.message.message_id
     bot.delete_message(chat_id=user_telegram_id, message_id=message_id)
-    bot.send_message(chat_id=user_telegram_id,
-                     parse_mode=ParseMode.HTML,
-                     text='Спасибо, что делишься результатами! Это позволит мне обучиться и подбирать'
-                     ' тебе самых интересных ребят для знакомства!\n\nНа следующей неделе я вернусь '
-                     'с новым собеседником!')
+
+    text = 'Спасибо, что делишься результатами! Это позволит мне обучиться и подбирать'\
+        ' тебе самых интересных ребят для знакомства!\n\nНа следующей неделе я вернусь '\
+        'с новым собеседником!'
+
+    custom_message = TelegramCustomMessage(
+        user=user,
+        string_for_bot=text
+    )
+
+    custom_message.send_message()
+    custom_message.send_count_to_dmitry()
 
 
 '''
@@ -77,4 +106,3 @@ def coffee_grade(update: Update, context: CallbackContext):
     chat_id = update.effective_user.id
     bot.delete_message(chat_id=chat_id, message_id=message_id)
 '''
-#    logs_string.save()
