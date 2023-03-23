@@ -1,32 +1,34 @@
+# Django core and Django ORM imports
 from django.core.management import BaseCommand
 from django.db.models import Q
 
+# imports for getting config data
 from club import settings
 
+# import for working with words in Russian (singular, plural)
 from posts.templatetags.text_filters import rupluralize
 
+# import Models
 from posts.models.post import Post, PostExceptions
 from users.models.user import User
 from users.models.mute import Muted
-from comments.models import Comment
 
+# time imports
 from datetime import datetime
 from datetime import timedelta
 import pytz
 
-from django.template import loader
-
-from notifications.email.sender import send_club_email
-from django.dispatch import receiver
-
+# Telegram imports
 import telegram
 from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+# import Python packages
 import re
 
-import time
+# import custom class for sending message in Telegram
+from bot.sending_message import TelegramCustomMessage
 
 dict_of_year = {1: 'января',
                 2: 'февраля',
@@ -137,10 +139,9 @@ def construct_message(object):
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
     ''' foo send messages to user'''
-    COUNT_FOR_DMITRY = 0
-
     start_len = len(header_of_message)
     string_for_bot = ''
+
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
@@ -156,54 +157,16 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            time.sleep(0.100)  # beacuse of API Telegram rules
-            try:  # if reason in DB to an other, but in API rules
-                bot.send_message(text=string_for_bot,
-                                 chat_id=user.telegram_id,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
-                                 )
-                string_for_bot = ''
-                COUNT_FOR_DMITRY += 1
-            except Exception as error:
-                try:  # if reason not in DB or an other, but in API rules
-                    if 'bot was blocked by the user' in str(error):
-                        time.sleep(0.100)
-                        string_for_bot = ''
-                        bot.send_message(text='Я вляпался в доупщит!'
-                                         f'Вот ошибка: {error}\n\n'
-                                         f'\nПроблемный юзер: {user.slug}:'
-                                         f'\nЕго Telegram_id: {user.telegram_id}'
-                                         f'\nTELEGRAM DATA: {user.telegram_data}'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                    else:
-                        time.sleep(300)
-                        bot.send_message(text=string_for_bot,
-                                         chat_id=user.telegram_id,
-                                         parse_mode=ParseMode.HTML,
-                                         disable_web_page_preview=True,
-                                         )
-                        bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                         f'\nЮзер: {user.slug}:'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                        COUNT_FOR_DMITRY += 1
-                except:  # if message was not sended as result
-                    string_for_bot = ''
-                    bot.send_message(text='Я вляпался в доупщит!'
-                                     f'Вот ошибка: {error}\n\n'
-                                     f'\nПроблемный юзер: {user.slug}:'
-                                     f'\nЕго Telegram_id: {user.telegram_id}'
-                                     f'\nTELEGRAM DATA: {user.telegram_data}'
-                                     f'\nАвтор статьи: {author}',
-                                     chat_id=settings.TG_DEVELOPER_DMITRY
-                                     )
-    bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
-                     chat_id=settings.TG_DEVELOPER_DMITRY
-                     )
+            custom_message = TelegramCustomMessage(
+                etc=author,
+                user=user,
+                string_for_bot=string_for_bot
+            )
+            custom_message.send_message()
+            string_for_bot = ''
+
+    custom_message.send_count_to_dmitry(type_ = 'Рассылка постов и интро')
+
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
     ''' foo creates users list and basic text of message like Title, etc'''
@@ -240,7 +203,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=1)
+        yesterday = now - timedelta(days=10)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
@@ -258,7 +221,7 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+                                    ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
@@ -267,8 +230,11 @@ class Command(BaseCommand):
         intros = Post.objects.filter(published_at__gte=yesterday_start
                                      ).filter(published_at__lte=yesterday_finish
                                               ).filter(is_approved_by_moderator=True
-                                                       ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
-                                                                ).all()
+                                                       ).filter(type='intro'
+                                                                ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
+                                                                         ).all()
+
+        print(posts)
 
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)

@@ -1,35 +1,34 @@
+# Django core and Django ORM imports
 from django.core.management import BaseCommand
 from django.db.models import Q
 
-# from django.db.models import Max
-# from club import settings
+# imports for getting config data
+from club import settings
 
+# import for working with words in Russian (singular, plural)
 from posts.templatetags.text_filters import rupluralize
 
+# import Models
 from posts.models.post import Post, PostExceptions
 from users.models.user import User
 from users.models.mute import Muted
-from comments.models import Comment
 
+# time imports
 from datetime import datetime
 from datetime import timedelta
 import pytz
 
-from django.template import loader
-
-from notifications.email.sender import send_club_email
-from django.dispatch import receiver
-
-from club import settings
-from users.models.user import User
-
+# Telegram imports
 import telegram
 from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+# import Python packages
 import re
-import time
+
+# import custom class for sending message in Telegram
+from bot.sending_message import TelegramCustomMessage
 
 dict_of_emoji = {
     'post': '📝',
@@ -126,10 +125,9 @@ def construct_message(object):
 
 def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message):
     ''' foo send messages to user'''
-    COUNT_FOR_DMITRY = 0
-
     start_len = len(header_of_message)
     string_for_bot = ''
+
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
@@ -145,54 +143,15 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            time.sleep(0.100)  # beacuse of API Telegram rules
-            try:  # if reason in DB to an other, but in API rules
-                bot.send_message(text=string_for_bot,
-                                 chat_id=user.telegram_id,
-                                 parse_mode=ParseMode.HTML,
-                                 disable_web_page_preview=True,
-                                 )
-                string_for_bot = ''
-                COUNT_FOR_DMITRY += 1
-            except Exception as error:
-                try:  # if reason not in DB or an other, but in API rules
-                    if 'bot was blocked by the user' in str(error):
-                        time.sleep(0.100)
-                        string_for_bot = ''
-                        bot.send_message(text='Я вляпался в доупщит!'
-                                         f'Вот ошибка: {error}\n\n'
-                                         f'\nПроблемный юзер: {user.slug}:'
-                                         f'\nЕго Telegram_id: {user.telegram_id}'
-                                         f'\nTELEGRAM DATA: {user.telegram_data}'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                    else:
-                        time.sleep(300)
-                        bot.send_message(text=string_for_bot,
-                                         chat_id=user.telegram_id,
-                                         parse_mode=ParseMode.HTML,
-                                         disable_web_page_preview=True,
-                                         )
-                        bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                         f'\nЮзер: {user.slug}:'
-                                         f'\nАвтор статьи: {author}',
-                                         chat_id=settings.TG_DEVELOPER_DMITRY
-                                         )
-                        COUNT_FOR_DMITRY += 1
-                except:  # if message was not sended as result
-                    string_for_bot = ''
-                    bot.send_message(text='Я вляпался в доупщит!'
-                                     f'Вот ошибка: {error}\n\n'
-                                     f'\nПроблемный юзер: {user.slug}:'
-                                     f'\nЕго Telegram_id: {user.telegram_id}'
-                                     f'\nTELEGRAM DATA: {user.telegram_data}'
-                                     f'\nАвтор статьи: {author}',
-                                     chat_id=settings.TG_DEVELOPER_DMITRY
-                                     )
-    bot.send_message(text=f'COUNT EQUAL TO: {COUNT_FOR_DMITRY}',
-                     chat_id=settings.TG_DEVELOPER_DMITRY
-                     )
+            custom_message = TelegramCustomMessage(
+                etc=author,
+                user=user,
+                string_for_bot=string_for_bot
+            )
+            custom_message.send_message()
+            string_for_bot = ''
+
+    custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
 
 def send_email_helper(posts_list, intros_list, bot):

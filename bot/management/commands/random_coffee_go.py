@@ -1,32 +1,23 @@
+# import Django packages
 from django.core.management import BaseCommand
 
-# from django.db.models import Max
-# from club import settings
-
-
+# import Models
 from users.models.mute import Muted
 from posts.models.post import Post
 from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
 
-from datetime import datetime
-from datetime import timedelta
-import pytz
-
-from django.template import loader
-
-from notifications.email.sender import send_club_email
-from django.dispatch import receiver
-
+# imports for getting config data
 from club import settings
 
+# Telegram imports
 import telegram
 from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
-text_for_message = 'Привет! Напоминаю, что ты участвуешь в Random Coffee!\n' \
-    'Если на этой неделе ты не хочешь ни с кем знакомиться, нажми кнопку 👇 Ждем твоего ответа до 19 мск.'
-# И кнопка - Я не готов на этой неделе 😿'
+# import custom package for sending message
+from bot.sending_message import TelegramCustomMessage
+
 
 def coffee_partners_hepler(user_1, user_2):
     if user_1.random_coffee_past_partners is None:
@@ -50,7 +41,7 @@ def coffee_partners_hepler(user_1, user_2):
     user_1.save()
     user_2.save()
 
-def send_message_helper(user_1, user_2, bot):
+def send_message_helper(user_1, user_2):
     # slug could be different for post and user, careful with that
     intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
     intro_2 = Post.objects.filter(author=user_2.user).filter(type='intro').first()
@@ -77,29 +68,38 @@ def send_message_helper(user_1, user_2, bot):
     coffee_log_1.save()
     coffee_log_2.save()
 
-    bot.send_message(chat_id=user_1.user.telegram_id,
-                     parse_mode=ParseMode.HTML,
-                     text='<strong>Привет! Это система Рандом Кофе!</strong>\n\n'
-                     'Мы подобрали тебе собеседника на эту неделю! '
-                     f'Это {user_2.user.full_name}!\n\n'
-                     f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'
-                     f'Вот его Телеграм для связи: {user_2.random_coffee_tg_link}\n'
-                     f'{text_finish}')
+    text = '<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
+           'Мы подобрали тебе собеседника на эту неделю! '\
+        f'Это {user_2.user.full_name}!\n\n'\
+        f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'\
+        f'Вот его Телеграм для связи: {user_2.random_coffee_tg_link}\n'\
+        f'{text_finish}'\
 
-    bot.send_message(chat_id=user_2.user.telegram_id,
-                     parse_mode=ParseMode.HTML,
-                     text='<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'
-                     'Мы подобрали тебе собеседника на эту неделю!'
-                     f'Это {user_1.user.full_name}!\n\n'
-                     f'Вот его интро: {settings.APP_HOST}/intro/{intro_1.slug}\n\n'
-                     f'Вот его Телеграм для связи: {user_1.random_coffee_tg_link}\n\n'
-                     f'{text_finish}')
+    custom_message_1 = TelegramCustomMessage(
+        user=user_1.user,
+        string_for_bot=text
+    )
+
+    custom_message_1.send_message()
+
+    text = '<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'\
+        'Мы подобрали тебе собеседника на эту неделю!'\
+        f'Это {user_1.user.full_name}!\n\n'\
+        f'Вот его интро: {settings.APP_HOST}/intro/{intro_1.slug}\n\n'\
+        f'Вот его Телеграм для связи: {user_1.random_coffee_tg_link}\n\n'\
+        f'{text_finish}'
+
+    custom_message_2 = TelegramCustomMessage(
+        user=user_2.user,
+        string_for_bot=text
+    )
+
+    custom_message_2.send_message()
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-#        coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=False).filter(random_coffee_is=True).all())
         coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all())
         k = 1
         # random_coffee_today True - user is not busy
@@ -118,16 +118,20 @@ class Command(BaseCommand):
                     k += 1
                 else:
                     coffee_partners_hepler(coffee_users[0], coffee_users[k])
-                    send_message_helper(coffee_users[0], coffee_users[k], bot)
+                    send_message_helper(coffee_users[0], coffee_users[k])
                     coffee_users.pop(k)
                     coffee_users.pop(0)
             else:
                 coffee_users[0].random_coffee_last_partner_id = None
                 coffee_users[0].random_coffee_today = False
                 coffee_users[0].save()
-                bot.send_message(chat_id=coffee_users[0].user.telegram_id,
-                                 text='Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'
-                                 'На следующей неделе мы постараемся исправиться! ❤️')
+                text = 'Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'\
+                    'На следующей неделе мы постараемся исправиться! ❤️'
+                custom_message = TelegramCustomMessage(
+                    string_for_bot=text,
+                    user=coffee_users[0].user
+                )
+                custom_message.send_message()
                 coffee_users = coffee_users[1:]
                 k = 1
         while coffee_users:
@@ -135,6 +139,12 @@ class Command(BaseCommand):
             u.random_coffee_last_partner_id = None
             u.random_coffee_today = False
             u.save()
-            bot.send_message(chat_id=u.user.telegram_id,
-                             text='Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'
-                             'На следующей неделе мы постараемся исправиться! ❤️')
+            text = 'Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'\
+                'На следующей неделе мы постараемся исправиться! ❤️'
+            custom_message = TelegramCustomMessage(
+                string_for_bot=text,
+                user=u.user
+            )
+            custom_message.send_message()
+
+        TelegramCustomMessage().send_count_to_dmitry(type_='Всем участникам рандом-кофе отправили данные для созвона. ')
