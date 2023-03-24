@@ -10,7 +10,8 @@ class ChooseSubscription(ModelForm):
             "daily_email_digest",
             "weekly_email_digest",
             "tg_yesterday_best_posts",
-            "tg_weekly_best_posts"
+            "tg_weekly_best_posts",
+            "day_helpfullness_digest"
         }
 
     YES_NO = (
@@ -30,6 +31,10 @@ class ChooseSubscription(ModelForm):
     tg_weekly_best_posts = BooleanField(label="Лучшие посты и интересные интро за прошедшую неделю в Telegram",
                                               required=False,
                                               widget=CheckboxInput())
+    day_helpfullness_digest = BooleanField(label="Полезности сегодняшего дня в Telegram",
+                                           required=False,
+                                           widget=CheckboxInput())
+    
 
 class RandomCoffee(ModelForm):
     class Meta:

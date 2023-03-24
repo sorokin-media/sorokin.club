@@ -93,6 +93,7 @@ def edit_notifications(request, user_slug):
             user.weekly_email_digest = form.cleaned_data['weekly_email_digest']
             user.tg_yesterday_best_posts = form.cleaned_data['tg_yesterday_best_posts']
             user.tg_weekly_best_posts = form.cleaned_data['tg_weekly_best_posts']
+            user.day_helpfullness_digest = form.cleaned_data['day_helpfullness_digest']
             user.save()
             return redirect("profile", user.slug)
     user = User.objects.get(slug=user_slug)
