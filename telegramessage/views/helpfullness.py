@@ -23,7 +23,7 @@ def show_helpfullness_list(request):
 def create_day_helpfullness(request, id=None, is_archived=False):
     if request.method == 'POST':
         if "Отправить тест Алексею" in request.POST:
-            user = User.objects.get(slug='dev')
+            user = User.objects.get(slug='romashovdmitryo')
             if request.POST['image_url'] != '':
                 custom_message = TelegramCustomMessage(
                     user=user,
