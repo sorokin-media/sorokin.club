@@ -203,7 +203,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        yesterday = now - timedelta(days=10)
+        yesterday = now - timedelta(days=1)
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
@@ -221,7 +221,7 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=now
+                                    ).filter(published_at__lte=yesterday_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
