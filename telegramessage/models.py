@@ -7,7 +7,7 @@ from django.db import models
 from users.models.user import User
 
 class TelegramMesage(models.Model):
-
+    '''Messages that are sent according to the schedule from the moment of registration. '''
     class Meta:
         db_table = 'telegram_messages'
 
@@ -74,7 +74,7 @@ class TelegramMesage(models.Model):
 
 
 class TelegramMesageQueue(models.Model):
-
+    '''Queue Model for objects of Model TelegramMesage '''
     class Meta:
         db_table = 'telegram_messages_queue'
 
@@ -106,3 +106,25 @@ class TelegramMesageQueue(models.Model):
         string_of_ids = string_of_ids + id_of_message
         self.id_of_sended_messages = string_of_ids
         self.save()
+
+class DayHelpfulness(models.Model):
+
+    class Meta:
+        db_table = 'day_help_messages'
+
+    TRUE_FALSE_CHOICES = (
+        (True, 'Yes'),
+        (False, 'No')
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(unique=True, null=False, blank=False, max_length=256, verbose_name='Название сообщения')
+    text = models.TextField(null=True, blank=True, verbose_name='Текст сообщения')
+    image_url = models.CharField(default=None, blank=True, max_length=256, verbose_name='Ссылка на изображение')
+    order = models.IntegerField(null=True)
+    is_archived = models.BooleanField(null=False,
+                                      choices=TRUE_FALSE_CHOICES,
+                                      verbose_name='Сохранить как черновик',
+                                      default=False)
+    is_sended = models.BooleanField(null=False, default=False)
+    

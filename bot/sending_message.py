@@ -16,11 +16,12 @@ class TelegramCustomMessage():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
-    def __init__(self, etc='no data', buttons=None, **kwargs) -> None:
+    def __init__(self, etc='no data', buttons=None, photo=None, **kwargs) -> None:
 
         self.string_for_bot = kwargs['string_for_bot']
         self.etc = etc
         self.buttons = buttons
+        self.photo = photo
 
         user = kwargs['user']
 
@@ -45,6 +46,7 @@ class TelegramCustomMessage():
 
         try:  # if reason in DB to an other, but in API rules
             self.bot.send_message(text=self.string_for_bot,
+                                  photo=self.photo,
                                   chat_id=self.telegram_id,
                                   parse_mode=ParseMode.HTML,
                                   disable_web_page_preview=True,
@@ -66,6 +68,7 @@ class TelegramCustomMessage():
                 else:
                     time.sleep(300)
                     self.bot.send_message(text=self.string_for_bot,
+                                          photo=self.photo,
                                           chat_id=self.telegram_id,
                                           parse_mode=ParseMode.HTML,
                                           disable_web_page_preview=True,
