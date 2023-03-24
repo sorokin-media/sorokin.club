@@ -47,6 +47,8 @@ def create_day_helpfullness(request, id=None, is_archived=False):
             form = CreateDayHelpfullness(request.POST, instance=obj)
             if form.is_valid():
                 form.save()
+            else:
+                return render(request, 'message/create_day_helpfullness.html', {'form': form, 'validation_errors': form.errors})
             return redirect('show_helpfullness_list')
         # if new message
         form = CreateDayHelpfullness(request.POST)
@@ -54,6 +56,8 @@ def create_day_helpfullness(request, id=None, is_archived=False):
             instance = form.save(commit=False)
             instance.is_archived=is_archived
             instance.save()
+        else:
+            return render(request, 'message/create_day_helpfullness.html', {'form': form, 'validation_errors': form.errors})
         return redirect('show_helpfullness_list')
     if id is None:
         form = CreateDayHelpfullness()

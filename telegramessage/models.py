@@ -111,6 +111,8 @@ class DayHelpfulness(models.Model):
 
     class Meta:
         db_table = 'day_help_messages'
+        ordering = ['order']
+        verbose_name = 'Полезняха дня'
 
     TRUE_FALSE_CHOICES = (
         (True, 'Yes'),
@@ -121,7 +123,7 @@ class DayHelpfulness(models.Model):
     name = models.CharField(unique=True, null=False, blank=False, max_length=256, verbose_name='Название сообщения')
     text = models.TextField(null=True, blank=True, verbose_name='Текст сообщения')
     image_url = models.CharField(default=None, blank=True, max_length=256, verbose_name='Ссылка на изображение')
-    order = models.IntegerField(null=True)
+    order = models.IntegerField(null=True, unique=True, verbose_name='Порядок отправки')
     is_archived = models.BooleanField(null=False,
                                       choices=TRUE_FALSE_CHOICES,
                                       verbose_name='Сохранить как черновик',

@@ -27,12 +27,14 @@
 
     <div class="form-row compose-form-title">
 
-        {% if messages %}
-        {% for message in messages %}
-        <h1>{{ message }}</h1>
-        {% endfor %}
+        {% if validation_errors %}
+        {% if "order" in validation_errors.as_text %}
+        <div style="color: rgb(255, 0, 0);font-size:20px">
+            <i> Полезняха дня с таким порядком отправки уже есть </i>
+        </div>
         {% endif %}
-
+        {% endif %}
+        <br>
         <small><a href="{% url 'show_helpfullness_list' %}">Вернуться к списку</a></small>
         <br>
         {% if id %}
@@ -58,9 +60,7 @@
                 <button id="send message" type="'submit" name="Отправить тест Алексею">Отправить тест Алексею</button>
                 <br><br><br>
                 {% if id %}
-                <div class="div-3">
                     <a style="color: rgb(255, 0, 247)" href="{% url 'delete_day_helpfullness' id %}">Удалить сообщение</a>
-                </div>
                 {% endif %}
                 <div class="menu">
 
