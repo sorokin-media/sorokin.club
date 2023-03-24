@@ -49,7 +49,8 @@ from users.views.people import people
 from users.views.profile import random_coffee
 from search.api import api_search_users
 from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat
-from telegramessage.views import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
+from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
+from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -136,6 +137,10 @@ urlpatterns = [
     path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
     path("modify_telegram_message/<message_id>/", modify_telegram_message, name='modify_telegram_message'),
     path("delete_telegram_message/<message_id>/", delete_telegram_message, name='delete_telegram_message'),
+    path("create_day_helpfullness/<id>", create_day_helpfullness, name="create_day_helpfullness"),
+    path("create_day_helpfullness", create_day_helpfullness, name="create_day_helpfullness"),
+    path("show_helpfullness_list", show_helpfullness_list, name="show_helpfullness_list"),
+    path("delete_day_helpfullness/<id>", delete_day_helpfullness, name="delete_day_helpfullness"),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),

@@ -1,16 +1,22 @@
+# import Django packages
 from django.shortcuts import render, redirect
-from django.http.response import HttpResponse
 from django.contrib import messages
-import uuid
 
-from .forms import CreateMessage
-from .models import TelegramMesage
+# import Forms and Models
+from telegramessage.forms import CreateMessage
+from telegramessage.models import TelegramMesage
 from users.models.user import User
 
+# import config settings
 from club import settings
 
+# import class for sending message in Telegram
+from bot.sending_message import TelegramCustomMessage
+
+# import auth decorators 
 from auth.helpers import auth_required
 
+# Telegram imports
 import telegram
 from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
@@ -37,19 +43,22 @@ def check_uniqie_helper(name, id):
 def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
     if "Отправить тест Алексею" in request.POST:
-        bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-        tg_id_of_alex = User.objects.filter(slug='bigsmart').first().telegram_id
-        tg_id_of_dima = User.objects.filter(slug='romashovdmitryo').first().telegram_id
+        tg_id_of_alex = User.objects.filter(slug='bigsmart').first()
+        tg_id_of_dima = User.objects.filter(slug='romashovdmitryo').first()
         tg_ids = [tg_id_of_alex, tg_id_of_dima]
         for _ in tg_ids:
             if image_url != '':
-                bot.send_photo(
-                    chat_id=_,
-                    photo=image_url
+                custom_message = TelegramCustomMessage(
+                    user=_,
+                    photo=image_url,
+                    string_for_bot=None
                 )
-            bot.send_message(chat_id=_,
-                             text=text,
-                             parse_mode=ParseMode.HTML)
+                custom_message.send_message()
+            custom_message = TelegramCustomMessage(
+                user=_,
+                string_for_bot=text
+            )
+        custom_message.send_count_to_dmitry()
         message.save_data(days=days, hours=hours, minutes=minutes,
                           name=name, text=text, is_finish_of_queue=is_finish_of_queue,
                           is_archived=True, image_url=image_url)
@@ -118,3 +127,4 @@ def delete_telegram_message(request, message_id):
     id = message_id
     TelegramMesage.objects.filter(id=id).delete()
     return redirect('show_telegram_messages')
+

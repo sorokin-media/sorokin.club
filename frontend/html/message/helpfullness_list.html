@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load posts %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+<div class="container">
+<div class="menu-left">
+<a class="" href="{% url 'create_day_helpfullness' %}">Создать сообщение</a>
+</div>
+<br>
+<br>
+</div>
+{% for message in messages %}
+<div class="container">
+
+    <article class="block feed-post h-entry feed-post-post">
+        <div class="feed-post-header">
+            <div class="feed-post-title">
+                {% if message.is_archived == True %}
+                <small><font color="red">Черновик</font></small>
+                <br>
+                {% endif %}
+                <a href="{% url 'create_day_helpfullness' message.id %}" class="p-name post-title-link"> {{ message.name }}</a>
+                <br>Порядок отправки: {{ message.order }}
+            </div>
+        </div>
+        </div>
+
+
+</div>
+{% endfor %}
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+{% endif %}
+{% endblock %}
+</html>

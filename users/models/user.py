@@ -124,6 +124,8 @@ class User(models.Model, ModelDiffMixin):
     tg_weekly_best_posts = models.BooleanField(verbose_name='Лучшие посты и интересные '
                                                'интро клуба за прошедшую неделю в Telegram',
                                                default=True)
+    day_helpfullness_digest = models.BooleanField(verbose_name='Ползеность дня', default=False)
+
 
     class Meta:
         db_table = "users"
