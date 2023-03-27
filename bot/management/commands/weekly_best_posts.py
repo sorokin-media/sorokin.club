@@ -210,6 +210,7 @@ class Command(BaseCommand):
             minute=59,
             second=59
         ))
+
         posts = Post.objects.filter(published_at__gte=week_ago_start
                                     ).filter(published_at__lte=week_ago_finish
                                              ).filter(is_approved_by_moderator=True
