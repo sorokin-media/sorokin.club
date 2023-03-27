@@ -231,4 +231,4 @@ class Command(BaseCommand):
 #            send_email_helper(posts_list, intros_list, bot)
 
         if intros:
-            send_email_helper(intros_list, bot, posts_list=None)
+            send_email_helper(intros_list=intros_list, bot=bot, posts_list=None)
