@@ -18,6 +18,12 @@ from datetime import datetime
 from datetime import timedelta
 import pytz
 
+# Telegram imports
+import telegram
+from telegram import Update, ParseMode
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import CallbackContext
+
 # import Python packages
 import re
 
