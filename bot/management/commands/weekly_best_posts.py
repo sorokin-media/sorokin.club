@@ -204,21 +204,25 @@ class Command(BaseCommand):
             minute=59,
             second=59
         ))
-        posts = Post.objects.filter(published_at__gte=week_ago_start
-                                    ).filter(published_at__lte=week_ago_finish
-                                             ).filter(is_approved_by_moderator=True
-                                                      ).exclude(type='intro'
-                                                                ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
-                                                                         ).all()
+#        posts = Post.objects.filter(published_at__gte=week_ago_start
+#                                    ).filter(published_at__lte=week_ago_finish
+#                                             ).filter(is_approved_by_moderator=True
+#                                                      ).exclude(type='intro'
+#                                                                ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
+#                                                                         ).all()
 
         intros = Post.objects.filter(published_at__gte=week_ago_start
                                      ).filter(published_at__lte=week_ago_finish
                                               ).filter(is_approved_by_moderator=True
-                                                       ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
-                                                                ).all()
+                                                       ).filter(type='intro'
+                                                                ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
+                                                                         ).all()
 
-        posts_list = point_counter(posts)
+#        posts_list = point_counter(posts)
         intros_list = point_counter(intros)
 
-        if intros or posts:
-            send_email_helper(posts_list, intros_list, bot)
+#        if intros or posts:
+#            send_email_helper(posts_list, intros_list, bot)
+
+        if intros:
+            send_email_helper(intros_list, bot, posts_list=None)
