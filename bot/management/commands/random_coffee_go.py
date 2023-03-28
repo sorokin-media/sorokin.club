@@ -46,11 +46,11 @@ def send_message_helper(user_1, user_2):
     intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
     intro_2 = Post.objects.filter(author=user_2.user).filter(type='intro').first()
 
-    text_finish = 'Вам нужно созвониться до вечера пятницы'
-    'Напоминаем: мы рекомендуем не просто переписываться текстом,'
-    'а обязательно созваниваться. Текст передает только крупицу важной'
-    'информации, звук - чуть больше, а с видео можно получить максимум,'
-    'возможный на расстоянии.'
+    text_finish = '<strong>Вам нужно созвониться до вечера пятницы'\
+        'Напоминаем: мы рекомендуем не просто переписываться текстом,'\
+        'а обязательно созваниваться. Текст передает только крупицу важной'\
+        'информации, звук - чуть больше, а с видео можно получить максимум,'\
+        'возможный на расстоянии </strong>🔥🕒🔥'\
 
     user_1.random_coffee_last_partner_id = user_2.user.id
     user_2.random_coffee_last_partner_id = user_1.user.id
@@ -68,11 +68,20 @@ def send_message_helper(user_1, user_2):
     coffee_log_1.save()
     coffee_log_2.save()
 
-    text = '<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
+    #formatting for Telegram
+    link_1 = user_1.random_coffee_tg_link
+    link_2 = user_2.random_coffee_tg_link
+
+    if link_1[0] != '@':
+        link_1 = '@' + link_1
+    if link_2[0] != '@':
+        link_2 = '@' + link_2
+
+    text = '\n<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
            'Мы подобрали тебе собеседника на эту неделю! '\
         f'Это {user_2.user.full_name}!\n\n'\
         f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'\
-        f'Вот его Телеграм для связи: {user_2.random_coffee_tg_link}\n'\
+        f'Вот его Телеграм для связи: {link_2}\n'\
         f'{text_finish}'\
 
     custom_message_1 = TelegramCustomMessage(
@@ -86,7 +95,7 @@ def send_message_helper(user_1, user_2):
         'Мы подобрали тебе собеседника на эту неделю!'\
         f'Это {user_1.user.full_name}!\n\n'\
         f'Вот его интро: {settings.APP_HOST}/intro/{intro_1.slug}\n\n'\
-        f'Вот его Телеграм для связи: {user_1.random_coffee_tg_link}\n\n'\
+        f'Вот его Телеграм для связи: {link_1}\n\n'\
         f'{text_finish}'
 
     custom_message_2 = TelegramCustomMessage(
@@ -101,6 +110,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all())
+        # look bellow, change that
+        u_ = coffee_users[0].user
         k = 1
         # random_coffee_today True - user is not busy
         while len(coffee_users) >= 2:
@@ -147,4 +158,10 @@ class Command(BaseCommand):
             )
             custom_message.send_message()
 
-        TelegramCustomMessage().send_count_to_dmitry(type_='Всем участникам рандом-кофе отправили данные для созвона. ')
+        # change this one!
+        custom_message = TelegramCustomMessage(
+            string_for_bot='',
+            user=u_
+        )
+
+        custom_message.send_count_to_dmitry(type_='Всем участникам рандом-кофе отправили данные для созвона. ')

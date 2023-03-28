@@ -9,6 +9,7 @@ from users.models.expertise import UserExpertise
 from common.forms import ImageUploadField
 from users.models.random_coffee import RandomCoffee
 
+from django.forms import CheckboxInput, BooleanField
 
 class ProfileEditForm(ModelForm):
     avatar = ImageUploadField(
@@ -108,3 +109,12 @@ class CoffeeForm(ModelForm):
             'random_coffee_is',
             'random_coffee_tg_link'
         }
+
+        YES_NO = (
+            (True, 'Yes'),
+            (False, 'No')
+        )
+
+        daily_email_digest = BooleanField(label='Я хочу участвовать в клубном Random Coffee!',
+                                                required=False,
+                                                widget=CheckboxInput())

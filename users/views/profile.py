@@ -201,21 +201,46 @@ def delete_expertise(request, expertise):
 
 @auth_required
 def random_coffee(request, user_slug):
+
     user = User.objects.get(slug=user_slug)
-    if RandomCoffee.objects.filter(user=user).exists(): 
+
+    if user.telegram_id is None:
+        tg_data='no telegram_id'
+        form = CoffeeForm()
+    elif RandomCoffee.objects.filter(user=user).exists(): 
         random_string = RandomCoffee.objects.get(user=user)
         form = CoffeeForm(instance=random_string)
+        if not random_string.random_coffee_tg_link:
+            tg_data = user.telegram_data['username']
+        else:
+            tg_data = random_string.random_coffee_tg_link
     else:
+        tg_data = user.telegram_data['username']
         random_string = RandomCoffee()
+        random_string.random_coffee_tg_link
         random_string.user = user
+        form = CoffeeForm(instance=random_string)
     if request.method == 'POST':
         form = CoffeeForm(request.POST)
+
+        # that needs changes
+        if request.POST.get('day_random_coffee') == 'on':
+            form.random_coffee_is = True
+        else:
+            form.random_coffee_is = False
+
+        print(form)
+
         if form.is_valid():
             random_string.random_coffee_is = form.cleaned_data['random_coffee_is']
             random_string.random_coffee_tg_link = form.cleaned_data['random_coffee_tg_link']
             if random_string.random_coffee_is is True:
                 random_string.set_activation_coffee_time()
             random_string.save()
-            return redirect('/')
-    form = CoffeeForm(instance=random_string)
-    return render(request, 'users/profile/random_coffee.html', {'form': form, 'user_slug': user_slug})
+            return redirect('/') 
+    
+    return render(request, 'users/profile/random_coffee.html', {
+        'form': form,
+        'user_slug': user_slug,
+        'tg_data': tg_data
+    })

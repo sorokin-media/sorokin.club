@@ -1,25 +1,84 @@
 {% extends "layout.html" %}
+{% load posts %}
 {% load static %}
-
+{% load users %}
+{% load text_filters %}
 {% block title %}
-    Редактирование профиля — {{ block.super }}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
 {% endblock %}
 
 {% block content %}
-    <div class="content user-edit">
-            <div class="form-title">☕<br>Подключение рандом-кофе</div>
 
-            <div class="block">
-                <div class="form-row">
-                    <form action="{% url 'random_coffee' user_slug %}" method="post">{% csrf_token %}
-                        {% for field in form %}
-                        {{ field.label_tag }}
-                        {{ field }}
-                        <br><br>
-                        {% endfor %}
-                    <input type="submit" class="button button-big" value="Сохранить">
+<div class="content user-edit">
+    <div class="form-title">☕<br>Подключение рандом-кофе</div>
+
+    <div class="block">
+        <div class="form-row">
+            {% if tg_data != "no telegram_id" %}
+            <form action="{% url 'random_coffee' user_slug %}" method="post" class="settings-form">{% csrf_token %}
+                {% for field in form %}
+
+                <!-- 
+    there is a better variant to use django-widget-tweaks
+ -->
+
+                {% if field.name == "random_coffee_tg_link" %}
+                <label for="id_random_coffee_tg_link">Ваш Телеграм для связи с собеседником:</label>
+
+                {% if tg_data.0 == '@' %}
+                <input value="{{ tg_data }}" type="text" name="random_coffee_tg_link" maxlength="128"
+                    required="required" id="id_random_coffee_tg_link">
+                {% else %}
+                <input value="@{{ tg_data }}" type="text" name="random_coffee_tg_link" maxlength="128"
+                    required="required" id="id_random_coffee_tg_link">
+                {% endif %}
+
+                {% else %}
+
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ field.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ field }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
+                    {% endif %}
+
+                    <br><br>
+
+                    {% endfor %}
+                    <input type="submit" class="button button-big" value="Сохранить">
+                    {% else %}
+
+                    <a href="/">Вернуться на главную</a>
+                    <br>
+                    <br>
+                    <i> Надо подключить сначала бота!</i>
+
+                    {% endif %}
+                </div>
+        </div>
+
     </div>
-{% endblock %}
+
+    {% endblock %}

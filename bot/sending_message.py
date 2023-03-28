@@ -8,11 +8,12 @@ from telegram.ext import CallbackContext
 import time
 
 # import static config data
-from club.settings import TG_DEVELOPER_DMITRY, TELEGRAM_TOKEN
+from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 
 
 class TelegramCustomMessage():
 
+    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
@@ -58,13 +59,14 @@ class TelegramCustomMessage():
                 if 'bot was blocked by the user' in str(error):
                     time.sleep(0.100)
                     self.string_for_bot = ''
-                    self.bot.send_message(text='Бота заблокировал. '
-                                          f'\Юзер: {self.slug}:'
-                                          f'\nTelegram_id: {self.telegram_id}'
-                                          f'\nTELEGRAM DATA: {self.telegram_data}'
-                                          f'\nДопольнительная информация: {self.etc}',
-                                          chat_id=TG_DEVELOPER_DMITRY
-                                          )
+                    for logs_user in self.logs_list:
+                        self.bot.send_message(text='Бота заблокировал. '
+                                              f'\Юзер: {self.slug}:'
+                                              f'\nTelegram_id: {self.telegram_id}'
+                                              f'\nTELEGRAM DATA: {self.telegram_data}'
+                                              f'\nДопольнительная информация: {self.etc}',
+                                              chat_id=logs_user
+                                              )
                 else:
                     time.sleep(300)
                     self.bot.send_message(text=self.string_for_bot,
@@ -74,29 +76,33 @@ class TelegramCustomMessage():
                                           disable_web_page_preview=True,
                                           reply_markup=self.buttons
                                           )
-                    self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                          f'\nЮзер: {self.slug}:'
-                                          f'\Дополнительная информация: {self.etc}',
-                                          chat_id=TG_DEVELOPER_DMITRY
-                                          )
+                    for logs_user in self.logs_list:
+                        self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
+                                              f'\nЮзер: {self.slug}:'
+                                              f'\Дополнительная информация: {self.etc}',
+                                              chat_id=logs_user
+                                              )
                     TelegramCustomMessage.COUNT_FOR_DMITRY += 1
             except:  # if message was not sended as result
                 self.string_for_bot = ''
-                self.bot.send_message(text='Я вляпался в доупщит!'
-                                      f'Вот ошибка: {error}\n\n'
-                                      f'\nПроблемный юзер: {self.slug}:'
-                                      f'\nЕго Telegram_id: {self.telegram_id}'
-                                      f'\nTELEGRAM DATA: {self.telegram_data}'
-                                      f'\nДополнительная информация: {self.etc}',
-                                      chat_id=TG_DEVELOPER_DMITRY
-                                      )
+                for logs_user in self.logs_list:
+                    self.bot.send_message(text='Я вляпался в доупщит!'
+                                          f'Вот ошибка: {error}\n\n'
+                                          f'\nПроблемный юзер: {self.slug}:'
+                                          f'\nЕго Telegram_id: {self.telegram_id}'
+                                          f'\nTELEGRAM DATA: {self.telegram_data}'
+                                          f'\nДополнительная информация: {self.etc}',
+                                          chat_id=logs_user
+                                          )
 
     def send_count_to_dmitry(self, type_=None):
 
         if type_ is not None:
 
-            self.bot.send_message(text=f'COUNT EQUAL TO: {TelegramCustomMessage.COUNT_FOR_DMITRY}\n'
-                                  f'Тип рассылки: {type_}',
-                                  chat_id=TG_DEVELOPER_DMITRY
-                                  )
-        TelegramCustomMessage.COUNT_FOR_DMITRY = 0
+            for logs_user in self.logs_list:
+
+                self.bot.send_message(text=f'COUNT EQUAL TO: {TelegramCustomMessage.COUNT_FOR_DMITRY}\n'
+                                      f'Тип рассылки: {type_}',
+                                      chat_id=logs_user
+                                      )
+            TelegramCustomMessage.COUNT_FOR_DMITRY = 0

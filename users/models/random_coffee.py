@@ -19,7 +19,6 @@ class RandomCoffee(models.Model):
     )
     user = models.ForeignKey(User, related_name="random_coffee", on_delete=models.CASCADE, db_column='user')
     random_coffee_is = models.BooleanField(default=False,
-                                           choices=TRUE_FALSE_CHOICES,
                                            verbose_name='Я хочу участвовать в клубном Random Coffee!')
     random_coffee_tg_link = models.CharField(null=True,
                                              max_length=128,
