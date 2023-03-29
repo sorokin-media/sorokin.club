@@ -66,7 +66,10 @@ def profile(request, user_slug):
     friend = Friend.objects.filter(user_from=request.me, user_to=user).first()
     muted = Muted.objects.filter(user_from=request.me, user_to=user).first()
 
-    random_coffee_status = RandomCoffee.objects.get(user=user)
+    if RandomCoffee.objects.filter(user=user).exists():
+        random_coffee_status = RandomCoffee.objects.get(user=user)
+    else:
+        random_coffee_status = False
 
     return render(request, "users/profile.html", {
         "user": user,
@@ -208,9 +211,9 @@ def random_coffee(request, user_slug):
     user = User.objects.get(slug=user_slug)
 
     if user.telegram_id is None:
-        tg_data='no telegram_id'
+        tg_data = 'no telegram_id'
         form = CoffeeForm()
-    elif RandomCoffee.objects.filter(user=user).exists(): 
+    elif RandomCoffee.objects.filter(user=user).exists():
         random_string = RandomCoffee.objects.get(user=user)
         form = CoffeeForm(instance=random_string)
         if not random_string.random_coffee_tg_link:
@@ -240,8 +243,8 @@ def random_coffee(request, user_slug):
             if random_string.random_coffee_is is True:
                 random_string.set_activation_coffee_time()
             random_string.save()
-            return redirect('/') 
-    
+            return redirect('/')
+
     return render(request, 'users/profile/random_coffee.html', {
         'form': form,
         'user_slug': user_slug,
