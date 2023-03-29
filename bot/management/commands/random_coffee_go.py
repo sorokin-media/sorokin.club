@@ -84,8 +84,8 @@ def send_message_helper(user_1, user_2):
     text = '\n<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
            'Мы подобрали тебе собеседника на эту неделю! '\
         f'Это {user_2.user.full_name}!\n\n'\
-        f'Вот его интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'\
-        f'Вот его Телеграм для связи: {link_2}\n'\
+        f'Вот интро: {settings.APP_HOST}/intro/{intro_2.slug}\n\n'\
+        f'Вот его Телеграм для связи: {link_2}\n\n'\
         f'{text_finish}'\
 
     custom_message_1 = TelegramCustomMessage(

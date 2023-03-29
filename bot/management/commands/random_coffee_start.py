@@ -15,6 +15,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        all_coffee_string = RandomCoffee.objects.all()
+        all_coffee_string.update(random_coffee_last_partner_id=None)
+
         coffee_users = RandomCoffee.objects.filter(random_coffee_is=True).all()
 
         for coffee_user in coffee_users:
