@@ -66,6 +66,8 @@ def profile(request, user_slug):
     friend = Friend.objects.filter(user_from=request.me, user_to=user).first()
     muted = Muted.objects.filter(user_from=request.me, user_to=user).first()
 
+    random_coffee_status = RandomCoffee.objects.get(user=user)
+
     return render(request, "users/profile.html", {
         "user": user,
         "intro": intro,
@@ -82,6 +84,7 @@ def profile(request, user_slug):
         "similarity": similarity,
         "friend": friend,
         "muted": muted,
+        'random_coffee_status': random_coffee_status
     })
 
 
