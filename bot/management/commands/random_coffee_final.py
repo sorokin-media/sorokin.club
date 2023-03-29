@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        coffee_users = RandomCoffee.objects.filter(random_coffee_today=True).all()
+        coffee_users = RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all()
         for coffee_user in coffee_users:
             coffee_buddy_id = coffee_user.random_coffee_last_partner_id
             coffee_buddy_full_name = User.objects.filter(id=coffee_buddy_id).first().full_name
