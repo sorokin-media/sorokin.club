@@ -18,15 +18,10 @@ from telegram.ext import CallbackContext
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
+from club.settings import TG_DEVELOPER_DMITRY
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        user = User.objects.get(slug='romashovdmitryo')
-        string_for_bot = 'string_for_bot'
-
-        custom_message = TelegramCustomMessage(
-            user=user,
-            string_for_bot=string_for_bot
-        )
-        custom_message.send_count_to_dmitry(type_='done')
+        print(TG_DEVELOPER_DMITRY)

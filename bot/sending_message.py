@@ -14,7 +14,6 @@ from users.models.user import User
 # import static config data
 from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 
-
 class TelegramCustomMessage():
 
     logs_list = [TG_DEVELOPER_DMITRY] #, TG_ALEX]
