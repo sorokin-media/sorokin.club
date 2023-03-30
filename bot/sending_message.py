@@ -129,7 +129,7 @@ class TelegramCustomMessage():
 
     def send_count_to_dmitry(self, type_=None):
 
-        kek = self.logs_list['TG_DEVELOPER_DMITRY']
+        kek = self.logs_list[0]
         print(f'\n\nLOGS USERS: {kek}\n ! ! ! ')
         print(f'SELF TYPE: {type_}')
 
