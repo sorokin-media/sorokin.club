@@ -18,7 +18,6 @@ from telegram.ext import CallbackContext
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):

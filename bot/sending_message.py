@@ -18,7 +18,9 @@ from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 class TelegramCustomMessage():
 
     logs_list = [TG_DEVELOPER_DMITRY] #, TG_ALEX]
+    print('\n\nbot start\n\n')
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    print('\n\nbot finish\n\n')
     COUNT_FOR_DMITRY = 0
 
     def __init__(self, etc='no data', buttons=None, photo=None, **kwargs) -> None:
@@ -126,6 +128,10 @@ class TelegramCustomMessage():
             random_coffee.save()
 
     def send_count_to_dmitry(self, type_=None):
+
+        kek = self.logs_list['TG_DEVELOPER_DMITRY']
+        print(f'\n\nLOGS USERS: {kek}\n ! ! ! ')
+        print(f'SELF TYPE: {type_}')
 
         if type_ is not None:
 
