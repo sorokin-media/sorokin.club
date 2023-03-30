@@ -7,13 +7,17 @@ from telegram.ext import CallbackContext
 # time imports for pauses between sending messages
 import time
 
+# import models
+from users.models.random_coffee import RandomCoffee
+from users.models.user import User
+
 # import static config data
 from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 
 
 class TelegramCustomMessage():
 
-    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
+    logs_list = [TG_DEVELOPER_DMITRY] #, TG_ALEX]
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
@@ -46,14 +50,21 @@ class TelegramCustomMessage():
         time.sleep(0.100)  # beacuse of API Telegram rules
 
         try:  # if reason in DB to an other, but in API rules
-            self.bot.send_message(text=self.string_for_bot,
-                                  photo=self.photo,
-                                  chat_id=self.telegram_id,
-                                  parse_mode=ParseMode.HTML,
-                                  disable_web_page_preview=True,
-                                  reply_markup=self.buttons
-                                  )
+            message = self.bot.send_message(text=self.string_for_bot,
+                                            photo=self.photo,
+                                            chat_id=self.telegram_id,
+                                            parse_mode=ParseMode.HTML,
+                                            disable_web_page_preview=True,
+                                            reply_markup=self.buttons
+                                            )
             TelegramCustomMessage.COUNT_FOR_DMITRY += 1
+
+            # for deleting message in future
+            u = User.objects.get(telegram_id=self.telegram_id)
+            random_coffee = RandomCoffee.objects.get(user=u)
+            random_coffee.last_coffee_message_id = message['message_id']
+            random_coffee.save()
+
         except Exception as error:
             try:  # if reason not in DB or an other, but in API rules
                 if 'bot was blocked by the user' in str(error):
@@ -69,13 +80,20 @@ class TelegramCustomMessage():
                                               )
                 else:
                     time.sleep(300)
-                    self.bot.send_message(text=self.string_for_bot,
-                                          photo=self.photo,
-                                          chat_id=self.telegram_id,
-                                          parse_mode=ParseMode.HTML,
-                                          disable_web_page_preview=True,
-                                          reply_markup=self.buttons
-                                          )
+                    message = self.bot.send_message(text=self.string_for_bot,
+                                                    photo=self.photo,
+                                                    chat_id=self.telegram_id,
+                                                    parse_mode=ParseMode.HTML,
+                                                    disable_web_page_preview=True,
+                                                    reply_markup=self.buttons
+                                                    )
+
+                    # for deleting message in future
+                    u = User.objects.get(telegram_id=self.telegram_id)
+                    random_coffee = RandomCoffee.objects.get(user=u)
+                    random_coffee.last_coffee_message_id = message['message_id']
+                    random_coffee.save()
+
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
                                               f'\nЮзер: {self.slug}:'
@@ -94,6 +112,18 @@ class TelegramCustomMessage():
                                           f'\nДополнительная информация: {self.etc}',
                                           chat_id=logs_user
                                           )
+
+    def delete_message(self):
+
+        u = User.objects.get(telegram_id=self.telegram_id)
+        random_coffee = RandomCoffee.objects.get(user=u)
+        telegram_id = int(self.telegram_id)
+
+        if RandomCoffee.objects.filter(user=u).first().last_coffee_message_id:
+            message_id = random_coffee.last_coffee_message_id
+            self.bot.delete_message(chat_id=telegram_id, message_id=message_id)
+            random_coffee.last_coffee_message_id = None
+            random_coffee.save()
 
     def send_count_to_dmitry(self, type_=None):
 

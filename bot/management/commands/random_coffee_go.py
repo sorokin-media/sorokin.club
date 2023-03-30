@@ -87,12 +87,13 @@ def send_message_helper(user_1, user_2):
         f'Интро: {settings.APP_HOST}/intro/{intro_2.slug}\n'\
         f'Телеграм для связи: {link_2}\n\n'\
         f'{text_finish}'\
-
+    
     custom_message_1 = TelegramCustomMessage(
         user=user_1.user,
         string_for_bot=text
     )
 
+    custom_message_1.delete_message()
     custom_message_1.send_message()
 
     text = '<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'\
@@ -107,6 +108,7 @@ def send_message_helper(user_1, user_2):
         string_for_bot=text
     )
 
+    custom_message_2.delete_message()
     custom_message_2.send_message()
 
 
@@ -146,6 +148,7 @@ class Command(BaseCommand):
                     string_for_bot=text,
                     user=coffee_users[0].user
                 )
+                custom_message.delete_message()
                 custom_message.send_message()
                 coffee_users = coffee_users[1:]
                 k = 1
@@ -160,6 +163,7 @@ class Command(BaseCommand):
                 string_for_bot=text,
                 user=u.user
             )
+            custom_message.delete_message()
             custom_message.send_message()
 
         # change this one!

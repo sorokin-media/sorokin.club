@@ -17,6 +17,11 @@ from django.db.models import Max
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
+#import time packages
+from datetime import datetime
+from datetime import timedelta
+import pytz
+
 
 def no_random(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
@@ -28,6 +33,8 @@ def no_random(update: Update, context: CallbackContext):
     message_id = update.callback_query.message.message_id
     chat_id = update.effective_user.id
     bot.delete_message(chat_id=chat_id, message_id=message_id)
+    random_coffee_string.last_coffee_message_id = None
+    random_coffee_string.save()
 
 def coffee_feedback(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
@@ -90,6 +97,10 @@ def coffee_grade(update: Update, context: CallbackContext):
     message_id = update.callback_query.message.message_id
     bot.delete_message(chat_id=user_telegram_id, message_id=message_id)
 
+    random_coffee_string = RandomCoffee.objects.get(user=user)
+    random_coffee_string.last_coffee_message_id = None
+    random_coffee_string.save()
+
     text = 'Спасибо, что делишься результатами! Это позволит мне обучиться и подбирать'\
         ' тебе самых интересных ребят для знакомства!\n\nНа следующей неделе я вернусь '\
         'с новым собеседником!'
@@ -103,10 +114,3 @@ def coffee_grade(update: Update, context: CallbackContext):
     u_name = user.slug
     type_ = f'Пользователь {u_name} дал оценку звонку. '
     custom_message.send_count_to_dmitry(type_=type_)
-
-
-'''
-    message_id = update.callback_query.message.message_id
-    chat_id = update.effective_user.id
-    bot.delete_message(chat_id=chat_id, message_id=message_id)
-'''

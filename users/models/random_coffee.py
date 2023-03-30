@@ -28,6 +28,7 @@ class RandomCoffee(models.Model):
     random_coffee_last_partner_id = models.UUIDField(null=True)
     coffee_activation_time = models.DateTimeField(verbose_name='Время активации опции',
                                                   null=True)
+    last_coffee_message_id = models.CharField(max_length=128, null=True)
     coffee_done = models.IntegerField(default=0)
     coffee_deny = models.IntegerField(default=0)
 
