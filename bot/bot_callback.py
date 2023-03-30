@@ -70,7 +70,9 @@ def coffee_feedback(update: Update, context: CallbackContext):
             buttons=buttons
         )
         custom_message.send_message()
-        custom_message.COUNT_FOR_DMITRY()
+        u_name = user.slug
+        type_ = f'Пользователь {u_name} сообщил состоялся созвон или нет. '
+        custom_message.COUNT_FOR_DMITRY(type_=type_)
     else:
         coffee_string = RandomCoffee.objects.get(user=user)
         coffee_string.coffee_deny += 1
@@ -98,7 +100,9 @@ def coffee_grade(update: Update, context: CallbackContext):
     )
 
     custom_message.send_message()
-    custom_message.send_count_to_dmitry()
+    u_name = user.slug
+    type_ = f'Пользователь {u_name} дал оценку звонку. '
+    custom_message.send_count_to_dmitry(type_=type_)
 
 
 '''
