@@ -74,7 +74,8 @@ def coffee_feedback(update: Update, context: CallbackContext):
         custom_message = TelegramCustomMessage(
             user=user,
             string_for_bot=text,
-            buttons=buttons
+            buttons=buttons,
+            random_coffee=True
         )
         custom_message.send_message()
         u_name = user.slug
@@ -107,7 +108,8 @@ def coffee_grade(update: Update, context: CallbackContext):
 
     custom_message = TelegramCustomMessage(
         user=user,
-        string_for_bot=text
+        string_for_bot=text,
+        random_coffee=True
     )
 
     custom_message.send_message()

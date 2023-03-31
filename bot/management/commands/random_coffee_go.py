@@ -90,7 +90,8 @@ def send_message_helper(user_1, user_2):
     
     custom_message_1 = TelegramCustomMessage(
         user=user_1.user,
-        string_for_bot=text
+        string_for_bot=text,
+        random_coffee=True
     )
 
     custom_message_1.delete_message()
@@ -105,7 +106,8 @@ def send_message_helper(user_1, user_2):
 
     custom_message_2 = TelegramCustomMessage(
         user=user_2.user,
-        string_for_bot=text
+        string_for_bot=text,
+        random_coffee=True
     )
 
     custom_message_2.delete_message()

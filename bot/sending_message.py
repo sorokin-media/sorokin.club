@@ -20,12 +20,13 @@ class TelegramCustomMessage():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
-    def __init__(self, etc='no data', buttons=None, photo=None, **kwargs) -> None:
+    def __init__(self, etc='no data', buttons=None, photo=None, random_coffee=False, **kwargs) -> None:
 
         self.string_for_bot = kwargs['string_for_bot']
         self.etc = etc
         self.buttons = buttons
         self.photo = photo
+        self.random_coffee = random_coffee
 
         user = kwargs['user']
 
@@ -59,10 +60,11 @@ class TelegramCustomMessage():
 
             # for deleting message in future
             u = User.objects.get(telegram_id=self.telegram_id)
-            if RandomCoffee.objects.filter(user=u).exists():
-                random_coffee = RandomCoffee.objects.get(user=u)
-                random_coffee.last_coffee_message_id = message['message_id']
-                random_coffee.save()
+            if self.random_coffee is True:
+                if RandomCoffee.objects.filter(user=u).exists():
+                    random_coffee = RandomCoffee.objects.get(user=u)
+                    random_coffee.last_coffee_message_id = message['message_id']
+                    random_coffee.save()
 
         except Exception as error:
             try:  # if reason not in DB or an other, but in API rules
@@ -89,10 +91,11 @@ class TelegramCustomMessage():
 
                     # for deleting message in future
                     u = User.objects.get(telegram_id=self.telegram_id)
-                    if RandomCoffee.objects.filter(user=u).exists():
-                        random_coffee = RandomCoffee.objects.get(user=u)
-                        random_coffee.last_coffee_message_id = message['message_id']
-                        random_coffee.save()
+                    if self.random_coffee is True:
+                        if RandomCoffee.objects.filter(user=u).exists():
+                            random_coffee = RandomCoffee.objects.get(user=u)
+                            random_coffee.last_coffee_message_id = message['message_id']
+                            random_coffee.save()
 
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '

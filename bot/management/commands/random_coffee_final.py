@@ -49,7 +49,8 @@ class Command(BaseCommand):
             custom_message = TelegramCustomMessage(
                 user=coffee_user.user,
                 string_for_bot=text,
-                buttons=buttons
+                buttons=buttons,
+                random_coffee=True
                 )
             custom_message.send_message()
         
