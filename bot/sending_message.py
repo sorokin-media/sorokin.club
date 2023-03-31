@@ -59,9 +59,10 @@ class TelegramCustomMessage():
 
             # for deleting message in future
             u = User.objects.get(telegram_id=self.telegram_id)
-            random_coffee = RandomCoffee.objects.get(user=u)
-            random_coffee.last_coffee_message_id = message['message_id']
-            random_coffee.save()
+            if RandomCoffee.objects.filter(user=u).exists():
+                random_coffee = RandomCoffee.objects.get(user=u)
+                random_coffee.last_coffee_message_id = message['message_id']
+                random_coffee.save()
 
         except Exception as error:
             try:  # if reason not in DB or an other, but in API rules
@@ -88,9 +89,10 @@ class TelegramCustomMessage():
 
                     # for deleting message in future
                     u = User.objects.get(telegram_id=self.telegram_id)
-                    random_coffee = RandomCoffee.objects.get(user=u)
-                    random_coffee.last_coffee_message_id = message['message_id']
-                    random_coffee.save()
+                    if RandomCoffee.objects.filter(user=u).exists():
+                        random_coffee = RandomCoffee.objects.get(user=u)
+                        random_coffee.last_coffee_message_id = message['message_id']
+                        random_coffee.save()
 
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
