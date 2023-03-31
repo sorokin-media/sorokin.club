@@ -68,6 +68,7 @@ def profile(request, user_slug):
 
     if RandomCoffee.objects.filter(user=user).exists():
         random_coffee_status = RandomCoffee.objects.get(user=user)
+        random_coffee_status = random_coffee_status.random_coffee_is
     else:
         random_coffee_status = False
 
