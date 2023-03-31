@@ -20,7 +20,7 @@
 7 0 * * 1 root cd /app && python3 manage.py random_coffee_start >/proc/1/fd/1 2>/proc/1/fd/2
 14 0 * * 1 root cd /app && python3 manage.py random_coffee_go >/proc/1/fd/1 2>/proc/1/fd/2
 14 0 * * 5 root cd /app && python3 manage.py random_coffee_final >/proc/1/fd/1 2>/proc/1/fd/2
-7 0 * * 1 root cd /app && python3 manage.py random_coffee_start >/proc/1/fd/1 2>/proc/1/fd/2
-14 0 * * 1 root cd /app && python3 manage.py random_coffee_go >/proc/1/fd/1 2>/proc/1/fd/2
-14 0 * * 5 root cd /app && python3 manage.py random_coffee_final >/proc/1/fd/1 2>/proc/1/fd/2
+#7 0 * * 1 root cd /app && python3 manage.py random_coffee_start >/proc/1/fd/1 2>/proc/1/fd/2
+#14 0 * * 1 root cd /app && python3 manage.py random_coffee_go >/proc/1/fd/1 2>/proc/1/fd/2
+#14 0 * * 5 root cd /app && python3 manage.py random_coffee_final >/proc/1/fd/1 2>/proc/1/fd/2
 # * * * * * root cd /app && python3 manage.py check_ready_for_message  >/proc/1/fd/1 2>/proc/1/fd/2
