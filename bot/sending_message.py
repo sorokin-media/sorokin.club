@@ -118,11 +118,14 @@ class TelegramCustomMessage():
         telegram_id = int(self.telegram_id)
 
         if RandomCoffee.objects.filter(user=u).first().last_coffee_message_id:
+
             try:
                 message_id = random_coffee.last_coffee_message_id
                 self.bot.delete_message(chat_id=telegram_id, message_id=message_id)
-            random_coffee.last_coffee_message_id = None
-            random_coffee.save()
+            except:
+                pass
+        random_coffee.last_coffee_message_id = None
+        random_coffee.save()
 
     def send_count_to_dmitry(self, type_=None):
 
