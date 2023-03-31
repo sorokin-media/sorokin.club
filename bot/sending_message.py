@@ -104,7 +104,7 @@ class TelegramCustomMessage():
             except:  # if message was not sended as result
                 self.string_for_bot = ''
                 for logs_user in self.logs_list:
-                    self.bot.send_message(text='Я вляпался в доупщит!'
+                    self.bot.send_message(text='Произошло ошибка. Бот поставлен на паузу в 5 минут. \n\n'
                                           f'Вот ошибка: {error}\n\n'
                                           f'\nПроблемный юзер: {self.slug}:'
                                           f'\nЕго Telegram_id: {self.telegram_id}'
@@ -112,6 +112,7 @@ class TelegramCustomMessage():
                                           f'\nДополнительная информация: {self.etc}',
                                           chat_id=logs_user
                                           )
+                time.sleep(300)
 
     def delete_message(self):
 
