@@ -76,10 +76,16 @@ def send_message_helper(user_1, user_2):
     link_1 = user_1.random_coffee_tg_link
     link_2 = user_2.random_coffee_tg_link
 
+    if 'https://t.me/' in link_1:
+        link_1 = link_1.replace('https://t.me/', 'https://t.me/')
+    if 'https://t.me/' in link_2:
+        link_2 = link_2.replace('https://t.me/', 'https://t.me/')
+
     if link_1[0] != '@':
         link_1 = '@' + link_1
     if link_2[0] != '@':
         link_2 = '@' + link_2
+
 
     text = '\n<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
            'Мы подобрали тебе собеседника на эту неделю! '\
