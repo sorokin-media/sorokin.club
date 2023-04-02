@@ -236,15 +236,18 @@ def random_coffee(request, user_slug):
         else:
             form.random_coffee_is = False
 
-        print(form)
-
         if form.is_valid():
             random_string.random_coffee_is = form.cleaned_data['random_coffee_is']
             random_string.random_coffee_tg_link = form.cleaned_data['random_coffee_tg_link']
+            if 'https://t.me/' in random_string.random_coffee_tg_link:
+                random_string.random_coffee_tg_link = random_string.random_coffee_tg_link.replace('https://t.me/', '@')
             if random_string.random_coffee_is is True:
                 random_string.set_activation_coffee_time()
             random_string.save()
             return redirect('/')
+
+    if 'https://t.me/' in tg_data:
+        tg_data = tg_data.replace('https://t.me/', '@')
 
     return render(request, 'users/profile/random_coffee.html', {
         'form': form,
