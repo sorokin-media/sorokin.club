@@ -16,9 +16,9 @@ from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 
 class TelegramCustomMessage():
 
-    # don't touch, ask Alex about these accounts
+    # don't touch, ask Alex about these list of accounts
     exception_list = ['vika', 'skorpion28', 'sesevor']
-    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
+    logs_list = [TG_DEVELOPER_DMITRY]# , TG_ALEX]
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
@@ -50,9 +50,8 @@ class TelegramCustomMessage():
 
         time.sleep(0.100)  # beacuse of API Telegram rules
 
-        try:  # if reason in DB to an other, but in API rules
+        try:
             message = self.bot.send_message(text=self.string_for_bot,
-                                            photo=self.photo,
                                             chat_id=self.telegram_id,
                                             parse_mode=ParseMode.HTML,
                                             disable_web_page_preview=True,
@@ -60,8 +59,9 @@ class TelegramCustomMessage():
                                             )
             TelegramCustomMessage.COUNT_FOR_DMITRY += 1
 
-            # for deleting message in future
+            # Random Coffee extension: for deleting message in future
             u = User.objects.get(telegram_id=self.telegram_id)
+            # if user active in random coffee
             if self.random_coffee is True:
                 if RandomCoffee.objects.filter(user=u).exists():
                     random_coffee = RandomCoffee.objects.get(user=u)
@@ -69,18 +69,26 @@ class TelegramCustomMessage():
                     random_coffee.save()
 
         except Exception as error:
-            try:  # if reason not in DB or an other, but in API rules
+
+            # if reason of error in API rules
+            try:
+
+                # if user block bot
+
                 if 'bot was blocked by the user' in str(error):
-                    time.sleep(0.100)
                     self.string_for_bot = ''
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='Бота заблокировал. '
-                                              f'\Юзер: {self.slug}:'
-                                              f'\nTelegram_id: {self.telegram_id}'
-                                              f'\nTELEGRAM DATA: {self.telegram_data}'
-                                              f'\nДопольнительная информация: {self.etc}',
-                                              chat_id=logs_user
+                                              f'Юзер: {self.slug}\n'
+                                              f'Telegram_id: {self.telegram_id}\n'
+                                              f'TELEGRAM DATA: {self.telegram_data}\n'
+                                              f'Допольнительная информация: {self.etc}',
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
                                               )
+
+                # if there is any other reason neither blocking bot
+
                 else:
                     time.sleep(300)
                     message = self.bot.send_message(text=self.string_for_bot,
@@ -91,8 +99,9 @@ class TelegramCustomMessage():
                                                     reply_markup=self.buttons
                                                     )
 
-                    # for deleting message in future
+                    # Random Coffee extension: for deleting message in future
                     u = User.objects.get(telegram_id=self.telegram_id)
+                    # if user active in random coffee
                     if self.random_coffee is True:
                         if RandomCoffee.objects.filter(user=u).exists():
                             random_coffee = RandomCoffee.objects.get(user=u)
@@ -100,14 +109,19 @@ class TelegramCustomMessage():
                             random_coffee.save()
 
                     for logs_user in self.logs_list:
-                        self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. '
-                                              f'\nЮзер: {self.slug}:'
-                                              f'\Дополнительная информация: {self.etc}',
-                                              chat_id=logs_user
+                        self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. \n'
+                                              f'Юзер: {self.slug}\n'
+                                              f'Дополнительная информация: {self.etc}',
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
                                               )
                     TelegramCustomMessage.COUNT_FOR_DMITRY += 1
-            except:  # if message was not sended as result
-                # delete that only after Alex approve. Personal mistake on one user.
+
+            # if message was not sended as result
+            except Exception:
+
+                # delete that only after Alex approve. Personal errors on one user.
+
                 if self.slug not in self.exception_list:
                     self.string_for_bot = ''
                     for logs_user in self.logs_list:
@@ -117,7 +131,84 @@ class TelegramCustomMessage():
                                               f'\nЕго Telegram_id: {self.telegram_id}'
                                               f'\nTELEGRAM DATA: {self.telegram_data}'
                                               f'\nДополнительная информация: {self.etc}',
-                                              chat_id=logs_user
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
+                                              )
+                    time.sleep(300)
+
+    def send_photo(self):
+
+        time.sleep(0.100)  # beacuse of API Telegram rules
+
+        try:
+
+            self.bot.send_photo(
+                chat_id=self.telegram_id,
+                photo=self.photo,
+                caption=self.string_for_bot,
+                parse_mode=ParseMode.HTML)
+
+            TelegramCustomMessage.COUNT_FOR_DMITRY += 1
+
+        except Exception as error:
+
+            # if reason of error in API rules
+
+            try:
+
+                # if user block bot
+
+                if 'bot was blocked by the user' in str(error):
+
+                    self.string_for_bot = ''
+
+                    for logs_user in self.logs_list:
+                        self.bot.send_message(text='Бота заблокировал. '
+                                              f'Юзер: {self.slug}\n'
+                                              f'Telegram_id: {self.telegram_id}\n'
+                                              f'TELEGRAM DATA: {self.telegram_data}\n'
+                                              f'Допольнительная информация: {self.etc}',
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
+                                              )
+
+                # if there is any other reason neither blocking bot
+
+                else:
+
+                    time.sleep(300)
+
+                    self.bot.send_photo(
+                        chat_id=self.telegram_id,
+                        photo=self.photo,
+                        caption=self.string_for_bot,
+                        parse_mode=ParseMode.HTML)
+
+                    for logs_user in self.logs_list:
+                        self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. \n'
+                                              f'Юзер: {self.slug}\n'
+                                              f'Дополнительная информация: {self.etc}',
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
+                                              )
+                    TelegramCustomMessage.COUNT_FOR_DMITRY += 1
+
+            # if message was not sended as result
+            except Exception:
+
+                # delete that only after Alex approve. Personal errors on one user.
+
+                if self.slug not in self.exception_list:
+                    self.string_for_bot = ''
+                    for logs_user in self.logs_list:
+                        self.bot.send_message(text='Произошло ошибка. Бот поставлен на паузу в 5 минут. \n\n'
+                                              f'Вот ошибка: {error}\n\n'
+                                              f'\nПроблемный юзер: {self.slug}:'
+                                              f'\nЕго Telegram_id: {self.telegram_id}'
+                                              f'\nTELEGRAM DATA: {self.telegram_data}'
+                                              f'\nДополнительная информация: {self.etc}',
+                                              chat_id=logs_user,
+                                              parse_mode=ParseMode.HTML
                                               )
                     time.sleep(300)
 
@@ -132,7 +223,7 @@ class TelegramCustomMessage():
             try:
                 message_id = random_coffee.last_coffee_message_id
                 self.bot.delete_message(chat_id=telegram_id, message_id=message_id)
-            except:
+            except Exception:
                 pass
         random_coffee.last_coffee_message_id = None
         random_coffee.save()

@@ -42,12 +42,17 @@ def check_uniqie_helper(name, id):
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
+    
     if "Отправить тест Алексею" in request.POST:
+
         tg_id_of_alex = User.objects.filter(slug='bigsmart').first()
         tg_id_of_dima = User.objects.filter(slug='romashovdmitryo').first()
         tg_ids = [tg_id_of_alex, tg_id_of_dima]
+
         for _ in tg_ids:
+
             if image_url != '':
+
                 custom_message = TelegramCustomMessage(
                     user=_,
                     photo=image_url,

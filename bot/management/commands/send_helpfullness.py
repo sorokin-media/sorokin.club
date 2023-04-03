@@ -21,9 +21,9 @@ import pytz
 import re
 
 def construct_message(today_helpfullness):
-    # разделить название и текст
+    # divide text and name of message
     name = today_helpfullness.name
-    # добавить везде UTM-ссылку
+    # add UTM to every link in text of message
     text = today_helpfullness.text
     new_string = ''
     while 'https://sorokin' in text:
@@ -44,13 +44,24 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
 
-        users = User.objects.filter(day_helpfullness_digest=True).filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
+        # users who activate helpfulness digest and not banned
+        users = User.objects.filter(
+            day_helpfullness_digest=True
+        ).filter(
+            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
+        ).all()
+
+        # if all message are have been sended already
 
         if not DayHelpfulness.objects.filter(is_sended=False).exists():
+
             helpfullness = DayHelpfulness.objects.filter(is_sended=True).all()
+
             for _ in helpfullness:
                 _.is_sended = False
                 _.save()
+
+        # get message closest to zero by order 
 
         today_helpfullness = DayHelpfulness.objects.get(
             order=DayHelpfulness.objects.filter(
@@ -66,8 +77,6 @@ class Command(BaseCommand):
 
         text = construct_message(today_helpfullness)
 
-        print(f'\n\n{text}\n\n')
-
         for user in users:
 
             custom_message = TelegramCustomMessage(
@@ -75,5 +84,13 @@ class Command(BaseCommand):
                 photo=today_helpfullness.image_url,
                 user=user
             )
-            custom_message.send_message()
-        custom_message.send_count_to_dmitry(type_='Полезности дня. ')
+
+            if today_helpfullness.image_url:
+                custom_message.send_photo()
+            else:
+                custom_message.send_message()
+
+        if users:
+
+            custom_message.send_count_to_dmitry(type_='Полезности дня. ')
+        

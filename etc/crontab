@@ -11,13 +11,22 @@
 10 11 * * * root cd /app && python3 manage.py subscriptions_write_recurrent  >/proc/1/fd/1 2>/proc/1/fd/2
 */5 * * * * root cd /app && python3 manage.py subscriptions_write_admin  >/proc/1/fd/1 2>/proc/1/fd/2
 */20 * * * * root cd /app && python3 manage.py check_post_upvote  >/proc/1/fd/1 2>/proc/1/fd/2
+5 8 * * * root cd /app && python3 manage.py check_user_14_days  >/proc/1/fd/1 2>/proc/1/fd/2
+
+# sending best posts and intros
+
 * * * * * root cd /app && python3 manage.py check_posts_for_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
 * * * * * root cd /app && python3 manage.py check_comment_of_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
 0 8 * * * root cd /app && python3 manage.py yesterday_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
 0 12 * * 1 root cd /app && python3 manage.py weekly_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
-5 8 * * * root cd /app && python3 manage.py check_user_14_days  >/proc/1/fd/1 2>/proc/1/fd/2
-0 10 */3 * * root cd /app && python3 manage.py send_helpfullness >/proc/1/fd/1 2>/proc/1/fd/2
+
+# random coffee
+
 0 7 * * 1 root cd /app && python3 manage.py random_coffee_start >/proc/1/fd/1 2>/proc/1/fd/2
-0 14 * * 1 root cd /app && python3 manage.py random_coffee_go >/proc/1/fd/1 2>/proc/1/fd/2
-0 14 * * 5 root cd /app && python3 manage.py random_coffee_final >/proc/1/fd/1 2>/proc/1/fd/2
+0 16 * * 1 root cd /app && python3 manage.py random_coffee_go >/proc/1/fd/1 2>/proc/1/fd/2
+0 16 * * 5 root cd /app && python3 manage.py random_coffee_final >/proc/1/fd/1 2>/proc/1/fd/2
+
+# drafts
+
 # * * * * * root cd /app && python3 manage.py check_ready_for_message  >/proc/1/fd/1 2>/proc/1/fd/2
+# 0 12 */6 * * root cd /app && python3 manage.py send_helpfullness >/proc/1/fd/1 2>/proc/1/fd/2

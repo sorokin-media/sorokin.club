@@ -24,17 +24,29 @@ import pytz
 
 
 def no_random(update: Update, context: CallbackContext):
+
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
+
     callback_data = str(update.callback_query.data).replace("no_random_coffee ", "")
     user = User.objects.get(telegram_id=callback_data)
     random_coffee_string = RandomCoffee.objects.get(user=user.id)
     random_coffee_string.random_coffee_today = False
     random_coffee_string.save()
+
     message_id = update.callback_query.message.message_id
     chat_id = update.effective_user.id
     bot.delete_message(chat_id=chat_id, message_id=message_id)
     random_coffee_string.last_coffee_message_id = None
     random_coffee_string.save()
+    
+    # to fix who deny random coffee
+    custom_message = TelegramCustomMessage(
+        user=user,
+        string_for_bot='no matter',
+        random_coffee=True
+    )
+    custom_message.send_count_to_dmitry(type_=f'Юзер {user.slug} отказался от рандом кофе. ')
+
 
 def coffee_feedback(update: Update, context: CallbackContext):
     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
