@@ -85,18 +85,27 @@ class Command(BaseCommand):
         today_helpfullness.save()
 
         text = construct_message(today_helpfullness)
+        image_url = today_helpfullness.image_url
 
         for user in users:
 
-            custom_message = TelegramCustomMessage(
-                string_for_bot=text,
-                photo=today_helpfullness.image_url,
-                user=user
-            )
+            if image_url != '' and image_url:
 
-            if today_helpfullness.image_url:
+                custom_message = TelegramCustomMessage(
+                    user=user,
+                    photo=image_url,
+                    string_for_bot=text
+                )
+
                 custom_message.send_photo()
+
             else:
+
+                custom_message = TelegramCustomMessage(
+                    user=user,
+                    string_for_bot=text
+                )
+
                 custom_message.send_message()
 
         if users:
