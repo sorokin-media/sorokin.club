@@ -60,7 +60,7 @@
                 <button id="send message" type="'submit" name="Отправить тест Алексею">Отправить тест Алексею</button>
                 <br><br><br>
                 {% if id %}
-                    <a style="color: rgb(255, 0, 247)" href="{% url 'delete_day_helpfullness' id %}">Удалить сообщение</a>
+                    <a style="color: rgb(255, 0, 247)" href="{% url 'delete_day_helpfullness' id %}" onclick="return confirm('Вернуть не получится! Можно сохранить черновик. Точно удаляем?');">Удалить сообщение</a>
                 {% endif %}
                 <div class="menu">
 

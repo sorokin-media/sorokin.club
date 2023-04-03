@@ -58,7 +58,7 @@
         <button type="'submit" name="Отправить тест Алексею">Отправить тест Алексею</button>       
         <div class="menu">
 {% if status == 'modify' %}
-<a href="{% url 'delete_telegram_message' message_id %}" onclick="return confirm('Are you sure you want to delete this item?');">Удалить сообщение</a>
+<a href="{% url 'delete_telegram_message' message_id %}" onclick="return confirm('Вернуть не получится! Можно сохранить черновик. Точно удаляем?');">Удалить сообщение</a>
         </div>
 {% endif %}
     </form>
