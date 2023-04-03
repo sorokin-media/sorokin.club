@@ -18,7 +18,8 @@ class TelegramCustomMessage():
 
     # don't touch, ask Alex about these list of accounts
     exception_list = ['vika', 'skorpion28', 'sesevor']
-    logs_list = [TG_DEVELOPER_DMITRY]# , TG_ALEX]
+    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
+#    logs_list = ['dev']
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
