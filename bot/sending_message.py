@@ -16,6 +16,8 @@ from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 
 class TelegramCustomMessage():
 
+    # don't touch, ask Alex about these accounts
+    exception_list = ['vika', 'skorpion28', 'sesevor']
     logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
@@ -106,7 +108,7 @@ class TelegramCustomMessage():
                     TelegramCustomMessage.COUNT_FOR_DMITRY += 1
             except:  # if message was not sended as result
                 # delete that only after Alex approve. Personal mistake on one user.
-                if self.slug != 'vika':
+                if self.slug not in self.exception_list:
                     self.string_for_bot = ''
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='Произошло ошибка. Бот поставлен на паузу в 5 минут. \n\n'
