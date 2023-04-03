@@ -17,6 +17,7 @@ from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 class TelegramCustomMessage():
 
     # don't touch, ask Alex about these list of accounts
+    
     exception_list = ['vika', 'skorpion28', 'sesevor']
     logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
 #    logs_list = ['dev']
