@@ -20,6 +20,9 @@ from datetime import datetime
 import pytz
 import re
 
+# for test
+from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
+
 def construct_message(today_helpfullness):
     # divide text and name of message
     name = today_helpfullness.name
@@ -45,11 +48,17 @@ class Command(BaseCommand):
         now = time_zone.localize(datetime.utcnow())
 
         # users who activate helpfulness digest and not banned
-        users = User.objects.filter(
-            day_helpfullness_digest=True
-        ).filter(
-            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
-        ).all()
+
+#        users = User.objects.filter(
+#            day_helpfullness_digest=True
+#        ).filter(
+#            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
+#        ).all()
+
+        # for test
+        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        alex = User.objects.get(telegram_id=TG_ALEX)
+        users = [dmitry, alex]
 
         # if all message are have been sended already
 
