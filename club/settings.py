@@ -21,6 +21,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 ADMINS = [
     ("admin", "club@sorokin.club"),
     ("raskrutka89", "raskrutka89@gmail.com"),
+    ("dmitry", "romashov.dmitry.py@gmail.com")
     # ("glader", "glader.ru@gmail.com"),
 ]
 
