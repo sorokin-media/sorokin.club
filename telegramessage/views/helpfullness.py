@@ -52,7 +52,7 @@ def create_day_helpfullness(request, id=None, is_archived=False):
             try:
 
                 dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-                alex = User.objects.get(slug=TG_ALEX)
+                alex = User.objects.get(telegram_id=TG_ALEX)
                 users = [dmitry, alex]
 
                 image_url = request.POST['image_url'].replace(" ", '')
