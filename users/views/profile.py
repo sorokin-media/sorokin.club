@@ -23,6 +23,17 @@ from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
 
+# import custom class for sending messages
+from bot.sending_message import TelegramCustomMessage
+
+text_for_new_user = "<strong>Привет! Рандом Кофе подключен!</strong>\n\n"\
+    "Каждый понедельник я буду рекомендовать тебе новых классных собеседников. \n\n"\
+    "Если ты не захочешь ни с кем знакомиться на какой-то из недель - у тебя будет "\
+    "возможность отказаться перед распределением собеседников, я пришлю специальное "\
+    "сообшение.\n\n"\
+    "Вечером в понедельник я подберу тебе собеседника и вышлю все инструкции.\n\n"\
+    "<strong>Добро пожаловать в игру! 🔥</strong>"
+
 @auth_required
 def profile(request, user_slug):
     if user_slug == "me":
@@ -211,40 +222,63 @@ def random_coffee(request, user_slug):
 
     user = User.objects.get(slug=user_slug)
 
+    # if out bot doesn't know user
+
     if user.telegram_id is None:
         tg_data = 'no telegram_id'
         form = CoffeeForm()
+
+    # if user already earlier saved data in Random Coffee model
+
     elif RandomCoffee.objects.filter(user=user).exists():
+
         random_string = RandomCoffee.objects.get(user=user)
         form = CoffeeForm(instance=random_string)
+
+        # if user didn't write his tg_link
+
         if not random_string.random_coffee_tg_link:
             tg_data = user.telegram_data['username']
         else:
             tg_data = random_string.random_coffee_tg_link
+
+    # if user didn't saved data earlier
+
     else:
         tg_data = user.telegram_data['username']
         random_string = RandomCoffee()
         random_string.random_coffee_tg_link
         random_string.user = user
         form = CoffeeForm(instance=random_string)
+
     if request.method == 'POST':
+
         form = CoffeeForm(request.POST)
 
-        # that needs changes
-        if request.POST.get('day_random_coffee') == 'on':
-            form.random_coffee_is = True
-        else:
-            form.random_coffee_is = False
+        previous_coffee_status = random_string.random_coffee_is
 
         if form.is_valid():
             random_string.random_coffee_is = form.cleaned_data['random_coffee_is']
             random_string.random_coffee_tg_link = form.cleaned_data['random_coffee_tg_link']
-            if 'https://t.me/' in random_string.random_coffee_tg_link:
-                random_string.random_coffee_tg_link = random_string.random_coffee_tg_link.replace('https://t.me/', '@')
-            if random_string.random_coffee_is is True:
-                random_string.set_activation_coffee_time()
-            random_string.save()
-            return redirect('/')
+
+       # that needs changes
+        if random_string.random_coffee_is is True and previous_coffee_status is False:
+
+            custom_message = TelegramCustomMessage(
+                user=user,
+                string_for_bot=text_for_new_user
+            )
+            custom_message.send_message()
+            custom_message.send_count_to_dmitry(type_=f'Новый юзер в рандом кофе: {user.slug}')
+
+        if 'https://t.me/' in random_string.random_coffee_tg_link:
+            random_string.random_coffee_tg_link = random_string.random_coffee_tg_link.replace('https://t.me/', '@')
+
+        if random_string.random_coffee_is is True:
+            random_string.set_activation_coffee_time()
+
+        random_string.save()
+        return redirect('/')
 
     if 'https://t.me/' in tg_data:
         tg_data = tg_data.replace('https://t.me/', '@')

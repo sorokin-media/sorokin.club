@@ -51,11 +51,11 @@ class Command(BaseCommand):
                 string_for_bot=text,
                 buttons=buttons,
                 random_coffee=True
-                )
+            )
             custom_message.send_message()
-        
-        custom_message.send_count_to_dmitry(type_='Отправлен запрос на получение первого фидбека')
 
+        custom_message.send_count_to_dmitry(type_='Отправлен запрос на получение первого фидбека '
+                                            f'юзеру {coffee_user.user.slug}')
 
 
 '''

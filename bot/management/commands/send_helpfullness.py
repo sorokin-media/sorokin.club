@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 _.is_sended = False
                 _.save()
 
-        # get message closest to zero by order 
+        # get message closest to zero by order
 
         today_helpfullness = DayHelpfulness.objects.get(
             order=DayHelpfulness.objects.filter(
@@ -110,5 +110,4 @@ class Command(BaseCommand):
 
         if users:
 
-            custom_message.send_count_to_dmitry(type_='Полезности дня. ')
-        
+            custom_message.send_count_to_dmitry(type_='Полезности дня отправлены. ')

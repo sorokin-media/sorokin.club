@@ -17,7 +17,7 @@ from django.db.models import Max
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
-#import time packages
+# import time packages
 from datetime import datetime
 from datetime import timedelta
 import pytz
@@ -38,7 +38,7 @@ def no_random(update: Update, context: CallbackContext):
     bot.delete_message(chat_id=chat_id, message_id=message_id)
     random_coffee_string.last_coffee_message_id = None
     random_coffee_string.save()
-    
+
     # to fix who deny random coffee
     custom_message = TelegramCustomMessage(
         user=user,
@@ -114,9 +114,24 @@ def coffee_grade(update: Update, context: CallbackContext):
     random_coffee_string.last_coffee_message_id = None
     random_coffee_string.save()
 
-    text = 'Спасибо, что делишься результатами! Это позволит мне обучиться и подбирать'\
-        ' тебе самых интересных ребят для знакомства!\n\nНа следующей неделе я вернусь '\
-        'с новым собеседником!'
+    if "интересный" in feedback:
+
+        link_to_post = 'https://sorokin.club/post/1047/?utm_source=private_bot_random_coffee'
+        text = 'Спасибо! <strong>Мы обязательно учтем твое мнение при подборе собеседников в будущем!</strong>\n\n'\
+            f'Пожалуйста, оставь отзыв о работе Рандом Кофе <a href="{link_to_post}">на этой странице</a>. '\
+            'Это позволит привлечь внимание других клубных котиков и сделать будущие знакомства более '\
+            'разнообразными и интересными.\n\n'\
+            'И еще будет очень здорово, если ты продублируешь свой отзыв в интро '\
+            f'<a href="{settings.APP_HOST}/user/{logs_string.user_buddy.slug}/?utm_source=private_bot_random_coffee">'\
+            f'{logs_string.user_buddy.full_name}</a>'\
+            '- твоему собеседнику наверняка будет очень приятно!\n\n'\
+            'Спасибо за участие! Я напишу тебе уже в следующий понедельник! ❤️'
+
+    else:
+
+        text = 'Спасибо! <strong>Мы обязательно учтем твое мнение при подборе собеседников в будущем!</strong>\n\n'\
+            'Спасибо за участие! Я напишу тебе уже в следующий понедельник! ❤️\n\n'\
+            'Вроде на текущем этапе пока все =)'
 
     custom_message = TelegramCustomMessage(
         user=user,
@@ -126,5 +141,6 @@ def coffee_grade(update: Update, context: CallbackContext):
 
     custom_message.send_message()
     u_name = user.slug
-    type_ = f'Пользователь {u_name} дал оценку звонку. '
+    type_ = f'Пользователь {u_name} дал оценку звонку. \n'\
+            f'Оценка такая: {feedback}'
     custom_message.send_count_to_dmitry(type_=type_)

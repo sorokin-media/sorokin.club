@@ -20,7 +20,10 @@ class TelegramCustomMessage():
     
     exception_list = ['vika', 'skorpion28', 'sesevor']
     logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
-#    logs_list = ['dev']
+
+    # for tests on local
+    #logs_list = ['dev']
+
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
 
@@ -92,32 +95,36 @@ class TelegramCustomMessage():
                 # if there is any other reason neither blocking bot
 
                 else:
-                    time.sleep(300)
-                    message = self.bot.send_message(text=self.string_for_bot,
-                                                    photo=self.photo,
-                                                    chat_id=self.telegram_id,
-                                                    parse_mode=ParseMode.HTML,
-                                                    disable_web_page_preview=True,
-                                                    reply_markup=self.buttons
-                                                    )
 
-                    # Random Coffee extension: for deleting message in future
-                    u = User.objects.get(telegram_id=self.telegram_id)
-                    # if user active in random coffee
-                    if self.random_coffee is True:
-                        if RandomCoffee.objects.filter(user=u).exists():
-                            random_coffee = RandomCoffee.objects.get(user=u)
-                            random_coffee.last_coffee_message_id = message['message_id']
-                            random_coffee.save()
+                    # delete that only after Alex accept. Personal errors on one user.
+                    if self.slug not in self.exception_list:
 
-                    for logs_user in self.logs_list:
-                        self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. \n'
-                                              f'Юзер: {self.slug}\n'
-                                              f'Дополнительная информация: {self.etc}',
-                                              chat_id=logs_user,
-                                              parse_mode=ParseMode.HTML
-                                              )
-                    TelegramCustomMessage.COUNT_FOR_DMITRY += 1
+                        time.sleep(300)
+                        message = self.bot.send_message(text=self.string_for_bot,
+                                                        photo=self.photo,
+                                                        chat_id=self.telegram_id,
+                                                        parse_mode=ParseMode.HTML,
+                                                        disable_web_page_preview=True,
+                                                        reply_markup=self.buttons
+                                                        )
+
+                        # Random Coffee extension: for deleting message in future
+                        u = User.objects.get(telegram_id=self.telegram_id)
+                        # if user active in random coffee
+                        if self.random_coffee is True:
+                            if RandomCoffee.objects.filter(user=u).exists():
+                                random_coffee = RandomCoffee.objects.get(user=u)
+                                random_coffee.last_coffee_message_id = message['message_id']
+                                random_coffee.save()
+
+                        for logs_user in self.logs_list:
+                            self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. \n'
+                                                  f'Юзер: {self.slug}\n'
+                                                  f'Дополнительная информация: {self.etc}',
+                                                  chat_id=logs_user,
+                                                  parse_mode=ParseMode.HTML
+                                                  )
+                        TelegramCustomMessage.COUNT_FOR_DMITRY += 1
 
             # if message was not sended as result
             except Exception:
@@ -236,8 +243,16 @@ class TelegramCustomMessage():
 
             for logs_user in self.logs_list:
 
-                self.bot.send_message(text=f'COUNT EQUAL TO: {TelegramCustomMessage.COUNT_FOR_DMITRY}\n'
-                                      f'Тип рассылки: {type_}',
-                                      chat_id=logs_user
-                                      )
+                if self.COUNT_FOR_DMITRY < 3:
+
+                    self.bot.send_message(text=f'{type_}',
+                                          chat_id=logs_user
+                                          )
+                else:
+
+                    self.bot.send_message(text=f'COUNT EQUAL TO: {TelegramCustomMessage.COUNT_FOR_DMITRY}\n'
+                                          f'Тип рассылки: {type_}',
+                                          chat_id=logs_user
+                                          )
+
             TelegramCustomMessage.COUNT_FOR_DMITRY = 0
