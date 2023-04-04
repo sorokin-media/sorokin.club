@@ -17,7 +17,7 @@ from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
 class TelegramCustomMessage():
 
     # don't touch, ask Alex about these list of accounts
-    
+
     exception_list = ['vika', 'skorpion28', 'sesevor']
     logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
 
@@ -248,3 +248,20 @@ class TelegramCustomMessage():
                                           )
 
             TelegramCustomMessage.COUNT_FOR_DMITRY = 0
+
+
+class MessageToDmitry:
+    ''' simple class for developer Dmitry '''
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    dmitry = TG_DEVELOPER_DMITRY
+
+    def __init__(self, data):
+
+        self.data = data
+
+    def send_message(self):
+
+        self.bot.send_message(
+            text=self.data, 
+            chat_id=self.dmitry
+        )

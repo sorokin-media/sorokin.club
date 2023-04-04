@@ -33,6 +33,10 @@
     <article class="block feed-post h-entry feed-post-post">
         <div class="feed-post-header">
             <div class="feed-post-title">
+                {% if message.is_finish_of_queue == True %}
+                <small><font color="green">Конец очереди</font></small>
+                <br>
+                {% endif %}
                 {% if message.is_archived == True %}
                 <small><font color="red">Черновик</font></small>
                 <br>
