@@ -49,42 +49,36 @@ def create_day_helpfullness(request, id=None, is_archived=False):
 
         if "Отправить тест Алексею" in request.POST:
 
-            try:
+            dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+            alex = User.objects.get(telegram_id=TG_ALEX)
+            users = [dmitry, alex]
 
-                dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-                alex = User.objects.get(telegram_id=TG_ALEX)
-                users = [dmitry, alex]
+            image_url = request.POST['image_url'].replace(" ", '')
+            string_for_bot = construct_message(request.POST['text'])
 
-                image_url = request.POST['image_url'].replace(" ", '')
-                string_for_bot = construct_message(request.POST['text'])
+            for user in users:
 
-                for user in users:
+                if image_url != '':
 
-                    if image_url != '':
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        photo=image_url,
+                        string_for_bot=string_for_bot
+                    )
 
-                        custom_message = TelegramCustomMessage(
-                            user=user,
-                            photo=image_url,
-                            string_for_bot=string_for_bot
-                        )
+                    custom_message.send_photo()
 
-                        custom_message.send_photo()
+                else:
 
-                    else:
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
 
-                        custom_message = TelegramCustomMessage(
-                            user=user,
-                            string_for_bot=string_for_bot
-                        )
+                    custom_message.send_message()
 
-                        custom_message.send_message()
-
-                custom_message.send_count_to_dmitry()
-                return redirect('show_helpfullness_list')
-
-            except Exception:
-
-                return render(request, 'exception_page.html', {'exception': Exception})
+            custom_message.send_count_to_dmitry()
+            return redirect('show_helpfullness_list')
             
         if "Сохранить как черновик" in request.POST:
             is_archived = True

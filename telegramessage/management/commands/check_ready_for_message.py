@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from django.db.models import Max
+from django.db.models import Q
 from club import settings
 
 from posts.models.post import Post
@@ -55,37 +55,66 @@ class Command(BaseCommand):
     '''
 
     def handle(self, *args, **options):
+
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
         message_queue_start_datetime = time_zone.localize(settings.MESSAGE_QUEUE_DATETIME)
-        users = User.objects.filter(created_at__gte=message_queue_start_datetime).exclude(
+
+        # users that
+        # 1) created after specify data
+        # 2) not banned
+        # 3) having bot
+        users = User.objects.filter(
+            created_at__gte=message_queue_start_datetime
+        ).filter(
+            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
+        ).exclude(
             telegram_id__isnull=True).all()
+
+        # all writting messages
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
+
         for user in users:
+
+            # for tests
             pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
             if user.slug in pasha_me_alex_slugs:
-                if not user.is_banned and user.moderation_status != User.MODERATION_STATUS_DELETED:
+
+                # if user is not deleted
+                if user.moderation_status != User.MODERATION_STATUS_DELETED:
+
                     # if there is no record with user in table messagequeue, than create
                     if not TelegramMesageQueue.objects.filter(user_to=user).exists():
                         _ = TelegramMesageQueue()
                         _.user_to = user
                         _.save()
+
+                    # if the user has not yet received the final message
                     if TelegramMesageQueue.objects.filter(
                             user_to=user).first().is_series_finished is not True:
+
                         for message in telegram_messages:
+
                             delay_time_values = timedelta(
                                 days=message.days,
                                 hours=message.hours,
                                 minutes=message.minutes
                             )
+
                             # the time at which the message should have been sent
                             time_to_send = time_zone.localize(user.created_at) + delay_time_values
                             message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
+
+                            # 1) if message is not in list of messages that was wended earlier
+                            # 2) it's time to send a message
                             if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
+
                                 if message.is_archived is not True:
+
                                     message_queue.push_new_id(str(message.id))
                                     message_queue.save_time_message_sended()
                                     send_message_helper(message=message, message_queue=message_queue)
+                                    # don't understand
                                     WebhookEvent(type='private_bot_message',
                                                  recipient=message_queue.user_to, data=message.text).save()
                                     break
