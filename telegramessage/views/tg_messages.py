@@ -7,13 +7,13 @@ from telegramessage.forms import CreateMessage
 from telegramessage.models import TelegramMesage
 from users.models.user import User
 
-# import config settings
-from club import settings
+# import config data
+from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
 
 # import class for sending message in Telegram
 from bot.sending_message import TelegramCustomMessage
 
-# import auth decorators 
+# import auth decorators
 from auth.helpers import auth_required
 
 # Telegram imports
@@ -22,7 +22,7 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
-# 204349098
+
 @auth_required
 def show_telegram_messages(request):
     if TelegramMesage.objects.all().exists():
@@ -42,12 +42,20 @@ def check_uniqie_helper(name, id):
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
-    
+
     if "Отправить тест Алексею" in request.POST:
 
-        tg_id_of_alex = User.objects.filter(slug='bigsmart').first()
-        tg_id_of_dima = User.objects.filter(slug='romashovdmitryo').first()
-        tg_ids = [tg_id_of_alex, tg_id_of_dima]
+        #        tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
+        #        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        #        tg_ids = [tg_id_of_alex, tg_id_of_dima]
+
+        # for tests on local
+        #fortest = User.objects.filter(slug='dev').first()
+        #tg_ids = [fortest]
+
+        # for test on prod by Dmitry
+        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        tg_ids = [tg_id_of_dima]
 
         for _ in tg_ids:
 
@@ -56,33 +64,63 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
                 custom_message = TelegramCustomMessage(
                     user=_,
                     photo=image_url,
-                    string_for_bot=None
+                    string_for_bot=text
                 )
+
+                custom_message.send_photo()
+
+            else:
+
+                custom_message = TelegramCustomMessage(
+                    user=_,
+                    string_for_bot=text
+                )
+
                 custom_message.send_message()
-            custom_message = TelegramCustomMessage(
-                user=_,
-                string_for_bot=text
-            )
+
         custom_message.send_count_to_dmitry()
-        message.save_data(days=days, hours=hours, minutes=minutes,
-                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                          is_archived=True, image_url=image_url)
+
+        message.save_data(
+            days=days,
+            hours=hours,
+            minutes=minutes,
+            name=name,
+            text=text,
+            is_finish_of_queue=is_finish_of_queue,
+            is_archived=True,
+            image_url=image_url
+        )
 
     elif "Сохранить как черновик" in request.POST:
-        message.save_data(days=days, hours=hours, minutes=minutes,
-                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                          is_archived=True, image_url=image_url)
+        message.save_data(
+            days=days,
+            hours=hours,
+            minutes=minutes,
+            name=name,
+            text=text,
+            is_finish_of_queue=is_finish_of_queue,
+            is_archived=True,
+            image_url=image_url
+        )
 
     else:
-        message.save_data(days=days, hours=hours, minutes=minutes,
-                          name=name, text=text, is_finish_of_queue=is_finish_of_queue,
-                          is_archived=False, image_url=image_url)
+        message.save_data(
+            days=days,
+            hours=hours,
+            minutes=minutes,
+            name=name,
+            text=text,
+            is_finish_of_queue=is_finish_of_queue,
+            is_archived=False,
+            image_url=image_url
+        )
 
 @auth_required
 def create_telegram_message(request, message_id=None):
     if request.method == 'POST':
 
         # get data from form
+
         days = int(request.POST.get('days'))
         hours = int(request.POST.get('hours'))
         minutes = int(request.POST.get('minutes'))
@@ -91,7 +129,8 @@ def create_telegram_message(request, message_id=None):
         is_finish_of_queue = request.POST.get('is_finish_of_queue')
         image_url = request.POST.get('image_url')
 
-        # modify word
+        # if app modify message
+
         if message_id is not None:
             id = message_id
             # if there is similar name in DB already
@@ -104,7 +143,8 @@ def create_telegram_message(request, message_id=None):
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
 
-        # if we create new message
+        # if app create new message
+
         elif message_id is None:
             if check_uniqie_helper(name, id=None) is True:
                 form = CreateMessage(request.POST)
@@ -115,6 +155,8 @@ def create_telegram_message(request, message_id=None):
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue)
 
         return redirect('show_telegram_messages')
+
+    # just open DOM
 
     form = CreateMessage
     return render(request, 'message/create_message.html', {"form": form})
@@ -132,4 +174,3 @@ def delete_telegram_message(request, message_id):
     id = message_id
     TelegramMesage.objects.filter(id=id).delete()
     return redirect('show_telegram_messages')
-
