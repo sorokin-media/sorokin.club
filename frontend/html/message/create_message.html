@@ -25,10 +25,8 @@
 
     <div class="form-row compose-form-title">
 
-        {% if messages %}
-        {% for message in messages %}
-        <p style="color:rgb(255, 5, 64);" >{{ message }}</p>
-        {% endfor %}
+        {% if error %}
+        <p style="color:rgb(255, 5, 64);" >{{ error }}</p>
         {% endif %}
 
         <small><a href="{% url 'show_telegram_messages' %}">Вернуться к списку</a></small>

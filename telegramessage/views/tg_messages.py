@@ -152,9 +152,9 @@ def create_telegram_message(request, message_id=None):
             if unique_of_message is not True:
 
                 form = CreateMessage(request.POST)
-                messages.error(request, unique_of_message)
-                return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
-
+#                messages.error(request, unique_of_message)
+#                return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
+                return render(request, 'message/create_message.html', {"form": form, "status": "modify", 'error': unique_of_message})
             message = TelegramMesage.objects.get(id=id)
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
@@ -169,8 +169,9 @@ def create_telegram_message(request, message_id=None):
             if unique_of_message is not True:
 
                 form = CreateMessage(request.POST)
-                messages.error(request, unique_of_message)
-                return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
+#                messages.error(request, unique_of_message)
+#                return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
+                return render(request, 'message/create_message.html', {"form": form, "status": "modify", 'error': unique_of_message})
 
             message = TelegramMesage()
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
