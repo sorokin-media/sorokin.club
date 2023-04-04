@@ -46,11 +46,7 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
     if name in name_list and not id_in_db:
         return 'Сообщение с таким названием уже имеется'
 
-    if is_finish_of_queue is True:
-
-        print('\n\n')
-        print('TRUE BLIN')
-        print('\n\n')
+    if is_finish_of_queue == 'True':
 
         if TelegramMesage.objects.filter(is_finish_of_queue=True).exists():
             return 'У очереди уже имеется конец'
@@ -169,10 +165,6 @@ def create_telegram_message(request, message_id=None):
 
             # if there is similar name in DB already or duplicate final of queue
             unique_of_message = check_uniqie_helper(name, is_finish_of_queue)
-
-            print('\n\n')
-            print(unique_of_message)
-            print('\n\n')
 
             if unique_of_message is not True:
 
