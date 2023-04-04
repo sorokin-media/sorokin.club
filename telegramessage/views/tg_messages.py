@@ -32,13 +32,30 @@ def show_telegram_messages(request):
         return render(request, 'message/show_messages.html')
 
 # None when create
-def check_uniqie_helper(name, id):
+def check_uniqie_helper(name, is_finish_of_queue, id=None):
+
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
+
+    # is there name in list of message's name that already exist
     if id is None and name in name_list:
-        return True
-    id_in_db = TelegramMesage.objects.filter(name=name).exists()  # если есть такой
+        return 'Сообщение с таким названием уже имеется'
+
+    id_in_db = TelegramMesage.objects.filter(name=name).exists()
+
     # True if not unique, else False
-    return True if name in name_list and not id_in_db else False
+    if name in name_list and not id_in_db:
+        return 'Сообщение с таким названием уже имеется'
+
+    if is_finish_of_queue is True:
+
+        print('\n\n')
+        print('TRUE BLIN')
+        print('\n\n')
+
+        if TelegramMesage.objects.filter(is_finish_of_queue=True).exists():
+            return 'У очереди уже имеется конец'
+
+    return True
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
@@ -132,11 +149,14 @@ def create_telegram_message(request, message_id=None):
         # if app modify message
 
         if message_id is not None:
+
             id = message_id
-            # if there is similar name in DB already
-            if check_uniqie_helper(name, id) is True:
+            # if there is similar name in DB already or duplicate final of queue
+            unique_of_message = check_uniqie_helper(name, is_finish_of_queue, id)
+            if unique_of_message is not True:
+
                 form = CreateMessage(request.POST)
-                messages.error(request, "Сообщение с таким названием уже имеется")
+                messages.error(request, unique_of_message)
                 return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
 
             message = TelegramMesage.objects.get(id=id)
@@ -146,10 +166,20 @@ def create_telegram_message(request, message_id=None):
         # if app create new message
 
         elif message_id is None:
-            if check_uniqie_helper(name, id=None) is True:
+
+            # if there is similar name in DB already or duplicate final of queue
+            unique_of_message = check_uniqie_helper(name, is_finish_of_queue)
+
+            print('\n\n')
+            print(unique_of_message)
+            print('\n\n')
+
+            if unique_of_message is not True:
+
                 form = CreateMessage(request.POST)
-                messages.error(request, "Сообщение с таким названием уже имеется")
+                messages.error(request, unique_of_message)
                 return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
+
             message = TelegramMesage()
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue)
