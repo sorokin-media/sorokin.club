@@ -35,7 +35,7 @@
         {% if status == 'modify' %}
         <form action="{% url 'create_telegram_message' message_id %}" method="post">
         {% else %}
-        <form action="/create_telegram_message/" method="post">
+        <form action="{% url 'create_telegram_message' %}" method="post">
         {% endif %}
 
         {% csrf_token %}
