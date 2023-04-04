@@ -83,11 +83,7 @@ class TelegramCustomMessage():
                 if 'bot was blocked by the user' in str(error):
                     self.string_for_bot = ''
                     for logs_user in self.logs_list:
-                        self.bot.send_message(text='Бота заблокировал. '
-                                              f'Юзер: {self.slug}\n'
-                                              f'Telegram_id: {self.telegram_id}\n'
-                                              f'TELEGRAM DATA: {self.telegram_data}\n'
-                                              f'Допольнительная информация: {self.etc}',
+                        self.bot.send_message(text=f'Бота заблокировал юзер {self.slug}. ',
                                               chat_id=logs_user,
                                               parse_mode=ParseMode.HTML
                                               )
@@ -172,11 +168,7 @@ class TelegramCustomMessage():
                     self.string_for_bot = ''
 
                     for logs_user in self.logs_list:
-                        self.bot.send_message(text='Бота заблокировал. '
-                                              f'Юзер: {self.slug}\n'
-                                              f'Telegram_id: {self.telegram_id}\n'
-                                              f'TELEGRAM DATA: {self.telegram_data}\n'
-                                              f'Допольнительная информация: {self.etc}',
+                        self.bot.send_message(text=f'Бота заблокировал юзер {self.slug}. ',
                                               chat_id=logs_user,
                                               parse_mode=ParseMode.HTML
                                               )
