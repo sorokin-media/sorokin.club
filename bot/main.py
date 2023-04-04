@@ -89,9 +89,9 @@ def main() -> None:
     dispatcher.add_handler(
         MessageHandler(Filters.reply & Filters.regex(r"^\+[+\d ]*$"), upvotes.upvote)
     )
-    dispatcher.add_handler(
-        MessageHandler(Filters.reply & ~Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID)), comments.comment)
-    )
+#    dispatcher.add_handler(
+#        MessageHandler(Filters.reply & ~Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID)), comments.comment)
+#    )
 
     # Only private chats
     dispatcher.add_handler(CommandHandler("start", auth.command_auth, Filters.private))

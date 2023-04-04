@@ -14,6 +14,7 @@ from notifications.models import WebhookEvent
 from datetime import datetime
 from datetime import timedelta
 import pytz
+import re
 
 # import telegram packages
 import telegram
@@ -24,9 +25,26 @@ from telegram.ext import CallbackContext
 # import custom class for sending messages by bot
 from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
+def construct_message(text):
+
+    '''add UTM to links in text'''
+
+    new_string = ''
+    while 'https://sorokin' in text:
+        x = re.search(r'https://sorokin[\w\d\=\:\/\.\?\-\&\%\;]+', text)
+        start = x.start()
+        finish = x.end()
+        y = x.group()
+        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_messages_queue'
+        text = text[finish:]
+    new_string += text
+    print('\n\n\nHUY PIZDA\n\n\n')
+    return new_string
+
 def send_message_helper(message, message_queue):
 
     message_queue.last_message = message
+    text = construct_message(message.text)
 
     if message.is_finish_of_queue is True:
 
@@ -39,7 +57,7 @@ def send_message_helper(message, message_queue):
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
                 photo=message.image_url,
-                string_for_bot=message.text
+                string_for_bot=text
             )
 
             custom_message.send_photo()
@@ -48,7 +66,7 @@ def send_message_helper(message, message_queue):
 
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
-                string_for_bot=message.text
+                string_for_bot=text
             )
 
             custom_message.send_message()
@@ -66,7 +84,7 @@ def send_message_helper(message, message_queue):
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
                 photo=message.image_url,
-                string_for_bot=message.text
+                string_for_bot=text
             )
 
             custom_message.send_photo()
@@ -75,7 +93,7 @@ def send_message_helper(message, message_queue):
 
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
-                string_for_bot=message.text
+                string_for_bot=text
             )
 
             custom_message.send_message()
