@@ -36,14 +36,19 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
 
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
 
-    MessageToDmitry(data=str(name_list)).send_message()
+    MessageToDmitry(data=f'name_list: {str(name_list)}').send_message()
+
+    MessageToDmitry(data=f'NAME: {name}').send_message()
+
+    check = name in name_list
+    MessageToDmitry(data=f'Name in Name list? {check}').send_message()
 
     # is there name in list of message's name that already exist
     if id is None and name in name_list:
 
         MessageToDmitry(data='id is not none in unique helper')
         MessageToDmitry(data=f'type of id: {type(id)}')
- 
+
         return 'Please, modify name of message'
 
     id_in_db = TelegramMesage.objects.filter(name=name).exists()
@@ -181,13 +186,13 @@ def create_telegram_message(request, message_id=None):
                 messages.error(request, unique_of_message)
                 MessageToDmitry(data='final 3').send_message()
                 MessageToDmitry(data=f'message_id: {message_id}').send_message()
-                
+
                 return render(
                     request, 'message/create_message.html',
                     {
-                    "form": form, 
-                    "status": "modify", 
-                    'message_id': message_id
+                        "form": form,
+                        "status": "modify",
+                        'message_id': message_id
                     },
                     messages
                 )
