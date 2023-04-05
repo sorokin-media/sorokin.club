@@ -4,7 +4,7 @@
 {% load users %}
 {% load text_filters %}
 {% block title %}
-Статистика
+Очередь сообщений
 {% endblock %}
 {% block og_tags %}
 <meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
@@ -56,9 +56,10 @@
         <br><br>
         <button type="submit" name="Сохранить!">Сохранить!</button>
         <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>    
-        <button type="'submit" name="Отправить тест Алексею">Отправить тест Алексею</button>       
+        <button type="submit" name="Отправить тест Алексею">Отправить тест Алексею</button>       
         <div class="menu">
-{% if status == 'modify' %}
+
+            {% if status == 'modify' %}
 <a href="{% url 'delete_telegram_message' message_id=message_id %}" onclick="return confirm('Вернуть не получится! Можно сохранить черновик. Точно удаляем?');">Удалить сообщение</a>
         </div>
 {% endif %}
@@ -69,6 +70,7 @@
     Не для тебя
 </div>
 {% endif %}
+</div>
 
 {% endblock %}
 
