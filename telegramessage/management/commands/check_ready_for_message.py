@@ -142,8 +142,11 @@ class Command(BaseCommand):
             # for tests on local
             # if user.slug == 'dev':
 
+            # ONLY Dmirty on test on production
+            pasha_me_alex_slugs = ['romashovdmitryo']
+
             # for tests on prod
-            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo', 'raskrutka89']
+#            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo']
             if user.slug in pasha_me_alex_slugs:
 
                 # if there is no record with user in table messagequeue, than create
