@@ -143,10 +143,10 @@ class Command(BaseCommand):
             # if user.slug == 'dev':
 
             # ONLY Dmirty on test on production
-            pasha_me_alex_slugs = ['romashovdmitryo']
+            #pasha_me_alex_slugs = ['romashovdmitryo']
 
             # for tests on prod
-#            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo']
+            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo']
             if user.slug in pasha_me_alex_slugs:
 
                 # if there is no record with user in table messagequeue, than create
@@ -180,9 +180,6 @@ class Command(BaseCommand):
                                 message_queue.push_new_id(str(message.id))
                                 message_queue.save_time_message_sended()
 
-                                _ = 'Приложение пришло к этапу отправки сообщения из очереди. '
-                                MessageToDmitry(data=_).send_message()
-
                                 send_message_helper(message=message, message_queue=message_queue)
 
                                 # saving data about event in table 'webhook_events', as written in task
@@ -194,4 +191,4 @@ class Command(BaseCommand):
 
                                 break
 
-        MessageToDmitry(data='Очередь не отработала. Не прошла if-ы').send_message()
+        MessageToDmitry(data='Очередь отработала.').send_message()

@@ -41,8 +41,6 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
     # 2) if message is new, i.e. that's NOT just modification
     if name in name_list and id is None:
 
-        MessageToDmitry(data='name in name list!').send_message()
-
         return 'Please, modify name of message'
 
     # 1) if name is not unique
@@ -54,13 +52,9 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
         # if app just save message, e.g. modify text, not name
         if id_in_db != id:
 
-            MessageToDmitry(data='name in name list!').send_message()
-
             return 'Please, modify name of message'
 
     if is_finish_of_queue == 'True':
-
-        MessageToDmitry(data='finish if queue = True').send_message()
 
         if TelegramMesage.objects.filter(is_finish_of_queue=True).exists():
 
@@ -69,11 +63,7 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
             # if app just save existing message, e.g. modify text, not "finish of queue" status
             if id_in_db != id:
 
-                MessageToDmitry(data='come to text of error').send_message()
-
                 return 'The queue already has an end'
-
-    MessageToDmitry(data='return true').send_message()
 
     return True
 
@@ -117,8 +107,6 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
         custom_message.send_count_to_dmitry()
 
-        MessageToDmitry(data='AMA HERE BITCH').send_message()
-
         message.save_data(
             days=days,
             hours=hours,
@@ -159,7 +147,7 @@ def create_telegram_message(request, message_id=None):
 
     if request.method == 'POST':
 
-        MessageToDmitry(data='come here').send_message()
+        MessageToDmitry(data='Опа! В очереди изменения какие-то. ').send_message()
 
         # get data from form
 
@@ -173,27 +161,17 @@ def create_telegram_message(request, message_id=None):
 
         # if app modify message
 
-        MessageToDmitry(data='next setp').send_message()
-
         if message_id is not None:
-
-            MessageToDmitry(data='message id is not None').send_message()
 
             id = message_id
             # if there is similar name in DB already or duplicate final of queue
             unique_of_message = check_uniqie_helper(name, is_finish_of_queue, id)
 
-            MessageToDmitry(data=f'unique? -> {unique_of_message}').send_message()
-
             if unique_of_message is not True:
 
-                MessageToDmitry(data='final 1').send_message()
-
                 form = CreateMessage(request.POST)
-                MessageToDmitry(data='final 2').send_message()
                 messages.error(request, unique_of_message)
-                MessageToDmitry(data='final 3').send_message()
-                MessageToDmitry(data=f'message_id: {message_id}').send_message()
+                MessageToDmitry(data=f'Изменить что-то решили. Название этого сообщения: {message_id}').send_message()
 
                 # unknown bug with rendering page on host. on local there is no bug.
 
@@ -210,18 +188,6 @@ def create_telegram_message(request, message_id=None):
                 response = HttpResponse(html_content, content_type='text/html')
 
                 return response
-
-                return render(
-                    request, 'message/create_message.html',
-                    {
-                        "form": form,
-                        "status": "modify",
-                        'message_id': message_id
-                    },
-                    messages
-                )
-
-            MessageToDmitry(data='Oooops!').send_message()
 
             message = TelegramMesage.objects.get(id=id)
 
