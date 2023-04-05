@@ -11,7 +11,7 @@ from users.models.user import User
 from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
 
 # import class for sending message in Telegram
-from bot.sending_message import TelegramCustomMessage
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 # import auth decorators
 from auth.helpers import auth_required
@@ -48,9 +48,13 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
 
     if is_finish_of_queue == 'True':
 
+        MessageToDmitry(data='finish if queue = True').send_message()
+
         if TelegramMesage.objects.filter(is_finish_of_queue=True).exists():
+            MessageToDmitry(data='come to text of error').send_message()
             return 'The queue already has an end'
 
+    MessageToDmitry(data='return true').send_message()
     return True
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
@@ -93,6 +97,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
         custom_message.send_count_to_dmitry()
 
+        MessageToDmitry(data='AMA HERE BITCH').send_message()
+
         message.save_data(
             days=days,
             hours=hours,
@@ -132,6 +138,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 def create_telegram_message(request, message_id=None):
     if request.method == 'POST':
 
+        MessageToDmitry(data='come here').send_message()
+
         # get data from form
 
         days = int(request.POST.get('days'))
@@ -144,16 +152,28 @@ def create_telegram_message(request, message_id=None):
 
         # if app modify message
 
+        MessageToDmitry(data='next setp').send_message()
+
         if message_id is not None:
+
+            MessageToDmitry(data='message id is no None').send_message()
 
             id = message_id
             # if there is similar name in DB already or duplicate final of queue
             unique_of_message = check_uniqie_helper(name, is_finish_of_queue, id)
+
+            MessageToDmitry(data='go throw unique').send_message()
+
             if unique_of_message is not True:
 
+                MessageToDmitry(data='final 1').send_message()
+
                 form = CreateMessage(request.POST)
+                MessageToDmitry(data='final 2').send_message()
                 messages.error(request, unique_of_message)
+                MessageToDmitry(data='final 3').send_message()
                 return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
+            MessageToDmitry(data='Oooops!').send_message()
             message = TelegramMesage.objects.get(id=id)
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
