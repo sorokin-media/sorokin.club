@@ -38,7 +38,6 @@ def construct_message(text):
         new_string = new_string + text[0:start] + y + '?utm_source=private_bot_messages_queue'
         text = text[finish:]
     new_string += text
-    print('\n\n\nHUY PIZDA\n\n\n')
     return new_string
 
 def send_message_helper(message, message_queue):

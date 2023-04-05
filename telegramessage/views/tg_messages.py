@@ -23,6 +23,23 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+# Python imports
+import re
+
+def construct_message(text):
+
+    '''add UTM to links in text'''
+
+    new_string = ''
+    while 'https://sorokin' in text:
+        x = re.search(r'https://sorokin[\w\d\=\:\/\.\?\-\&\%\;]+', text)
+        start = x.start()
+        finish = x.end()
+        y = x.group()
+        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_messages_queue'
+        text = text[finish:]
+    new_string += text
+    return new_string
 
 @auth_required
 def show_telegram_messages(request):
@@ -72,17 +89,19 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
     if "Отправить тест Алексею" in request.POST:
 
-        #        tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
-        #        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        #        tg_ids = [tg_id_of_alex, tg_id_of_dima]
+        tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
+        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        tg_ids = [tg_id_of_alex, tg_id_of_dima]
 
         # for tests on local
         #fortest = User.objects.filter(slug='dev').first()
         #tg_ids = [fortest]
 
         # for test on prod by Dmitry
-        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        tg_ids = [tg_id_of_dima]
+        #tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        #tg_ids = [tg_id_of_dima]
+
+        text = construct_message(text)
 
         for _ in tg_ids:
 
