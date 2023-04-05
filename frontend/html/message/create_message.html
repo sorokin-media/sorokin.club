@@ -1,6 +1,6 @@
 <!DOCTYPE html>
+<html lang="ru-en">
 {% load static %}
-<html lang="ru">
 <head>
 <meta charset="UTF-8"/>
 <title>Очередь сообщений</title>
@@ -18,7 +18,6 @@
             {% include "common/menu-simplified.html" %}
         {% endif %}
     {% endblock %}
-
     {% if request.path in telegram_modal_ignore_paths %}
     {% else %}
         {% if me.moderation_status != 'approved' %}
@@ -77,6 +76,7 @@
     Не для тебя
 </div>
 {% endif %}
+
 </div>
 
 {% endblock %}
