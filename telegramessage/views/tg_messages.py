@@ -36,18 +36,24 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
 
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
 
-    MessageToDmitry(data=f'name_list: {str(name_list)}').send_message()
-
-    MessageToDmitry(data=f'NAME: {name}').send_message()
-
     check = name in name_list
-    MessageToDmitry(data=f'Name in Name list? {check}').send_message()
+    id_is_none = id is None
+
+    sum_of_conditions = id is None and name in name_list
+
+    MessageToDmitry(
+        data=f'id: {id}\n'
+        f'id so none? -> {id_is_none}\n'
+        f'name_list: {str(name_list)}\n'
+        f'NAME: {name}\n'
+        f'Name in Name list? {check}\n'
+        f'sum of conditions: {sum_of_conditions}'
+    ).send_message()
 
     # is there name in list of message's name that already exist
     if id is None and name in name_list:
 
-        MessageToDmitry(data='id is not none in unique helper')
-        MessageToDmitry(data=f'type of id: {type(id)}')
+        MessageToDmitry(data='CONDITION DONE').send_message()
 
         return 'Please, modify name of message'
 
