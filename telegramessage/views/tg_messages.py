@@ -1,6 +1,7 @@
 # import Django packages
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import HttpResponse
 
 # import Forms and Models
 from telegramessage.forms import CreateMessage
@@ -193,6 +194,22 @@ def create_telegram_message(request, message_id=None):
                 messages.error(request, unique_of_message)
                 MessageToDmitry(data='final 3').send_message()
                 MessageToDmitry(data=f'message_id: {message_id}').send_message()
+
+                # unknown bug with rendering page on host. on local there is no bug.
+
+                html_content = render(
+                    request, 'message/create_message.html',
+                    {
+                        "form": form,
+                        "status": "modify",
+                        'message_id': message_id
+                    },
+                    messages
+                ).content
+
+                response = HttpResponse(html_content, content_type='text/html')
+
+                return response
 
                 return render(
                     request, 'message/create_message.html',
