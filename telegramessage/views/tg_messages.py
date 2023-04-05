@@ -172,9 +172,22 @@ def create_telegram_message(request, message_id=None):
                 MessageToDmitry(data='final 2').send_message()
                 messages.error(request, unique_of_message)
                 MessageToDmitry(data='final 3').send_message()
-                return render(request, 'message/create_message.html', {"form": form, "status": "modify"}, messages)
+                MessageToDmitry(data=f'message_id: {message_id}').send_message()
+                
+                return render(
+                    request, 'message/create_message.html',
+                    {
+                    "form": form, 
+                    "status": "modify", 
+                    'message_id': message_id
+                    },
+                    messages
+                )
+
             MessageToDmitry(data='Oooops!').send_message()
+
             message = TelegramMesage.objects.get(id=id)
+
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
                              name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
 
