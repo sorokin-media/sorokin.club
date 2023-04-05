@@ -1,11 +1,14 @@
-{% extends "layout.html" %}
-{% load posts %}
+<!DOCTYPE html>
 {% load static %}
-{% load users %}
-{% load text_filters %}
-{% block title %}
-Очередь сообщений
-{% endblock %}
+<html lang="ru">
+<head>
+
+<meta charset="UTF-8"/>
+{% load static %}
+
+{% include "common/css.html" %}
+{% block css %}{% endblock %}
+
 {% block og_tags %}
 <meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
 <meta property="og:site_name" content="{{ settings.APP_NAME }}">
@@ -18,8 +21,24 @@
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="{% static " images/share.png" %}">
 {% endblock %}
-{% block content %}
+</head>
+<main id="app">
+    {% block menu %}
+        {% if me %}
+            {% include "common/menu-full.html" %}
+        {% else %}
+            {% include "common/menu-simplified.html" %}
+        {% endif %}
+    {% endblock %}
 
+    {% if request.path in telegram_modal_ignore_paths %}
+    {% else %}
+        {% if me.moderation_status != 'approved' %}
+            <get-post-modal/>
+        {% endif %}
+    {% endif %}
+</main>
+{% block content %}
 {% if me.is_god %}
 
 <div class="container">
