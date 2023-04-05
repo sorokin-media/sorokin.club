@@ -41,7 +41,9 @@
                 <small><font color="red">Черновик</font></small>
                 <br>
                 {% endif %}
-                <a href="{% url 'modify_telegram_message' message.id %}" class="p-name post-title-link"> {{ message.name }}.  Дни: {{ message.days }}, часы: {{ message.hours }}, минуты: {{ message.minutes }}</a>
+                <a href="{% url 'modify_telegram_message' message.id %}" class="p-name post-title-link"> <div style="font-size:110%; font-family:Arial Black; font-weight: bold;">{{ message.name }}</div>
+                    <br>
+                    <div style="font-size:80%; font-style: italic;">Дни: {{ message.days }}<br>Часы: {{ message.hours }}<br>Минуты: {{ message.minutes }}</div></a>
             </div>
         </div>
         </div>

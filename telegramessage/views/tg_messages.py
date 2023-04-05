@@ -36,44 +36,44 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
 
     name_list = list(TelegramMesage.objects.values_list('name', flat=True).distinct())
 
-    check = name in name_list
-    id_is_none = id is None
+    # 1) if name is not unique
+    # 2) if message is new, i.e. that's NOT just modification
+    if name in name_list and id is None:
 
-    sum_of_conditions = id is None and name in name_list
-
-    MessageToDmitry(
-        data=f'id: {id}\n'
-        f'id so none? -> {id_is_none}\n'
-        f'name_list: {str(name_list)}\n'
-        f'NAME: {name}\n'
-        f'Name in Name list? {check}\n'
-        f'sum of conditions: {sum_of_conditions}'
-    ).send_message()
-
-    # is there name in list of message's name that already exist
-    if id is None and name in name_list:
-
-        MessageToDmitry(data='CONDITION DONE').send_message()
+        MessageToDmitry(data='name in name list!').send_message()
 
         return 'Please, modify name of message'
 
-    id_in_db = TelegramMesage.objects.filter(name=name).exists()
+    # 1) if name is not unique
+    # 2) if app modify message, i.e. that's NOT new message
+    elif name in name_list and id is not None:
 
-    MessageToDmitry(data=f'id in db: {id_in_db}')
+        id_in_db = TelegramMesage.objects.get(name=name).id
 
-    # True if not unique, else False
-    if name in name_list and not id_in_db:
-        return 'Please, modify name of message'
+        # if app just save message, e.g. modify text, not name
+        if id_in_db != id:
+
+            MessageToDmitry(data='name in name list!').send_message()
+
+            return 'Please, modify name of message'
 
     if is_finish_of_queue == 'True':
 
         MessageToDmitry(data='finish if queue = True').send_message()
 
         if TelegramMesage.objects.filter(is_finish_of_queue=True).exists():
-            MessageToDmitry(data='come to text of error').send_message()
-            return 'The queue already has an end'
+
+            id_in_db = TelegramMesage.objects.get(is_finish_of_queue=True).id
+
+            # if app just save existing message, e.g. modify text, not "finish of queue" status
+            if id_in_db != id:
+
+                MessageToDmitry(data='come to text of error').send_message()
+
+                return 'The queue already has an end'
 
     MessageToDmitry(data='return true').send_message()
+
     return True
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
@@ -155,6 +155,7 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
 @auth_required
 def create_telegram_message(request, message_id=None):
+
     if request.method == 'POST':
 
         MessageToDmitry(data='come here').send_message()
@@ -175,7 +176,7 @@ def create_telegram_message(request, message_id=None):
 
         if message_id is not None:
 
-            MessageToDmitry(data='message id is no None').send_message()
+            MessageToDmitry(data='message id is not None').send_message()
 
             id = message_id
             # if there is similar name in DB already or duplicate final of queue
