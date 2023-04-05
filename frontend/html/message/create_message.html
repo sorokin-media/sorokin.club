@@ -18,7 +18,7 @@
         <br>
 
         {% if status == 'modify' %}
-        <form action="{% url 'create_telegram_message' message_id %}" method="post">
+        <form action="{% url 'create_telegram_message' message_id=message_id %}" method="post">
         {% else %}
         <form action="{% url 'create_telegram_message' %}" method="post">
         {% endif %}
