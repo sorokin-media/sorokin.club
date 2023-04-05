@@ -132,11 +132,11 @@ urlpatterns = [
 
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 
-    path("create_telegram_message/<message_id>/", create_telegram_message, name='create_telegram_message'),
+    path("create_telegram_message/<uuid:message_id>/", create_telegram_message, name='create_telegram_message'),
     path("create_telegram_message/", create_telegram_message, name='create_telegram_message'),
     path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
-    path("modify_telegram_message/<message_id>/", modify_telegram_message, name='modify_telegram_message'),
-    path("delete_telegram_message/<message_id>/", delete_telegram_message, name='delete_telegram_message'),
+    path("modify_telegram_message/<uuid:message_id>/", modify_telegram_message, name='modify_telegram_message'),
+    path("delete_telegram_message/<uuid:message_id>/", delete_telegram_message, name='delete_telegram_message'),
     path("create_day_helpfullness/<id>", create_day_helpfullness, name="create_day_helpfullness"),
     path("create_day_helpfullness", create_day_helpfullness, name="create_day_helpfullness"),
     path("show_helpfullness_list", show_helpfullness_list, name="show_helpfullness_list"),
