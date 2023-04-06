@@ -89,19 +89,17 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
     if "Отправить тест Алексею" in request.POST:
 
-        tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
-        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        tg_ids = [tg_id_of_alex, tg_id_of_dima]
+        #tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
+        #tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        #tg_ids = [tg_id_of_alex, tg_id_of_dima]
 
         # for tests on local
-        #fortest = User.objects.filter(slug='dev').first()
-        #tg_ids = [fortest]
+        fortest = User.objects.filter(slug='dev').first()
+        tg_ids = [fortest]
 
         # for test on prod by Dmitry
         #tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
         #tg_ids = [tg_id_of_dima]
-
-        text = construct_message(text)
 
         for _ in tg_ids:
 
@@ -110,7 +108,7 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
                 custom_message = TelegramCustomMessage(
                     user=_,
                     photo=image_url,
-                    string_for_bot=text
+                    string_for_bot=construct_message(text)
                 )
 
                 custom_message.send_photo()
@@ -119,7 +117,7 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
                 custom_message = TelegramCustomMessage(
                     user=_,
-                    string_for_bot=text
+                    string_for_bot=construct_message(text)
                 )
 
                 custom_message.send_message()
