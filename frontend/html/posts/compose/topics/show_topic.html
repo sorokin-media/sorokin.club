@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru-en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Очередь сообщений</title>
+    {% load static %}
+
+    {% include "common/css.html" %}
+    {% block css %}{% endblock %}
+
+</head>
+<main id="app">
+    {% block menu %}
+    {% if me %}
+    {% include "common/menu-full.html" %}
+    {% else %}
+    {% include "common/menu-simplified.html" %}
+    {% endif %}
+    {% endblock %}
+    {% if request.path in telegram_modal_ignore_paths %}
+    {% else %}
+    {% if me.moderation_status != 'approved' %}
+    <get-post-modal />
+    {% endif %}
+    {% endif %}
+</main>
+{% block content %}
+{% if me.is_god %}
+
+<br><br>
+
+<div class="container">
+
+    <a href="{% url 'create_topic' %}" style="font-size: 200%;">Создать комнату<a>
+    <br>
+    <br>
+    <br>
+    <div class="form-row compose-form-title">
+
+        {% for room in rooms %}
+        <div class="container">
+
+            <article class="block feed-post h-entry feed-post-post">
+                <div class="feed-post-header">
+                    <div class="feed-post-title">
+                        <a href="{% url 'create_topic' room_slug=room.slug %}" class="p-name post-title-link">
+                            <div style="font-size:110%; font-family:Arial Black; font-weight: bold;">{{ room }}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+        </div>
+        <br>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+    <div class="stats">
+        Не для тебя
+    </div>
+    {% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}
+
+</html>

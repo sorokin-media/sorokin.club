@@ -23,6 +23,9 @@ from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, stop_subscription_test
 from payments.views.crypto import crypto, coinbase_webhook
 from payments.views.unitpay import unitpay_pay, unitpay_webhook
+
+# posts import
+
 from posts.api import md_show_post, api_show_post
 from posts.models.post import Post
 from posts.rss import NewPostsRss
@@ -32,8 +35,13 @@ from posts.views.api import toggle_post_bookmark
 from posts.views.feed import feed
 from posts.views.posts import show_post, edit_post, upvote_post, retract_post_vote, compose, compose_type, \
     toggle_post_subscription, delete_post, unpublish_post, clear_post
+from posts.views.topic_create_delete import create_topic, open_form, show_list_of_rooms, delete_room
+
 from bookmarks.views import bookmarks
 from search.views import search
+
+# users impotrs
+
 from users.api import api_profile
 from users.views.delete_account import request_delete_account, confirm_delete_account
 from users.views.friends import toggle_friend, friends
@@ -165,6 +173,12 @@ urlpatterns = [
     path("post/<slug:post_slug>/comment/create/", create_comment, name="create_comment"),
     path("post/<slug:post_slug>/comment/<uuid:comment_id>/", show_comment, name="show_comment"),
     path("post/<slug:post_slug>/badge/", create_badge_for_post, name="create_badge_for_post"),
+  
+    path("topic/create/<room_slug>", create_topic, name='create_topic'),
+    path("topic/create/", create_topic, name='create_topic'),
+    path("topic/open_form/", open_form, name='open_form'),
+    path("show_list_of_rooms", show_list_of_rooms, name='show_list_of_rooms'),
+    path("delete_room/<room_slug>", delete_room, name="delete_room"),
 
     path("bookmarks/", bookmarks, name="bookmarks"),
 

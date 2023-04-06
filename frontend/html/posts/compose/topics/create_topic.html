@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru-en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Очередь сообщений</title>
+    {% load static %}
+
+    {% include "common/css.html" %}
+    {% block css %}{% endblock %}
+
+</head>
+<main id="app">
+    {% block menu %}
+    {% if me %}
+    {% include "common/menu-full.html" %}
+    {% else %}
+    {% include "common/menu-simplified.html" %}
+    {% endif %}
+    {% endblock %}
+    {% if request.path in telegram_modal_ignore_paths %}
+    {% else %}
+    {% if me.moderation_status != 'approved' %}
+    <get-post-modal />
+    {% endif %}
+    {% endif %}
+</main>
+
+{% block content %}
+
+{% if me.is_god %}
+
+<br><br>
+
+<div class="container">
+
+    <div class="form-row compose-form-title">
+
+        {% if messages %}
+        {% for message in messages %}
+        <p style="color:rgb(255, 5, 64);">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+
+        <a href="{% url 'show_list_of_rooms' %}">Вернуться в коридор</a>
+        <br><br>
+
+        <hr>
+        <div style="font-size: 280;font-family: monospace;fon">
+
+        <p>Slug - это будет отображаться в URL. Например для комнаты <a href="https://sorokin.club/room/health/"> по ссылке<a>используется slug 'health'</p>
+        <p>Name - это будет отображаться юзерам.  </p>
+        <p>icon - это ссылка на файл формата PNG, который используется для аватара комнаты  </p>
+        <p>color - это цвет, который окрашивается кнопка для перехода в комнату. Обязательно вводить значение начиная с символа #  </p>
+
+        </div>
+        <hr>
+
+        <br>
+        <br>
+
+        {% if form.slug.value %}
+
+        <form action="{% url 'create_topic' room_slug=form.slug.value %}" method="post">
+
+            {% else %}
+        
+            <form action="{% url 'create_topic' %}" method="post">
+        
+                {% endif %}
+        
+                {% csrf_token %}
+                {% for field in form %}
+                {{ field.label_tag }}
+        
+                <br>
+        
+                {{ field }}
+        
+                <br><br>
+        
+                {% endfor %}
+        
+                <button type="submit" name="Сохранить!">Сохранить!</button>
+                <br>
+                <br>
+
+            </form>
+
+            {% if form %}
+            <a href="{% url 'delete_room' room_slug=form.slug.value %}">Удалить сообщение</a>
+            <br><br>
+            {% endif %}
+            
+            <a href="https://csscolor.ru/" target="_blank" style="color: rgb(167, 16, 187);">Для подбора цвета</a>
+
+            {% else %}
+            <div class="stats">
+                Не для тебя
+            </div>
+            {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+</html>
+
+

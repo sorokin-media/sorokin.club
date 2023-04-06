@@ -11,6 +11,7 @@ from posts.models.topics import Topic
 from common.forms import ImageUploadField
 from users.models.user import User
 
+from django.forms import TextInput
 
 class PostForm(forms.ModelForm):
     topic = forms.ModelChoiceField(
@@ -42,9 +43,9 @@ class PostForm(forms.ModelForm):
         non_existing_coauthors = [coauthor for coauthor in cleaned_data.get("coauthors", [])
                                   if not User.objects.filter(slug=coauthor).exists()]
         if non_existing_coauthors:
-            raise ValidationError({"coauthors": "Несуществующие пользователи: {}".format(', '.join(non_existing_coauthors))})
+            raise ValidationError(
+                {"coauthors": "Несуществующие пользователи: {}".format(', '.join(non_existing_coauthors))})
         self.instance.coauthors = cleaned_data["coauthors"]
-
 
 
 class PostTextForm(PostForm):
@@ -774,7 +775,9 @@ class PostThreadForm(PostForm):
 
     class Meta:
         model = Post
-        fields = ["title", "text", "comment_template", "topic", "is_public", "seoTitle", "seoDescription", "seoKeywords"]
+        fields = ["title", "text", "comment_template", "topic",
+                  "is_public", "seoTitle", "seoDescription", "seoKeywords"]
+
 
 POST_TYPE_MAP = {
     Post.TYPE_POST: PostTextForm,
@@ -787,3 +790,39 @@ POST_TYPE_MAP = {
     Post.TYPE_GUIDE: PostGuideForm,
     Post.TYPE_THREAD: PostThreadForm,
 }
+
+class CreateTopic(forms.ModelForm):
+
+    class Meta:
+        model = Topic
+        fields = '__all__'
+
+        fields = ('slug', 'name', 'icon', 'color', )
+
+        widgets = {
+            'slug': TextInput(
+                attrs={
+                    'placeholder': 'sorokin.club/room/<SLUG>',
+                    'size': '100',
+                    'style': 'font-size:80%;font-style: italic;float: left;'
+                }
+            ),
+            'name': TextInput(
+                attrs={
+                    'placeholder': 'Название топика. Будет отображаться юзерам',
+                    'style': 'font-size:80%;font-style: italic;'
+                }),
+            'icon': TextInput(
+                attrs={
+                    'placeholder': ''
+                    'Ссылка на изображение формата PNG',
+                    'style': 'font-size:80%;font-style: italic;'
+                }
+            ),
+            'color': TextInput(
+                attrs={
+                    'placeholder': '#16662c',
+                    'style': 'font-size:80%;'
+                }
+            )
+        }
