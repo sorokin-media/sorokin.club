@@ -159,9 +159,13 @@
         <div class="feed-sidebar-block">
             <div class="feed-sidebar-header">Комнаты</div>
             <div class="feed-sidebar-topics">
-                {% for topic in topics %}
+
+                {% with topics|sort_by_attr:'name' as sorted_objects %}
+                {% for topic in sorted_objects %}
                     {% include "posts/widgets/topic.html" with topic=topic type="card" %}
                 {% endfor %}
+                {% endwith %}
+
             </div>
         </div>
     </aside>

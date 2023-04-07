@@ -157,3 +157,8 @@ def days_to_months(days):
 @register.filter()
 def days_to_years(days):
     return days // 365
+
+@register.filter
+def sort_by_attr(objects, attr):
+    objects = sorted(objects, key=lambda obj: str(obj).casefold())
+    return (objects)
