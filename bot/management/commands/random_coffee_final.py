@@ -16,7 +16,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
 # import custom class for sending message
-from bot.sending_message import TelegramCustomMessage
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 
 class Command(BaseCommand):
@@ -54,9 +54,14 @@ class Command(BaseCommand):
             )
             custom_message.send_message()
 
-        custom_message.send_count_to_dmitry(type_='Отправлен запрос на получение первого фидбека '
-                                            f'юзеру {coffee_user.user.slug}')
+        if coffee_users:
 
+            custom_message.send_count_to_dmitry(type_='Отправлен запрос на получение первого фидбека '
+                                            f'юзеру {coffee_user.user.slug}')
+        
+        else:
+
+            MessageToDmitry(data='Не было собеседников. ').send_message()
 
 '''
 typical commands for tests on local

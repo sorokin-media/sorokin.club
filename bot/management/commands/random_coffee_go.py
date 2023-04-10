@@ -42,7 +42,7 @@ def coffee_partners_hepler(user_1, user_2):
     user_2.save()
 
 def send_message_helper(user_1, user_2):
-    
+
     # need changes!
 
     # slug could be different for post and user, careful with that
@@ -72,7 +72,7 @@ def send_message_helper(user_1, user_2):
     coffee_log_1.save()
     coffee_log_2.save()
 
-    #formatting for Telegram
+    # formatting for Telegram
     link_1 = user_1.random_coffee_tg_link
     link_2 = user_2.random_coffee_tg_link
 
@@ -92,7 +92,7 @@ def send_message_helper(user_1, user_2):
         f'Интро: {settings.APP_HOST}/intro/{intro_2.slug}\n'\
         f'Телеграм для связи: {link_2}\n\n'\
         f'{text_finish}'\
-    
+
     custom_message_1 = TelegramCustomMessage(
         user=user_1.user,
         string_for_bot=text,
@@ -129,16 +129,16 @@ class Command(BaseCommand):
         # random_coffee_today True - user is not busy
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
-                if coffee_users[k].random_coffee_past_partners is not None \
-                        and coffee_users[0].random_coffee_past_partners is not None\
-                        and coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners\
-                        and (Muted.is_muted(
-                            user_from=coffee_users[k].user,
-                            user_to=coffee_users[0].user
-                        ) or Muted.is_muted(
-                            user_from=coffee_users[0].user,
-                            user_to=coffee_users[k].user
-                        )):
+                if coffee_users[k].random_coffee_past_partners is not None and\
+                    coffee_users[0].random_coffee_past_partners is not None and\
+                        (coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners or
+                         (Muted.is_muted(
+                             user_from=coffee_users[k].user,
+                             user_to=coffee_users[0].user
+                         ) or Muted.is_muted(
+                             user_from=coffee_users[0].user,
+                             user_to=coffee_users[k].user
+                         ))):
                     k += 1
                 else:
                     coffee_partners_hepler(coffee_users[0], coffee_users[k])
