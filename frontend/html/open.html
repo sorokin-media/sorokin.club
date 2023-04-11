@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load text_filters %}
+{% load static %}
+{% load paginator %}
+{% load posts %}
+
+{% block og_tags %}
+    <meta property="og:title" content="{% if topic %}{{ topic.name }} — {% endif %}{{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="{% if topic %}{{ topic.description }}{% endif %}">
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{% if topic %}{{ topic.name }} — {% endif %}{{ settings.APP_NAME }}">
+    <meta name="twitter:description" content="{% if topic %}{{ topic.description }}{% endif %}">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
+
+    {% endblock %}
+        {% block body %}
+        <nav class="menu menu-full">
+            <div class="menu-left">
+                <a href="{% url "index" %}" class="menu-logo">
+                    Сорокин.Клуб
+                </a>
+            </div>
+            <div class="menu-center">
+                <div class="menu-search">
+                    <form action="{% url "search" %}">
+                        <label for="menu-search-input" class="menu-search-label {% if query %}menu-search-label-is-active{% endif %}" id="menu-search-label"><i class="fas fa-search"></i></label>
+                        <input type="text" name="q" minlength="3" maxlength="200" class="menu-search-input" id="menu-search-input" value="{{ query|default:'' }}" aria-labelledby="menu-search-label" placeholder="Поиск">
+                        <input type="submit" value="&rarr;" style="position: absolute; top: 0; left: -9999px;">
+                    </form>
+                </div>
+            </div>
+            <div class="menu-right">
+                {% if me %}
+                    {% if me.is_club_member %}
+                        <a href="{% url "compose" %}" class="button menu-button menu-button-compose" aria-label="Написать пост" title="Написать пост"><i class="fas fa-pen"></i><span class="compose-btn-text">&nbsp;&nbsp;Пиши</span></a>
+                        <a href="{% url "bookmarks" %}" class="menu-button menu-button-bookmark" aria-label="Мои закладки" title="Мои закладки"><i class="fa fa-bookmark"></i>&nbsp;&nbsp;</a>
+                    {% endif %}
+                    <a href="{% url "profile" me.slug %}" class="avatar menu-avatar" aria-label="Мой профиль" title="Мой профиль"><img src="{{ me.get_avatar }}" alt="Аватар {{ me.full_name }}" /></a>
+                {% else %}
+                    <a href="{% url "login" %}?goto={{ settings.APP_HOST }}{{ request.path }}" class="avatar menu-avatar"><img src="{% static "images/test/avatar.png"%}" alt="Аватар" /></a>
+                {% endif %}
+            </div>
+        </nav>
+    
+        {% block feed_content %}
+        <div class="container">
+    {% for post in posts %}
+{% include "posts/items/items.html" %}
+    {% endfor %}
+</div>
+    <div class="feed-paginator">
+        {% paginator posts %}
+    </div>
+
+    {% endblock %}
+{% endblock %}
+
+
+
