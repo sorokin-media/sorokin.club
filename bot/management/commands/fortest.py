@@ -18,10 +18,16 @@ from telegram.ext import CallbackContext
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
-from club.settings import TG_DEVELOPER_DMITRY
+from club.settings import TG_DEVELOPER_DMITRY, TG_TEST
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        print(TG_DEVELOPER_DMITRY)
+        try:
+
+            print(TG_TEST)
+
+        except Exception:
+
+            print(Exception)
