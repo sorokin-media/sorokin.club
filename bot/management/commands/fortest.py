@@ -18,7 +18,7 @@ from telegram.ext import CallbackContext
 # import custom class for sending message
 from bot.sending_message import TelegramCustomMessage
 
-from club.settings import TG_DEVELOPER_DMITRY, TG_TEST
+from club.settings import TG_DEVELOPER_DMITRY
 
 class Command(BaseCommand):
 
@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
         try:
 
-            print(TG_TEST)
+            print(TG_DEVELOPER_DMITRY)
 
         except Exception:
 
