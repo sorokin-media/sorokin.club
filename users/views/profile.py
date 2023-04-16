@@ -280,8 +280,11 @@ def random_coffee(request, user_slug):
         random_string.save()
         return redirect('/')
 
-    if 'https://t.me/' in tg_data:
+    if tg_data is not None and 'https://t.me/' in tg_data:
         tg_data = tg_data.replace('https://t.me/', '@')
+
+    if tg_data is None:
+        tg_data = 'Похоже, твой username скрыт в настройках Telegram'
 
     return render(request, 'users/profile/random_coffee.html', {
         'form': form,
