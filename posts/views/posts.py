@@ -14,6 +14,11 @@ from posts.models.views import PostView
 from posts.models.votes import PostVote
 from posts.renderers import render_post
 from search.models import SearchIndex
+from users.models.affilate_models import AffilateLogs
+
+from django.http import HttpResponse
+
+import re
 
 
 def show_post(request, post_type, post_slug):
@@ -58,9 +63,26 @@ def show_post(request, post_type, post_slug):
     # force cleanup deleted/hidden posts from linked
     linked_posts = [p for p in linked_posts if p.is_visible]
 
+    if post.is_public:
+
+        if 'p' in request.GET.keys():
+            # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+            p_value = request.GET.getlist('p')[0]
+            new_one = AffilateLogs()
+            identify_string = None
+
+            if 'affilate_p' in request.COOKIES.keys():
+
+                identify_string = request.COOKIES.get('affilate_p')
+           
+            new_one.insert_first_time(p_value, identify_string)
+            cookie = new_one.identify_new_user
+
     return render_post(request, post, {
         "post_last_view_at": last_view_at,
         "linked_posts": linked_posts,
+        "cookie": cookie
     })
 
 

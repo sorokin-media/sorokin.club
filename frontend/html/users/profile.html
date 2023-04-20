@@ -100,6 +100,12 @@
                         {% endif %}
                     </span>
                 </a>
+                <a href="{% url "pfofile_affilate" user.slug %}" class="profile-status">
+                    <span class="profile-status-icon">🎁</span>
+                    <span class="profile-status-status">
+                        Реферальная программа
+                    </span>
+                </a>
             </div>
         {% else %}
             <div class="block profile-statuses">

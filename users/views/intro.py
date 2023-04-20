@@ -13,6 +13,7 @@ from users.models.user import User
 from posts.models.subscriptions import PostSubscription
 from pprint import pprint
 
+from users.models.affilate_models import AffilateLogs
 
 @auth_required
 def intro(request):
@@ -58,7 +59,8 @@ def intro(request):
             async_task(notify_profile_needs_review, user, intro_post)
 
             return redirect("on_review")
-    else:
+    else:  
+
         existing_intro = Post.get_user_intro(request.me)
         form = UserIntroForm(
             instance=request.me,
@@ -83,5 +85,12 @@ def intro(request):
                 chat=Chat(id=204349098),
                 text=text_send
             )
+
+        if 'affilate_p' in request.COOKIES.keys():      
+
+            identify_string = request.COOKIES.get('affilate_p')
+
+            new_one = AffilateLogs.objects.get(identify_new_user=identify_string)
+            new_one.insert_on_intro(user)
 
     return render(request, "users/intro.html", {"form": form})
