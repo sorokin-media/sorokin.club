@@ -48,3 +48,21 @@ def active_or_not(user):
     z = user.moderation_status == 'approved'
 
     return "Активен" if x and y and z else "Не активен"
+
+@register.simple_tag()
+def get_amount_from_str(comment):
+
+    if 'Bonus Money: ' in comment:
+
+        return comment.replace("Bonus Money: ", "")
+
+    elif 'Bonus Days: 1' in comment:
+
+        return comment.replace("Bonus Days: ", "")
+
+@register.simple_tag()
+def make_moscow_time(utc_date_time):
+
+    time_zone = pytz.UTC    
+    moscow_date_time = time_zone.localize(utc_date_time)
+    return moscow_date_time.strftime('%Y-%m-%d')

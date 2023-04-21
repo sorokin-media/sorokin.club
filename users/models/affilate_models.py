@@ -45,30 +45,6 @@ class AffilateInfo(models.Model):
         self.save()
 
 
-class AffilateVisit(models.Model):
-
-    class Meta:
-        db_table = 'affilate_visit'
-
-    id = models.UUIDField(primary_key=True, default=uuid4)
-    ref = models.CharField(max_length=248, null=True, editable=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    code = models.UUIDField(unique=True, default=uuid4, max_length=8)
-
-
-class UserAffilate(models.Model):
-
-    class Meta:
-        db_table = 'user_affilate'
-
-    affilate_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
-    unique_code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE, db_column='unique_code')
-    created_at = models.DateTimeField(auto_now_add=True)
-    creator_id = models.ForeignKey(User, related_name='creator_of_affilate',
-                                   on_delete=models.CASCADE, db_column='creator_id')
-    is_deleted = models.BooleanField(default=False)
-    deleted_at = models.DateTimeField(null=True)
-
 class AffilateLogs(models.Model):
 
     ACTION_CHOISES = [
@@ -132,7 +108,61 @@ class AffilateLogs(models.Model):
 
         if self.affilate_status != 'come to intro form':
 
-            self.affilated_user = user
-            self.time_come_on_intro = now
-            self.affilate_status = 'come to intro form'
-            self.save()
+            print('FIRST CONDITION')
+
+            if not AffilateLogs.objects.filter(
+                    creator_id=self.creator_id).filter(
+                        affilate_status='come to intro form').filter(
+                            affilated_user=user).exists():
+
+                print('SECOND CONDITION')
+
+                self.affilated_user = user
+                print(f'USER IN CONDITION: {user}')
+                self.time_come_on_intro = now
+                self.affilate_status = 'come to intro form'
+                self.save()
+
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+
+class AffilateVisit(models.Model):
+
+    class Meta:
+        db_table = 'affilate_visit'
+
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    ref = models.CharField(max_length=248, null=True, editable=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    code = models.UUIDField(unique=True, default=uuid4, max_length=8)
+
+class UserAffilate(models.Model):
+
+    class Meta:
+        db_table = 'user_affilate'
+
+    affilate_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
+    unique_code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE, db_column='unique_code')
+    created_at = models.DateTimeField(auto_now_add=True)
+    creator_id = models.ForeignKey(User, related_name='creator_of_affilate',
+                                   on_delete=models.CASCADE, db_column='creator_id')
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True)

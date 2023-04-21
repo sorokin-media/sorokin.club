@@ -27,7 +27,7 @@
 
     <div class="block">
         <div class="form-row">
-            <form action="{% url 'random_coffee' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+            <form action="{% url 'pfofile_affilate' user.slug %}" method="post" class="settings-form">{% csrf_token %}
                 {% for field in form %}
                 <div class="settings-form__content">
                     <div class="settings-form__row">
@@ -68,18 +68,23 @@ function copyToClipboard(text) {
 </div>
 <div class="container">
 <!-- отсортировать надо по дате регистрации пользователя -->
-    Мои рефералы: <br>
+{% if affilate_logs %}
+Мои рефералы: <br>
 {% for log in affilate_logs %}
     <a href="{{ settings.APP_HOST }}/user/{{log.affilated_user.slug}}">{{log.affilated_user.full_name}}:</a>
     <br>
-    Дата регистрации: {{log.affilated_user.created_at}}
+    Дата регистрации: {% make_moscow_time log.affilated_user.created_at %}
     <br>
     {% active_or_not log.affilated_user %}
     <br>
-    Принёс мне дней в клубе: 
+    {% if 'Bonus Days:' in log.comment %}
+    Принёс мне дней в клубе: {% get_amount_from_str log.comment %}
     <br>
-    Принёс мне денег: 
+    {% elif 'Bonus Money:' in log.comment %}
+    Принёс мне денег: {% get_amount_from_str log.comment %}
     <br><br>
+    {% endif %}
     {% endfor %}
+{% endif %}
 </div>
 {% endblock %}

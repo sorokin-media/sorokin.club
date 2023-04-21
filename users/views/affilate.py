@@ -18,11 +18,20 @@ def pfofile_affilate(request, user_slug):
         new_one.insert_new_one(user)
 
     if request.method == 'POST':
-        return HttpResponse(user_slug)
+        affilate_info_row = AffilateInfo.objects.get(user_id=user)
+        form = AffilateInfoForm(request.POST, instance=affilate_info_row)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', user_slug=user_slug)
 
-    form = AffilateInfoForm()
+    form = AffilateInfoForm(
+        instance=AffilateInfo.objects.get(
+            user_id=user
+        )
+    )
     affilate_info = AffilateInfo.objects.get(user_id=user)
-    affilate_logs = AffilateLogs.objects.filter(creator_id=user).all().order_by('time_come_on_intro')
+    affilate_logs = AffilateLogs.objects.filter(creator_id=user).filter(
+        affilate_status='come to intro form').all().order_by('time_come_on_intro')
 
     return render(request, 'users/profile/affilate.html', {
         'form': form,
