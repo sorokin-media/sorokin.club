@@ -28,7 +28,7 @@ def bonus_to_creator(creator_user, affilated_log):
     fee_type = AffilateInfo.objects.get(user_id=creator_user).fee_type
     percent = AffilateInfo.objects.get(user_id=creator_user).percent * 0.01
 
-    if fee_type == 'DAYS':
+    if fee_type == 'DAYS' or fee_type == 'Дни':
 
         print(f'\nLOG: {affilated_log}\n')
         print(f'\nAFFILATED USER: {affilated_log.affilated_user}\n')
@@ -52,6 +52,8 @@ def bonus_to_creator(creator_user, affilated_log):
 
         affilated_log.comment = f'Bonus Days: {bonus_days}'
         affilated_log.save()
+
+        affilated_log.creator_id.save()
 
     if fee_type == 'MONEY':
 
@@ -134,14 +136,21 @@ def intro(request):
                 text=text_send
             )
 
+        print('START CHECK')
+
         if 'affilate_p' in request.COOKIES.keys():
+
+            print('GO GO GO')
 
             identify_string = request.COOKIES.get('affilate_p')
 
             new_one = AffilateLogs.objects.get(identify_new_user=identify_string)
+            print(f'NEW ONE: {new_one}')
             new_one.insert_on_intro(user)
 
             affilate_creator = new_one.creator_id
+
+            print('GO TO BONUS')
 
             bonus_to_creator(
                 creator_user=affilate_creator,

@@ -80,7 +80,7 @@ def render_post(request, post, context=None):
 
     comment_form = CommentForm(initial={'text': post.comment_template}) if post.comment_template else CommentForm()
 
-    if 'cookie' in context.keys():
+    if 'cookie' in context.keys() and context['cookie']:
         cookie = context['cookie']
     else:
         cookie = None

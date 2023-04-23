@@ -19,6 +19,7 @@ from users.models.affilate_models import AffilateLogs
 from django.http import HttpResponse
 
 import re
+import uuid
 
 
 def show_post(request, post_type, post_slug):
@@ -63,21 +64,32 @@ def show_post(request, post_type, post_slug):
     # force cleanup deleted/hidden posts from linked
     linked_posts = [p for p in linked_posts if p.is_visible]
 
-    if post.is_public:
+    print(f'WTF REQUEST ME: {request.me}')
+
+    # identify affilated users
+    if post.is_public and not request.me:
 
         if 'p' in request.GET.keys():
             # getlist instead of keys() because of exception of dublicated ?p= in URL
 
             p_value = request.GET.getlist('p')[0]
+
             new_one = AffilateLogs()
             identify_string = None
 
             if 'affilate_p' in request.COOKIES.keys():
 
                 identify_string = request.COOKIES.get('affilate_p')
-           
-            new_one.insert_first_time(p_value, identify_string)
-            cookie = new_one.identify_new_user
+        
+            done = new_one.insert_first_time(p_value, identify_string)
+            print(f'DONE: {done}')
+            if done:
+                cookie = new_one.identify_new_user
+                print(f'KUKA: {cookie}')
+            else:
+                cookie = None
+    else:
+        cookie = None
 
     return render_post(request, post, {
         "post_last_view_at": last_view_at,

@@ -83,12 +83,18 @@ class AffilateLogs(models.Model):
         # b) come by second ref and not registrated -> there is in table AND
         # case #2: == 1 author of ref, but > 1 new_user
         # case #3: new_user open second time same link
-
-        self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
-        self.creator_fee_type = AffilateInfo.objects.get(user_id=self.creator_id).fee_type
+        print(0)
+        try:
+            self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
+            self.creator_fee_type = AffilateInfo.objects.get(user_id=self.creator_id).fee_type
+        except Exception:
+            return False
         # if it's first come to site of new_ser
+        print(1)
         if not identify_string:
             self.save()
+            print(1,5)
+            return True
 
         # if it is not first coming to site of user
         else:
@@ -96,10 +102,26 @@ class AffilateLogs(models.Model):
                 identify_new_user=identify_string).values_list('creator_id', flat=True)
 
             dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
+            print(2)
             if dublicated_creator:
+                print(3)
                 # If this is not a page view that has already occurred before
-                if not AffilateLogs.objects.filter(creator_id=self.creator_id).filter(affilate_status='come first time').filter().exists():
+                if not AffilateLogs.objects.filter(
+                    creator_id=self.creator_id).filter(
+                    identify_new_user=identify_string).filter(
+                    affilate_status='come first time').filter().exists():
+#                    if identify_string not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
                     self.save()
+                    print(4)
+                    return True
+
+            else:
+                self.identify_new_user = identify_string
+                print(5)
+                self.save()
+                return True
+        print(6)
+        return False
 
     def insert_on_intro(self, user):
 
@@ -113,7 +135,8 @@ class AffilateLogs(models.Model):
             if not AffilateLogs.objects.filter(
                     creator_id=self.creator_id).filter(
                         affilate_status='come to intro form').filter(
-                            affilated_user=user).exists():
+                            affilated_user=user
+            ).exists():
 
                 print('SECOND CONDITION')
 
