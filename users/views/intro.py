@@ -9,7 +9,7 @@ import decimal
 
 from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 from payments.models import Payment
-from auth.helpers import auth_required
+from auth.helpers import auth_required, check_user_permissions
 from notifications.telegram.users import notify_profile_needs_review
 from posts.models.post import Post
 from users.forms.intro import UserIntroForm
@@ -30,23 +30,16 @@ def bonus_to_creator(creator_user, affilated_log):
 
     if fee_type == 'DAYS' or fee_type == 'Дни':
 
-        print(f'\nLOG: {affilated_log}\n')
-        print(f'\nAFFILATED USER: {affilated_log.affilated_user}\n')
-        print(f'\nAFFILATED EXPIRE: {affilated_log.affilated_user.membership_expires_at}\n')
+        now = time_zone.localize(datetime.utcnow())
+        membership_expires_at = time_zone.localize(affilated_log.affilated_user.membership_expires_at)
 
-        membership_expires_dt = time_zone.localize(affilated_log.affilated_user.membership_expires_at) - now
-        membership_expires = int(membership_expires_dt.days)
-        print(membership_expires)
-        now = int(time_zone.localize(datetime.utcnow()).day)
-        days_on_balance = membership_expires - now
-
+        days_on_balance = (membership_expires_at - now).days
 
         bonus_days = days_on_balance * percent
         bonus_days = int(decimal.Decimal(bonus_days).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING))
         membership_expires = time_zone.localize(
             affilated_log.creator_id.membership_expires_at + timedelta(days=bonus_days)
         )
-
         creator_user.membership_expires_at = membership_expires
         creator_user.save()
 
@@ -55,7 +48,9 @@ def bonus_to_creator(creator_user, affilated_log):
 
         affilated_log.creator_id.save()
 
-    if fee_type == 'MONEY':
+    if fee_type == 'MONEY' or fee_type == 'Деньги':
+
+        print(f'\n\nCOME TO MONEY: {affilated_log.affilated_user}\n\n')
 
         paid_money = Payment.objects.get(user=affilated_log.affilated_user).amount
         bonus_money = paid_money * percent
@@ -63,7 +58,12 @@ def bonus_to_creator(creator_user, affilated_log):
         affilated_log.comment = f'Bonus Money: {bonus_money}'
         affilated_log.save()
 
+        aff_info_obj = AffilateInfo.objects.get(user_id=affilated_log.creator_id)
+        aff_info_obj.sum += bonus_money
+        aff_info_obj.save()
+
     return
+
 
 @auth_required
 def intro(request):
@@ -136,25 +136,20 @@ def intro(request):
                 text=text_send
             )
 
-        print('START CHECK')
-
         if 'affilate_p' in request.COOKIES.keys():
 
-            print('GO GO GO')
-
             identify_string = request.COOKIES.get('affilate_p')
-
             new_one = AffilateLogs.objects.get(identify_new_user=identify_string)
-            print(f'NEW ONE: {new_one}')
-            new_one.insert_on_intro(user)
+            
+            if new_one.affilate_status is None or new_one.affilate_status == 'come first time':
 
-            affilate_creator = new_one.creator_id
+                new_one.insert_on_intro(user)
 
-            print('GO TO BONUS')
+                affilate_creator = new_one.creator_id
 
-            bonus_to_creator(
-                creator_user=affilate_creator,
-                affilated_log=new_one
-            )
+                bonus_to_creator(
+                    creator_user=affilate_creator,
+                    affilated_log=new_one
+                )
 
     return render(request, "users/intro.html", {"form": form})

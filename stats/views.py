@@ -1,23 +1,35 @@
-from django.shortcuts import render
+# Python imports
 import datetime as DT
 import pprint
-from django.shortcuts import render, redirect
-
-from auth.helpers import auth_required
-from users.models.user import User
-from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
-from payments.models import Payment
-from posts.models.post import Post
-from stats.forms.money import DateForm
-from comments.models import Comment
-from users.models.subscription import Subscription
-from users.models.subscription_plan import SubscriptionPlan
-from django.shortcuts import redirect, get_object_or_404, render
-from django.http import Http404
 import time
 from datetime import datetime
 import pytz
 import json
+
+# Django imports
+from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
+from django.shortcuts import render, redirect
+
+# import models
+from users.models.user import User
+from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
+from payments.models import Payment
+from posts.models.post import Post
+from comments.models import Comment
+from users.models.subscription import Subscription
+from users.models.subscription_plan import SubscriptionPlan
+from users.models.affilate_models import AffilateLogs
+
+# import forms
+from stats.forms.money import DateForm
+
+# custom classes imports
+from auth.helpers import auth_required
+from users.templatetags.users import active_or_not
+
+# import confid data
 from club.settings import APP_HOST as host
 
 # Create your views here.
@@ -48,7 +60,7 @@ def stats_gode(request):
                 date = str(payment_one.created_at)
                 dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
                 if payment_one and int(dt.timestamp()) > int(datetime_for) and int(dt.timestamp()) <= int(
-                    datetime_to):
+                        datetime_to):
                     payment_first.extend([payment_one.reference, payment_one.amount, payment_one.created_at])
                     sum_first += payment_one.amount
                     count_first += 1
@@ -199,4 +211,121 @@ def random_coffee_stat(request):
         request,
         'pages/coffee-rating.html',
         {'coffee_list': coffee_list}
+    )
+
+@auth_required
+def affilates_stat(request):
+    return render(
+        request,
+        'pages/stats-affilate.html'
+    )
+
+@auth_required
+def affilates_money_stat(request):
+
+    affilate_users_sum = 0
+    money = None
+    active_users_sum = None
+    form = DateForm(request.POST)
+    
+    if request.method == 'POST':
+
+        time_zone = pytz.UTC
+        range_date = request.POST['date-range']
+        range_date = range_date.replace(' ', '').replace('-', ' ')
+        range_date = range_date.split()
+        start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
+        finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+
+        # __range from Django ORM don't resolve task, because of doesn't include dates
+        # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+
+        start_date = time_zone.localize(
+            datetime(start_year, start_month, start_day))
+        finish_date = time_zone.localize(
+            datetime(finish_year, finish_month, finish_day))
+
+        affilated_logs = AffilateLogs.objects.filter(
+            affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()
+
+        print(affilated_logs)
+
+        money = 0
+        active_users_sum = 0
+        
+        for row in affilated_logs:
+
+            if 'Bonus Money:' in row.comment:
+
+                affilate_users_sum += 1
+                money += float(row.comment.replace('Bonus Money: ', ''))
+                user = row.affilated_user
+
+                if active_or_not(user) == 'Активен':
+                
+                    active_users_sum += 1
+
+    return render(
+        request,
+        'pages/stats-affilate-money.html',
+        {
+            'form': form,
+            'money': money,
+            'active_users_sum': active_users_sum,
+            'affilate_users_sum': affilate_users_sum
+        }
+    )
+
+@auth_required
+def affilates_days_stat(request):
+
+    form = DateForm(request.POST)
+    days_sum = None
+    active_users_sum = None
+    affilate_users_sum = 0
+    
+    if request.method == 'POST':
+
+        time_zone = pytz.UTC
+        range_date = request.POST['date-range']
+        range_date = range_date.replace(' ', '').replace('-', ' ')
+        range_date = range_date.split()
+        start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
+        finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+
+        # __range from Django ORM don't resolve task, because of doesn't include dates
+        # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+
+        start_date = time_zone.localize(
+            datetime(start_year, start_month, start_day))
+        finish_date = time_zone.localize(
+            datetime(finish_year, finish_month, finish_day))
+
+        affilated_logs = AffilateLogs.objects.filter(
+            affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()
+
+        days_sum = 0
+        active_users_sum = 0
+
+        for row in affilated_logs:
+
+            if 'Bonus Days' in row.comment:
+
+                affilate_users_sum += 1
+                days_sum += int(row.comment.replace('Bonus Days: ', ''))
+                user = row.affilated_user
+
+                if active_or_not(user) == 'Активен':
+
+                    active_users_sum += 1
+
+    return render(
+        request,
+        'pages/stats-affilate-days.html',
+        {
+            'form': form,
+            'days': days_sum,
+            'active_users_sum': active_users_sum,
+            'affilate_users_sum': affilate_users_sum
+        }
     )

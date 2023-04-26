@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from uuid import uuid4
 from uuid import UUID
 import pytz
+import decimal
 
 # Django ORM import
 from django.db.models import Max
@@ -23,8 +24,9 @@ class AffilateInfo(models.Model):
     DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
 
     AFFILATE_CHOICES = [
-        ('MONEY', 'Деньги'),
-        ('DAYS', 'Дни')
+        ('DAYS', 'Дни'),
+        ('MONEY', 'Деньги')
+        
     ]
 
     class Meta:
@@ -33,47 +35,44 @@ class AffilateInfo(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
     parametr = models.UUIDField(unique=True, default=uuid4, editable=False, max_length=16)
     url = models.CharField(default=DEFAULT_LINK, max_length=248)
-    percent = models.PositiveSmallIntegerField(default=10)
+    percent = models.PositiveSmallIntegerField(default=10, editable=True)
     fee_type = models.CharField(default='Дни', verbose_name='Как я хочу получать вознаграждение',
                                 choices=AFFILATE_CHOICES, max_length=24)
-    sum = models.DecimalField(null=True, decimal_places=1, max_digits=10)
+    sum = models.DecimalField(default=0, decimal_places=1, max_digits=10)
 
     def insert_new_one(self, user, link=DEFAULT_LINK):
 
         self.user_id = user
-        self.url = self.DEFAULT_LINK + '?' + str(self.parametr)
+        self.url = self.DEFAULT_LINK + '?p=' + str(self.parametr)
         self.save()
 
 
 class AffilateLogs(models.Model):
 
-    ACTION_CHOISES = [
-        ('PAY_BY_AFFILATE', 'paid for membership'),
-        ('GET_BY_MONEY', 'get money from club')
-    ]
-
-# for checking diff between time first come to club and time of registration in club
-# also for checking of a mount of comming but not registrated
-
-    AFFILATE_STATUS = [
-        ('FIRST_TIME', 'come first time'),
-        ('REGISTRATION_DONE', 'come to intro form')
-    ]
+    # variants of affilate_status:
+    #
+    # 1. come first time -> come but not registrate
+    # 2. come to intro form -> come and go throw payment stage, come to intro
+    # 3. manual by admin-interface -> admin add by interface affilating
+    # 4. get money -> admin get money from account of user by interface
 
     class Meta:
         db_table = 'affilate_logs'
 
-    creator_id = models.ForeignKey(User, on_delete=models.CASCADE,
+    creator_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
                                    related_name='affilate_creator', db_column='creator_id')
     affilated_user = models.ForeignKey(User, null=True, on_delete=models.CASCADE,
                                        related_name='affilated_user', db_column='affilated_user')
-    affilate_status = models.CharField(choices=AFFILATE_STATUS, max_length=48, default='come first time')
-    creator_fee_type = models.CharField(choices=AffilateInfo.AFFILATE_CHOICES, max_length=24)
-    type_of_action = models.CharField(null=True, choices=ACTION_CHOISES, max_length=48)
-    time_firstly_come = models.DateTimeField(auto_now_add=True)
-    time_come_on_intro = models.DateTimeField(null=True)
-    identify_new_user = models.UUIDField(unique=True, default=uuid4)
-    comment = models.CharField(null=True, max_length=248)
+    affilate_status = models.CharField(max_length=48, default='come first time')
+    creator_fee_type = models.CharField(choices=AffilateInfo.AFFILATE_CHOICES, null=True, max_length=24)
+    time_firstly_come = models.DateTimeField(auto_now=True, null=True)
+    affilate_time_was_set = models.DateTimeField(null=True)
+    # affilate_time_was_set
+    identify_new_user = models.UUIDField(unique=True, default=uuid4, null=True)
+    models.PositiveSmallIntegerField(default=10)
+    comment = models.CharField(null=True, max_length=512)
+    admin_comment = models.CharField(null=True, max_length=512)
+    percent_log = models.PositiveSmallIntegerField(default=10, editable=True, null=True)
 
     def insert_first_time(self, p_value, identify_string):
 
@@ -83,17 +82,14 @@ class AffilateLogs(models.Model):
         # b) come by second ref and not registrated -> there is in table AND
         # case #2: == 1 author of ref, but > 1 new_user
         # case #3: new_user open second time same link
-        print(0)
         try:
             self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
             self.creator_fee_type = AffilateInfo.objects.get(user_id=self.creator_id).fee_type
         except Exception:
             return False
         # if it's first come to site of new_ser
-        print(1)
         if not identify_string:
             self.save()
-            print(1,5)
             return True
 
         # if it is not first coming to site of user
@@ -102,25 +98,26 @@ class AffilateLogs(models.Model):
                 identify_new_user=identify_string).values_list('creator_id', flat=True)
 
             dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
-            print(2)
             if dublicated_creator:
-                print(3)
                 # If this is not a page view that has already occurred before
                 if not AffilateLogs.objects.filter(
-                    creator_id=self.creator_id).filter(
-                    identify_new_user=identify_string).filter(
-                    affilate_status='come first time').filter().exists():
-#                    if identify_string not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
+                        creator_id=self.creator_id).filter(
+                        identify_new_user=identify_string).filter(
+                        affilate_status='come first time').exists():
+                    #                    if identify_string not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
                     self.save()
-                    print(4)
                     return True
-
+                else:
+                    db_row = AffilateLogs.objects.filter(creator_id=self.creator_id).filter(
+                        identify_new_user=identify_string).filter(affilate_status='come first time').first()
+                    time_zone = pytz.UTC
+                    now = time_zone.localize(datetime.utcnow())
+                    db_row.time_firstly_come = now
+                    db_row.save()
             else:
                 self.identify_new_user = identify_string
-                print(5)
                 self.save()
                 return True
-        print(6)
         return False
 
     def insert_on_intro(self, user):
@@ -130,40 +127,61 @@ class AffilateLogs(models.Model):
 
         if self.affilate_status != 'come to intro form':
 
-            print('FIRST CONDITION')
-
             if not AffilateLogs.objects.filter(
                     creator_id=self.creator_id).filter(
                         affilate_status='come to intro form').filter(
                             affilated_user=user
             ).exists():
 
-                print('SECOND CONDITION')
-
                 self.affilated_user = user
-                print(f'USER IN CONDITION: {user}')
-                self.time_come_on_intro = now
+                self.affilate_time_was_set = now
                 self.affilate_status = 'come to intro form'
                 self.save()
 
+    def manual_insert(self, creator_slug, affilated_user, percent):
+
+        time_zone = pytz.UTC
+        now = time_zone.localize(datetime.utcnow())
+
+        creator = User.objects.get(slug=creator_slug)
+
+        self.creator_id = creator
+        self.percent_log = percent
+        self.time_firstly_come = None
+        self.affilate_time_was_set = now
+        self.identify_new_user = None
+        self.affilated_user = affilated_user
+        self.affilate_status = 'manual by admin-interface'
+
+        membership_expires_at = time_zone.localize(affilated_user.membership_expires_at)
+        days_on_balance = (membership_expires_at - now).days
+        # don't delete int() in bellow string. either it would be exception.
+        bonus_days = days_on_balance * (int(percent) * 0.01)
+        bonus_days = int(decimal.Decimal(bonus_days).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING))
+        membership_expires = time_zone.localize(
+            creator.membership_expires_at + timedelta(days=bonus_days)
+        )
+        creator.membership_expires_at = membership_expires
+        creator.save()
+
+        self.comment = f'Bonus Days: {bonus_days}'
+        self.save()
+
+    def admin_get_money(self, user, admin_comment, money):
+
+        time_zone = pytz.UTC
+        now = time_zone.localize(datetime.utcnow())
+
+        self.creator_id = user
+        self.affilate_status = 'get money'
+        self.admin_comment = admin_comment
+        self.comment = str(money)
+        self.affilate_time_was_set = now
+        self.percent_log = None
+        self.save()
 
 '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+bellow model that unused. 
 
 '''
 

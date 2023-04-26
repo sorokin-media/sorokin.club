@@ -119,6 +119,7 @@ def render_post(request, post, context=None):
         if cookie:
             return_ = render(request, f"posts/show/{post.type}.html", context)
             expires = datetime.now() + timedelta(days=3650)
+            
             return_.set_cookie('affilate_p', cookie, expires=expires)
             return return_
         return render(request, f"posts/show/{post.type}.html", context)

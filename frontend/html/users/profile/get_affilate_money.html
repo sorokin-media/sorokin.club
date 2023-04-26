@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% load posts %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+        {% if me.is_god %}
+
+        {% if messages %}
+        {% for message in messages %}
+        <p style="color:rgb(255, 5, 64);">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'profile' user.slug %}">Вернуться в профиль юзера</a>
+    <br>
+    <br>
+<p>
+    <strong style="font-family: monospace;font-size: x-large;">это реферальные деньги юзера {{ user.slug }}</strong>
+</p>
+    <p>
+   <h2>Сейчас на счету: {{ aff_money }}</h2>
+</p>
+
+<br>
+
+<div class="form-row">
+    <form action="{% url 'get_affilate_money' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+    <label for="sumField">Какую сумму выводить?</label>
+    <input required type="number" id="sumField" name="sumField">
+
+    <br>
+
+    <label for="commentField">Комментарий. <small>Вмещает 512 символов.</small> </label>
+    <textarea id="commentField" name="commentField" maxlength="512" rows="5" cols="50"></textarea>
+
+    <br>
+<button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
+</form>
+
+{% endif %}
+</div>
+{% endblock %}

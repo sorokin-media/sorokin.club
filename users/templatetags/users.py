@@ -52,11 +52,13 @@ def active_or_not(user):
 @register.simple_tag()
 def get_amount_from_str(comment):
 
+    print('\nCOME GO GO')
+
     if 'Bonus Money: ' in comment:
 
         return comment.replace("Bonus Money: ", "")
 
-    elif 'Bonus Days: 1' in comment:
+    elif 'Bonus Days: ' in comment:
 
         return comment.replace("Bonus Days: ", "")
 

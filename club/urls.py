@@ -24,6 +24,9 @@ from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, 
 from payments.views.crypto import crypto, coinbase_webhook
 from payments.views.unitpay import unitpay_pay, unitpay_webhook
 
+# only for tests
+from club.dmitry_tests import dmitry_tests
+
 # posts import
 
 from posts.api import md_show_post, api_show_post
@@ -55,9 +58,9 @@ from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
 from users.views.profile import random_coffee
-from users.views.affilate import pfofile_affilate
+from users.views.affilate import pfofile_affilate, affilate_list, get_affilate_money
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat
+from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
@@ -86,7 +89,7 @@ urlpatterns = [
     path("club-moscow/", geo_moscow, name="club-moscow"),
 
     # ===================
-
+    path("dmitry_tests", dmitry_tests, name="dmitry_tests"),
     path("join/", join, name="join"),
     path("auth/login/", login, name="login"),
     path("auth/logout/", logout, name="logout"),
@@ -129,6 +132,8 @@ urlpatterns = [
     path("user/<slug:user_slug>/delete/confirm/", confirm_delete_account, name="confirm_delete_account"),
     path("user/<slug:user_slug>/edit/coffee", random_coffee, name="random_coffee"),
     path("user/<slug:user_slug>/pfofile_affilate", pfofile_affilate, name="pfofile_affilate"),
+    path("affilate_list/<slug:user_slug>", affilate_list, name='affilate_list'),
+    path("get_affilate_money/<slug:user_slug>", get_affilate_money, name='get_affilate_money'),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
@@ -139,6 +144,9 @@ urlpatterns = [
     path("stats-content/", stats_content, name="stats-content"),
     path("posts_rating", posts_rating, name='posts_rating'),
     path("random_coffee_stat", random_coffee_stat, name='random_coffee_stat'),
+    path("affilates_stat", affilates_stat, name='affilates_stat'),
+    path("affilates_days_stat", affilates_days_stat, name='affilates_days_stat'),
+    path("affilates_money_stat", affilates_money_stat, name='affilates_money_stat'),
 
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 

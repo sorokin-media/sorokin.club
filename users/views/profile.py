@@ -23,6 +23,10 @@ from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
 
+# for affilating admin imports
+from django.contrib import messages
+from users.models.affilate_models import AffilateLogs, AffilateInfo
+
 # import custom class for sending messages
 from bot.sending_message import TelegramCustomMessage
 
@@ -83,6 +87,48 @@ def profile(request, user_slug):
     else:
         random_coffee_status = False
 
+    # code bellow is about affilate programm
+    if request.method == 'POST':
+
+        affilate_creator_slug = request.POST['SlugField']
+        percent = request.POST['PercentSelect']
+
+        try:
+            # don't delete. that's for check out exist or not instead of ORM exist method
+            form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
+            new_one = AffilateLogs()
+            new_one.manual_insert(
+                creator_slug=affilate_creator_slug,
+                affilated_user=user,
+                percent=percent
+            )
+            return redirect('index')
+        except Exception:
+            messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
+    try:
+        affilate_creator = AffilateLogs.objects.filter(affilated_user=user).exclude(
+            affilate_time_was_set=None).first().creator_id.slug        
+    except:
+        affilate_creator = None
+    if affilate_creator:
+        percent = AffilateLogs.objects.filter(affilated_user=user).exclude(
+            affilate_time_was_set=None).first().percent_log
+    else:
+        percent = None
+    try:
+        how_much_affilate = len(AffilateLogs.objects.filter(creator_id=user).all())
+    except:
+        how_much_affilate = None
+    try:
+        u = User.objects.get(slug=user_slug)
+        print(f'\n\nFIND U: {u}\n\n')
+        aff_money = AffilateInfo.objects.get(user_id=u).sum
+        print(f'\n\AFF MONEY: {aff_money}\n\n')
+    except:
+        aff_money = None
+    # because of custom HTML form. (why not form=CustomForm(), etc.)
+    request.POST = None
+
     return render(request, "users/profile.html", {
         "user": user,
         "intro": intro,
@@ -99,8 +145,13 @@ def profile(request, user_slug):
         "similarity": similarity,
         "friend": friend,
         "muted": muted,
-        'random_coffee_status': random_coffee_status
-    })
+        'random_coffee_status': random_coffee_status,
+        'affilate_creator': affilate_creator,
+        'percent': percent,
+        'how_much_affilate': how_much_affilate,
+        'aff_money': aff_money
+    },
+        messages)
 
 
 @auth_required

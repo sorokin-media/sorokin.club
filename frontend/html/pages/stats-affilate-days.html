@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% load posts %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+<div class="container">
+<div class="stats-header">Статистика по рефералке - дни</div>
+
+<a href="{% url 'affilates_money_stat' %}">Деньги по рефералке</a>
+<br><br>
+
+<form action="" method="post" class="stat-money-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="date-range">
+        <label class="form-label">Диапозон дат</label>
+        <input type="text" name="date-range" class="date-range__input" data-submit="true" />
+        <div class="date-range__inputs">
+            {{ form.date_from }}
+            {{ form.date_to }}
+        </div>
+    </div>
+    <button type="submit" class="button button-small">Отправить</button>
+</form>
+<br><br><br>
+{% if days %}
+Кол-во начисленных дней: {{ days }}
+<br>
+{% endif %}
+Всего пришло новых юзеров по реферальной программе в заданный период: {{ affilate_users_sum }}
+<br>
+{% if active_users_sum %}
+Кол-во активных на данный момент рефервальных юзеров, пришедших в заданный период: {{ active_users_sum }}
+{% else %}
+Никого не осталось 🙉🙉🙉
+{% endif %}
+<br>
+</div>
+<br>
+
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+</article>
+{% endif %}
+{% endblock %}

@@ -50,7 +50,7 @@
         </div>
         <!-- HTML код кнопки "Скопировать" -->
         Реферальная ссылка: {{settings.APP_HOST}}/post/2?p={{ affilate_info.parametr }}
-        <button onclick="copyToClipboard('{{settings.APP_HOST}}/post/2/?p={{ affilate_info.parametr }}')">Copy Link</button>
+        <button onclick="copyToClipboard('{{settings.APP_HOST}}/post/2/?p={{ affilate_info.parametr }}')">Скопировать</button>
         
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
@@ -67,24 +67,38 @@ function copyToClipboard(text) {
     </div>
 </div>
 <div class="container">
+    <div class="form-row">
 <!-- отсортировать надо по дате регистрации пользователя -->
 {% if affilate_logs %}
-Мои рефералы: <br>
+<h3>Мои рефералы: </h3>
 {% for log in affilate_logs %}
-    <a href="{{ settings.APP_HOST }}/user/{{log.affilated_user.slug}}">{{log.affilated_user.full_name}}:</a>
+    {% if log.affilated_user.moderation_status == 'approved' %}
+<a href="{{ settings.APP_HOST }}/user/{{log.affilated_user.slug}}">{{log.affilated_user.full_name}}:</a>
     <br>
+{% else %}
+{{ log.affilated_user.slug }} 👩🏻‍💻 ещё проходит модерацию, регистрируется 🧑🏼‍💻<br>
+    {% endif %}
     Дата регистрации: {% make_moscow_time log.affilated_user.created_at %}
     <br>
+    {% if log.affilated_user %}
     {% active_or_not log.affilated_user %}
     <br>
+    {% endif %}
     {% if 'Bonus Days:' in log.comment %}
     Принёс мне дней в клубе: {% get_amount_from_str log.comment %}
     <br>
     {% elif 'Bonus Money:' in log.comment %}
-    Принёс мне денег: {% get_amount_from_str log.comment %}
+    Принёс мне денег: {% get_amount_from_str log.comment %} рублей
     <br><br>
     {% endif %}
     {% endfor %}
-{% endif %}
+    {% endif %}
+    {% if get_money_logs %}
+    {% for log in get_money_logs %}
+    <h3>Снятия денег с баланса реферальной программы</h3>
+    Из денежного бонуса за реферальную программу {% make_moscow_time log.affilate_time_was_set %} было снято {{ log.comment }}
+    {% endfor %}
+    {% endif %}
+</div>
 </div>
 {% endblock %}
