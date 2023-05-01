@@ -1,23 +1,33 @@
-from django.shortcuts import render
+# Python imports
 import datetime as DT
 import pprint
+import time
+from datetime import datetime, timedelta
+import pytz
+import json
+
+# Django imports
+from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
 from django.shortcuts import render, redirect
 
-from auth.helpers import auth_required
+# import models
 from users.models.user import User
 from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
 from payments.models import Payment
 from posts.models.post import Post
-from stats.forms.money import DateForm
 from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
-from django.shortcuts import redirect, get_object_or_404, render
-from django.http import Http404
-import time
-from datetime import datetime
-import pytz
-import json
+
+# import forms
+from stats.forms.money import DateForm
+
+# custom classes imports
+from auth.helpers import auth_required
+
+# import confid data
 from club.settings import APP_HOST as host
 
 # Create your views here.
@@ -25,11 +35,22 @@ from club.settings import APP_HOST as host
 def stats_gode(request):
     # Это ублюдство надо переписать
     if request.method == "POST":
+
         form = DateForm(request.POST)
         date_from_string = request.POST.get('date_from') + ' 00:00:00'
         date_to_string = request.POST.get('date_to') + ' 00:00:00'
         dt = DT.datetime.strptime(date_from_string, '%Y-%m-%d %H:%M:%S')
         datetime_for = dt.timestamp()
+
+        # быстрый костыль для бага с тем, что конечная дата не включается
+        # а ублюдство действительно надо переделать, прост кошмар какой то
+        date_format = '%Y-%m-%d %H:%M:%S'
+        date_obj = datetime.strptime(date_to_string, date_format)
+        date_plus_one_day = date_obj + timedelta(days=1)
+        date_to_string = date_plus_one_day.strftime(date_format)
+        # конец костыля
+
+        property(date_to_string)
         dt = DT.datetime.strptime(date_to_string, '%Y-%m-%d %H:%M:%S')
         datetime_to = dt.timestamp()
         payment_first = []
@@ -48,7 +69,7 @@ def stats_gode(request):
                 date = str(payment_one.created_at)
                 dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
                 if payment_one and int(dt.timestamp()) > int(datetime_for) and int(dt.timestamp()) <= int(
-                    datetime_to):
+                        datetime_to):
                     payment_first.extend([payment_one.reference, payment_one.amount, payment_one.created_at])
                     sum_first += payment_one.amount
                     count_first += 1
