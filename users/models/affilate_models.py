@@ -19,6 +19,13 @@ from utils.slug import generate_unique_slug
 from utils.strings import random_string
 
 
+'''
+Модель AffilateInfo => участники реферальной программы, создатели ссылок
+Модель AffilateVisit => фиксирует визиты пришедших по реферальной программе
+Модель AffilateLogs => фиксирует списывания, ничего больше
+
+'''
+
 class AffilateInfo(models.Model):
 
     DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
@@ -26,7 +33,7 @@ class AffilateInfo(models.Model):
     AFFILATE_CHOICES = [
         ('DAYS', 'Дни'),
         ('MONEY', 'Деньги')
-        
+
     ]
 
     class Meta:
@@ -47,6 +54,67 @@ class AffilateInfo(models.Model):
         self.save()
 
 
+class AffilateVisit(models.Model):
+    '''When user come by ref link '''
+
+    DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
+
+    class Meta:
+        db_table = 'affilate_visit'
+
+    creator_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
+                                   related_name='visit_affilate_creator', db_column='creator_id')
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    ref_url = models.CharField(max_length=248, null=True, editable=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    code = models.UUIDField(unique=True, default=uuid4, null=True)
+
+    def insert_first_time(self, p_value, code):
+
+        # case #0: == 1 new_user, == 1 author_of_ref
+        # case #1: > 1 authors of ref, but == 1 new_user
+        # a) come by first ref and no registrated -> there is no in table
+        # b) come by second ref and not registrated -> there is in table AND
+        # case #2: == 1 author of ref, but > 1 new_user
+        # case #3: new_user open second time same link
+
+        if AffilateInfo.objects.filter(parametr=UUID(p_value)).exists():
+            self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
+        else:
+            return False
+        # if it's first come to site of new_ser
+        if not code:
+            self.save()
+            return True
+
+        # if it is not first coming to site of user
+        else:
+            previous_refs = AffilateLogs.objects.filter(
+                identify_new_user=code).values_list('creator_id', flat=True)
+
+            dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
+            if dublicated_creator:
+                # If this is not a page view that has already occurred before
+                if not AffilateLogs.objects.filter(
+                        creator_id=self.creator_id).filter(
+                        identify_new_user=code).filter(
+                        affilate_status='come first time').exists():
+                    #                    if code not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
+                    self.save()
+                    return True
+                else:
+                    db_row = AffilateLogs.objects.filter(creator_id=self.creator_id).filter(
+                        identify_new_user=code).filter(affilate_status='come first time').first()
+                    time_zone = pytz.UTC
+                    now = time_zone.localize(datetime.utcnow())
+                    db_row.time_firstly_come = now
+                    db_row.save()
+            else:
+                self.identify_new_user = code
+                self.save()
+                return True
+        return False
+
 class AffilateLogs(models.Model):
 
     # variants of affilate_status:
@@ -60,7 +128,7 @@ class AffilateLogs(models.Model):
         db_table = 'affilate_logs'
 
     creator_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
-                                   related_name='affilate_creator', db_column='creator_id')
+                                   related_name='logs_affilate_creator', db_column='creator_id')
     affilated_user = models.ForeignKey(User, null=True, on_delete=models.CASCADE,
                                        related_name='affilated_user', db_column='affilated_user')
     affilate_status = models.CharField(max_length=48, default='come first time')
@@ -73,52 +141,6 @@ class AffilateLogs(models.Model):
     comment = models.CharField(null=True, max_length=512)
     admin_comment = models.CharField(null=True, max_length=512)
     percent_log = models.PositiveSmallIntegerField(default=10, editable=True, null=True)
-
-    def insert_first_time(self, p_value, identify_string):
-
-        # case #0: == 1 new_user, == 1 author_of_ref
-        # case #1: > 1 authors of ref, but == 1 new_user
-        # a) come by first ref and no registrated -> there is no in table
-        # b) come by second ref and not registrated -> there is in table AND
-        # case #2: == 1 author of ref, but > 1 new_user
-        # case #3: new_user open second time same link
-        try:
-            self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
-            self.creator_fee_type = AffilateInfo.objects.get(user_id=self.creator_id).fee_type
-        except Exception:
-            return False
-        # if it's first come to site of new_ser
-        if not identify_string:
-            self.save()
-            return True
-
-        # if it is not first coming to site of user
-        else:
-            previous_refs = AffilateLogs.objects.filter(
-                identify_new_user=identify_string).values_list('creator_id', flat=True)
-
-            dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
-            if dublicated_creator:
-                # If this is not a page view that has already occurred before
-                if not AffilateLogs.objects.filter(
-                        creator_id=self.creator_id).filter(
-                        identify_new_user=identify_string).filter(
-                        affilate_status='come first time').exists():
-                    #                    if identify_string not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
-                    self.save()
-                    return True
-                else:
-                    db_row = AffilateLogs.objects.filter(creator_id=self.creator_id).filter(
-                        identify_new_user=identify_string).filter(affilate_status='come first time').first()
-                    time_zone = pytz.UTC
-                    now = time_zone.localize(datetime.utcnow())
-                    db_row.time_firstly_come = now
-                    db_row.save()
-            else:
-                self.identify_new_user = identify_string
-                self.save()
-                return True
-        return False
 
     def insert_on_intro(self, user):
 
@@ -180,20 +202,12 @@ class AffilateLogs(models.Model):
         self.percent_log = None
         self.save()
 
+
 '''
 bellow model that unused. 
 
 '''
 
-class AffilateVisit(models.Model):
-
-    class Meta:
-        db_table = 'affilate_visit'
-
-    id = models.UUIDField(primary_key=True, default=uuid4)
-    ref = models.CharField(max_length=248, null=True, editable=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    code = models.UUIDField(unique=True, default=uuid4, max_length=8)
 
 class UserAffilate(models.Model):
 

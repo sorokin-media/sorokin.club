@@ -2,7 +2,7 @@
 import datetime as DT
 import pprint
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import json
 
@@ -244,6 +244,8 @@ def affilates_money_stat(request):
             datetime(start_year, start_month, start_day))
         finish_date = time_zone.localize(
             datetime(finish_year, finish_month, finish_day))
+
+        finish_date += timedelta(days=1z)
 
         affilated_logs = AffilateLogs.objects.filter(
             affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()
