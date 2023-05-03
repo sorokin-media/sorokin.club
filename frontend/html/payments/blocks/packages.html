@@ -19,6 +19,12 @@
                 {% if plan.package_price == 5920 %}
                     <div class="pay-package-price-crossed">7920₽</div>
                 {% endif %}
+                {% if plan.package_price == 9990 %}
+                <div class="pay-package-price-crossed">11880₽</div>
+                {% endif %}
+                {% if plan.package_price == 19990 %}
+                <div class="pay-package-price-crossed">35640₽</div>
+                {% endif %}
             </label>
         </div>
     {% endfor %}
