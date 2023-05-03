@@ -1324,14 +1324,20 @@
             }
     }
 
-    .feed-post-event--past .post-event-date {
-        opacity: 0.5;
+    .feed-post-event--past,
+    .feed-post-event--past .post-event-date,
+    .feed-post-event--past .post-event-calendar,
+    .feed-post-event--past .post-event-date-day {
+        opacity: 0.8;
     }
 
-    .feed-post-event--past .post-event-date-month,
-    .feed-post-event--past .post-event-date-day {
+    .feed-post-event--past .post-event-date-month {
         color: #fff;
         background-color: var(--visited-link-color);
+    }
+
+    .feed-post-event--past .post-event-calendar {
+        pointer-events: none;
     }
 
     @media (max-width: 430px) {
