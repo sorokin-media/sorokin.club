@@ -18,7 +18,7 @@ from search.models import SearchIndex
 from common.pagination import paginate
 
 def open_posts(request):
-    posts = Post.objects.filter(is_public=True).filter(is_approved_by_moderator=True).all()
+    posts = Post.objects.filter(is_public=True).all()
     return render(
         request,
         'open.html',

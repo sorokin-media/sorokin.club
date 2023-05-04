@@ -47,10 +47,6 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
     if label_code:
         posts = posts.filter(label_code=label_code)
 
-    # if it is not section "New" (новое)
-    if ordering != 'new':
-        posts = posts.filter(is_approved_by_moderator=True)
-
     # hide muted users
     if request.me:
         muted = Muted.objects.filter(user_from=request.me).values_list("user_to_id").all()

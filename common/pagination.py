@@ -4,5 +4,5 @@ from django.core.paginator import Paginator
 
 def paginate(request, items, page_size=settings.DEFAULT_PAGE_SIZE):
     paginator = Paginator(items, page_size)
-    page_number = request.GET.get("page") or 1
+    page_number = request.GET.get("page") or 10
     return paginator.get_page(page_number)
