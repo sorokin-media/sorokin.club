@@ -32,9 +32,8 @@ def pfofile_affilate(request, user_slug):
         )
     )
     affilate_info = AffilateInfo.objects.get(user_id=user)
-    affilate_logs = AffilateLogs.objects.filter(creator_id=user).filter(
-        Q(affilate_status='come to intro form') | Q(affilate_status='manual by admin-interface')).all().order_by('affilate_time_was_set')
-    get_money_logs = AffilateLogs.objects.filter(creator_id=user).filter(affilate_status='get money').all()
+    affilate_logs = AffilateLogs.objects.filter(creator_id=user).all().order_by('created_at')
+    get_money_logs = AffilateLogs.objects.filter(creator_id=user).filter(creator_fee_type='Деньги').all()
 
     return render(request, 'users/profile/affilate.html', {
         'form': form,

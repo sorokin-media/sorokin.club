@@ -67,7 +67,10 @@ class AffilateVisit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     ref_url = models.CharField(max_length=248, null=True, editable=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    # if last_page_view_time is Null, than user mane only one page view
+    last_page_view_time = models.DateTimeField(null=True)
     code = models.UUIDField(unique=True, default=uuid4, null=True)
+    affilate_status = models.CharField(max_length=48, default='user visited site')
 
     def insert_first_time(self, p_value, code):
 
@@ -89,37 +92,54 @@ class AffilateVisit(models.Model):
 
         # if it is not first coming to site of user
         else:
-            previous_refs = AffilateLogs.objects.filter(
-                identify_new_user=code).values_list('creator_id', flat=True)
+            previous_refs = AffilateVisit.objects.filter(
+                code=code).values_list('creator_id', flat=True)
 
             dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
             if dublicated_creator:
                 # If this is not a page view that has already occurred before
-                if not AffilateLogs.objects.filter(
+                if not AffilateVisit.objects.filter(
                         creator_id=self.creator_id).filter(
-                        identify_new_user=code).filter(
-                        affilate_status='come first time').exists():
-                    #                    if code not in AffilateLogs.objects.all().values_list("identify_new_user", flat=True):
+                        code=code).filter(
+                        affilate_status='user visited site').exists():
                     self.save()
                     return True
                 else:
-                    db_row = AffilateLogs.objects.filter(creator_id=self.creator_id).filter(
-                        identify_new_user=code).filter(affilate_status='come first time').first()
+                    # user not visited for the first time, make more than on page view
+                    db_row = AffilateVisit.objects.filter(creator_id=self.creator_id).filter(
+                        code=code).filter(affilate_status='user visited site').first()
                     time_zone = pytz.UTC
-                    now = time_zone.localize(datetime.utcnow())
-                    db_row.time_firstly_come = now
+                    db_row.last_page_view_time = time_zone.localize(datetime.utcnow())
                     db_row.save()
             else:
-                self.identify_new_user = code
+                self.code = code
                 self.save()
                 return True
         return False
+
+    def insert_on_intro(self, user):
+
+        time_zone = pytz.UTC
+        now = time_zone.localize(datetime.utcnow())
+
+        if self.affilate_status != 'come to intro form':
+
+            if not AffilateLogs.objects.filter(
+                    creator_id=self.creator_id).filter(
+                        affilate_status='come to intro form').filter(
+                            affilated_user=user
+            ).exists():
+
+                self.affilated_user = user
+                self.affilate_time_was_set = now
+                self.affilate_status = 'come to intro form'
+                self.save()
 
 class AffilateLogs(models.Model):
 
     # variants of affilate_status:
     #
-    # 1. come first time -> come but not registrate
+    # 1. user visited site -> come but not registrate
     # 2. come to intro form -> come and go throw payment stage, come to intro
     # 3. manual by admin-interface -> admin add by interface affilating
     # 4. get money -> admin get money from account of user by interface
@@ -130,17 +150,14 @@ class AffilateLogs(models.Model):
     creator_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
                                    related_name='logs_affilate_creator', db_column='creator_id')
     affilated_user = models.ForeignKey(User, null=True, on_delete=models.CASCADE,
-                                       related_name='affilated_user', db_column='affilated_user')
-    affilate_status = models.CharField(max_length=48, default='come first time')
+                                       related_name='logs_affilated_user', db_column='affilated_user')
     creator_fee_type = models.CharField(choices=AffilateInfo.AFFILATE_CHOICES, null=True, max_length=24)
-    time_firstly_come = models.DateTimeField(auto_now=True, null=True)
-    affilate_time_was_set = models.DateTimeField(null=True)
-    # affilate_time_was_set
-    identify_new_user = models.UUIDField(unique=True, default=uuid4, null=True)
-    models.PositiveSmallIntegerField(default=10)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    code = models.UUIDField(unique=True, default=uuid4, null=True)
     comment = models.CharField(null=True, max_length=512)
     admin_comment = models.CharField(null=True, max_length=512)
     percent_log = models.PositiveSmallIntegerField(default=10, editable=True, null=True)
+    bonus_amount = models.PositiveIntegerField(null=True)
 
     def insert_on_intro(self, user):
 
@@ -202,22 +219,19 @@ class AffilateLogs(models.Model):
         self.percent_log = None
         self.save()
 
-
-'''
-bellow model that unused. 
-
-'''
-
-
-class UserAffilate(models.Model):
+# to save relation of new user and user, that used referal programm
+class AffilateRelation(models.Model):
 
     class Meta:
-        db_table = 'user_affilate'
+        db_table = 'affilate_relation'
 
     affilate_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
-    unique_code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE, db_column='unique_code')
+    code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE,
+                             db_column='unique_code', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     creator_id = models.ForeignKey(User, related_name='creator_of_affilate',
                                    on_delete=models.CASCADE, db_column='creator_id')
+    affilated_user = models.ForeignKey(User, related_name='affilated_user',
+                                       on_delete=models.CASCADE, db_column='affilated_user', null=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True)

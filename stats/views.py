@@ -245,7 +245,7 @@ def affilates_money_stat(request):
         finish_date = time_zone.localize(
             datetime(finish_year, finish_month, finish_day))
 
-        finish_date += timedelta(days=1z)
+        finish_date += timedelta(days=1)
 
         affilated_logs = AffilateLogs.objects.filter(
             affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()

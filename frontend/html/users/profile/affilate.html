@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+f{% extends "layout.html" %}
 {% load posts %}
 {% load static %}
 {% load users %}
@@ -84,11 +84,12 @@ function copyToClipboard(text) {
     {% active_or_not log.affilated_user %}
     <br>
     {% endif %}
-    {% if 'Bonus Days:' in log.comment %}
-    Принёс мне дней в клубе: {% get_amount_from_str log.comment %}
+    {% if log.creator_fee_type == "DAYS" or log.creator_fee_type == 'Дни' %}
+    Принёс мне дней в клубе: {{ log.bonus_amount }}
+    <!-- #DELETE#   Принёс мне дней в клубе: {% get_amount_from_str log.comment %}-->
     <br>
-    {% elif 'Bonus Money:' in log.comment %}
-    Принёс мне денег: {% get_amount_from_str log.comment %} рублей
+    {% elif log.creator_fee_type == "MONEY" %}
+    Принёс мне денег: {{ log.bonus_amount }} рублей
     <br><br>
     {% endif %}
     {% endfor %}

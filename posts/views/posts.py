@@ -14,7 +14,7 @@ from posts.models.views import PostView
 from posts.models.votes import PostVote
 from posts.renderers import render_post
 from search.models import SearchIndex
-from users.models.affilate_models import AffilateLogs
+from users.models.affilate_models import AffilateLogs, AffilateVisit
 
 from django.http import HttpResponse
 
@@ -74,17 +74,17 @@ def show_post(request, post_type, post_slug):
 
             p_value = request.GET.getlist('p')[0]
 
-            new_one = AffilateLogs()
+            new_one = AffilateVisit()
             identify_string = None
 
             if 'affilate_p' in request.COOKIES.keys():
 
                 identify_string = request.COOKIES.get('affilate_p')
-        
+
             done = new_one.insert_first_time(p_value, identify_string)
             print(f'DONE: {done}')
             if done:
-                cookie = new_one.identify_new_user
+                cookie = new_one.code
                 print(f'KUKA: {cookie}')
             else:
                 cookie = None
