@@ -47,8 +47,9 @@ def affilate_list(request, user_slug):
 
     u = User.objects.get(slug=user_slug)
 
-    slug_list = AffilateLogs.objects.filter(creator_id=u).filter(Q(affilate_status='come to intro form') | Q(
-        affilate_status='manual by admin-interface')).values_list("affilated_user", flat=True)
+#    slug_list = AffilateLogs.objects.filter(creator_id=u).filter(Q(affilate_status='come to intro form') | Q(
+#        affilate_status='manual by admin-interface')).values_list("affilated_user", flat=True)
+    slug_list = AffilateLogs.objects.filter(creator_id=u).values_list("affilated_user", flat=True)
 
     affilate_list = [User.objects.get(id=user_id) for user_id in slug_list]
 
@@ -60,6 +61,7 @@ def affilate_list(request, user_slug):
             'user': u
         }
     )
+    
 
 def get_affilate_money(request, user_slug):
 

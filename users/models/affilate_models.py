@@ -27,7 +27,7 @@ from utils.strings import random_string
 '''
 
 class AffilateInfo(models.Model):
-
+    ''' This stores data about a user who has connected to the referral program and their referral program settings '''
     DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
 
     AFFILATE_CHOICES = [
@@ -55,7 +55,7 @@ class AffilateInfo(models.Model):
 
 
 class AffilateVisit(models.Model):
-    '''When user come by ref link '''
+    ''' This stores data about users who arrived at the website via a referral link '''
 
     DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
 
@@ -136,7 +136,7 @@ class AffilateVisit(models.Model):
                 self.save()
 
 class AffilateLogs(models.Model):
-
+    ''' This stores data about users who arrived at the website via a referral link '''
     # variants of affilate_status:
     #
     # 1. user visited site -> come but not registrate
@@ -221,11 +221,11 @@ class AffilateLogs(models.Model):
 
 # to save relation of new user and user, that used referal programm
 class AffilateRelation(models.Model):
-
+    ''' This stores data about the relationship between the referrer and the referred user '''
     class Meta:
         db_table = 'affilate_relation'
 
-    affilate_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
+#    affilate_info_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
     code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE,
                              db_column='unique_code', null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -82,10 +82,8 @@ def show_post(request, post_type, post_slug):
                 identify_string = request.COOKIES.get('affilate_p')
 
             done = new_one.insert_first_time(p_value, identify_string)
-            print(f'DONE: {done}')
             if done:
                 cookie = new_one.code
-                print(f'KUKA: {cookie}')
             else:
                 cookie = None
     else:

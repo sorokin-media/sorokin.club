@@ -25,7 +25,7 @@ import base64
 
 # for affilating admin imports
 from django.contrib import messages
-from users.models.affilate_models import AffilateLogs, AffilateInfo
+from users.models.affilate_models import AffilateLogs, AffilateInfo, AffilateRelation
 
 # import custom class for sending messages
 from bot.sending_message import TelegramCustomMessage
@@ -88,44 +88,52 @@ def profile(request, user_slug):
         random_coffee_status = False
 
     # code bellow is about affilate programm
-    if request.method == 'POST':
 
-        affilate_creator_slug = request.POST['SlugField']
-        percent = request.POST['PercentSelect']
+    if not AffilateRelation.objects.filter(affilated_user=user).exists():
 
-        try:
-            # don't delete. that's for check out exist or not instead of ORM exist method
-            form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
-            new_one = AffilateLogs()
-            new_one.manual_insert(
-                creator_slug=affilate_creator_slug,
-                affilated_user=user,
-                percent=percent
-            )
-            return redirect('index')
-        except Exception:
-            messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
-    try:
-        affilate_creator = AffilateLogs.objects.filter(affilated_user=user).exclude(
-            affilate_time_was_set=None).first().creator_id.slug        
-    except:
-        affilate_creator = None
-    if affilate_creator:
-        percent = AffilateLogs.objects.filter(affilated_user=user).exclude(
-            affilate_time_was_set=None).first().percent_log
+        if request.method == 'POST':
+
+            affilate_creator_slug = request.POST['SlugField']
+            percent = request.POST['PercentSelect']
+
+            try:
+                # don't delete. that's for check out exist or not instead of ORM exist method
+                form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
+
+                # save logs
+                new_one = AffilateLogs()
+                new_one.manual_insert(
+                    creator_slug=affilate_creator_slug,
+                    affilated_user=user,
+                    percent=percent
+                )
+
+                # save relation
+                new_one_relation = AffilateRelation()
+                new_one_relation.creator_id = form_affilate_creator
+                new_one_relation.affilated_user = user
+                aff_info_id = AffilateInfo.objects.get(user_id=user)
+                new_one_relation.affilate_id = aff_info_id
+                new_one_relation.code = None
+                new_one_relation.save()
+
+                return redirect('index')
+
+            except Exception:
+
+                messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
+
+        else:
+
+            affilate_creator = percent = how_much_affilate = aff_money = None
+
     else:
-        percent = None
-    try:
+
+        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first()
+        percent = affilate_creator.affilate_info_id.percent
         how_much_affilate = len(AffilateLogs.objects.filter(creator_id=user).all())
-    except:
-        how_much_affilate = None
-    try:
-        u = User.objects.get(slug=user_slug)
-        print(f'\n\nFIND U: {u}\n\n')
-        aff_money = AffilateInfo.objects.get(user_id=u).sum
-        print(f'\n\AFF MONEY: {aff_money}\n\n')
-    except:
-        aff_money = None
+        aff_money = AffilateInfo.objects.get(user_id=user).sum
+
     # because of custom HTML form. (why not form=CustomForm(), etc.)
     request.POST = None
 
