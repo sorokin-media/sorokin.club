@@ -1,4 +1,4 @@
-f{% extends "layout.html" %}
+{% extends "layout.html" %}
 {% load posts %}
 {% load static %}
 {% load users %}
@@ -50,7 +50,7 @@ f{% extends "layout.html" %}
         </div>
         <!-- HTML код кнопки "Скопировать" -->
         Реферальная ссылка: {{settings.APP_HOST}}/post/2?p={{ affilate_info.parametr }}
-        <button onclick="copyToClipboard('{{settings.APP_HOST}}/post/2/?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <button onclick="copyToClipboard('{{settings.APP_HOST}}/post/1/?p={{ affilate_info.parametr }}')">Скопировать</button>
         
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>

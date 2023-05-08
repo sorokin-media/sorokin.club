@@ -48,7 +48,7 @@ def bonus_to_creator(creator_user, new_one):
         new_log.affilated_user = new_one.affilated_user
         new_log.creator_fee_type = fee_type
         new_log.percent_log = percent
-        new_log.comment = f'User {creator_user.slug} get {bonus_days} days by referal programm'\
+        new_log.comment = f'User {creator_user.slug} get {bonus_days} days by referal programm '\
             f'from user {new_one.affilated_user.slug}. '
         new_log.bonus_amount = bonus_days
         new_log.save()
@@ -57,7 +57,7 @@ def bonus_to_creator(creator_user, new_one):
 
     if fee_type == 'MONEY' or fee_type == 'Деньги':
 
-        paid_money = Payment.objects.get(user=new_one.affilated_user).amount
+        paid_money = Payment.objects.filter(user=new_one.affilated_user).latest('created_at')
         bonus_money = paid_money * percent
         bonus_money = decimal.Decimal(bonus_money).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING)
 
@@ -153,26 +153,30 @@ def intro(request):
         if 'affilate_p' in request.COOKIES.keys():
 
             code = request.COOKIES.get('affilate_p')
-            db_row = AffilateVisit.objects.get(code=code)
+            db_row_visit = AffilateVisit.objects.get(code=code)
+            creator = db_row_visit.creator_id
+            db_row_info = AffilateInfo.objects.get(user_id=creator)
 
-            if db_row.affilate_status == 'user visited site':
+            if db_row_visit.affilate_status == 'user visited site':
  
                 time_zone = pytz.UTC
                 now = time_zone.localize(datetime.utcnow())
 
-                db_row.affilate_status = 'come to intro'
-                db_row.last_page_view_time = now
-                db_row.save()
+                db_row_visit.affilate_status = 'come to intro'
+                db_row_visit.last_page_view_time = now
+                db_row_visit.save()
 
 
                 new_one = AffilateRelation()
-                new_one.code = db_row
-                new_one.creator_id = db_row.creator_id
+                new_one.code = db_row_visit
+                new_one.creator_id = creator
                 new_one.affilated_user = user
+                new_one.percent = db_row_info.percent
+                new_one.fee_type = db_row_info.fee_type
                 new_one.save()
 
                 bonus_to_creator(
-                    creator_user=db_row.creator_id,
+                    creator_user=creator,
                     new_one=new_one
                 )
 

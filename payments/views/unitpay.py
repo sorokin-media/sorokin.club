@@ -15,6 +15,10 @@ from users.models.user import User
 from users.models.subscription_plan import SubscriptionPlan
 from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 
+# imports for affilate programm
+from users.models.affilate_models import AffilateRelation, AffilateLogs
+from users.views.intro import bonus_to_creator
+
 log = logging.getLogger(__name__)
 
 
@@ -128,6 +132,7 @@ def unitpay_pay(request):
 def unitpay_webhook(request):
     log.info("Unitpay webhook, GET %r", request.GET)
 
+    # for tests it's better to comment
     signature_is_valid = UnitpayService.verify_webhook(request)
     if not signature_is_valid:
         return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
@@ -169,6 +174,19 @@ def unitpay_webhook(request):
 
         if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
             send_payed_email(payment.user)
+
+        # if there is affilate relation where affilated user is who pay
+        if AffilateRelation.objects.filter(affilated_user=user_model).exists():
+
+            # get object of this relation
+            new_one = AffilateRelation.objects.get(affilated_user=user_model)
+            # get creator of ref (рефовод)
+            creator_user = new_one.creator_id
+            # plus days or money depending on setting in user's profile
+            bonus_to_creator(
+                creator_user=creator_user,
+                new_one=new_one
+            )
 
         return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 

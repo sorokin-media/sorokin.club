@@ -89,7 +89,11 @@ def profile(request, user_slug):
 
     # code bellow is about affilate programm
 
+    print(user.slug)
+
     if not AffilateRelation.objects.filter(affilated_user=user).exists():
+
+        print('BLIAT! ')
 
         if request.method == 'POST':
 
@@ -127,12 +131,32 @@ def profile(request, user_slug):
 
             affilate_creator = percent = how_much_affilate = aff_money = None
 
-    else:
+    how_much_affilate = None
+    aff_money = None
+    affilate_creator = None
+    percent = None
 
-        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first()
-        percent = affilate_creator.affilate_info_id.percent
-        how_much_affilate = len(AffilateLogs.objects.filter(creator_id=user).all())
+    if AffilateInfo.objects.filter(user_id=user).exists():
+
         aff_money = AffilateInfo.objects.get(user_id=user).sum
+
+        print(f'\n\nSUM: {aff_money}\n\n')
+
+    if AffilateRelation.objects.filter(affilated_user=user).exists():
+
+        print(AffilateRelation.objects.filter(affilated_user=user).first())
+
+        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first().creator_id.slug
+
+        print(f'\n\nCREATOR: {affilate_creator}\n\n')
+
+        percent = AffilateRelation.objects.filter(affilated_user=user).first().percent
+
+    if AffilateLogs.objects.filter(creator_id=user).exists():
+
+        how_much_affilate = len(AffilateLogs.objects.filter(creator_id=user).all())
+
+        print(f'HOW MUCH : {how_much_affilate}')
 
     # because of custom HTML form. (why not form=CustomForm(), etc.)
     request.POST = None

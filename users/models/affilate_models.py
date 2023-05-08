@@ -225,7 +225,6 @@ class AffilateRelation(models.Model):
     class Meta:
         db_table = 'affilate_relation'
 
-#    affilate_info_id = models.ForeignKey(AffilateInfo, on_delete=models.CASCADE, db_column='affilate_id', null=True)
     code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE,
                              db_column='unique_code', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -235,3 +234,5 @@ class AffilateRelation(models.Model):
                                        on_delete=models.CASCADE, db_column='affilated_user', null=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True)
+    percent = models.PositiveSmallIntegerField(default=10, editable=True)
+    fee_type = models.CharField(default='Дни', choices=AffilateInfo.AFFILATE_CHOICES, max_length=24)
