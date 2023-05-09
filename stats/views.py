@@ -20,7 +20,7 @@ from posts.models.post import Post
 from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
-from users.models.affilate_models import AffilateLogs
+from users.models.affilate_models import AffilateLogs, AffilateRelation
 
 # import forms
 from stats.forms.money import DateForm
@@ -220,53 +220,92 @@ def affilates_stat(request):
         'pages/stats-affilate.html'
     )
 
+def get_list_of_logs(request_post):
+
+    time_zone = pytz.UTC
+    range_date = request_post['date-range']
+    range_date = range_date.replace(' ', '').replace('-', ' ')
+    range_date = range_date.split()
+    start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
+    finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+
+    # __range from Django ORM don't resolve task, because of doesn't include dates
+    # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+
+    start_date = time_zone.localize(
+        datetime(start_year, start_month, start_day))
+    finish_date = time_zone.localize(
+        datetime(finish_year, finish_month, finish_day))
+
+    finish_date += timedelta(days=1)
+
+    affilated_logs = AffilateLogs.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).all()
+
+    affilate_relations = AffilateRelation.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).exclude(
+        creator_id__isnull=True).values_list('creator_id').distinct()
+
+    return affilate_relations, affilated_logs, finish_date, start_date
+
 @auth_required
 def affilates_money_stat(request):
 
     affilate_users_sum = 0
     money = None
     active_users_sum = None
+    get_out_monies = None
+    users_pay_done = None
     form = DateForm(request.POST)
-    
+
     if request.method == 'POST':
 
-        time_zone = pytz.UTC
-        range_date = request.POST['date-range']
-        range_date = range_date.replace(' ', '').replace('-', ' ')
-        range_date = range_date.split()
-        start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
-        finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+        affilate_relations, affilated_logs, finish_date, start_date = get_list_of_logs(request.POST)
 
-        # __range from Django ORM don't resolve task, because of doesn't include dates
-        # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+        affilate_users_sum = len(affilate_relations)
+        active_users_sum = 0
+        get_out_monies = 0
+        users_pay_done = 0
 
-        start_date = time_zone.localize(
-            datetime(start_year, start_month, start_day))
-        finish_date = time_zone.localize(
-            datetime(finish_year, finish_month, finish_day))
+        # how much affilated users are active now
 
-        finish_date += timedelta(days=1)
+        for row in affilate_relations:
 
-        affilated_logs = AffilateLogs.objects.filter(
-            affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()
+            user = User.objects.get(id=row[0])
+            if active_or_not(user) == 'Активен':
 
-        print(affilated_logs)
+                active_users_sum += 1
+
+        # how much monies was given to referal creators (рефевод)
 
         money = 0
-        active_users_sum = 0
-        
+
         for row in affilated_logs:
 
-            if 'Bonus Money:' in row.comment:
+            if row.bonus_amount and row.creator_fee_type and 'MONEY' in row.creator_fee_type:
 
-                affilate_users_sum += 1
-                money += float(row.comment.replace('Bonus Money: ', ''))
+                money += row.bonus_amount
+
+        # how much monies was get out from club budget for referal payments
+
+        for row in affilated_logs:
+
+            # it's single event in affilate part of project that has creator and doesn't have affilated_user
+            if row.bonus_amount and row.affilated_user is None and row.creator_id:
+
+                get_out_monies += row.bonus_amount
+
+        # how much users make payment
+
+        for row in affilated_logs:
+
+            if row.affilated_user:
+
                 user = row.affilated_user
-
-                if active_or_not(user) == 'Активен':
-                
-                    active_users_sum += 1
-
+                how_much = len(Payment.objects.filter(created_at__gte=start_date).filter(
+                    created_at__lte=finish_date).filter(user=user).filter(status='success').all())
+                users_pay_done += how_much
+    print(f'users_pay_done -> {users_pay_done}')
     return render(
         request,
         'pages/stats-affilate-money.html',
@@ -274,7 +313,9 @@ def affilates_money_stat(request):
             'form': form,
             'money': money,
             'active_users_sum': active_users_sum,
-            'affilate_users_sum': affilate_users_sum
+            'affilate_users_sum': affilate_users_sum,
+            'get_out_monies': get_out_monies,
+            'users_pay_done': users_pay_done
         }
     )
 
@@ -285,41 +326,28 @@ def affilates_days_stat(request):
     days_sum = None
     active_users_sum = None
     affilate_users_sum = 0
-    
+
     if request.method == 'POST':
 
-        time_zone = pytz.UTC
-        range_date = request.POST['date-range']
-        range_date = range_date.replace(' ', '').replace('-', ' ')
-        range_date = range_date.split()
-        start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
-        finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+        affilate_relations, affilated_logs = get_list_of_logs(request.POST)
 
-        # __range from Django ORM don't resolve task, because of doesn't include dates
-        # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+        affilate_users_sum = len(affilate_relations)
+        active_users_sum = 0
 
-        start_date = time_zone.localize(
-            datetime(start_year, start_month, start_day))
-        finish_date = time_zone.localize(
-            datetime(finish_year, finish_month, finish_day))
+        for row in affilate_relations:
 
-        affilated_logs = AffilateLogs.objects.filter(
-            affilate_time_was_set__gte=start_date).filter(affilate_time_was_set__lte=finish_date).all()
+            user = User.objects.get(id=row[0])
+            if active_or_not(user) == 'Активен':
+
+                active_users_sum += 1
 
         days_sum = 0
-        active_users_sum = 0
 
         for row in affilated_logs:
 
-            if 'Bonus Days' in row.comment:
+            if row.creator_fee_type and 'DAYS' in row.creator_fee_type:
 
-                affilate_users_sum += 1
-                days_sum += int(row.comment.replace('Bonus Days: ', ''))
-                user = row.affilated_user
-
-                if active_or_not(user) == 'Активен':
-
-                    active_users_sum += 1
+                days_sum += row.bonus_amount
 
     return render(
         request,

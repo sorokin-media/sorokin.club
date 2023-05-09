@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.contrib import messages
 
 # models import
-from users.models.affilate_models import AffilateInfo, AffilateLogs
+from users.models.affilate_models import AffilateInfo, AffilateLogs, AffilateRelation
 from users.models.user import User
 
 # forms import
@@ -32,8 +32,8 @@ def pfofile_affilate(request, user_slug):
         )
     )
     affilate_info = AffilateInfo.objects.get(user_id=user)
-    affilate_logs = AffilateLogs.objects.filter(creator_id=user).all().order_by('created_at')
-    get_money_logs = AffilateLogs.objects.filter(creator_id=user).filter(creator_fee_type='Деньги').all()
+    affilate_logs = AffilateLogs.objects.filter(creator_id=user).exclude(affilated_user__isnull=True).all().order_by('created_at')
+    get_money_logs = AffilateLogs.objects.filter(creator_id=user).filter(affilated_user__isnull=True).all()
 
     return render(request, 'users/profile/affilate.html', {
         'form': form,
@@ -49,7 +49,7 @@ def affilate_list(request, user_slug):
 
 #    slug_list = AffilateLogs.objects.filter(creator_id=u).filter(Q(affilate_status='come to intro form') | Q(
 #        affilate_status='manual by admin-interface')).values_list("affilated_user", flat=True)
-    slug_list = AffilateLogs.objects.filter(creator_id=u).values_list("affilated_user", flat=True)
+    slug_list = AffilateRelation.objects.filter(creator_id=u).values_list("affilated_user", flat=True)
 
     affilate_list = [User.objects.get(id=user_id) for user_id in slug_list]
 
@@ -71,24 +71,19 @@ def get_affilate_money(request, user_slug):
     if request.method == 'POST':
 
         try:
-            print(1)
+
             money_sum = float(request.POST['sumField'])
-            print(2)
             comment = str(request.POST['commentField'])
-            print(3)
+
             aff_info_obj.sum = float(aff_info_obj.sum) - money_sum
-            print(4)
             aff_info_obj.save()
-            print(5)
             new_one = AffilateLogs()
-            print(6)
             new_one.admin_get_money(
                 user=u,
                 admin_comment=comment,
                 money=money_sum
             )
             request.POST = None
-            print(7)
             return redirect('profile', user_slug=user_slug)
         except Exception:
             messages.error(request, 'Что-то пошло не так. Сообщите Дмитрию, пожалуйста.')

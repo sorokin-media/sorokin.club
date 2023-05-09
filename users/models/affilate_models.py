@@ -117,23 +117,6 @@ class AffilateVisit(models.Model):
                 return True
         return False
 
-    def insert_on_intro(self, user):
-
-        time_zone = pytz.UTC
-        now = time_zone.localize(datetime.utcnow())
-
-        if self.affilate_status != 'come to intro form':
-
-            if not AffilateLogs.objects.filter(
-                    creator_id=self.creator_id).filter(
-                        affilate_status='come to intro form').filter(
-                            affilated_user=user
-            ).exists():
-
-                self.affilated_user = user
-                self.affilate_time_was_set = now
-                self.affilate_status = 'come to intro form'
-                self.save()
 
 class AffilateLogs(models.Model):
     ''' This stores data about users who arrived at the website via a referral link '''
@@ -155,27 +138,8 @@ class AffilateLogs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     code = models.UUIDField(unique=True, default=uuid4, null=True)
     comment = models.CharField(null=True, max_length=512)
-    admin_comment = models.CharField(null=True, max_length=512)
     percent_log = models.PositiveSmallIntegerField(default=10, editable=True, null=True)
     bonus_amount = models.PositiveIntegerField(null=True)
-
-    def insert_on_intro(self, user):
-
-        time_zone = pytz.UTC
-        now = time_zone.localize(datetime.utcnow())
-
-        if self.affilate_status != 'come to intro form':
-
-            if not AffilateLogs.objects.filter(
-                    creator_id=self.creator_id).filter(
-                        affilate_status='come to intro form').filter(
-                            affilated_user=user
-            ).exists():
-
-                self.affilated_user = user
-                self.affilate_time_was_set = now
-                self.affilate_status = 'come to intro form'
-                self.save()
 
     def manual_insert(self, creator_slug, affilated_user, percent):
 
@@ -186,37 +150,20 @@ class AffilateLogs(models.Model):
 
         self.creator_id = creator
         self.percent_log = percent
-        self.time_firstly_come = None
-        self.affilate_time_was_set = now
-        self.identify_new_user = None
+        self.code = None
         self.affilated_user = affilated_user
-        self.affilate_status = 'manual by admin-interface'
-
-        membership_expires_at = time_zone.localize(affilated_user.membership_expires_at)
-        days_on_balance = (membership_expires_at - now).days
-        # don't delete int() in bellow string. either it would be exception.
-        bonus_days = days_on_balance * (int(percent) * 0.01)
-        bonus_days = int(decimal.Decimal(bonus_days).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING))
-        membership_expires = time_zone.localize(
-            creator.membership_expires_at + timedelta(days=bonus_days)
-        )
-        creator.membership_expires_at = membership_expires
+        self.comment = f'admin set {creator.slug} as fereral creator for {affilated_user.slug}'
         creator.save()
-
-        self.comment = f'Bonus Days: {bonus_days}'
         self.save()
 
     def admin_get_money(self, user, admin_comment, money):
 
-        time_zone = pytz.UTC
-        now = time_zone.localize(datetime.utcnow())
-
         self.creator_id = user
-        self.affilate_status = 'get money'
-        self.admin_comment = admin_comment
-        self.comment = str(money)
-        self.affilate_time_was_set = now
+        self.comment = admin_comment
         self.percent_log = None
+        self.affilated_user = None
+        self.bonus_amount = money
+        self.code = None
         self.save()
 
 # to save relation of new user and user, that used referal programm

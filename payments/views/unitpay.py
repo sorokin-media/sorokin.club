@@ -137,7 +137,7 @@ def unitpay_webhook(request):
     if not signature_is_valid:
         return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
 
-    # process payment
+    # process payment, get account from webhook
     order_id = request.GET["params[account]"]
 
     if order_id == "test":
@@ -161,6 +161,7 @@ def unitpay_webhook(request):
             data=payload,
         )
 
+        # subscriptionId -> references in DB table
         if "params[subscriptionId]" in request.GET:
             user_model = payment.user
             user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
@@ -171,7 +172,7 @@ def unitpay_webhook(request):
             club_invite_activator(product, payment, payment.user)
         else:
             club_subscription_activator(product, payment, payment.user)
-
+        # it's better to comment for tests
         if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
             send_payed_email(payment.user)
 
@@ -180,11 +181,9 @@ def unitpay_webhook(request):
 
             # get object of this relation
             new_one = AffilateRelation.objects.get(affilated_user=user_model)
-            # get creator of ref (рефовод)
-            creator_user = new_one.creator_id
             # plus days or money depending on setting in user's profile
             bonus_to_creator(
-                creator_user=creator_user,
+                creator_user=new_one.creator_id,
                 new_one=new_one
             )
 

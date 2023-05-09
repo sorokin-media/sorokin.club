@@ -53,7 +53,7 @@ class Payment(models.Model):
         payment = Payment.get(reference)
         if not payment:
             raise PaymentNotFound()
-
+        # it's better to comment for tests
         if payment.status != cls.STATUS_STARTED and status == cls.STATUS_SUCCESS:
             raise PaymentAlreadyFinalized()
 

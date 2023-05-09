@@ -89,15 +89,16 @@ function copyToClipboard(text) {
     <!-- #DELETE#   Принёс мне дней в клубе: {% get_amount_from_str log.comment %}-->
     <br>
     {% elif log.creator_fee_type == "MONEY" %}
-    Принёс мне денег: {{ log.bonus_amount }} рублей
+    Принёс мне денег: {{ log.bonus_amount }} {{ log.bonus_amount|rupluralize:"рубль,рубля,рублей" }}
     <br><br>
     {% endif %}
+    <br>
     {% endfor %}
     {% endif %}
     {% if get_money_logs %}
     {% for log in get_money_logs %}
     <h3>Снятия денег с баланса реферальной программы</h3>
-    Из денежного бонуса за реферальную программу {% make_moscow_time log.affilate_time_was_set %} было снято {{ log.comment }}
+    Из денежного бонуса за реферальную программу {% make_moscow_time log.created_at %} было снято {{ log.bonus_amount }}
     {% endfor %}
     {% endif %}
 </div>

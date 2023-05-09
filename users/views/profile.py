@@ -89,7 +89,7 @@ def profile(request, user_slug):
 
     # code bellow is about affilate programm
 
-    print(user.slug)
+    print('\n\nCOME HERE\n\n')
 
     if not AffilateRelation.objects.filter(affilated_user=user).exists():
 
@@ -116,8 +116,6 @@ def profile(request, user_slug):
                 new_one_relation = AffilateRelation()
                 new_one_relation.creator_id = form_affilate_creator
                 new_one_relation.affilated_user = user
-                aff_info_id = AffilateInfo.objects.get(user_id=user)
-                new_one_relation.affilate_id = aff_info_id
                 new_one_relation.code = None
                 new_one_relation.save()
 
@@ -129,37 +127,32 @@ def profile(request, user_slug):
 
         else:
 
-            affilate_creator = percent = how_much_affilate = aff_money = None
+            affilate_creator_slug = percent = how_much_affilate = aff_money = None
 
     how_much_affilate = None
     aff_money = None
-    affilate_creator = None
+    affilate_creator_slug = None
     percent = None
 
     if AffilateInfo.objects.filter(user_id=user).exists():
 
         aff_money = AffilateInfo.objects.get(user_id=user).sum
 
-        print(f'\n\nSUM: {aff_money}\n\n')
-
     if AffilateRelation.objects.filter(affilated_user=user).exists():
 
-        print(AffilateRelation.objects.filter(affilated_user=user).first())
+        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first().creator_id
+        affilate_creator_slug = affilate_creator.slug
 
-        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first().creator_id.slug
-
-        print(f'\n\nCREATOR: {affilate_creator}\n\n')
-
-        percent = AffilateRelation.objects.filter(affilated_user=user).first().percent
+        percent = AffilateInfo.objects.filter(user_id=affilate_creator).first().percent
 
     if AffilateLogs.objects.filter(creator_id=user).exists():
 
-        how_much_affilate = len(AffilateLogs.objects.filter(creator_id=user).all())
-
-        print(f'HOW MUCH : {how_much_affilate}')
+        how_much_affilate = len(AffilateRelation.objects.filter(creator_id=user).all())
 
     # because of custom HTML form. (why not form=CustomForm(), etc.)
     request.POST = None
+
+    print('\n\nhello\n\n')
 
     return render(request, "users/profile.html", {
         "user": user,
@@ -178,7 +171,7 @@ def profile(request, user_slug):
         "friend": friend,
         "muted": muted,
         'random_coffee_status': random_coffee_status,
-        'affilate_creator': affilate_creator,
+        'affilate_creator': affilate_creator_slug,
         'percent': percent,
         'how_much_affilate': how_much_affilate,
         'aff_money': aff_money

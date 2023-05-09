@@ -57,7 +57,8 @@ def bonus_to_creator(creator_user, new_one):
 
     if fee_type == 'MONEY' or fee_type == 'Деньги':
 
-        paid_money = Payment.objects.filter(user=new_one.affilated_user).latest('created_at')
+        paid_money = Payment.objects.filter(user=new_one.affilated_user).filter(
+            status='success').latest('created_at').amount
         bonus_money = paid_money * percent
         bonus_money = decimal.Decimal(bonus_money).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING)
 
@@ -158,14 +159,13 @@ def intro(request):
             db_row_info = AffilateInfo.objects.get(user_id=creator)
 
             if db_row_visit.affilate_status == 'user visited site':
- 
+
                 time_zone = pytz.UTC
                 now = time_zone.localize(datetime.utcnow())
 
                 db_row_visit.affilate_status = 'come to intro'
                 db_row_visit.last_page_view_time = now
                 db_row_visit.save()
-
 
                 new_one = AffilateRelation()
                 new_one.code = db_row_visit
