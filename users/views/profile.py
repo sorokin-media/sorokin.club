@@ -89,11 +89,7 @@ def profile(request, user_slug):
 
     # code bellow is about affilate programm
 
-    print('\n\nCOME HERE\n\n')
-
     if not AffilateRelation.objects.filter(affilated_user=user).exists():
-
-        print('BLIAT! ')
 
         if request.method == 'POST':
 
@@ -151,8 +147,6 @@ def profile(request, user_slug):
 
     # because of custom HTML form. (why not form=CustomForm(), etc.)
     request.POST = None
-
-    print('\n\nhello\n\n')
 
     return render(request, "users/profile.html", {
         "user": user,

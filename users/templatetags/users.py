@@ -52,8 +52,6 @@ def active_or_not(user):
 @register.simple_tag()
 def get_amount_from_str(comment):
 
-    print('\nCOME GO GO')
-
     if 'Bonus Money: ' in comment:
 
         return comment.replace("Bonus Money: ", "")

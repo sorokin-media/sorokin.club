@@ -53,8 +53,6 @@ def bonus_to_creator(creator_user, new_one):
         new_log.bonus_amount = bonus_days
         new_log.save()
 
-        print(f'\n\nNEW_LOG: {new_log}\n\n')
-
     if fee_type == 'MONEY' or fee_type == 'Деньги':
 
         paid_money = Payment.objects.filter(user=new_one.affilated_user).filter(

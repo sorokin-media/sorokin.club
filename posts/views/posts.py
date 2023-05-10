@@ -64,8 +64,6 @@ def show_post(request, post_type, post_slug):
     # force cleanup deleted/hidden posts from linked
     linked_posts = [p for p in linked_posts if p.is_visible]
 
-    print(f'WTF REQUEST ME: {request.me}')
-
     # identify affilated users
     if post.is_public and not request.me:
 
