@@ -246,7 +246,10 @@ def get_list_of_logs(request_post):
         created_at__gte=start_date).filter(created_at__lte=finish_date).exclude(
         creator_id__isnull=True).values_list('creator_id').distinct()
 
-    return affilate_relations, affilated_logs, finish_date, start_date
+    logs_distinct_users = AffilateLogs.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).values_list('creator_id', flat=True).distinct()
+
+    return affilate_relations, affilated_logs, logs_distinct_users, finish_date, start_date
 
 @auth_required
 def affilates_money_stat(request):
@@ -260,7 +263,8 @@ def affilates_money_stat(request):
 
     if request.method == 'POST':
 
-        affilate_relations, affilated_logs, finish_date, start_date = get_list_of_logs(request.POST)
+        affilate_relations, affilated_logs, logs_distinct_users, \
+            finish_date, start_date = get_list_of_logs(request.POST)
 
         affilate_users_sum = len(affilate_relations)
         active_users_sum = 0
@@ -297,15 +301,15 @@ def affilates_money_stat(request):
 
         # how much users make payment
 
-        for row in affilated_logs:
+        for row in logs_distinct_users:
 
-            if row.affilated_user:
+            if row:
 
-                user = row.affilated_user
+                user = User.objects.get(id=row)
                 how_much = len(Payment.objects.filter(created_at__gte=start_date).filter(
                     created_at__lte=finish_date).filter(user=user).filter(status='success').all())
                 users_pay_done += how_much
-    print(f'users_pay_done -> {users_pay_done}')
+
     return render(
         request,
         'pages/stats-affilate-money.html',
