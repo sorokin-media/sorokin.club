@@ -145,8 +145,12 @@ def edit_payments(request, user_slug):
                 plan_subcription = Subscription.objects.filter(default=True).last()
                 plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
     else:
-        plan_subcription = Subscription.objects.filter(default=True).last()
-        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+        if request.me.email == 'petrblagov@gmail.com' or request.me.email == 'rupronin@gmail.com' or request.me.email == 'raskrutka89@gmail.com':
+            # Включаем им старый тариф
+            plans = SubscriptionPlan.objects.filter(subscription_id='464b5b07-b44e-4d91-8529-9aa6f3fa1246').order_by("created_at")
+        else:
+            plan_subcription = Subscription.objects.filter(default=True).last()
+            plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
 
     # if user.telegram_id == '204349098':
     #     plan_subcription = Subscription.objects.filter(name='Test').last()
