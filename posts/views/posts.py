@@ -13,7 +13,7 @@ from posts.models.subscriptions import PostSubscription
 from posts.models.views import PostView
 from posts.models.votes import PostVote
 from posts.renderers import render_post
-from search.models import SearchIndex
+from search.models import SearchIndляex
 from users.models.affilate_models import AffilateLogs, AffilateVisit
 
 from django.http import HttpResponse

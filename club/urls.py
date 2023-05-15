@@ -131,9 +131,11 @@ urlpatterns = [
     path("user/<slug:user_slug>/delete/", request_delete_account, name="request_delete_account"),
     path("user/<slug:user_slug>/delete/confirm/", confirm_delete_account, name="confirm_delete_account"),
     path("user/<slug:user_slug>/edit/coffee", random_coffee, name="random_coffee"),
-    path("user/<slug:user_slug>/pfofile_affilate", pfofile_affilate, name="pfofile_affilate"),
-    path("affilate_list/<slug:user_slug>", affilate_list, name='affilate_list'),
-    path("get_affilate_money/<slug:user_slug>", get_affilate_money, name='get_affilate_money'),
+    # path note that there is grammar mistake in name. 
+    # there is difference beetween real URL and name uf URL in one symbol
+    path("user/<slug:user_slug>/pfofile_affiliate", pfofile_affilate, name="pfofile_affilate"),
+    path("affiliate_list/<slug:user_slug>", affilate_list, name='affilate_list'),
+    path("get_affiliate_money/<slug:user_slug>", get_affilate_money, name='get_affilate_money'),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
