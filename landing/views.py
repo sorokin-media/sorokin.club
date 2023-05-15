@@ -13,6 +13,7 @@ from landing.forms import GodmodeNetworkSettingsEditForm, GodmodeDigestEditForm,
 from landing.models import GodSettings
 from notifications.email.invites import send_invited_email
 from users.models.user import User
+from users.models.affilate_models import AffilateVisit
 
 EXISTING_DOCS = [
     os.path.splitext(f)[0]  # get only filenames
@@ -30,6 +31,39 @@ def landing(request):
             .annotate(total=Count("country")).order_by().count() + 1,
         }
         cache.set("landing_stats", stats, settings.LANDING_CACHE_TIMEOUT)
+
+    if 'p' in request.GET.keys():
+        # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+        p_value = request.GET.getlist('p')[0]
+
+        new_one = AffilateVisit()
+        identify_string = None
+
+        if 'affilate_p' in request.COOKIES.keys():
+
+            identify_string = request.COOKIES.get('affilate_p')
+
+        done = new_one.insert_first_time(p_value, identify_string)
+        if done:
+            cookie = new_one.code
+        else:
+            cookie = None
+    else:
+        cookie = None
+
+    if cookie:
+
+        return_ = render(
+            request,
+            "landing.html",
+            {
+                "stats": stats
+            }
+        )
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
 
     return render(request, "landing.html", {
         "stats": stats
@@ -49,13 +83,13 @@ def club(request):
         "stats": stats
     })
 
-def tg_bot (request):
+def tg_bot(request):
     return render(request, "pages/tg-bot.html")
 
-def tg_bot_second (request):
+def tg_bot_second(request):
     return render(request, "pages/tg-bot-second.html")
 
-def tg_bot_second_2 (request):
+def tg_bot_second_2(request):
     return render(request, "pages/tg-bot-second_2.html")
 
 # Geo targeting pages

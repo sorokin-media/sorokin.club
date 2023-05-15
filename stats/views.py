@@ -28,6 +28,9 @@ import pytz
 import json
 from club.settings import APP_HOST as host
 
+# import custom classes
+from auth.helpers import auth_required
+
 # Create your views here.
 @auth_required
 def stats_gode(request):

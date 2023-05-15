@@ -1,27 +1,55 @@
-from django.conf import settings
-from django.db.models import Q
-from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
+from django.shortcuts import render
 
-from auth.helpers import check_user_permissions, auth_required
-from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
-from common.request import ajax_request
-from posts.forms.compose import POST_TYPE_MAP, PostTextForm
-from posts.models.linked import LinkedPost
 from posts.models.post import Post
-from posts.models.subscriptions import PostSubscription
-from posts.models.views import PostView
-from posts.models.votes import PostVote
-from posts.renderers import render_post
-from search.models import SearchIndex
+
+from users.models.affilate_models import AffilateVisit
 
 from common.pagination import paginate
 
+from datetime import datetime, timedelta
+
 def open_posts(request):
+
+    if not request.me:
+
+        if 'p' in request.GET.keys():
+            # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+            p_value = request.GET.getlist('p')[0]
+
+            new_one = AffilateVisit()
+            identify_string = None
+
+            if 'affilate_p' in request.COOKIES.keys():
+
+                identify_string = request.COOKIES.get('affilate_p')
+
+            done = new_one.insert_first_time(p_value, identify_string)
+            if done:
+                cookie = new_one.code
+            else:
+                cookie = None
+    else:
+        cookie = None
+
     posts = Post.objects.filter(is_public=True).all()
+
+    if cookie:
+
+        return_ = render(
+            request,
+            "open.html",
+            {
+                "posts": paginate(request, posts)
+            }
+        )
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
+
     return render(
         request,
-        'open.html',
+        "open.html",
         {
             "posts": paginate(request, posts)
         }
