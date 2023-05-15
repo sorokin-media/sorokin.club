@@ -20,16 +20,12 @@ from posts.models.post import Post
 from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
-from users.models.affilate_models import AffilateLogs, AffilateRelation
-
-# import forms
-from stats.forms.money import DateForm
-
-# custom classes imports
-from auth.helpers import auth_required
-from users.templatetags.users import active_or_not
-
-# import confid data
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
+import time
+from datetime import datetime
+import pytz
+import json
 from club.settings import APP_HOST as host
 
 # Create your views here.
@@ -37,11 +33,22 @@ from club.settings import APP_HOST as host
 def stats_gode(request):
     # Это ублюдство надо переписать
     if request.method == "POST":
+
         form = DateForm(request.POST)
         date_from_string = request.POST.get('date_from') + ' 00:00:00'
         date_to_string = request.POST.get('date_to') + ' 00:00:00'
         dt = DT.datetime.strptime(date_from_string, '%Y-%m-%d %H:%M:%S')
         datetime_for = dt.timestamp()
+
+        # быстрый костыль для бага с тем, что конечная дата не включается
+        # а ублюдство действительно надо переделать, прост кошмар какой то
+        date_format = '%Y-%m-%d %H:%M:%S'
+        date_obj = datetime.strptime(date_to_string, date_format)
+        date_plus_one_day = date_obj + timedelta(days=1)
+        date_to_string = date_plus_one_day.strftime(date_format)
+        # конец костыля
+
+        property(date_to_string)
         dt = DT.datetime.strptime(date_to_string, '%Y-%m-%d %H:%M:%S')
         datetime_to = dt.timestamp()
         payment_first = []

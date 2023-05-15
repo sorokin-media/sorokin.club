@@ -14,12 +14,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        expiring_posts = Post.objects.filter(type='event')
-        for post in expiring_posts:
-            date = post.event_datetime
-            if date:
-                post.event_time_start = date
-                post.save()
+#         expiring_posts = Post.objects.filter(type='event')
+#         for post in expiring_posts:
+#             date = post.event_datetime
+#             if date:
+#                 post.event_time_start = date
+#                 post.save()
 
 
         # auto_payment = Payment.objects.filter(status='success',
@@ -56,18 +56,18 @@ class Command(BaseCommand):
 #                 chat=Chat(id=204349098),
 #                 text=text_send
 #             )
-#         subscription = Subscription(name="Sale20122022", default=False)
-#         subscription.save()
-#         subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 месяц (акция)', amount=420,
-#                                              description='1 месяц членства в Клубе потом 420р.', code='sale1m1022', timedelta=30,
-#                                              package_name='На 1 месяц', package_image='🤘', package_price=10)
-#         subscription_plan.save()
-#         subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 год (акция)', amount=2920,
-#                                              description='1 год членства в Клубе потом 3920р.', code='sale12m1022', timedelta=365,
-#                                              package_name='На 1 год', package_image='🤘', package_price=2920)
-#         subscription_plan.save()
-#         subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 3 года (акция)', amount=5920,
-#                                              description='3 года членства в Клубе потом 7920р.', code='sale12m1022', timedelta=1095,
-#                                              package_name='На 3 года', package_image='🤘', package_price=5920)
-#         subscription_plan.save()
+        subscription = Subscription(name="new01052023", default=False)
+        subscription.save()
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 месяц', amount=990,
+                                                 description='1 месяц членства в Клубе', code='club1m0523', timedelta=30,
+                                             package_name='На 1 месяц', package_image='🤘', package_price=990)
+        subscription_plan.save()
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 1 год', amount=9990,
+                                             description='1 год членства в Клубе', code='club12m0523', timedelta=365,
+                                             package_name='На 1 год', package_image='🤘', package_price=9990)
+        subscription_plan.save()
+        subscription_plan = SubscriptionPlan(subscription_id=subscription.id, name='На 3 года', amount=19990,
+                                             description='3 года членства в Клубе', code='club36m0523', timedelta=1095,
+                                             package_name='На 3 года', package_image='🤘', package_price=19990)
+        subscription_plan.save()
 

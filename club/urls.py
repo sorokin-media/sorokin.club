@@ -39,6 +39,7 @@ from posts.views.feed import feed
 from posts.views.posts import show_post, edit_post, upvote_post, retract_post_vote, compose, compose_type, \
     toggle_post_subscription, delete_post, unpublish_post, clear_post
 from posts.views.topic_create_delete import create_topic, open_form, show_list_of_rooms, delete_room
+from posts.views.open import open_posts
 
 from bookmarks.views import bookmarks
 from search.views import search
@@ -185,6 +186,8 @@ urlpatterns = [
     path("post/<slug:post_slug>/comment/create/", create_comment, name="create_comment"),
     path("post/<slug:post_slug>/comment/<uuid:comment_id>/", show_comment, name="show_comment"),
     path("post/<slug:post_slug>/badge/", create_badge_for_post, name="create_badge_for_post"),
+
+    path("open", open_posts, name='open_posts'),
   
     path("topic/create/<room_slug>", create_topic, name='create_topic'),
     path("topic/create/", create_topic, name='create_topic'),
