@@ -46,11 +46,12 @@
                 </div>
                 <br><br>
                 {% endfor %}
+
                 <input type="submit" class="button button-big" value="Сохранить">
         </div>
         <!-- HTML код кнопки "Скопировать" -->
-        Реферальная ссылка: {{settings.APP_HOST}}/post/2?p={{ affilate_info.parametr }}
-        <button onclick="copyToClipboard('{{settings.APP_HOST}}/post/1/?p={{ affilate_info.parametr }}')">Скопировать</button>
+        Реферальная ссылка: {{settings.AFFILATE_LINK}}?referall_param={{ affilate_info.parametr }}
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK}}?referall_param={{ affilate_info.parametr }}')">Скопировать</button>
         
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
