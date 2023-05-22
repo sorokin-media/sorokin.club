@@ -1,30 +1,26 @@
-from datetime import datetime, timedelta
+# Python imports
+from datetime import datetime
 from uuid import uuid4
 from uuid import UUID
 import pytz
-import decimal
 
 # Django ORM import
 from django.db.models import Max
 from django.db.models import Q
 
+# Django imports
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.models import F
 
+# import models
 from users.models.user import User
-from common.models import ModelDiffMixin
-from utils.slug import generate_unique_slug
-from utils.strings import random_string
+from users.models.subscription_plan import SubscriptionPlan
 
-
-'''
-Модель AffilateInfo => участники реферальной программы, создатели ссылок
-Модель AffilateVisit => фиксирует визиты пришедших по реферальной программе
-Модель AffilateLogs => фиксирует списывания, ничего больше
-
-'''
+# COMMENT FOR FUTURE UPDATES
+#
+# don't forget that there are \landing\views.py
+# and open_posts.py
+# where updates must be too. of just search by <if 'affilate_p'>
 
 class AffilateInfo(models.Model):
     ''' This stores data about a user who has connected to the referral program and their referral program settings '''
@@ -57,7 +53,7 @@ class AffilateInfo(models.Model):
 class AffilateVisit(models.Model):
     ''' This stores data about users who arrived at the website via a referral link '''
 
-    DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
+    DEFAULT_LINK = settings.AFFILATE_LINK
 
     class Meta:
         db_table = 'affilate_visit'
@@ -67,55 +63,39 @@ class AffilateVisit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     ref_url = models.CharField(max_length=248, null=True, editable=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # if last_page_view_time is Null, than user mane only one page view
-    last_page_view_time = models.DateTimeField(null=True)
-    code = models.UUIDField(unique=True, default=uuid4, null=True)
-    affilate_status = models.CharField(max_length=48, default='user visited site')
+    code = models.UUIDField(default=uuid4, null=True)
 
-    def insert_first_time(self, p_value, code):
+    def generate_uniqie_uuid_value(self):
 
-        # case #0: == 1 new_user, == 1 author_of_ref
-        # case #1: > 1 authors of ref, but == 1 new_user
-        # a) come by first ref and no registrated -> there is no in table
-        # b) come by second ref and not registrated -> there is in table AND
-        # case #2: == 1 author of ref, but > 1 new_user
-        # case #3: new_user open second time same link
+        new_uuid = uuid4()
 
-        if AffilateInfo.objects.filter(parametr=UUID(p_value)).exists():
+        while AffilateVisit.objects.filter(code=new_uuid).exists():
+
+            new_uuid = uuid4()
+
+        return new_uuid
+
+    def insert_first_time(self, p_value, code, url):
+
+        # if it's correct value of p, there is a user who is ref creator with this link
+        if p_value and AffilateInfo.objects.filter(parametr=UUID(p_value)).exists():
             self.creator_id = AffilateInfo.objects.get(parametr=UUID(p_value)).user_id
-        else:
+        elif code and AffilateVisit.objects.filter(code=code).exists():
+            self.creator_id = AffilateVisit.objects.filter(code=code).first().creator_id
+        if self.creator_id is None:
             return False
-        # if it's first come to site of new_ser
+            # if it's first come to site of new_ser
         if not code:
+            self.code = self.generate_uniqie_uuid_value()
+            self.ref_url = url
             self.save()
             return True
-
         # if it is not first coming to site of user
         else:
-            previous_refs = AffilateVisit.objects.filter(
-                code=code).values_list('creator_id', flat=True)
-
-            dublicated_creator = AffilateInfo.objects.filter(user_id__in=previous_refs).first()
-            if dublicated_creator:
-                # If this is not a page view that has already occurred before
-                if not AffilateVisit.objects.filter(
-                        creator_id=self.creator_id).filter(
-                        code=code).filter(
-                        affilate_status='user visited site').exists():
-                    self.save()
-                    return True
-                else:
-                    # user not visited for the first time, make more than on page view
-                    db_row = AffilateVisit.objects.filter(creator_id=self.creator_id).filter(
-                        code=code).filter(affilate_status='user visited site').first()
-                    time_zone = pytz.UTC
-                    db_row.last_page_view_time = time_zone.localize(datetime.utcnow())
-                    db_row.save()
-            else:
-                self.code = code
-                self.save()
-                return True
-        return False
+            self.code = code
+            self.ref_url = url
+            self.save()
+            return True
 
 
 class AffilateLogs(models.Model):
@@ -172,8 +152,6 @@ class AffilateRelation(models.Model):
     class Meta:
         db_table = 'affilate_relation'
 
-    code = models.ForeignKey(AffilateVisit, to_field='code', on_delete=models.CASCADE,
-                             db_column='unique_code', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     creator_id = models.ForeignKey(User, related_name='creator_of_affilate',
                                    on_delete=models.CASCADE, db_column='creator_id')
@@ -183,3 +161,4 @@ class AffilateRelation(models.Model):
     deleted_at = models.DateTimeField(null=True)
     percent = models.PositiveSmallIntegerField(default=10, editable=True)
     fee_type = models.CharField(default='Дни', choices=AffilateInfo.AFFILATE_CHOICES, max_length=24)
+    last_product = models.ForeignKey(SubscriptionPlan, related_name='product_for_affilate', on_delete=models.CASCADE, null=True)

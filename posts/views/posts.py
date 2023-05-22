@@ -24,8 +24,6 @@ import uuid
 
 def show_post(request, post_type, post_slug):
 
-    print(request.GET.keys())
-
     post = get_object_or_404(Post, slug=post_slug)
 
     # post_type can be changed by moderator
@@ -70,28 +68,34 @@ def show_post(request, post_type, post_slug):
     # identify affilated users
     if post.is_public and not request.me:
 
-        if 'referall_param' in request.GET.keys():
+        if 'p' in request.GET.keys():
             # getlist instead of keys() because of exception of dublicated ?p= in URL
 
-            p_value = request.GET.getlist('referall_param')[0]
-
-            new_one = AffilateVisit()
+            p_value = request.GET.getlist('p')[0]
             identify_string = None
 
-            if 'affilate_p' in request.COOKIES.keys():
+        else:
 
-                identify_string = request.COOKIES.get('affilate_p')
+            p_value = None
 
-            done = new_one.insert_first_time(p_value, identify_string)
-            if done:
-                cookie = new_one.code
-            else:
-                cookie = None
+        if 'affilate_p' in request.COOKIES.keys():
+
+            identify_string = request.COOKIES.get('affilate_p')
+
+        new_one = AffilateVisit()
+        done = new_one.insert_first_time(
+            p_value=p_value, 
+            code=identify_string,
+            url=request.build_absolute_uri()
+        )
+        if done:
+            cookie = new_one.code
         else:
             cookie = None
     else:
         cookie = None
 
+    # there is setting cookie inside of render_post. 
     return render_post(request, post, {
         "post_last_view_at": last_view_at,
         "linked_posts": linked_posts,

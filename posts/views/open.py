@@ -16,19 +16,26 @@ def open_posts(request):
             # getlist instead of keys() because of exception of dublicated ?p= in URL
 
             p_value = request.GET.getlist('p')[0]
-
-            new_one = AffilateVisit()
             identify_string = None
 
-            if 'affilate_p' in request.COOKIES.keys():
+        else:
 
-                identify_string = request.COOKIES.get('affilate_p')
+            p_value = None
 
-            done = new_one.insert_first_time(p_value, identify_string)
-            if done:
-                cookie = new_one.code
-            else:
-                cookie = None
+        if 'affilate_p' in request.COOKIES.keys():
+
+            identify_string = request.COOKIES.get('affilate_p')
+
+        new_one = AffilateVisit()
+        done = new_one.insert_first_time(
+            p_value=p_value, 
+            code=identify_string,
+            url=request.build_absolute_uri()
+        )
+        if done:
+            cookie = new_one.code
+        else:
+            cookie = None
     else:
         cookie = None
 

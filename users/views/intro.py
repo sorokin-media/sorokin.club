@@ -18,63 +18,7 @@ from users.models.user import User
 from posts.models.subscriptions import PostSubscription
 from pprint import pprint
 
-from users.models.affilate_models import AffilateLogs, AffilateInfo, AffilateVisit, AffilateRelation
-
-def bonus_to_creator(creator_user, new_one):
-
-    time_zone = pytz.UTC
-    now = time_zone.localize(datetime.utcnow())
-
-    fee_type = AffilateInfo.objects.get(user_id=creator_user).fee_type
-    percent = AffilateInfo.objects.get(user_id=creator_user).percent * 0.01
-
-    if fee_type == 'DAYS' or fee_type == 'Дни':
-
-        now = time_zone.localize(datetime.utcnow())
-        membership_expires_at = time_zone.localize(new_one.affilated_user.membership_expires_at)
-
-        days_on_balance = (membership_expires_at - now).days
-
-        bonus_days = days_on_balance * percent
-        bonus_days = int(decimal.Decimal(bonus_days).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING))
-        membership_expires = time_zone.localize(
-            new_one.creator_id.membership_expires_at + timedelta(days=bonus_days)
-        )
-        creator_user.membership_expires_at = membership_expires
-        creator_user.save()
-
-        new_log = AffilateLogs()
-        new_log.creator_id = creator_user
-        new_log.affilated_user = new_one.affilated_user
-        new_log.creator_fee_type = fee_type
-        new_log.percent_log = percent
-        new_log.comment = f'User {creator_user.slug} get {bonus_days} days by referal programm '\
-            f'from user {new_one.affilated_user.slug}. '
-        new_log.bonus_amount = bonus_days
-        new_log.save()
-
-    if fee_type == 'MONEY' or fee_type == 'Деньги':
-
-        paid_money = Payment.objects.filter(user=new_one.affilated_user).filter(
-            status='success').latest('created_at').amount
-        bonus_money = paid_money * percent
-        bonus_money = decimal.Decimal(bonus_money).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_CEILING)
-
-        new_log = AffilateLogs()
-        new_log.creator_id = creator_user
-        new_log.affilated_user = new_one.affilated_user
-        new_log.creator_fee_type = fee_type
-        new_log.percent_log = percent
-        new_log.comment = f'User {creator_user.slug} get {bonus_money} money by referal programm'\
-            f'from user {new_one.affilated_user.slug}. '
-        new_log.bonus_amount = bonus_money
-        new_log.save()
-
-        aff_info_obj = AffilateInfo.objects.get(user_id=creator_user)
-        aff_info_obj.sum += bonus_money
-        aff_info_obj.save()
-
-    return
+from users.models.affilate_models import AffilateLogs, AffilateInfo, AffilateVisit
 
 
 @auth_required
@@ -147,36 +91,6 @@ def intro(request):
                 chat=Chat(id=204349098),
                 text=text_send
             )
-
-        # code bellow is for affilate programm
-        if 'affilate_p' in request.COOKIES.keys():
-
-            code = request.COOKIES.get('affilate_p')
-            db_row_visit = AffilateVisit.objects.get(code=code)
-            creator = db_row_visit.creator_id
-            db_row_info = AffilateInfo.objects.get(user_id=creator)
-
-            if db_row_visit.affilate_status == 'user visited site':
-
-                time_zone = pytz.UTC
-                now = time_zone.localize(datetime.utcnow())
-
-                db_row_visit.affilate_status = 'come to intro'
-                db_row_visit.last_page_view_time = now
-                db_row_visit.save()
-
-                new_one = AffilateRelation()
-                new_one.code = db_row_visit
-                new_one.creator_id = creator
-                new_one.affilated_user = user
-                new_one.percent = db_row_info.percent
-                new_one.fee_type = db_row_info.fee_type
-                new_one.save()
-
-                bonus_to_creator(
-                    creator_user=creator,
-                    new_one=new_one
-                )
 
     return render(request, "users/intro.html", {"form": form})
 

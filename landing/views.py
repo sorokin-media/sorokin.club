@@ -32,19 +32,28 @@ def landing(request):
         }
         cache.set("landing_stats", stats, settings.LANDING_CACHE_TIMEOUT)
 
-    if 'p' in request.GET.keys():
-        # getlist instead of keys() because of exception of dublicated ?p= in URL
+    if not request.me:
 
-        p_value = request.GET.getlist('p')[0]
+        if 'p' in request.GET.keys():
+            # getlist instead of keys() because of exception of dublicated ?p= in URL
 
-        new_one = AffilateVisit()
-        identify_string = None
+            p_value = request.GET.getlist('p')[0]
+            identify_string = None
+
+        else:
+
+            p_value = None
 
         if 'affilate_p' in request.COOKIES.keys():
 
             identify_string = request.COOKIES.get('affilate_p')
 
-        done = new_one.insert_first_time(p_value, identify_string)
+        new_one = AffilateVisit()
+        done = new_one.insert_first_time(
+            p_value=p_value, 
+            code=identify_string,
+            url=request.build_absolute_uri()
+        )
         if done:
             cookie = new_one.code
         else:

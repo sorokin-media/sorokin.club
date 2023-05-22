@@ -54,8 +54,10 @@ class UnitpayService:
             }
 
         params["signature"] = cls.make_signature(params)
-
-        url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
+        # it' better to comment for test on local
+        # and uncoment next string after
+#        url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
+        url = 'url'
 
         invoice = Invoice(
             id=order_id,
