@@ -50,8 +50,14 @@
                 <input type="submit" class="button button-big" value="Сохранить">
         </div>
         <!-- HTML код кнопки "Скопировать" -->
-        Реферальная ссылка: {{settings.AFFILATE_LINK}}?p={{ affilate_info.parametr }}
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        Реферальная ссылка на главную страницу Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <br><br>
+        Реферальная ссылка на страницу с преимуществами Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <br><br>
+        Реферальная ссылка на страницу с открытыми материалами Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{ affilate_info.parametr }}')">Скопировать</button>
         
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
@@ -87,7 +93,6 @@ function copyToClipboard(text) {
     {% endif %}
     {% if log.creator_fee_type == "DAYS" or log.creator_fee_type == 'Дни' %}
     Принёс мне дней в клубе: {{ log.bonus_amount }}
-    <!-- #DELETE#   Принёс мне дней в клубе: {% get_amount_from_str log.comment %}-->
     <br>
     {% elif log.creator_fee_type == "MONEY" %}
     Принёс мне денег: {{ log.bonus_amount }} {{ log.bonus_amount|rupluralize:"рубль,рубля,рублей" }}

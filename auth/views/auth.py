@@ -34,17 +34,17 @@ def join(request):
         plan_subcription = Subscription.objects.filter(default=True).last()
         plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
 
+    identify_string = None
     if 'p' in request.GET.keys():
         # getlist instead of keys() because of exception of dublicated ?p= in URL
 
         p_value = request.GET.getlist('p')[0]
-        identify_string = None
 
     else:
 
         p_value = None
 
-    if 'affilate_p' in request.COOKIES.keys():
+    if 'affilate_p' in request.COOKIES.keys() and not p_value:
 
         identify_string = request.COOKIES.get('affilate_p')
 
@@ -80,18 +80,17 @@ def join(request):
 def login(request):
     if request.me:
         return redirect("profile", request.me.slug)
-
+    identify_string = None
     if 'p' in request.GET.keys():
         # getlist instead of keys() because of exception of dublicated ?p= in URL
 
         p_value = request.GET.getlist('p')[0]
-        identify_string = None
 
     else:
 
         p_value = None
 
-    if 'affilate_p' in request.COOKIES.keys():
+    if 'affilate_p' in request.COOKIES.keys() and not p_value:
 
         identify_string = request.COOKIES.get('affilate_p')
 
@@ -105,6 +104,16 @@ def login(request):
         cookie = new_one.code
     else:
         cookie = None
+
+    if cookie:
+
+        return_ = render(request, "auth/login.html", {
+            "goto": request.GET.get("goto"),
+            "email": request.GET.get("email"),
+        })
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
 
     return render(request, "auth/login.html", {
         "goto": request.GET.get("goto"),

@@ -37,9 +37,8 @@ def bonus_to_creator(creator_user, new_one, product):
 
         # round up: 4,5 ---> 5 or 2,3 ---> 2
         bonus_day = math.ceil(product.timedelta * percent)
-        bonus_days = timedelta(days=bonus_day)
         creator_user.membership_expires_at = time_zone.localize(
-            creator_user.membership_expires_at + timedelta(days=bonus_days)
+            creator_user.membership_expires_at + timedelta(days=bonus_day)
         )
         creator_user.save()
 
@@ -48,15 +47,14 @@ def bonus_to_creator(creator_user, new_one, product):
         new_log.affilated_user = new_one.affilated_user
         new_log.creator_fee_type = fee_type
         new_log.percent_log = percent
-        new_log.comment = f'User {creator_user.slug} get {bonus_days} days by referal programm '\
+        new_log.comment = f'User {creator_user.slug} get {bonus_day} days by referal programm '\
             f'from user {new_one.affilated_user.slug}. '
-        new_log.bonus_amount = bonus_days
+        new_log.bonus_amount = bonus_day
         new_log.save()
 
     if fee_type == 'MONEY' or fee_type == 'Деньги':
 
-        paid_money = Payment.objects.filter(user=new_one.affilated_user).filter(
-            status='success').latest('created_at').amount
+        paid_money = product.amount
         bonus_money = paid_money * percent
         bonus_money = decimal.Decimal(bonus_money).quantize(decimal.Decimal('0.1'), rounding=decimal.ROUND_CEILING)
 
@@ -182,6 +180,31 @@ def unitpay_pay(request):
         }
     else:  # scenario 3: account renewal
         user = request.me
+    identify_string = None
+    if 'p' in request.GET.keys():
+        # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+        p_value = request.GET.getlist('p')[0]
+        identify_string = None
+
+    else:
+
+        p_value = None
+
+    if 'affilate_p' in request.COOKIES.keys():
+
+        identify_string = request.COOKIES.get('affilate_p')
+
+    new_one = AffilateVisit()
+    done = new_one.insert_first_time(
+        p_value=p_value, 
+        code=identify_string,
+        url=request.build_absolute_uri()
+    )
+    if done:
+        cookie = new_one.code
+    else:
+        cookie = None
 
     # create stripe session and payment (to keep track of history)
     pay_service = UnitpayService()
@@ -194,6 +217,22 @@ def unitpay_pay(request):
         product=product,
         data=payment_data,
     )
+
+    if cookie:
+
+        return_ = render(
+            request,
+            "payments/pay.html",
+            {
+                "invoice": invoice,
+                "product": product,
+                "payment": payment,
+                "user": user
+            }
+        )
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
 
     return render(request, "payments/pay.html", {
         "invoice": invoice,
@@ -255,7 +294,7 @@ def unitpay_webhook(request):
 
             # get object of this relation
 
-            new_one = AffilateRelation.objects.get(affilated_user=user_model)
+            new_one = AffilateRelation.objects.filter(affilated_user=user_model).latest('created_at')
             # plus days or money depending on setting in user's profile
             bonus_to_creator(
                 creator_user=new_one.creator_id,

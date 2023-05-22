@@ -12,6 +12,8 @@ def open_posts(request):
 
     if not request.me:
 
+        identify_string = None
+
         if 'p' in request.GET.keys():
             # getlist instead of keys() because of exception of dublicated ?p= in URL
 
@@ -22,7 +24,7 @@ def open_posts(request):
 
             p_value = None
 
-        if 'affilate_p' in request.COOKIES.keys():
+        if 'affilate_p' in request.COOKIES.keys() and not p_value:
 
             identify_string = request.COOKIES.get('affilate_p')
 

@@ -24,7 +24,6 @@ from users.models.subscription_plan import SubscriptionPlan
 
 class AffilateInfo(models.Model):
     ''' This stores data about a user who has connected to the referral program and their referral program settings '''
-    DEFAULT_LINK = 'http://127.0.0.1:8000/post/2/'
 
     AFFILATE_CHOICES = [
         ('DAYS', 'Дни'),
@@ -37,23 +36,19 @@ class AffilateInfo(models.Model):
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
     parametr = models.UUIDField(unique=True, default=uuid4, editable=False, max_length=16)
-    url = models.CharField(default=DEFAULT_LINK, max_length=248)
     percent = models.PositiveSmallIntegerField(default=10, editable=True)
     fee_type = models.CharField(default='Дни', verbose_name='Как я хочу получать вознаграждение',
                                 choices=AFFILATE_CHOICES, max_length=24)
     sum = models.DecimalField(default=0, decimal_places=1, max_digits=10)
 
-    def insert_new_one(self, user, link=DEFAULT_LINK):
+    def insert_new_one(self, user):
 
         self.user_id = user
-        self.url = self.DEFAULT_LINK + '?p=' + str(self.parametr)
         self.save()
 
 
 class AffilateVisit(models.Model):
     ''' This stores data about users who arrived at the website via a referral link '''
-
-    DEFAULT_LINK = settings.AFFILATE_LINK
 
     class Meta:
         db_table = 'affilate_visit'
