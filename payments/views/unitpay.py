@@ -245,10 +245,10 @@ def unitpay_pay(request):
 def unitpay_webhook(request):
     log.info("Unitpay webhook, GET %r", request.GET)
 
-    # for tests it's better to comment
-#    signature_is_valid = UnitpayService.verify_webhook(request)
-#    if not signature_is_valid:
-#        return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
+    # for tests it's better to comment: next 3 rows
+    signature_is_valid = UnitpayService.verify_webhook(request)
+    if not signature_is_valid:
+        return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
 
     # process payment, get account from webhook
     order_id = request.GET["params[account]"]
@@ -285,9 +285,9 @@ def unitpay_webhook(request):
             club_invite_activator(product, payment, payment.user)
         else:
             club_subscription_activator(product, payment, payment.user)
-        # it's better to comment for tests
-#        if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
-#            send_payed_email(payment.user)
+        # it's better to comment for tests: next 2 rows
+        if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
+            send_payed_email(payment.user)
 
         # if there is affilate relation where affilated user is who pay
         if AffilateRelation.objects.filter(affilated_user=user_model).exists():
