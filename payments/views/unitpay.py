@@ -135,6 +135,21 @@ def unitpay_webhook(request):
     # process payment
     order_id = request.GET["params[account]"]
 
+    if order_id == 'f0c46e13d09941e8afd72acc24081a1b':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == '1c27f57c090a469a88812957a74849ff':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == '6b5e669bcafa4a1a96335fdf41cc9f1e':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == '977afa2d4c834041aa5c323fcc6c0eb2':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == 'f0c46e13d09941e8afd72acc24081a1b':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == '6b4d76dab28e48a8991862f43fbf6f2e':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+    if order_id == '9a659cc8534a4a95ad8ce95a6cc7d1e2':
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+
     if order_id == "test":
         return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
 
