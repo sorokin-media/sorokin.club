@@ -95,7 +95,7 @@
     {% if post_type == 'event' %}
     <p class="feed-post-title">Прошло:</p>
         {% for post in posts %}
-            {% include "posts/items/event.html" %}
+            {% include "posts/items/event_past.html" %}
         {% endfor %}
     {% else %}
         {% for post in posts %}

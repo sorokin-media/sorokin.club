@@ -2,9 +2,14 @@ import json
 from django.shortcuts import redirect, render
 from django_q.tasks import async_task
 
+from datetime import datetime, timedelta
+import pytz
+
+import decimal
+
 from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
 from payments.models import Payment
-from auth.helpers import auth_required
+from auth.helpers import auth_required, check_user_permissions
 from notifications.telegram.users import notify_profile_needs_review
 from posts.models.post import Post
 from users.forms.intro import UserIntroForm
@@ -12,6 +17,8 @@ from users.models.geo import Geo
 from users.models.user import User
 from posts.models.subscriptions import PostSubscription
 from pprint import pprint
+
+from users.models.affilate_models import AffilateLogs, AffilateInfo, AffilateVisit
 
 
 @auth_required
@@ -59,6 +66,7 @@ def intro(request):
 
             return redirect("on_review")
     else:
+
         existing_intro = Post.get_user_intro(request.me)
         form = UserIntroForm(
             instance=request.me,
@@ -85,3 +93,11 @@ def intro(request):
             )
 
     return render(request, "users/intro.html", {"form": form})
+
+
+'''
+1. записываем в афилейтвизит, что всё ок
+2. записываем связь между создаталем и примкнувшим к рядам клуба
+
+
+'''

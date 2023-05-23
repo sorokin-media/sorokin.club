@@ -44,7 +44,70 @@
             <p>
                 <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
             </p>
-        {% endif %}
+<!-- Вывод ошибки, если Slug был введён некорректно-->
+            {% if messages %}
+                {% for message in messages %}
+                <p style="color:rgb(255, 5, 64);">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+<!-- Вывод ошибки, если Slug был введён некорректно-->
+
+<!-- Вывод кол-ва рефов -->
+{% if how_much_affilate %}
+                <p>
+                    Кол-во рефералов: {{ how_much_affilate }}
+                </p>
+                <p>
+                    <a href="{% url 'affilate_list' user.slug %}">Список рефералов</a>
+                </p>
+                {% else %}
+                <p>Нет рефералов. </p>
+                {% endif %}
+<!-- Вывод кол-ва рефов -->
+
+<!-- Вывод накопившейся суммы -->
+{% if aff_money %}
+<p>
+    Сумма накопленных реферальных денег: {{ aff_money }}
+    <a href="{% url 'get_affilate_money' user.slug %}"> Вывести бабки</a>
+</p>
+{% endif %}
+<!-- Вывод накопившейся суммы -->
+
+{% if affilate_creator %}
+                    <p>
+                        <strong>Рефовод: {{ affilate_creator }} </strong>
+                    </p>
+                    <p>
+                        <strong>Процент: {{ percent }} </strong>
+                    </p>
+                    {% else %}
+                    <div class="form-row">
+                    <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+                    <label for="slugField">Слаг рефовода. Без собачки. </label>
+                    <input required type="text" id="slugField" name="SlugField">
+
+                    <br>
+
+                    <label for="dropdownList">Процент:</label>
+                    <select id="dropdownList" name="PercentSelect">
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                      <option value="40">40</option>
+                    </select>
+
+                    <br>
+                <button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
+                </form>
+                <br>
+                <br>
+
+
+            {% endif %}
+
+
+{% endif %}
 
 
         {% if me.id == user.id %}
@@ -98,6 +161,12 @@
                         {% else %}
                             ❌ Бот не подключен
                         {% endif %}
+                    </span>
+                </a>
+                <a href="{% url "pfofile_affilate" user.slug %}" class="profile-status">
+                    <span class="profile-status-icon">🎁</span>
+                    <span class="profile-status-status">
+                        Реферальная программа
                     </span>
                 </a>
             </div>

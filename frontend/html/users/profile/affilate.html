@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% load posts %}
+{% load static %}
+{% load users %}
+{% load  %}
+{% load text_filters %}
+{% block title %}
+Реферальная программа
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="content user-edit">
+    <div class="form-title">📢<br>Реферальная программа</div>
+
+    <div class="block">
+        <div class="form-row">
+            <form action="{% url 'pfofile_affilate' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+                {% for field in form %}
+                <div class="settings-form__content">
+                    <div class="settings-form__row">
+                        <div class="settings-form__row-name">
+                            {{ field.label_tag }}
+                        </div>
+                        <div class="settings-form__row-input">
+                            <label class="settings-form__input">
+                                {{ field }}
+                                <div class="settings-form__input-indicator">
+                                    <span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                {% endfor %}
+
+                <input type="submit" class="button button-big" value="Сохранить">
+        </div>
+        <!-- HTML код кнопки "Скопировать" -->
+        Реферальная ссылка на главную страницу Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <br><br>
+        Реферальная ссылка на страницу с преимуществами Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <br><br>
+        Реферальная ссылка на страницу с открытыми материалами Сорокин.Клуба
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        
+<!-- JavaScript код для копирования ссылки в буфер обмена -->
+<script>
+function copyToClipboard(text) {
+  var input = document.createElement('input');
+  input.setAttribute('value', text);
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  alert('Ссылка скопирована! ');
+}
+</script>
+    </div>
+</div>
+<div class="container">
+    <div class="form-row">
+<!-- отсортировать надо по дате регистрации пользователя -->
+{% if affilate_logs %}
+<h3>Мои рефералы: </h3>
+{% for log in affilate_logs %}
+    {% if log.affilated_user.moderation_status == 'approved' %}
+<a href="{{ settings.APP_HOST }}/user/{{log.affilated_user.slug}}">{{log.affilated_user.full_name}}:</a>
+    <br>
+{% else %}
+{{ log.affilated_user.slug }} 👩🏻‍💻 ещё проходит модерацию, регистрируется 🧑🏼‍💻<br>
+    {% endif %}
+    Дата регистрации: {% make_moscow_time log.affilated_user.created_at %}
+    <br>
+    {% if log.affilated_user %}
+<!-- delete? -->
+    {% active_or_not log.affilated_user %}
+<!-- delete? -->
+    <br>
+    {% endif %}
+    {% if log.creator_fee_type == "DAYS" or log.creator_fee_type == 'Дни' %}
+    Принёс мне дней в клубе: {{ log.bonus_amount }}
+    <br>
+    {% elif log.creator_fee_type == "MONEY" %}
+    Принёс мне денег: {{ log.bonus_amount }} {{ log.bonus_amount|rupluralize:"рубль,рубля,рублей" }}
+    <br><br>
+    {% endif %}
+    <br>
+    {% endfor %}
+    {% endif %}
+    {% if get_money_logs %}
+    {% for log in get_money_logs %}
+    <h3>Снятия денег с баланса реферальной программы</h3>
+    Из денежного бонуса за реферальную программу {% make_moscow_time log.created_at %} было снято {{ log.bonus_amount }}
+    {% endfor %}
+    {% endif %}
+</div>
+</div>
+{% endblock %}

@@ -14,9 +14,16 @@ from posts.models.views import PostView
 from posts.models.votes import PostVote
 from posts.renderers import render_post
 from search.models import SearchIndex
+from users.models.affilate_models import AffilateLogs, AffilateVisit
+
+from django.http import HttpResponse
+
+import re
+import uuid
 
 
 def show_post(request, post_type, post_slug):
+
     post = get_object_or_404(Post, slug=post_slug)
 
     # post_type can be changed by moderator
@@ -58,9 +65,42 @@ def show_post(request, post_type, post_slug):
     # force cleanup deleted/hidden posts from linked
     linked_posts = [p for p in linked_posts if p.is_visible]
 
+    # identify affilated users
+    if post.is_public and not request.me:
+
+        identify_string = None
+
+        if 'p' in request.GET.keys():
+            # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+            p_value = request.GET.getlist('p')[0]
+
+        else:
+
+            p_value = None
+
+        if 'affilate_p' in request.COOKIES.keys() and not p_value:
+
+            identify_string = request.COOKIES.get('affilate_p')
+
+        new_one = AffilateVisit()
+        done = new_one.insert_first_time(
+            p_value=p_value, 
+            code=identify_string,
+            url=request.build_absolute_uri()
+        )
+        if done:
+            cookie = new_one.code
+        else:
+            cookie = None
+    else:
+        cookie = None
+
+    # there is setting cookie inside of render_post. 
     return render_post(request, post, {
         "post_last_view_at": last_view_at,
         "linked_posts": linked_posts,
+        "cookie": cookie
     })
 
 

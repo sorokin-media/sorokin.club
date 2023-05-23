@@ -16,6 +16,8 @@ from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
 import time
 
+from users.models.affilate_models import AffilateVisit
+
 def join(request):
     if request.me:
         return redirect("profile", request.me.slug)
@@ -23,13 +25,53 @@ def join(request):
         cookie_sale = request.COOKIES.get('sale-november')
         get_sale = request.GET.get("sale-november")
         if cookie_sale or get_sale:
-            plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
+            plans = SubscriptionPlan.objects.filter(
+                subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
         else:
             plan_subcription = Subscription.objects.filter(default=True).last()
             plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
     else:
         plan_subcription = Subscription.objects.filter(default=True).last()
         plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+
+    identify_string = None
+    if 'p' in request.GET.keys():
+        # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+        p_value = request.GET.getlist('p')[0]
+
+    else:
+
+        p_value = None
+
+    if 'affilate_p' in request.COOKIES.keys() and not p_value:
+
+        identify_string = request.COOKIES.get('affilate_p')
+
+    new_one = AffilateVisit()
+    done = new_one.insert_first_time(
+        p_value=p_value,
+        code=identify_string,
+        url=request.build_absolute_uri()
+    )
+    if done:
+        cookie = new_one.code
+    else:
+        cookie = None
+
+    if cookie:
+
+        return_ = render(
+            request,
+            "auth/join.html",
+            {
+                "plans": plans
+            }
+        )
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
+
     return render(request, "auth/join.html", {
         "plans": plans
     })
@@ -38,6 +80,40 @@ def join(request):
 def login(request):
     if request.me:
         return redirect("profile", request.me.slug)
+    identify_string = None
+    if 'p' in request.GET.keys():
+        # getlist instead of keys() because of exception of dublicated ?p= in URL
+
+        p_value = request.GET.getlist('p')[0]
+
+    else:
+
+        p_value = None
+
+    if 'affilate_p' in request.COOKIES.keys() and not p_value:
+
+        identify_string = request.COOKIES.get('affilate_p')
+
+    new_one = AffilateVisit()
+    done = new_one.insert_first_time(
+        p_value=p_value,
+        code=identify_string,
+        url=request.build_absolute_uri()
+    )
+    if done:
+        cookie = new_one.code
+    else:
+        cookie = None
+
+    if cookie:
+
+        return_ = render(request, "auth/login.html", {
+            "goto": request.GET.get("goto"),
+            "email": request.GET.get("email"),
+        })
+        expires = datetime.now() + timedelta(days=3650)
+        return_.set_cookie('affilate_p', cookie, expires=expires)
+        return return_
 
     return render(request, "auth/login.html", {
         "goto": request.GET.get("goto"),

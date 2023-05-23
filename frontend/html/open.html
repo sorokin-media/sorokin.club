@@ -42,11 +42,11 @@
                     {% endif %}
                     <a href="{% url "profile" me.slug %}" class="avatar menu-avatar" aria-label="Мой профиль" title="Мой профиль"><img src="{{ me.get_avatar }}" alt="Аватар {{ me.full_name }}" /></a>
                 {% else %}
-                    <a href="{% url "login" %}?goto={{ settings.APP_HOST }}{{ request.path }}" class="avatar menu-avatar"><img src="{% static "images/test/avatar.png"%}" alt="Аватар" /></a>
+                <a href="{% url "join" %}" class="button menu-button menu-button-compose" aria-label="Вступить в клуб" title="Вступить в клуб"><i class="fas fa-pen"></i><span class="compose-btn-text">&nbsp;&nbsp;Вступить в клуб</span></a>
                 {% endif %}
             </div>
         </nav>
-
+    
         {% block feed_content %}
         <div class="container">
     {% for post in posts %}
@@ -59,3 +59,6 @@
 
     {% endblock %}
 {% endblock %}
+
+
+

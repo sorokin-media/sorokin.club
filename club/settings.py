@@ -232,7 +232,10 @@ COINBASE_CHECKOUT_ENDPOINT = "https://commerce.coinbase.com/checkout/"
 COINBASE_WEBHOOK_SECRET = os.getenv("COINBASE_WEBHOOK_SECRET")
 
 UNITPAY_PUBLIC_KEY = os.getenv("UNITPAY_PUBLIC_KEY")
+# it' better to comment for test on local
+# and uncoment next string after
 UNITPAY_SECRET_KEY = os.getenv("UNITPAY_SECRET_KEY")
+# UNITPAY_SECRET_KEY = 'UNITPAY_SECRET_KEY'
 
 JWT_PRIVATE_KEY = os.getenv("JWT_PRIVATE_KEY")
 JWT_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
@@ -360,3 +363,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 TG_DEVELOPER_DMITRY = os.getenv("TG_DEVELOPER_DMITRY")
 TG_ALEX = os.getenv("TG_ALEX")
+
+AFFILATE_LINK_1 = f'{APP_HOST}'
+AFFILATE_LINK_2 = f'{APP_HOST}/docs/about'
+AFFILATE_LINK_3 = f'{APP_HOST}/open'
