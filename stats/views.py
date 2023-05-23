@@ -1,35 +1,47 @@
 # Python imports
 import datetime as DT
-import pprint
 import time
 from datetime import datetime, timedelta
 import pytz
-import json
 
 # Django imports
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404, render
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
 
 # import models
 from users.models.user import User
-from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
+from users.models.random_coffee import RandomCoffee
 from payments.models import Payment
 from posts.models.post import Post
 from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
-from django.shortcuts import redirect, get_object_or_404, render
-from django.http import Http404
-import time
-from datetime import datetime
-import pytz
-import json
+from users.models.affilate_models import AffilateLogs, AffilateRelation
+
+# import config data
 from club.settings import APP_HOST as host
 
 # import custom classes
 from auth.helpers import auth_required
+from stats.forms.money import DateForm
+from users.models.affilate_models import AffilateLogs
+
+def active_or_not(user):
+
+    time_zone = pytz.UTC
+    now = time_zone.localize(datetime.utcnow())
+
+    x = now < time_zone.localize(user.membership_expires_at)
+    y = user.is_banned_until is None
+    if not y:
+        y = user.is_banned_until < now
+    z = user.moderation_status == 'approved'
+
+    return "Активен" if x and y and z else "Не активен"
 
 # Create your views here.
 @auth_required
@@ -343,7 +355,8 @@ def affilates_days_stat(request):
 
     if request.method == 'POST':
 
-        affilate_relations, affilated_logs = get_list_of_logs(request.POST)
+        affilate_relations, affilated_logs, logs_distinct_users, \
+            finish_date, start_date = get_list_of_logs(request.POST)
 
         affilate_users_sum = len(affilate_relations)
         active_users_sum = 0

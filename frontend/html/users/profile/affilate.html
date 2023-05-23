@@ -88,7 +88,9 @@ function copyToClipboard(text) {
     Дата регистрации: {% make_moscow_time log.affilated_user.created_at %}
     <br>
     {% if log.affilated_user %}
+<!-- delete? -->
     {% active_or_not log.affilated_user %}
+<!-- delete? -->
     <br>
     {% endif %}
     {% if log.creator_fee_type == "DAYS" or log.creator_fee_type == 'Дни' %}
