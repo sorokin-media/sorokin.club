@@ -79,3 +79,68 @@ class Payment(models.Model):
             except (KeyError, AttributeError):
                 return None
         return None
+
+
+class PaymentLink(models.Model):
+    STATUS_STARTED = "started"
+    STATUS_FAILED = "failed"
+    STATUS_SUCCESS = "success"
+    STATUSES = [
+        (STATUS_STARTED, STATUS_STARTED),
+        (STATUS_FAILED, STATUS_FAILED),
+        (STATUS_SUCCESS, STATUS_SUCCESS),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+
+    reference = models.CharField(max_length=256, db_index=True)
+
+    email = models.EmailField(unique=False, null=True)
+
+    title = models.TextField(null=False)
+    description = models.TextField(null=False)
+    amount = models.FloatField(default=0.0)
+
+    user = models.ForeignKey(User, related_name="payments", null=True, on_delete=models.SET_NULL, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    status = models.CharField(choices=STATUSES, default=STATUS_STARTED, max_length=32)
+    data = models.TextField(null=True)
+
+    @classmethod
+    def create(cls, reference: str, user: User, data: dict = None, status: str = STATUS_STARTED):
+        return PaymentLink.objects.create(
+            reference=reference,
+            user=user,
+            amount=product.amount or 0.0,
+            status=status,
+            data=json.dumps(data),
+        )
+
+    @classmethod
+    def get(cls, reference):
+        return Payment.objects.filter(reference=reference).first()
+
+    @classmethod
+    def finish(cls, reference, status=STATUS_SUCCESS, data=None):
+        payment = Payment.get(reference)
+        if not payment:
+            raise PaymentNotFound()
+
+        if payment.status != cls.STATUS_STARTED and status == cls.STATUS_SUCCESS:
+            raise PaymentAlreadyFinalized()
+
+        payment.status = status
+        if data:
+            payment_old_json = json.loads(payment.data)
+            payment_old_json.update(data)
+            payment.data = json.dumps(payment_old_json)
+        payment.save()
+
+        return payment
+
+    @classmethod
+    def for_user(cls, user):
+        return Payment.objects.filter(user=user)
