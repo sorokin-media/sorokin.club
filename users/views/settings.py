@@ -156,10 +156,6 @@ def edit_payments(request, user_slug):
             plan_subcription = Subscription.objects.filter(default=True).last()
             plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
 
-    # if user.telegram_id == '204349098':
-    #     plan_subcription = Subscription.objects.filter(name='Test').last()
-    #     plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
-
     return render(request, "users/edit/payments.html", {
         "user": user,
         "subscriptions": subscriptions,
