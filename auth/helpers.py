@@ -75,7 +75,6 @@ def check_user_permissions(request, **context):
             and not request.path.startswith("/messages/"):
 #            and not request.path.startswith("/network/") \
 
-
         if request.me.membership_expires_at < datetime.utcnow():
             log.info("User membership expired. Redirecting to payments page...")
             return redirect("membership_expired")
