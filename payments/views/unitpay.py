@@ -278,8 +278,10 @@ def unitpay_webhook(request):
         )
 
         # subscriptionId -> references in DB table
+
+        user_model = payment.user
+
         if "params[subscriptionId]" in request.GET:
-            user_model = payment.user
             user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
             user_model.save()
 
