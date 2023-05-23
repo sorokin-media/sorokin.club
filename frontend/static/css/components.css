@@ -1071,6 +1071,7 @@
                 padding: 8px;
                 margin-right: 0;
 
+                font-weight: 500;
                 font-size: 145%;
 
                 border-radius: 0;
@@ -1186,6 +1187,11 @@
         .feed-post-title a {
             text-decoration: none;
         }
+
+    .feed-post-post .feed-post-title a {
+        display: inline-block;
+        width: 100%;
+    }
 
     .feed-post-author .avatar {
         position: absolute;

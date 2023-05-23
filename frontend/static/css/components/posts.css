@@ -1097,6 +1097,16 @@ background-color: #282C35;
     }
 }
 
+.text-body-type-post h1,
+.text-body-type-post h2,
+.text-body-type-post h3,
+.text-body-type-post h4,
+.text-body-type-post h5,
+.text-body-type-post h6 {
+    margin-top: 1.75em;
+    margin-bottom: 0.8em;
+}
+
 .post-under-upvote .upvote {
     display: inline-block;
 
