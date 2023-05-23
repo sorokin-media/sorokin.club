@@ -60,6 +60,8 @@ from stats.views import stats_gode, stats_content, edit_payments_sale, stats_bud
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
+from posts.views.open import open_posts
+
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
 urlpatterns = [
@@ -173,7 +175,8 @@ urlpatterns = [
     path("post/<slug:post_slug>/comment/create/", create_comment, name="create_comment"),
     path("post/<slug:post_slug>/comment/<uuid:comment_id>/", show_comment, name="show_comment"),
     path("post/<slug:post_slug>/badge/", create_badge_for_post, name="create_badge_for_post"),
-  
+    path("open", open_posts, name='open_posts'),
+
     path("topic/create/<room_slug>", create_topic, name='create_topic'),
     path("topic/create/", create_topic, name='create_topic'),
     path("topic/open_form/", open_form, name='open_form'),
