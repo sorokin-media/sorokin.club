@@ -123,7 +123,7 @@
                         {% endif %}
                     </span>
                 </div>
-                <a href="{% url "edit_payments" user.slug %}" class="profile-status">
+                <a href="{% url 'edit_payments' user.slug %}" class="profile-status">
                     {% if user.membership_days_left < 150 %}
                         <span class="profile-status-number">{% if user.membership_days_left < 10 %}😱{% else %}😋{% endif %} {{ user.membership_days_left | ceil | cool_number }}</span>
                         <span class="profile-status-text">{{ user.membership_days_left | ceil | rupluralize:"день,дня,дней" }}</span>
@@ -135,7 +135,7 @@
                         <span class="profile-status-text">{{ user.membership_days_left | days_to_years | rupluralize:"год,года,лет" }}</span>
                     {% endif %}
                 </a>
-                <a href="{% url "random_coffee" user.slug %}" class="profile-status">
+                <a href="{% url 'random_coffee' user.slug %}" class="profile-status">
                     {% if random_coffee_status is False %}
                     <span class="profile-status-icon">☕</span>
                     <span class="profile-status-status">
@@ -148,13 +148,13 @@
                     </span>
                     {% endif %}
                 </a>
-                <a href="{% url "edit_notifications" user.slug %}" class="profile-status">
+                <a href="{% url 'edit_notifications' user.slug %}" class="profile-status">
                     <span class="profile-status-icon">✉️</span>
                     <span class="profile-status-status">
                             Настройки уведомлений 💎
                     </span>
                 </a>
-                <a href="{% url "edit_bot" user.slug %}" class="profile-status">
+                <a href="{% url 'edit_bot' user.slug %}" class="profile-status">
                     <span class="profile-status-icon">🤖</span>
                     <span class="profile-status-status">
                         {% if user.telegram_id %}
@@ -230,7 +230,7 @@
         {% endif %}
 
         {% if badges %}
-            <a class="user-badges" href="{% url "profile_badges" user.slug  %}">
+            <a class="user-badges" href="{% url 'profile_badges' user.slug  %}">
                 {% include "badges/widgets/badges.html" with badges=badges badge_size="big" %}
             </a>
         {% endif %}
@@ -371,7 +371,7 @@
 
         {% if posts %}
             <div class="profile-header">
-                <a href="{% url "profile_posts" user.slug  %}">Посты ({{ posts_total }}) &rarr;</a>
+                <a href="{% url 'profile_posts' user.slug  %}">Посты ({{ posts_total }}) &rarr;</a>
             </div>
 
             <div class="profile-posts">
@@ -382,13 +382,13 @@
 
             {% if posts_total > posts|length %}
                 <div class="profile-more">
-                    <a href="{% url "profile_posts" user.slug  %}" class="button button-inverted">Все {{ posts_total }} {{ posts_total|rupluralize:"пост,поста,постов" }}...</a>
+                    <a href="{% url 'profile_posts' user.slug  %}" class="button button-inverted">Все {{ posts_total }} {{ posts_total|rupluralize:"пост,поста,постов" }}...</a>
                 </div>
             {% endif %}
         {% endif %}
     </div>
 
-    <user-expertise-window submit-form-action="{% url "add_expertise" %}"
+    <user-expertise-window submit-form-action="{% url 'add_expertise' %}"
                            :expertise-list="JSON.parse('{{ global_data.expertise | jsonify }}')"
                            v-show="shownWindow === 'add-expertise'"
                            @close-window="shownWindow = null">
