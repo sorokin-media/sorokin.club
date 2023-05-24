@@ -13,7 +13,7 @@
 {% block og_tags %}
     <meta property="og:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
     <meta property="og:site_name" content="{{ settings.APP_NAME }}">
-    <meta property="og:url" content="{{ settings.APP_HOST }}{% url "profile" user.slug %}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}{% url 'profile' user.slug %}">
     <meta property="og:type" content="website" />
     <meta property="og:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
     <meta property="og:image" content="{{ user.get_avatar }}">
@@ -209,18 +209,18 @@
                 </div>
 
                 <friend-button
-                    url="{% url "toggle_friend" user.slug %}"
+                    url="{% url 'toggle_friend' user.slug %}"
                     {% if friend %}is-friend-by-default{% endif %}>
                 </friend-button>
 
                 {% if not user.is_curator and not user.is_moderator %}
                     {% if muted %}
-                        <a href="{% url "toggle_mute" user.slug %}" class="profile-status clickable">
+                        <a href="{% url 'toggle_mute' user.slug %}" class="profile-status clickable">
                             <span class="profile-status-icon">❌</span>
                             <span class="profile-status-status">Снять бан</span>
                         </a>
                     {% else %}
-                        <a href="{% url "toggle_mute" user.slug %}" class="profile-status clickable">
+                        <a href="{% url 'toggle_mute' user.slug %}" class="profile-status clickable">
                             <span class="profile-status-icon">⛔️</span>
                             <span class="profile-status-status">Я не хочу видеть его в Клубе</span>
                         </a>
@@ -238,9 +238,9 @@
         {% if intro %}
             <div class="block profile-intro">
                 <div class="profile-header">
-                    <a href="{% url "show_post" "intro" intro.slug %}">Интро &rarr;</a>
+                    <a href="{% url 'show_post' "intro" intro.slug %}">Интро &rarr;</a>
                     {% if me.id == user.id %}
-                        <a href="{% url "edit_post" intro.slug  %}" class="button post-edit-button profile-intro-edit">
+                        <a href="{% url 'edit_post' intro.slug  %}" class="button post-edit-button profile-intro-edit">
                             <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
@@ -249,7 +249,7 @@
                     {% render_post intro %}
                 </div>
                 <div class="profile-intro-footer">
-                    <a href="{% url "show_post" intro.type intro.slug %}#comments">
+                    <a href="{% url 'show_post' intro.type intro.slug %}#comments">
                         {{ intro.comment_count }} {{ intro.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
                     </a>
                 </div>
@@ -268,7 +268,7 @@
                                     <user-tag tag-name="{{ tag.name }}"
                                               tag-color="{{ tag.color }}"
                                               class="user-tag"
-                                              url="{% url "toggle_tag" tag.code %}"
+                                              url="{% url 'toggle_tag' tag.code %}"
                                               {% if tag.code in active_tags %}is-active-by-default{% endif %}
                                     ></user-tag>
                                 {% else %}
@@ -301,7 +301,7 @@
                                 {% endif %}
                             {% else %}
                                 {% if user.id == me.id %}
-                                    <strong>⚠️ Вы не указали контакт для обратной связи.<br><a href="{% url "edit_profile" user.slug %}#id_contact">Сделайте это здесь</a></strong>
+                                    <strong>⚠️ Вы не указали контакт для обратной связи.<br><a href="{% url 'edit_profile' user.slug %}#id_contact">Сделайте это здесь</a></strong>
                                 {% endif %}
                             {% endif %}
 
@@ -341,7 +341,7 @@
 
             <div class="user-projects">
                 {% for project in projects %}
-                    <a href="{% url "show_post" project.type project.slug %}" class="block user-project">
+                    <a href="{% url 'show_post' project.type project.slug %}" class="block user-project">
                         {% if project.image %}
                             <img src="{{ project.image }}" alt="{{ project.title }}">
                         {% endif %}
@@ -353,7 +353,7 @@
 
         {% if comments %}
             <div class="profile-header">
-                <a href="{% url "profile_comments" user.slug  %}">Комментарии ({{ comments_total }}) &rarr;</a>
+                <a href="{% url 'profile_comments' user.slug  %}">Комментарии ({{ comments_total }}) &rarr;</a>
             </div>
 
             <div class="profile-comments">
@@ -364,7 +364,7 @@
 
             {% if comments_total > comments|length %}
                 <div class="profile-more">
-                    <a href="{% url "profile_comments" user.slug  %}" class="button button-inverted">Все {{ comments_total }} {{ comments_total|rupluralize:"комментарий,комментария,комментариев" }}...</a>
+                    <a href="{% url 'profile_comments' user.slug  %}" class="button button-inverted">Все {{ comments_total }} {{ comments_total|rupluralize:"комментарий,комментария,комментариев" }}...</a>
                 </div>
             {% endif %}
         {% endif %}
