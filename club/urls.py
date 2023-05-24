@@ -59,7 +59,7 @@ from users.views.intro import intro
 from users.views.admin import admin_profile
 from users.views.people import people
 from users.views.profile import random_coffee
-from users.views.affilate import pfofile_affilate, affilate_list, get_affilate_money
+from users.views.affilate import profile_affilate, affilate_list, get_affilate_money
 from search.api import api_search_users
 from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
@@ -136,7 +136,7 @@ urlpatterns = [
     path("user/<slug:user_slug>/edit/coffee", random_coffee, name="random_coffee"),
     # path note that there is grammar mistake in name. 
     # there is difference beetween real URL and name uf URL in one symbol
-    path("user/<slug:user_slug>/pfofile_affiliate", pfofile_affilate, name="pfofile_affilate"),
+    path("user/<slug:user_slug>/profile_affiliate", profile_affilate, name="profile_affilate"),
     path("affiliate_list/<slug:user_slug>", affilate_list, name='affilate_list'),
     path("get_affiliate_money/<slug:user_slug>", get_affilate_money, name='get_affilate_money'),
 
