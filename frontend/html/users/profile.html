@@ -30,85 +30,85 @@
 {% block content %}
     <div class="content profile">
         {% if me.id == user.id or me.is_moderator %}
-            <div class="profile-user-edit">
-                {% if me.is_moderator %}
-                    <i class="fas fa-tools"></i>&nbsp;<a href="{% url "admin_profile" user.slug %}">Админка</a>&nbsp;&nbsp;&nbsp;
-                {% endif %}
-                <i class="fas fa-cog"></i>&nbsp;<a href="{% url "profile_settings" user.slug %}">Настройки профиля</a>
-            </div>
+        <div class="profile-user-edit">
+            {% if me.is_moderator %}
+            <i class="fas fa-tools"></i>&nbsp;<a href="{% url " admin_profile" user.slug %}">Админка</a>&nbsp;&nbsp;&nbsp;
+            {% endif %}
+            <i class="fas fa-cog"></i>&nbsp;<a href="{% url " profile_settings" user.slug %}">Настройки профиля</a>
+        </div>
         {% endif %}
 
         {% include "users/widgets/card.html" with user=user %}
 
         {% if me.is_god %}
-            <p>
-                <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
-            </p>
-<!-- Вывод ошибки, если Slug был введён некорректно-->
-            {% if messages %}
-                {% for message in messages %}
-                <p style="color:rgb(255, 5, 64);">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-<!-- Вывод ошибки, если Slug был введён некорректно-->
-
-<!-- Вывод кол-ва рефов -->
-{% if how_much_affilate %}
-<p>
-    Кол-во рефералов: {{ how_much_affilate }}
-</p>
-<p>
-    <a href="{% url 'affilate_list' user.slug %}">Список рефералов</a>
-</p>
-{% else %}
-<p>Нет рефералов. </p>
-{% endif %}
-<!-- Вывод кол-ва рефов -->
-
-<!-- Вывод накопившейся суммы -->
-{% if aff_money %}
-<p>
-    Сумма накопленных реферальных денег: {{ aff_money }}
-    <a href="{% url 'get_affilate_money' user.slug %}"> Вывести бабки</a>
-</p>
-{% endif %}
-<!-- Вывод накопившейся суммы -->
-
-{% if affilate_creator %}
-<p>
-    <strong>Рефовод: {{ affilate_creator }} </strong>
-</p>
-<p>
-    <strong>Процент: {{ percent }} </strong>
-</p>
-{% else %}
-<div class="form-row">
-    <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}
-        <label for="slugField">Слаг рефовода. Без собачки. </label>
-        <input required type="text" id="slugField" name="SlugField">
-
+        <p>
+            <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
+        </p>
+        <!-- Вывод ошибки, если Slug был введён некорректно-->
+        {% if messages %}
+        {% for message in messages %}
+        <p style="color:rgb(255, 5, 64);">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        <!-- Вывод ошибки, если Slug был введён некорректно-->
+        
+        <!-- Вывод кол-ва рефов -->
+        {% if how_much_affilate %}
+        <p>
+            Кол-во рефералов: {{ how_much_affilate }}
+        </p>
+        <p>
+            <a href="{% url 'affilate_list' user.slug %}">Список рефералов</a>
+        </p>
+        {% else %}
+        <p>Нет рефералов. </p>
+        {% endif %}
+        <!-- Вывод кол-ва рефов -->
+        
+        <!-- Вывод накопившейся суммы -->
+        {% if aff_money %}
+        <p>
+            Сумма накопленных реферальных денег: {{ aff_money }}
+            <a href="{% url 'get_affilate_money' user.slug %}"> Вывести бабки</a>
+        </p>
+        {% endif %}
+        <!-- Вывод накопившейся суммы -->
+        
+        {% if affilate_creator %}
+        <p>
+            <strong>Рефовод: {{ affilate_creator }} </strong>
+        </p>
+        <p>
+            <strong>Процент: {{ percent }} </strong>
+        </p>
+        {% else %}
+        <div class="form-row">
+            <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+                <label for="slugField">Слаг рефовода. Без собачки. </label>
+                <input required type="text" id="slugField" name="SlugField">
+        
+                <br>
+        
+                <label for="dropdownList">Процент:</label>
+                <select id="dropdownList" name="PercentSelect">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                </select>
+        
+                <br>
+                <button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
+            </form>
+        </div>
         <br>
-
-        <label for="dropdownList">Процент:</label>
-        <select id="dropdownList" name="PercentSelect">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="40">40</option>
-        </select>
-
         <br>
-        <button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
-    </form>
-</div>
-    <br>
-    <br>
-
-
-    {% endif %}
-
-
-{% endif %}
+        
+        
+        {% endif %}
+        
+        
+        {% endif %}
 
 
         {% if me.id == user.id %}
