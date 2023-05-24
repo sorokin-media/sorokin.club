@@ -91,6 +91,8 @@ def profile(request, user_slug):
 
     # code bellow is about affilate programm
 
+    custom_message = None
+
     if not AffilateRelation.objects.filter(affilated_user=user).exists():
 
         if request.method == 'POST':
@@ -121,7 +123,8 @@ def profile(request, user_slug):
 
             except Exception:
 
-                messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
+                custom_message = 'Кажется, некорректно введён Slug. '\
+                                 'Если же верно, пожалуйста, напишите Диме. '
 
         else:
 
@@ -170,7 +173,8 @@ def profile(request, user_slug):
         "affilate_creator": affilate_creator_slug,
         "percent": percent,
         "how_much_affilate": how_much_affilate,
-        "aff_money": aff_money
+        "aff_money": aff_money,
+        'custom_message': custom_message
     })
 
 
