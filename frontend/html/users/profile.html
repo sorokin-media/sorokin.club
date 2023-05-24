@@ -7,24 +7,20 @@
 {% load paginator %}
 
 {% block title %}
-    {{ user.full_name }} — {{ block.super }}
+    {{ user.full_name }}
 {% endblock %}
 
 {% block og_tags %}
-    <meta property="og:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
-    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
-    <meta property="og:url" content="{{ settings.APP_HOST }}{% url "profile" user.slug %}">
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
-    <meta property="og:image" content="{{ user.get_avatar }}">
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
-    <meta name="twitter:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
-    <meta name="twitter:image" content="{{ user.get_avatar }}">
-
-    <!-- Exclude profiles from search engines -->
-    <meta name="robots" content="noindex">
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static " images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static " images/share.png" %}">
 {% endblock %}
 
 {% block content %}
@@ -44,7 +40,7 @@
             <p>
                 <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
             </p>
-{% endif %}
+        {% endif %}
             {% if me.id == user.id %}
             <div class="block profile-statuses">
                 <div class="profile-status profile-respect">
