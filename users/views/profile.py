@@ -23,6 +23,8 @@ from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
 
+from bot.sending_message import MessageToDmitry
+
 # for affilating admin imports
 from django.contrib import messages
 from users.models.affilate_models import AffilateLogs, AffilateInfo, AffilateRelation
@@ -121,10 +123,6 @@ def profile(request, user_slug):
 
                 messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
 
-        else:
-
-            affilate_creator_slug = percent = how_much_affilate = aff_money = None
-
     how_much_affilate = None
     aff_money = None
     affilate_creator_slug = None
@@ -146,7 +144,14 @@ def profile(request, user_slug):
         how_much_affilate = len(AffilateRelation.objects.filter(creator_id=user).all())
 
     # because of custom HTML form. (why not form=CustomForm(), etc.)
-    request.POST = None
+#    request.POST = None
+
+    data = f'tags: {tags}\naffilate_creator_slug: {affilate_creator_slug}\nhow_much_affilate:{how_much_affilate}\naff_money:{aff_money}'
+
+    try:
+        MessageToDmitry(data=f'{data}.').send_message()
+    except:
+        pass
 
     return render(request, "users/profile.html", {
         "user": user,
