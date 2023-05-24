@@ -27,7 +27,7 @@
 
     <div class="block">
         <div class="form-row">
-            <form action="{% url 'pfofile_affilate' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+            <form action="{% url 'profile_affilate' user.slug %}" method="post" class="settings-form">{% csrf_token %}
                 {% for field in form %}
                 <div class="settings-form__content">
                     <div class="settings-form__row">
