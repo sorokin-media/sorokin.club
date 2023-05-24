@@ -23,7 +23,7 @@ from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
 
-from bot.sending_message import MessageToDmitry
+from bot.sending_message import MessageToDmitry 
 
 # for affilating admin imports
 from django.contrib import messages
@@ -108,70 +108,6 @@ def profile(request, user_slug):
         "random_coffee_status": random_coffee_status
     },
         messages)
-
-    # code bellow is about affilate programm
-'''
-    if not AffilateRelation.objects.filter(affilated_user=user).exists():
-
-        if request.method == 'POST':
-
-            affilate_creator_slug = request.POST['SlugField']
-            percent = request.POST['PercentSelect']
-
-            try:
-                # don't delete. that's for check out exist or not instead of ORM exist method
-                form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
-
-                # save logs
-                new_one = AffilateLogs()
-                new_one.manual_insert(
-                    creator_slug=affilate_creator_slug,
-                    affilated_user=user,
-                    percent=percent
-                )
-
-                # save relation
-                new_one_relation = AffilateRelation()
-                new_one_relation.creator_id = form_affilate_creator
-                new_one_relation.affilated_user = user
-                new_one_relation.code = None
-                new_one_relation.save()
-
-                return redirect('index')
-
-            except Exception:
-
-                messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
-
-    how_much_affilate = None
-    aff_money = None
-    affilate_creator_slug = None
-    percent = None
-
-    if AffilateInfo.objects.filter(user_id=user).exists():
-
-        aff_money = AffilateInfo.objects.get(user_id=user).sum
-
-    if AffilateRelation.objects.filter(affilated_user=user).exists():
-
-        affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first().creator_id
-        affilate_creator_slug = affilate_creator.slug
-
-        percent = AffilateInfo.objects.filter(user_id=affilate_creator).first().percent
-
-    if AffilateLogs.objects.filter(creator_id=user).exists():
-
-        how_much_affilate = len(AffilateRelation.objects.filter(creator_id=user).all())
-
-    # because of custom HTML form. (why not form=CustomForm(), etc.)
-#    request.POST = None
-'''
-
-#        'affilate_creator': affilate_creator_slug,
-#        'percent': percent,
-#        'how_much_affilate': how_much_affilate,
-#        'aff_money': aff_money
-
 
 
 @auth_required
