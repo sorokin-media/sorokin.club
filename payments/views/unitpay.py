@@ -197,7 +197,7 @@ def unitpay_pay(request):
 
     new_one = AffilateVisit()
     done = new_one.insert_first_time(
-        p_value=p_value, 
+        p_value=p_value,
         code=identify_string,
         url=request.build_absolute_uri()
     )
