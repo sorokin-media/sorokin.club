@@ -171,8 +171,7 @@ def profile(request, user_slug):
         "percent": percent,
         "how_much_affilate": how_much_affilate,
         "aff_money": aff_money
-    },
-        messages)
+    })
 
 
 @auth_required
