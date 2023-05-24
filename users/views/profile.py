@@ -106,8 +106,7 @@ def profile(request, user_slug):
         "friend": friend,
         "muted": muted,
         "random_coffee_status": random_coffee_status
-    },
-        messages)
+    })
 
 
 @auth_required
