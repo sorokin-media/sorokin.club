@@ -11,7 +11,7 @@ from users.models.user import User
 # forms import
 from users.forms.affilate_forms import AffilateInfoForm
 
-def pfofile_affilate(request, user_slug):
+def profile_affilate(request, user_slug):
 
     user = User.objects.get(slug=user_slug)
 
