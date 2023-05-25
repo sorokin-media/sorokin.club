@@ -23,7 +23,7 @@ from users.utils import calculate_similarity
 from bs4 import BeautifulSoup
 import base64
 
-from bot.sending_message import MessageToDmitry
+from bot.sending_message import MessageToDmitry 
 
 # for affilating admin imports
 from django.contrib import messages
@@ -89,28 +89,10 @@ def profile(request, user_slug):
     else:
         random_coffee_status = False
 
-    return render(request, "users/profile.html", {
-        "user": user,
-        "intro": intro,
-        "projects": projects,
-        "badges": badges,
-        "tags": tags,
-        "active_tags": active_tags,
-        "achievements": [ua.achievement for ua in achievements],
-        "expertises": expertises,
-        "comments": comments[:3],
-        "comments_total": comments.count(),
-        "posts": posts[:15],
-        "posts_total": posts.count(),
-        "similarity": similarity,
-        "friend": friend,
-        "muted": muted,
-        "random_coffee_status": random_coffee_status
-    },
-        messages)
-
     # code bellow is about affilate programm
-'''
+
+    custom_message = None
+
     if not AffilateRelation.objects.filter(affilated_user=user).exists():
 
         if request.method == 'POST':
@@ -141,7 +123,12 @@ def profile(request, user_slug):
 
             except Exception:
 
-                messages.error(request, 'Кажется, некорректно введён Slug. Если же верно, пожалуйста, напишите Диме. ')
+                custom_message = 'Кажется, некорректно введён Slug. '\
+                                 'Если же верно, пожалуйста, напишите Диме. '
+
+        else:
+
+            affilate_creator_slug = percent = how_much_affilate = aff_money = None
 
     how_much_affilate = None
     aff_money = None
@@ -164,14 +151,31 @@ def profile(request, user_slug):
         how_much_affilate = len(AffilateRelation.objects.filter(creator_id=user).all())
 
     # because of custom HTML form. (why not form=CustomForm(), etc.)
-#    request.POST = None
-'''
+    request.POST = None
 
-#        'affilate_creator': affilate_creator_slug,
-#        'percent': percent,
-#        'how_much_affilate': how_much_affilate,
-#        'aff_money': aff_money
-
+    return render(request, "users/profile.html", {
+        "user": user,
+        "intro": intro,
+        "projects": projects,
+        "badges": badges,
+        "tags": tags,
+        "active_tags": active_tags,
+        "achievements": [ua.achievement for ua in achievements],
+        "expertises": expertises,
+        "comments": comments[:3],
+        "comments_total": comments.count(),
+        "posts": posts[:15],
+        "posts_total": posts.count(),
+        "similarity": similarity,
+        "friend": friend,
+        "muted": muted,
+        "random_coffee_status": random_coffee_status,
+        "affilate_creator": affilate_creator_slug,
+        "percent": percent,
+        "how_much_affilate": how_much_affilate,
+        "aff_money": aff_money,
+        'custom_message': custom_message
+    })
 
 
 @auth_required

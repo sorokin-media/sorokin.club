@@ -7,7 +7,24 @@
 {% load paginator %}
 
 {% block title %}
-    {{ user.full_name }}
+    {{ user.full_name }} — {{ block.super }}
+{% endblock %}
+
+{% block og_tags %}
+    <meta property="og:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}{% url "profile" user.slug %}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
+    <meta property="og:image" content="{{ user.get_avatar }}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
+    <meta name="twitter:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
+    <meta name="twitter:image" content="{{ user.get_avatar }}">
+
+    <!-- Exclude profiles from search engines -->
+    <meta name="robots" content="noindex">
 {% endblock %}
 
 {% block content %}
@@ -19,16 +36,76 @@
                 {% endif %}
                 <i class="fas fa-cog"></i>&nbsp;<a href="{% url "profile_settings" user.slug %}">Настройки профиля</a>
             </div>
-        {% endif %}
+
+            {% endif %}
 
         {% include "users/widgets/card.html" with user=user %}
 
         {% if me.is_god %}
+
+                <p>
+                    <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
+                </p>
+
+            {% if custom_message %}
+                    <p style="color:rgb(255, 5, 64);">{{ custom_message }}</p>
+            {% endif %}
+
+            {% if how_much_affilate %}
+                <p>
+                    Кол-во рефералов: {{ how_much_affilate }}
+                </p>
+                <p>
+                    <a href="{% url 'affilate_list' user.slug %}">Список рефералов</a>
+                </p>
+            {% else %}
+                <p>
+                    Нет рефералов. 
+                </p>
+            {% endif %}
+
+            {% if aff_money %}
+                <p>
+                    Сумма накопленных реферальных денег: {{ aff_money }}
+                    <a href="{% url 'get_affilate_money' user.slug %}"> Вывести бабки</a>
+                </p>
+            {% endif %}
+
+            {% if affilate_creator %}
             <p>
-                <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
+                <strong>Рефовод: {{ affilate_creator }} </strong>
             </p>
+            <p>
+                <strong>Процент: {{ percent }} </strong>
+            </p>
+            {% else %}
+            <div class="form-row">
+                <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}
+                    <label for="slugField">Слаг рефовода. Без собачки. </label>
+                    <input required type="text" id="slugField" name="SlugField">
+            
+                    <br>
+            
+                    <label for="dropdownList">Процент:</label>
+                    <select id="dropdownList" name="PercentSelect">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+            
+                    <br>
+                    <button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
+                </form>
+            </div>
+            <br>
+            <br>            
+            {% endif %}
+            
         {% endif %}
-            {% if me.id == user.id %}
+
+
+        {% if me.id == user.id %}
             <div class="block profile-statuses">
                 <div class="profile-status profile-respect">
                     <span class="profile-status-number">+{{ user.upvotes | cool_number }}</span>
@@ -79,6 +156,12 @@
                         {% else %}
                             ❌ Бот не подключен
                         {% endif %}
+                    </span>
+                </a>
+                <a href="{% url "profile_affilate" user.slug %}" class="profile-status">
+                    <span class="profile-status-icon">🎁</span>
+                    <span class="profile-status-status">
+                        Реферальная программа
                     </span>
                 </a>
             </div>
@@ -184,7 +267,7 @@
                                     ></user-tag>
                                 {% else %}
                                     {% if tag.code in active_tags %}
-                                        <span class="user-tag user-tag-active" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
+                                        <span class="user-tag user-tag-active" style="background-color: {{ tag.color  }};">{{ tag.name }}</span>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
