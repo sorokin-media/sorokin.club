@@ -234,8 +234,6 @@ class Command(BaseCommand):
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
                                                                                   ).all()
 
-        print(posts)
-
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
 

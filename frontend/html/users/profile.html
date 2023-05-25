@@ -7,24 +7,7 @@
 {% load paginator %}
 
 {% block title %}
-    {{ user.full_name }} — {{ block.super }}
-{% endblock %}
-
-{% block og_tags %}
-    <meta property="og:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
-    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
-    <meta property="og:url" content="{{ settings.APP_HOST }}{% url "profile" user.slug %}">
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
-    <meta property="og:image" content="{{ user.get_avatar }}">
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ user.full_name }} — {{ settings.APP_NAME }}">
-    <meta name="twitter:description" content="{{ user.position }}{% if user.company %}, {{ user.company }}{% endif %}">
-    <meta name="twitter:image" content="{{ user.get_avatar }}">
-
-    <!-- Exclude profiles from search engines -->
-    <meta name="robots" content="noindex">
+    {{ user.full_name }}
 {% endblock %}
 
 {% block content %}
@@ -45,9 +28,7 @@
                 <strong>Осталось {{ user.membership_days_left_round }} в клубе</strong>
             </p>
         {% endif %}
-
-
-        {% if me.id == user.id %}
+            {% if me.id == user.id %}
             <div class="block profile-statuses">
                 <div class="profile-status profile-respect">
                     <span class="profile-status-number">+{{ user.upvotes | cool_number }}</span>
@@ -203,7 +184,7 @@
                                     ></user-tag>
                                 {% else %}
                                     {% if tag.code in active_tags %}
-                                        <span class="user-tag user-tag-active" style="background-color: {{ tag.color  }};">{{ tag.name }}</span>
+                                        <span class="user-tag user-tag-active" style="background-color: {{ tag.color }};">{{ tag.name }}</span>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}

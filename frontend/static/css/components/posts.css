@@ -194,6 +194,8 @@
 
             padding-right: 20px;
             padding-left: 20px;
+
+            z-index: 2;
         }
 
         @media (min-width: 1024px) {
@@ -217,7 +219,6 @@
                     top: 15px;
                     left: auto;
                     right: 0;
-                    z-index: 1;
                     float: right;
                     display: block;
                     margin-bottom: 1.5em;
@@ -1095,6 +1096,16 @@ background-color: #282C35;
     .post-under-upvote {
         display: none;
     }
+}
+
+.text-body-type-post h1,
+.text-body-type-post h2,
+.text-body-type-post h3,
+.text-body-type-post h4,
+.text-body-type-post h5,
+.text-body-type-post h6 {
+    margin-top: 1.75em;
+    margin-bottom: 0.8em;
 }
 
 .post-under-upvote .upvote {

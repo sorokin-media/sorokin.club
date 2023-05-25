@@ -1,35 +1,69 @@
-from django.shortcuts import render
+# Python imports
 import datetime as DT
-import pprint
-from django.shortcuts import render, redirect
+import time
+from datetime import datetime, timedelta
+import pytz
 
-from auth.helpers import auth_required
+# Django imports
+from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
+from django.shortcuts import render, redirect
+from django.shortcuts import redirect, get_object_or_404, render
+from django.http import Http404
+
+# import models
 from users.models.user import User
-from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
+from users.models.random_coffee import RandomCoffee
 from payments.models import Payment
 from posts.models.post import Post
-from stats.forms.money import DateForm
 from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
-from django.shortcuts import redirect, get_object_or_404, render
-from django.http import Http404
-import time
-from datetime import datetime
-import pytz
-import json
+from users.models.affilate_models import AffilateLogs, AffilateRelation
+
+# import config data
 from club.settings import APP_HOST as host
+
+# import custom classes
+from auth.helpers import auth_required
+from stats.forms.money import DateForm
+from users.models.affilate_models import AffilateLogs
+
+def active_or_not(user):
+
+    time_zone = pytz.UTC
+    now = time_zone.localize(datetime.utcnow())
+
+    x = now < time_zone.localize(user.membership_expires_at)
+    y = user.is_banned_until is None
+    if not y:
+        y = user.is_banned_until < now
+    z = user.moderation_status == 'approved'
+
+    return "Активен" if x and y and z else "Не активен"
 
 # Create your views here.
 @auth_required
 def stats_gode(request):
     # Это ублюдство надо переписать
     if request.method == "POST":
+
         form = DateForm(request.POST)
         date_from_string = request.POST.get('date_from') + ' 00:00:00'
         date_to_string = request.POST.get('date_to') + ' 00:00:00'
         dt = DT.datetime.strptime(date_from_string, '%Y-%m-%d %H:%M:%S')
         datetime_for = dt.timestamp()
+
+        # быстрый костыль для бага с тем, что конечная дата не включается
+        # а ублюдство действительно надо переделать, прост кошмар какой то
+        date_format = '%Y-%m-%d %H:%M:%S'
+        date_obj = datetime.strptime(date_to_string, date_format)
+        date_plus_one_day = date_obj + timedelta(days=1)
+        date_to_string = date_plus_one_day.strftime(date_format)
+        # конец костыля
+
+        property(date_to_string)
         dt = DT.datetime.strptime(date_to_string, '%Y-%m-%d %H:%M:%S')
         datetime_to = dt.timestamp()
         payment_first = []
@@ -48,7 +82,7 @@ def stats_gode(request):
                 date = str(payment_one.created_at)
                 dt = DT.datetime.strptime('-'.join(date.split('.')[:-1]), '%Y-%m-%d %H:%M:%S')
                 if payment_one and int(dt.timestamp()) > int(datetime_for) and int(dt.timestamp()) <= int(
-                    datetime_to):
+                        datetime_to):
                     payment_first.extend([payment_one.reference, payment_one.amount, payment_one.created_at])
                     sum_first += payment_one.amount
                     count_first += 1
@@ -199,4 +233,156 @@ def random_coffee_stat(request):
         request,
         'pages/coffee-rating.html',
         {'coffee_list': coffee_list}
+    )
+
+@auth_required
+def affilates_stat(request):
+    return render(
+        request,
+        'pages/stats-affilate.html'
+    )
+
+def get_list_of_logs(request_post):
+
+    time_zone = pytz.UTC
+    range_date = request_post['date-range']
+    range_date = range_date.replace(' ', '').replace('-', ' ')
+    range_date = range_date.split()
+    start_year, start_month, start_day = int(range_date[0]), int(range_date[1]), int(range_date[2])
+    finish_year, finish_month, finish_day = int(range_date[3]), int(range_date[4]), int(range_date[5])
+
+    # __range from Django ORM don't resolve task, because of doesn't include dates
+    # note that there are posts without date "created_at" in DB. But that one means that post was deleted
+
+    start_date = time_zone.localize(
+        datetime(start_year, start_month, start_day))
+    finish_date = time_zone.localize(
+        datetime(finish_year, finish_month, finish_day))
+
+    finish_date += timedelta(days=1)
+
+    affilated_logs = AffilateLogs.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).all()
+
+    affilate_relations = AffilateRelation.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).exclude(
+        creator_id__isnull=True).values_list('creator_id').distinct()
+
+    logs_distinct_users = AffilateLogs.objects.filter(
+        created_at__gte=start_date).filter(created_at__lte=finish_date).values_list('creator_id', flat=True).distinct()
+
+    return affilate_relations, affilated_logs, logs_distinct_users, finish_date, start_date
+
+@auth_required
+def affilates_money_stat(request):
+
+    affilate_users_sum = 0
+    money = None
+    active_users_sum = None
+    get_out_monies = None
+    users_pay_done = None
+    form = DateForm(request.POST)
+
+    if request.method == 'POST':
+
+        affilate_relations, affilated_logs, logs_distinct_users, \
+            finish_date, start_date = get_list_of_logs(request.POST)
+
+        affilate_users_sum = len(affilate_relations)
+        active_users_sum = 0
+        get_out_monies = 0
+        users_pay_done = 0
+
+        # how much affilated users are active now
+
+        for row in affilate_relations:
+
+            user = User.objects.get(id=row[0])
+            if active_or_not(user) == 'Активен':
+
+                active_users_sum += 1
+
+        # how much monies was given to referal creators (рефевод)
+
+        money = 0
+
+        for row in affilated_logs:
+
+            if row.bonus_amount and row.creator_fee_type and 'MONEY' in row.creator_fee_type:
+
+                money += row.bonus_amount
+
+        # how much monies was get out from club budget for referal payments
+
+        for row in affilated_logs:
+
+            # it's single event in affilate part of project that has creator and doesn't have affilated_user
+            if row.bonus_amount and row.affilated_user is None and row.creator_id:
+
+                get_out_monies += row.bonus_amount
+
+        # how much users make payment
+
+        for row in logs_distinct_users:
+
+            if row:
+
+                user = User.objects.get(id=row)
+                how_much = len(Payment.objects.filter(created_at__gte=start_date).filter(
+                    created_at__lte=finish_date).filter(user=user).filter(status='success').all())
+                users_pay_done += how_much
+
+    return render(
+        request,
+        'pages/stats-affilate-money.html',
+        {
+            'form': form,
+            'money': money,
+            'active_users_sum': active_users_sum,
+            'affilate_users_sum': affilate_users_sum,
+            'get_out_monies': get_out_monies,
+            'users_pay_done': users_pay_done
+        }
+    )
+
+@auth_required
+def affilates_days_stat(request):
+
+    form = DateForm(request.POST)
+    days_sum = None
+    active_users_sum = None
+    affilate_users_sum = 0
+
+    if request.method == 'POST':
+
+        affilate_relations, affilated_logs, logs_distinct_users, \
+            finish_date, start_date = get_list_of_logs(request.POST)
+
+        affilate_users_sum = len(affilate_relations)
+        active_users_sum = 0
+
+        for row in affilate_relations:
+
+            user = User.objects.get(id=row[0])
+            if active_or_not(user) == 'Активен':
+
+                active_users_sum += 1
+
+        days_sum = 0
+
+        for row in affilated_logs:
+
+            if row.creator_fee_type and 'DAYS' in row.creator_fee_type:
+
+                days_sum += row.bonus_amount
+
+    return render(
+        request,
+        'pages/stats-affilate-days.html',
+        {
+            'form': form,
+            'days': days_sum,
+            'active_users_sum': active_users_sum,
+            'affilate_users_sum': affilate_users_sum
+        }
     )

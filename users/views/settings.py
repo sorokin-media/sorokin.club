@@ -85,7 +85,7 @@ def edit_notifications(request, user_slug):
     if user.id != request.me.id and not request.me.is_moderator:
         raise Http404()
 
-    if request.method == "POST":        
+    if request.method == "POST":
         form = sub_form(request.POST)
         if form.is_valid():
             user = User.objects.get(slug=user_slug)
@@ -138,15 +138,23 @@ def edit_payments(request, user_slug):
         if plan_query:
             plans = SubscriptionPlan.objects.filter(subscription_id=plan_query.subscription_id).order_by("created_at")
         else:
+            if request.me.email == 'petrblagov@gmail.com' or request.me.email == 'rupronin@gmail.com':
+                # Включаем им старый тариф
+                plans = SubscriptionPlan.objects.filter(subscription_id='464b5b07-b44e-4d91-8529-9aa6f3fa1246').order_by("created_at")
+                if request.me.email == 'raskrutka89@gmail.com':
+                    plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
+            else:
+                plan_subcription = Subscription.objects.filter(default=True).last()
+                plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
+    else:
+        if request.me.email == 'petrblagov@gmail.com' or request.me.email == 'rupronin@gmail.com':
+            # Включаем им старый тариф
+            plans = SubscriptionPlan.objects.filter(subscription_id='464b5b07-b44e-4d91-8529-9aa6f3fa1246').order_by("created_at")
+            if request.me.email == 'raskrutka89@gmail.com':
+                plans = SubscriptionPlan.objects.filter(subscription_id='ea5d1894-fb02-4266-8083-23af90d393b0').order_by("created_at")
+        else:
             plan_subcription = Subscription.objects.filter(default=True).last()
             plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
-    else:
-        plan_subcription = Subscription.objects.filter(default=True).last()
-        plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id).order_by("created_at")
-
-    # if user.telegram_id == '204349098':
-    #     plan_subcription = Subscription.objects.filter(name='Test').last()
-    #     plans = SubscriptionPlan.objects.filter(subscription_id=plan_subcription.id)
 
     return render(request, "users/edit/payments.html", {
         "user": user,

@@ -1,7 +1,7 @@
 {% load posts %}
 {% load static %}
 {% load text_filters %}
-<div class="block feed-post h-entry {% css_classes post %}">
+<div class="block feed-post h-entry feed-post-event--short {% css_classes post %}">
     <div class="feed-post-header feed-post-header--event feed-post-header--event-short">
         <div class="feed-post-header-icon">
             <div class="post-event-date">
@@ -25,16 +25,58 @@
                     </div>
                 </div>
 
-                <div class="feed-post-title">
-                    {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
+                <div class="feed-post-content">
+                    <div class="feed-post-title">
+                        {% if post.is_pinned %}<i class="fas fa-thumbtack"></i>{% endif %}
 
-                    <span class="p-name">
-                        <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
-                    </span>
+                        <span class="p-name">
+                            <a href="{% url "show_post" post.type post.slug %}" class="post-title-link">{{ post.title | rutypography }}</a>
+                        </span>
 
-                    {% if post.label %}
-                        {% include "posts/widgets/label.html" with label=post.label %}
-                    {% endif %}
+                        {% if post.label %}
+                            {% include "posts/widgets/label.html" with label=post.label %}
+                        {% endif %}
+                    </div>
+
+                    <div class="feed-post-footer">
+                        <div class="feed-post-available-icon">
+                            <span class="post-is-public">
+                                {% if post.is_public %}
+                                    <i class="fas fa-globe-americas" title="Публичный ивент"></i>
+                                {% else %}
+                                    <i class="fas fa-lock" title="Только для своих"></i>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        {% if post.topic %}
+                            <span class="feed-post-topic">
+                                {% include "posts/widgets/topic.html" with topic=post.topic type="inline" %}
+                            </span>
+                        {% endif %}
+
+                        {% if post.metadata.badges %}
+                            {% for badge_code, badge in post.metadata.badges.items %}
+                                <img
+                                    src="{% static "images/badges" %}/{{ badge_size|default:"small" }}/{{ badge_code }}.png"
+                                    alt="{{ badge.title }}"
+                                    class="feed-post-badge">
+                            {% endfor %}
+                        {% endif %}
+
+                        <a href="{% url "show_post" post.type post.slug %}?comment_order=created_at#comments" class="feed-post-comments">
+                            {{ post.comment_count }} {{ post.comment_count | rupluralize:"комментарий,комментария,комментариев" }}
+                        </a>
+
+                        {% if post.unread_comments %}
+                            <a href="{% url "show_post" post.type post.slug %}?comment_order=-created_at#comments" class="feed-post-comments-unread">
+                                +{{ post.unread_comments }} {{ post.unread_comments | rupluralize:"новый,новых,новых" }}
+                            </a>
+                        {% endif %}
+
+                        {% include "posts/widgets/bookmark_controls.html" %}
+
+                    </div>
                 </div>
             </div>
         </div>

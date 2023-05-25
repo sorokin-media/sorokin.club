@@ -26,42 +26,36 @@ class Command(BaseCommand):
         coffee_users = RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all()
         for coffee_user in coffee_users:
             coffee_buddy_id = coffee_user.random_coffee_last_partner_id
-            coffee_buddy_full_name = User.objects.filter(id=coffee_buddy_id).first().full_name
+            if coffee_buddy_id:
+                coffee_buddy_full_name = User.objects.filter(id=coffee_buddy_id).first().full_name
 
-            text = '<strong>Привет! Это бот Рандом Кофе!☕️</strong>\n\n'\
-                f'Созвон с {coffee_buddy_full_name} прошёл успешно?'
+                text = '<strong>Привет! Это бот Рандом Кофе!☕️</strong>\n\n'\
+                    f'Созвон с {coffee_buddy_full_name} прошёл успешно?'
 
-            buttons = [
-                {
-                    'text': 'Да, всё 🔥',
-                    'callback': 'coffee_feedback:Звонок состоялся'
-                },
-                {
-                    'text': 'Нет, по моей вине 😿',
-                    'callback': 'coffee_feedback:Я не позвонил'
-                },
-                {
-                    'text': 'Нет, с той стороны что-то пошло не так 😿',
-                    'callback': 'coffee_feedback:Собеседник не позвонил'
-                }
-            ]
+                buttons = [
+                    {
+                        'text': 'Да, всё 🔥',
+                        'callback': 'coffee_feedback:Звонок состоялся'
+                    },
+                    {
+                        'text': 'Нет, по моей вине 😿',
+                        'callback': 'coffee_feedback:Я не позвонил'
+                    },
+                    {
+                        'text': 'Нет, с той стороны что-то пошло не так 😿',
+                        'callback': 'coffee_feedback:Собеседник не позвонил'
+                    }
+                ]
 
-            custom_message = TelegramCustomMessage(
-                user=coffee_user.user,
-                string_for_bot=text,
-                buttons=buttons,
-                random_coffee=True
-            )
-            custom_message.send_message()
+                custom_message = TelegramCustomMessage(
+                    user=coffee_user.user,
+                    string_for_bot=text,
+                    buttons=buttons,
+                    random_coffee=True
+                )
+                custom_message.send_message()
 
-        if coffee_users:
-
-            custom_message.send_count_to_dmitry(type_='Отправлен запрос на получение первого фидбека '
-                                            f'юзеру {coffee_user.user.slug}')
-        
-        else:
-
-            MessageToDmitry(data='Не было собеседников. ').send_message()
+                MessageToDmitry(data=f'Запрос отправлен юзеру {coffee_user.user.slug}.').send_message()
 
 '''
 typical commands for tests on local
