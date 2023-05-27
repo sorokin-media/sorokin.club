@@ -5,6 +5,7 @@ from django.core.management import BaseCommand
 from users.models.mute import Muted
 from posts.models.post import Post
 from users.models.random_coffee import RandomCoffee, RandomCoffeeLogs
+from users.models.user import User
 
 # imports for getting config data
 from club import settings
@@ -18,6 +19,9 @@ from telegram.ext import CallbackContext
 # import custom package for sending message
 from bot.sending_message import TelegramCustomMessage
 
+# Python imports
+from datetime import datetime
+import pytz
 
 def coffee_partners_hepler(user_1, user_2):
     if user_1.random_coffee_past_partners is None:
@@ -122,6 +126,10 @@ def send_message_helper(user_1, user_2):
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+
+        time_zone = pytz.UTC
+        now = time_zone.localize(datetime.utcnow())
+
         coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all())
         # look bellow, change that
         u_ = coffee_users[0].user
@@ -129,7 +137,14 @@ class Command(BaseCommand):
         # random_coffee_today True - user is not busy
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
-                if coffee_users[k].random_coffee_past_partners is not None and\
+                # Fixing the issue with users whose membership has expired.
+                if coffee_users[0].user.membership_expires_at < now or coffee_users[0].user.is_banned:
+                    coffee_users.pop(0)
+                    coffee_users[0].random_coffee_is = False
+                elif coffee_users[k].user.membership_expires_at < now or coffee_users[k].user.is_banned:
+                    coffee_users.pop(k)
+                    coffee_users[0].random_coffee_is = False
+                elif coffee_users[k].random_coffee_past_partners is not None and\
                     coffee_users[0].random_coffee_past_partners is not None and\
                         (coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners or
                          (Muted.is_muted(
