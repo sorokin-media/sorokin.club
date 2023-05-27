@@ -93,16 +93,22 @@ def profile(request, user_slug):
 
     custom_message = None
 
-    if not AffilateRelation.objects.filter(affilated_user=user).exists():
+    if request.method == 'POST':
 
-        if request.method == 'POST':
+        if 'PercentSelect' in request.POST:
+
+            aff_info = AffilateInfo.objects.get(user_id=user)
+            aff_info.percent = request.POST['PercentSelect']
+            aff_info.save()
+
+        if not AffilateRelation.objects.filter(affilated_user=user).exists() and 'SlugField' in request.POST:
 
             affilate_creator_slug = request.POST['SlugField']
-            percent = request.POST['PercentSelect']
 
             try:
                 # don't delete. that's for check out exist or not instead of ORM exist method
                 form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
+                percent = AffilateInfo.objects.get(user_id=affilate_creator).percent
 
                 # save logs
                 new_one = AffilateLogs()
@@ -124,11 +130,7 @@ def profile(request, user_slug):
             except Exception:
 
                 custom_message = 'Кажется, некорректно введён Slug. '\
-                                 'Если же верно, пожалуйста, напишите Диме. '
-
-        else:
-
-            affilate_creator_slug = percent = how_much_affilate = aff_money = None
+                                'Если же верно, пожалуйста, напишите Диме. '
 
     how_much_affilate = None
     aff_money = None
@@ -138,6 +140,7 @@ def profile(request, user_slug):
     if AffilateInfo.objects.filter(user_id=user).exists():
 
         aff_money = AffilateInfo.objects.get(user_id=user).sum
+        percent = AffilateInfo.objects.get(user_id=user).percent
 
     if AffilateRelation.objects.filter(affilated_user=user).exists():
 

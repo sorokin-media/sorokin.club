@@ -73,36 +73,43 @@
 
             {% if affilate_creator %}
             <p>
-                <strong>Рефовод: {{ affilate_creator }} </strong>
-            </p>
-            <p>
-                <strong>Процент: {{ percent }} </strong>
+                <strong>
+                    Рефовод: {{ affilate_creator }} 
+                </strong>
             </p>
             {% else %}
-            <div class="form-row">
                 <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}
-                    <label for="slugField">Слаг рефовода. Без собачки. </label>
-                    <input required type="text" id="slugField" name="SlugField">
-            
+                    <label for="slugField">
+                        Набери слаг рефовода без собачки. 
+                    </label>
+                    <input type="text" id="slugField" name="SlugField">
                     <br>
-            
-                    <label for="dropdownList">Процент:</label>
-                    <select id="dropdownList" name="PercentSelect">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                    </select>
-            
-                    <br>
-                    <button type="submit" class="button menu-button menu-button-compose">Сохранить</button>
+                    <button type="submit" class="button menu-button menu-button-compose">
+                        Сохранить рефовода
+                    </button>
                 </form>
-            </div>
-            <br>
-            <br>            
             {% endif %}
-            
-        {% endif %}
+            <br>
+            <form action="{% url 'profile' user.slug %}" method="post" class="settings-form">{% csrf_token %}             
+            <strong>
+                Процент бонусов по рефералке в данный момент: {{ percent }} 
+            </strong>
+            <p>
+                <label for="dropdownList">Изменить процент:</label>
+                <select id="dropdownList" name="PercentSelect">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+                <br>
+                <button type="submit" class="button menu-button menu-button-compose">
+                    Сохранить процент
+                </button>
+            </p>
+        </form>
+        {% endif %} 
 
 
         {% if me.id == user.id %}
