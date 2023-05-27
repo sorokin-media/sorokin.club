@@ -50,15 +50,16 @@
                 <input type="submit" class="button button-big" value="Сохранить">
         </div>
         <!-- HTML код кнопки "Скопировать" -->
-        Реферальная ссылка на главную страницу Сорокин.Клуба
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <h1>Ваша партнёрская ссылка</h1>
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{ affilate_info.parametr }}')"style="border-radius: 15px; background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+        <span style="margin-left: 5px;">Главная страница клуба</span>
         <br><br>
-        Реферальная ссылка на страницу с преимуществами Сорокин.Клуба
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{ affilate_info.parametr }}')">Скопировать</button>
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{ affilate_info.parametr }}')"style="border-radius: 15px; background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+        <span style="margin-left: 5px;">Наши преимущества</span>
         <br><br>
-        Реферальная ссылка на страницу с открытыми материалами Сорокин.Клуба
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{ affilate_info.parametr }}')">Скопировать</button>
-        
+        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{ affilate_info.parametr }}')"style="border-radius: 15px; background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+        <span style="margin-left: 5px;">Открытые материалы</span>
+
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
 function copyToClipboard(text) {
