@@ -362,7 +362,7 @@ def unitpay_pay_single(request):
 
     # create stripe session and payment (to keep track of history)
     pay_service = UnitpayService()
-    invoice = pay_service.create_payment_single(product, email, is_recurrent)
+    invoice = pay_service.create_payment_single(email, is_recurrent, reference, product.amount)
 
     return render(request, "payments/pay-single.html", {
         "invoice": invoice,

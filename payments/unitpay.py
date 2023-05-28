@@ -69,18 +69,18 @@ class UnitpayService:
         return invoice
 
     @classmethod
-    def create_payment_single(cls, product: PaymentLink, email: str, reccurent: bool) -> Invoice:
+    def create_payment_single(cls, email: str, reccurent: bool, reference_link: str, amount_link: int) -> Invoice:
 
         cash = [{
             "name": "Сорокин.Клуб",
             "count": 1,
-            "price": product.amount,
+            "price": amount_link,
             "type": "commodity",
         }]
         if reccurent:
             params = {
-                "sum": str(product.amount),
-                "account": str(PaymentLink.reference),
+                "sum": str(amount_link),
+                "account": reference_link,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
                 "backUrl": settings.APP_HOST,
@@ -90,8 +90,8 @@ class UnitpayService:
             }
         else:
             params = {
-                "sum": str(product.amount),
-                "account": str(PaymentLink.reference),
+                "sum": str(amount_link),
+                "account": reference_link,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
                 "backUrl": settings.APP_HOST,
@@ -99,14 +99,14 @@ class UnitpayService:
                 "cashItems": b64encode(json.dumps(cash).encode()),
             }
 
-        params["signature"] = cls.make_signature(params)
+        # params["signature"] = cls.make_signature(params)
         # for tests it's better to comment
         # and uncoment next string after
         url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
         #        url = 'url'
 
         invoice = Invoice(
-            id=PaymentLink.reference,
+            id=reference_link,
             url=url,
         )
         log.info("Created %s", invoice)
