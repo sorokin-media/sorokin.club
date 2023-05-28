@@ -33,7 +33,6 @@
         <table>
             <tr>
                 <th>Айди</th>
-                <th>будущая ссылка</th>
                 <th>Заголовок</th>
                 <th>Описание</th>
                 <th>Сумма</th>
@@ -43,8 +42,7 @@
             {% if payments_link %}
                 {% for link in payments_link %}
                     <tr>
-                        <td>{{ link.id }}</td>
-                        <td>{{ link.reference }}</td>
+                        <td><a href="/pay/{{ link.id }}" target="_blank">Ссылка</a></td>
                         <td>{{ link.title }}</td>
                         <td>{{ link.description }}</td>
                         <td>{{ link.amount }}</td>

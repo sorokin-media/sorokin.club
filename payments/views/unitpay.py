@@ -5,7 +5,7 @@ from json import dumps
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
 
-from notifications.email.users import send_payed_email
+from notifications.email.users import send_payed_email, send_payed_email_single
 from payments.models import Payment
 from payments.products import PRODUCTS
 from payments.products import club_subscription_activator
