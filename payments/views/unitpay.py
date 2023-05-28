@@ -328,7 +328,7 @@ def unitpay_webhook(request):
                 payment_link.unitpay_id = int(request.GET["params[subscriptionId]"])
                 payment_link.save()
 
-            text_send = '#Разовый_платеж Сумма: ' + payment_link.amount + "\nEmail: " + payment_link.email
+            text_send = '#Разовый_платеж Сумма: ' + str(payment_link.amount) + "\nEmail: " + str(payment_link.email)
             send_telegram_message(
                 chat=ADMIN_CHAT,
                 text=text_send
