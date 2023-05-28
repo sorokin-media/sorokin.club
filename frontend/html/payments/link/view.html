@@ -4,63 +4,67 @@
 
 {% block content %}
 <div class="content join">
-    <div class="join-title">{{ payment.title }} 🎩</div>
+    {% if payment.status == 'success' %}
+        <div class="join-title">Оплачено! 🎩</div>
+    {% else %}
+        <div class="join-title">{{ payment.title }} 🎩</div>
 
-    <div class="join-description">
-        {{ payment.description }}
-    </div>
+        <div class="join-description">
+            {{ payment.description }}
+        </div>
 
-    <form action="{% url "unitpay_pay_single" %}" method="get">
+        <form action="{% url "unitpay_pay_single" %}" method="get">
 
-    <div class="join-subtitle-single-pay" id="select_package"></div>
+        <div class="join-subtitle-single-pay" id="select_package"></div>
 
-    <div class="pay-packages">
+        <div class="pay-packages">
 
-        <div>
+            <div>
 
-            <input type="radio" id="package-{{ payment.reference }}" name="product_code" value="{{ payment.reference }}" checked>
+                <input type="radio" id="package-{{ payment.reference }}" name="product_code" value="{{ payment.reference }}" checked>
 
-            <label for="package-{{ payment.reference }}" class="block pay-package">
-                <div class="pay-package-name">Оплата</div>
-                <div class="pay-package-image">🤘</div>
-                <div class="pay-package-price">{{ payment.amount }}₽</div>
+                <label for="package-{{ payment.reference }}" class="block pay-package">
+                    <div class="pay-package-name">Оплата</div>
+                    <div class="pay-package-image">🤘</div>
+                    <div class="pay-package-price">{{ payment.amount }}₽</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="pay-recurrent">
+            <label class="block pay-recurrent-block">
+                <input type="checkbox" name="is_recurrent" value="true" checked>
+                продлять автоматически
             </label>
+            <p>Оплачивая участие, вы соглашаетесь с нашими <a href="/docs/oferta/">Офертой</a>, <a
+                href="/docs/about/">Правилами клуба</a>, <a
+                href="/docs/privacy_policy/">Политикой приватности</a>, <a
+                href="/docs/subscription/">Правилами подписки</a> и <a
+                href="/docs/policy/">Политикой оплаты, доставки и возврата</a>.</p>
+            <p>Если что-то пошло не так - напишите нам на <a href="mailto:club@sorokin.club">club@sorokin.club</a> или
+                связавшись с командой модерации в <a href="https://t.me/sorokinclub_public_chat">телеграм-чате клуба</a> (мы
+                постараемся решить вопрос в тот же день, но на всякий случай оставим за собой право разобраться в течение 5
+                рабочих дней с момента запроса). Подробности вы найдете в своем профиле после оплаты и заполнения интро.</p>
         </div>
-    </div>
 
-    <div class="pay-recurrent">
-        <label class="block pay-recurrent-block">
-            <input type="checkbox" name="is_recurrent" value="true" checked>
-            продлять автоматически
-        </label>
-        <p>Оплачивая участие, вы соглашаетесь с нашими <a href="/docs/oferta/">Офертой</a>, <a
-            href="/docs/about/">Правилами клуба</a>, <a
-            href="/docs/privacy_policy/">Политикой приватности</a>, <a
-            href="/docs/subscription/">Правилами подписки</a> и <a
-            href="/docs/policy/">Политикой оплаты, доставки и возврата</a>.</p>
-        <p>Если что-то пошло не так - напишите нам на <a href="mailto:club@sorokin.club">club@sorokin.club</a> или
-            связавшись с командой модерации в <a href="https://t.me/sorokinclub_public_chat">телеграм-чате клуба</a> (мы
-            постараемся решить вопрос в тот же день, но на всякий случай оставим за собой право разобраться в течение 5
-            рабочих дней с момента запроса). Подробности вы найдете в своем профиле после оплаты и заполнения интро.</p>
-    </div>
+        <div class="join-subtitle">Ваш e-mail</div>
 
-    <div class="join-subtitle">Ваш e-mail</div>
-
-    <div class="block join-email">
-        <div class="join-email-form">
-            <label>Вот сюда 👉&nbsp;&nbsp;<input type="email" name="email" placeholder="your@gmail.com"
-                                                 required></label>
+        <div class="block join-email">
+            <div class="join-email-form">
+                <label>Вот сюда 👉&nbsp;&nbsp;<input type="email" name="email" placeholder="your@gmail.com"
+                                                     required></label>
+            </div>
         </div>
-    </div>
 
-    <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на
-        обработку <a href="/docs/privacy_policy/" target="_blank">персональных данных</a> и соглашаюсь с <a
-            href="/docs/about/" target="_blank">правилами клуба</a> и помню, что мне придётся написать
-        интро и пройти модерацию;<br/>
-        <input type="checkbox" name="iconsent2" value="true" required> &larr; я соглашаюсь с <a
-            href="/docs/subscription/" target="_blank">правилами подписки</a>.</label>
-    <button type="submit" class="button button-big join-button">Перейти к оплате</button>
+        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на
+            обработку <a href="/docs/privacy_policy/" target="_blank">персональных данных</a> и соглашаюсь с <a
+                href="/docs/about/" target="_blank">правилами клуба</a> и помню, что мне придётся написать
+            интро и пройти модерацию;<br/>
+            <input type="checkbox" name="iconsent2" value="true" required> &larr; я соглашаюсь с <a
+                href="/docs/subscription/" target="_blank">правилами подписки</a>.</label>
+        <button type="submit" class="button button-big join-button">Перейти к оплате</button>
 
-    </form>
+        </form>
+    {% endif %}
 </div>
 {% endblock %}
