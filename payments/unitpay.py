@@ -70,8 +70,6 @@ class UnitpayService:
 
     @classmethod
     def create_payment_single(cls, product: PaymentLink, email: str, reccurent: bool) -> Invoice:
-        order_id = uuid4().hex
-
         cash = [{
             "name": "Сорокин.Клуб",
             "count": 1,
@@ -81,7 +79,7 @@ class UnitpayService:
         if reccurent:
             params = {
                 "sum": str(product.amount),
-                "account": order_id,
+                "account": PaymentLink.reference,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
                 "backUrl": settings.APP_HOST,
@@ -92,7 +90,7 @@ class UnitpayService:
         else:
             params = {
                 "sum": str(product.amount),
-                "account": order_id,
+                "account": PaymentLink.reference,
                 "desc": "Сорокин.Клуб",
                 "currency": "RUB",
                 "backUrl": settings.APP_HOST,

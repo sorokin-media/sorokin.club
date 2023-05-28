@@ -254,7 +254,7 @@ def unitpay_webhook(request):
     # process payment, get account from webhook
     order_id = request.GET["params[account]"]
 
-    if order_id == '549269b5dd0b4ea29aaef0d117322b85':
+    if order_id == '2f8f28b99fe54bc6b687fab225a3933d':
         return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 
     if order_id == "test":
