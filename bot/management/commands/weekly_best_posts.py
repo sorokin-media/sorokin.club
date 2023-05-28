@@ -133,38 +133,39 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     user_1 = User.objects.get(slug='romashovdmitryo')
     user_2 = User.objects.get(slug='Anna_Golubova')
 
-    users_for_yesterday_digest = []
+    my_users = []
 
-    users_for_yesterday_digest.append(user_1)
-    users_for_yesterday_digest.append(user_2)
+    my_users.append(user_1)
+    my_users.append(user_2)
 
     # DELETE AFTER TEST
 
     for user in users_for_yesterday_digest:
-        for author_and_text in dict_list:
-            author_slug = author_and_text['slug']
-            # bruteforce resolving of problem getting value from set with one value
-            for b in author_slug:
-                author_slug = str(b)
-            author = User.objects.get(slug=author_slug)
-            is_muted = Muted.is_muted(
-                user_from=user,
-                user_to=author
-            )
-            if not is_muted:
-                string_for_bot += author_and_text['text']
-        if start_len != len(string_for_bot):
-            if optional:
-                string_for_bot = header_of_message + string_for_bot + optional
-            else:
-                string_for_bot = header_of_message + string_for_bot
-            custom_message = TelegramCustomMessage(
-                etc=author,
-                user=user,
-                string_for_bot=string_for_bot
-            )
-            custom_message.send_message()
-            string_for_bot = ''
+        if user in my_users:
+            for author_and_text in dict_list:
+                author_slug = author_and_text['slug']
+                # bruteforce resolving of problem getting value from set with one value
+                for b in author_slug:
+                    author_slug = str(b)
+                author = User.objects.get(slug=author_slug)
+                is_muted = Muted.is_muted(
+                    user_from=user,
+                    user_to=author
+                )
+                if not is_muted:
+                    string_for_bot += author_and_text['text']
+            if start_len != len(string_for_bot):
+                if optional:
+                    string_for_bot = header_of_message + string_for_bot + optional
+                else:
+                    string_for_bot = header_of_message + string_for_bot
+                custom_message = TelegramCustomMessage(
+                    etc=author,
+                    user=user,
+                    string_for_bot=string_for_bot
+                )
+                custom_message.send_message()
+                string_for_bot = ''
 
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
