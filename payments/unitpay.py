@@ -99,7 +99,7 @@ class UnitpayService:
                 "cashItems": b64encode(json.dumps(cash).encode()),
             }
 
-        # params["signature"] = cls.make_signature(params)
+        params["signature"] = cls.make_signature(params)
         # for tests it's better to comment
         # and uncoment next string after
         url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
