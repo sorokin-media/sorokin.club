@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static "images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Статистика — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+<div class="stats stats--single">
+    <div class="container">
+        <div class="stats-header">Ссылка хуилка</div>
+
+        <a href="/payment_link/create" class="">
+                Создать новую
+            </a>
+
+
+        <div class="stats-description">
+        </div>
+        <table>
+            <tr>
+                <th>Айди</th>
+                <th>будущая ссылка</th>
+                <th>Заголовок</th>
+                <th>Описание</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+            {% if payments_link %}
+                {% for link in payments_link %}
+                    <tr>
+                        <td>{{ link.id }}</td>
+                        <td>{{ link.reference }}</td>
+                        <td>{{ link.title }}</td>
+                        <td>{{ link.description }}</td>
+                        <td>{{ link.amount }}</td>
+                        <td>{{ link.status }}</td>
+                        <td><a href="{% url 'update_single_link' link.id %}" class="">Обновить</a> <a href="{% url 'given_to_user_link' link.id %}" class="">Отдали</a></td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+{% endif %}
+{% endblock %}

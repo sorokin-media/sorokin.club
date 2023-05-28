@@ -79,3 +79,72 @@ class Payment(models.Model):
             except (KeyError, AttributeError):
                 return None
         return None
+
+
+class PaymentLink(models.Model):
+    STATUS_STARTED = "started"
+    STATUS_FAILED = "failed"
+    STATUS_SUCCESS = "success"
+    STATUS_GIVEN_TO_USER = "given_to_user"
+    STATUSES = [
+        (STATUS_STARTED, STATUS_STARTED),
+        (STATUS_FAILED, STATUS_FAILED),
+        (STATUS_SUCCESS, STATUS_SUCCESS),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+
+    reference = models.CharField(max_length=256, db_index=True)
+
+    email = models.EmailField(unique=False, null=True)
+
+    title = models.TextField(null=False)
+    description = models.TextField(null=False)
+    amount = models.IntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    unitpay_id = models.CharField(max_length=128, null=True)
+
+    status = models.CharField(choices=STATUSES, default=STATUS_STARTED, max_length=32)
+    data = models.TextField(null=True)
+
+    class Meta:
+            db_table = "payments_link"
+
+    @classmethod
+    def create(cls, title: str, description: str,  amount: int):
+        order_id = uuid4().hex
+        return PaymentLink.objects.create(
+            reference=order_id,
+            title=title,
+            description=description,
+            amount=amount,
+            status=PaymentLink.STATUS_STARTED,
+        )
+
+    @classmethod
+    def get(cls, id):
+        return PaymentLink.objects.filter(id=id).first()
+
+    @classmethod
+    def get_reference(cls, reference):
+        return PaymentLink.objects.filter(reference=reference).first()
+
+    @classmethod
+    def finish(cls, reference, status=STATUS_SUCCESS, data=None):
+        payment = PaymentLink.get_reference(reference)
+        # it's better to comment for tests: next 4 rows
+        if not payment:
+            raise PaymentNotFound()
+        if status == cls.STATUS_SUCCESS:
+            raise PaymentAlreadyFinalized()
+
+        payment.status = status
+        if data:
+            payment_old_json = json.loads(payment.data)
+            payment_old_json.update(data)
+            payment.data = json.dumps(payment_old_json)
+        payment.save()
+
+        return payment

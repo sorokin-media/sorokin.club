@@ -30,6 +30,14 @@
         padding-bottom: 40px;
     }
 
+    .join-subtitle-single-pay {
+        text-align: center;
+        font-weight: 500;
+        font-size: 180%;
+        padding-top: 25px;
+        padding-bottom: 40px;
+    }
+
     .join-description {
         text-align: center;
         padding: 50px 20px;
