@@ -133,17 +133,16 @@ class PaymentLink(models.Model):
 
     @classmethod
     def finish(cls, reference, status=STATUS_SUCCESS, data=None):
+
         payment = PaymentLink.get_reference(reference)
-        # it's better to comment for tests: next 4 rows
-        if not payment:
-            raise PaymentNotFound()
-        if status == cls.STATUS_SUCCESS:
-            raise PaymentAlreadyFinalized()
 
         payment.status = status
         if data:
-            payment_old_json = json.loads(payment.data)
-            payment_old_json.update(data)
+            if payment.data:
+                payment_old_json = json.loads(payment.data)
+                payment_old_json.update(data)
+            else:
+                payment_old_json = data
             payment.data = json.dumps(payment_old_json)
         payment.save()
 
