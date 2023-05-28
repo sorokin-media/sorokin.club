@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content pay">
+        <div class="block pay-description">
+            <div class="pay-title">
+                Платим 💰<br>
+                <small>
+                    по email: <strong>{{ email }}</strong>
+                </small>
+            </div>
+
+            <a href="{{ invoice.url }}" class="button button-big join-button">
+                Перейти к оплате
+            </a>
+
+            <p style="font-size: 300%; margin: 20px 0;">
+                ☝️
+            </p>
+
+            <p style="font-size: 90%;">
+                Платежи для нас процессит <a href="https://unitpay.ru" target="_blank">UnitPay</a>.
+                Кнопочка выше перенесёт вас на их специальную безопасную страницу оплаты.
+                Клуб не видит и не хранит никаких платёжных данных.
+            </p>
+        </div>
+
+        <div class="block pay-warning">
+            <p>
+                ⚠️ С оплатой с <strong>зарубежных карт</strong> сейчас могут быть проблемы из-за санкций.
+            </p>
+            <p>
+                💎 За оплатой криптой и другими вариантами заходите в Телеграм: <a href="https://t.me/bigsmart"><strong>@bigsmart</strong></a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

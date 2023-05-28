@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from urllib.parse import urlencode
 from uuid import uuid4
 from users.models.subscription_plan import SubscriptionPlan
+from payments.models import PaymentLink
 
 from django.conf import settings
 
@@ -61,6 +62,51 @@ class UnitpayService:
 
         invoice = Invoice(
             id=order_id,
+            url=url,
+        )
+        log.info("Created %s", invoice)
+
+        return invoice
+
+    @classmethod
+    def create_payment_single(cls, email: str, reccurent: bool, reference_link: str, amount_link: int) -> Invoice:
+
+        cash = [{
+            "name": "Сорокин.Клуб",
+            "count": 1,
+            "price": amount_link,
+            "type": "commodity",
+        }]
+        if reccurent:
+            params = {
+                "sum": str(amount_link),
+                "account": reference_link,
+                "desc": "Сорокин.Клуб",
+                "currency": "RUB",
+                "backUrl": settings.APP_HOST,
+                "subscription": True,
+                "customerEmail": email,
+                "cashItems": b64encode(json.dumps(cash).encode()),
+            }
+        else:
+            params = {
+                "sum": str(amount_link),
+                "account": reference_link,
+                "desc": "Сорокин.Клуб",
+                "currency": "RUB",
+                "backUrl": settings.APP_HOST,
+                "customerEmail": email,
+                "cashItems": b64encode(json.dumps(cash).encode()),
+            }
+
+        params["signature"] = cls.make_signature(params)
+        # for tests it's better to comment
+        # and uncoment next string after
+        url = "https://unitpay.ru/pay/" + settings.UNITPAY_PUBLIC_KEY + "?" + urlencode(params)
+        #        url = 'url'
+
+        invoice = Invoice(
+            id=reference_link,
             url=url,
         )
         log.info("Created %s", invoice)

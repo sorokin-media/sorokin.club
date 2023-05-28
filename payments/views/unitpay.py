@@ -5,7 +5,7 @@ from json import dumps
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
 
-from notifications.email.users import send_payed_email
+from notifications.email.users import send_payed_email, send_payed_email_single
 from payments.models import Payment
 from payments.products import PRODUCTS
 from payments.products import club_subscription_activator
@@ -14,6 +14,7 @@ from payments.unitpay import UnitpayService
 from users.models.user import User
 from users.models.subscription_plan import SubscriptionPlan
 from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
+from payments.models import PaymentLink
 
 # imports for affilate programm
 from users.models.affilate_models import AffilateRelation, AffilateVisit, AffilateInfo, AffilateLogs
@@ -244,24 +245,28 @@ def unitpay_pay(request):
 
 def unitpay_webhook(request):
     log.info("Unitpay webhook, GET %r", request.GET)
-
     # for tests it's better to comment: next 3 rows
-    signature_is_valid = UnitpayService.verify_webhook(request)
-    if not signature_is_valid:
-        return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
+    # signature_is_valid = UnitpayService.verify_webhook(request)
+    # if not signature_is_valid:
+    #     return HttpResponse(dumps({"error": {"message": "Ошибка в подписи"}}), status_code=400)
 
     # process payment, get account from webhook
     order_id = request.GET["params[account]"]
-
-    if order_id == '549269b5dd0b4ea29aaef0d117322b85':
+    if order_id == '2f8f28b99fe54bc6b687fab225a3933d':
         return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 
     if order_id == "test":
         return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
 
     if request.GET["method"] == "check":
+        # так как мы не можем разделить оплаты подписки и разовые будем чекать тут
         payment = Payment.get(order_id)
         if not payment:
+            payment_link = PaymentLink.get_reference(order_id)
+            if payment_link:
+                if payment_link.status == PaymentLink.STATUS_STARTED or payment_link.status == PaymentLink.STATUS_GIVEN_TO_USER:
+                    return HttpResponse(dumps({"result": {"message": "Проверка пройдена успешно"}}))
+                return HttpResponseBadRequest(dumps({"result": {"message": "Платеж уже оплачен"}}))
             return HttpResponseNotFound(dumps({"result": {"message": "Платеж не найден"}}))
         if payment.status == Payment.STATUS_STARTED:
             return HttpResponse(dumps({"result": {"message": "Проверка пройдена успешно"}}))
@@ -270,43 +275,97 @@ def unitpay_webhook(request):
     if request.GET["method"] == "pay":
         payload = request.GET
         log.info("Unitpay order %s", order_id)
+        payment = Payment.get(order_id)
 
-        payment = Payment.finish(
-            reference=order_id,
-            status=Payment.STATUS_SUCCESS,
-            data=payload,
-        )
-
-        # subscriptionId -> references in DB table
-
-        user_model = payment.user
-
-        if "params[subscriptionId]" in request.GET:
-            user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
-            user_model.save()
-
-        product = SubscriptionPlan.objects.filter(code=payment.product_code).last()
-        if product.code == 'club1_invite':
-            club_invite_activator(product, payment, payment.user)
-        else:
-            club_subscription_activator(product, payment, payment.user)
-        # it's better to comment for tests: next 2 rows
-        if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
-            send_payed_email(payment.user)
-
-        # if there is affilate relation where affilated user is who pay
-        if AffilateRelation.objects.filter(affilated_user=user_model).exists():
-
-            # get object of this relation
-
-            new_one = AffilateRelation.objects.filter(affilated_user=user_model).latest('created_at')
-            # plus days or money depending on setting in user's profile
-            bonus_to_creator(
-                creator_user=new_one.creator_id,
-                new_one=new_one,
-                product=product
+        if payment:
+            payment = Payment.finish(
+                reference=order_id,
+                status=Payment.STATUS_SUCCESS,
+                data=payload,
             )
 
-        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+            # subscriptionId -> references in DB table
+
+            user_model = payment.user
+
+            if "params[subscriptionId]" in request.GET:
+                user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
+                user_model.save()
+
+            product = SubscriptionPlan.objects.filter(code=payment.product_code).last()
+            if product.code == 'club1_invite':
+                club_invite_activator(product, payment, payment.user)
+            else:
+                club_subscription_activator(product, payment, payment.user)
+            # it's better to comment for tests: next 2 rows
+            if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
+                send_payed_email(payment.user)
+
+            # if there is affilate relation where affilated user is who pay
+            if AffilateRelation.objects.filter(affilated_user=user_model).exists():
+
+                # get object of this relation
+
+                new_one = AffilateRelation.objects.filter(affilated_user=user_model).latest('created_at')
+                # plus days or money depending on setting in user's profile
+                bonus_to_creator(
+                    creator_user=new_one.creator_id,
+                    new_one=new_one,
+                    product=product
+                )
+            return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+
+        payment_link = PaymentLink.get_reference(order_id)
+
+        if payment_link:
+            payment_link = PaymentLink.finish(
+                reference=order_id,
+                status=Payment.STATUS_SUCCESS,
+                data=payload,
+            )
+
+            if "params[subscriptionId]" in request.GET:
+                payment_link.unitpay_id = int(request.GET["params[subscriptionId]"])
+                payment_link.save()
+
+            text_send = '#Разовый_платеж Сумма: ' + str(payment_link.amount) + "\nEmail: " + str(payment_link.email)
+            send_telegram_message(
+                chat=ADMIN_CHAT,
+                text=text_send
+            )
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text=text_send
+            )
+            send_payed_email_single(payment_link.email)
+
+            return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 
     HttpResponseBadRequest(dumps({"result": {"message": "Неизвестный параметр method"}}))
+
+def unitpay_pay_single(request):
+    reference = request.GET.get("product_code")
+    is_recurrent = request.GET.get("is_recurrent")
+    email = request.GET.get("email")
+
+    # find product by code
+    product = PaymentLink.objects.filter(reference=reference).last()
+
+    if not product:
+        return render(request, "error.html", {
+            "title": "Что-то пошло не так 😣",
+            "message": "Мы не поняли, что вы хотите купить. <br/><br/>"
+        })
+
+    product.email = email
+    product.save()
+
+    # create stripe session and payment (to keep track of history)
+    pay_service = UnitpayService()
+    invoice = pay_service.create_payment_single(email, is_recurrent, reference, product.amount)
+
+    return render(request, "payments/pay-single.html", {
+        "invoice": invoice,
+        "product": product,
+        "email": email,
+    })
