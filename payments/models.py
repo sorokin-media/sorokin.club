@@ -85,6 +85,7 @@ class PaymentLink(models.Model):
     STATUS_STARTED = "started"
     STATUS_FAILED = "failed"
     STATUS_SUCCESS = "success"
+    STATUS_GIVEN_TO_USER = "given_to_user"
     STATUSES = [
         (STATUS_STARTED, STATUS_STARTED),
         (STATUS_FAILED, STATUS_FAILED),
@@ -99,36 +100,43 @@ class PaymentLink(models.Model):
 
     title = models.TextField(null=False)
     description = models.TextField(null=False)
-    amount = models.FloatField(default=0.0)
-
-    user = models.ForeignKey(User, related_name="payments", null=True, on_delete=models.SET_NULL, db_index=True)
+    amount = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
+    updated_at = models.DateTimeField(auto_now=True)
+    unitpay_id = models.CharField(max_length=128, null=True)
 
     status = models.CharField(choices=STATUSES, default=STATUS_STARTED, max_length=32)
     data = models.TextField(null=True)
 
+    class Meta:
+            db_table = "payments_link"
+
     @classmethod
-    def create(cls, reference: str, user: User, data: dict = None, status: str = STATUS_STARTED):
+    def create(cls, title: str, description: str,  amount: int):
+        order_id = uuid4().hex
         return PaymentLink.objects.create(
-            reference=reference,
-            user=user,
-            amount=product.amount or 0.0,
-            status=status,
-            data=json.dumps(data),
+            reference=order_id,
+            title=title,
+            description=description,
+            amount=amount,
+            status=PaymentLink.STATUS_STARTED,
         )
 
     @classmethod
-    def get(cls, reference):
-        return Payment.objects.filter(reference=reference).first()
+    def get(cls, id):
+        return PaymentLink.objects.filter(id=id).first()
+
+    @classmethod
+    def get_reference(cls, reference):
+        return PaymentLink.objects.filter(reference=reference).first()
 
     @classmethod
     def finish(cls, reference, status=STATUS_SUCCESS, data=None):
         payment = Payment.get(reference)
+        # it's better to comment for tests: next 4 rows
         if not payment:
             raise PaymentNotFound()
-
         if payment.status != cls.STATUS_STARTED and status == cls.STATUS_SUCCESS:
             raise PaymentAlreadyFinalized()
 
@@ -140,7 +148,3 @@ class PaymentLink(models.Model):
         payment.save()
 
         return payment
-
-    @classmethod
-    def for_user(cls, user):
-        return Payment.objects.filter(user=user)

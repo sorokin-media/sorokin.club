@@ -22,7 +22,8 @@ from notifications.webhooks import webhook_event
 from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, stop_subscription_test
 from payments.views.crypto import crypto, coinbase_webhook
-from payments.views.unitpay import unitpay_pay, unitpay_webhook
+from payments.views.unitpay import unitpay_pay, unitpay_webhook, unitpay_pay_single
+from payments.views.payment_link import create_payment_link, update_single_link, given_to_user_link, get_pay_link
 
 # only for tests
 from club.dmitry_tests import dmitry_tests
@@ -61,7 +62,7 @@ from users.views.people import people
 from users.views.profile import random_coffee
 from users.views.affilate import profile_affilate, affilate_list, get_affilate_money
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat
+from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat, payment_link
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
@@ -111,6 +112,7 @@ urlpatterns = [
     path("monies/stripe/webhook/", stripe_webhook, name="stripe_webhook"),
     path("monies/coinbase/webhook/", coinbase_webhook, name="coinbase_webhook"),
     path("monies/unitpay/pay/", unitpay_pay, name="unitpay_pay"),
+    path("monies/unitpay/pay-single/", unitpay_pay_single, name="unitpay_pay_single"),
     path("monies/unitpay/webhook/", unitpay_webhook, name="unitpay_webhook"),
 
     path("user/<slug:user_slug>/", profile, name="profile"),
@@ -137,6 +139,13 @@ urlpatterns = [
     path("user/<slug:user_slug>/profile_affiliate", profile_affilate, name="profile_affilate"),
     path("affiliate_list/<slug:user_slug>", affilate_list, name='affilate_list'),
     path("get_affiliate_money/<slug:user_slug>", get_affilate_money, name='get_affilate_money'),
+
+    #paymenet link
+    path("pay/<slug:link_id>", get_pay_link, name="get_pay_link"),
+    path("payment_link/", payment_link, name="payment-link"),
+    path("payment_link/create/", create_payment_link, name="create_payment_link"),
+    path("payment_link/<slug:link_id>/", update_single_link, name="update_single_link"),
+    path("payment_link_status/<slug:link_id>/", given_to_user_link, name="given_to_user_link"),
 
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
@@ -252,6 +261,7 @@ urlpatterns = [
     path("<slug:post_type>/<slug:post_slug>/", show_post, name="show_post"),
     path("<slug:post_type>/<slug:post_slug>.md", md_show_post, name="md_show_post"),
     path("<slug:post_type>/<slug:post_slug>.json", api_show_post, name="api_show_post"),
+
 ]
 
 if settings.DEBUG:

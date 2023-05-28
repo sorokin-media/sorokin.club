@@ -31,7 +31,7 @@
                         🏆 Топы
                     </a>
                 </li>
-                
+
                 <li>
                         <br />Стань богаче:
                 </li>
@@ -40,7 +40,7 @@
                        💰 Гайд по клубу
                     </a>
                 </li>
-                
+
                 <li>
                     <a href="https://sorokin.club/post/1116/">
                        💰 Гайд по клубу
@@ -55,22 +55,22 @@
                     <a href="https://sorokin.club/event/">
                        📅 События
                     </a>
-                </li>                 
+                </li>
                 <li>
                     <a href="https://sorokin.club/post/885/">
                        🔥 Мастермайнды
                     </a>
-                </li> 
+                </li>
              <li>
                     <a href="https://sorokin.club/post/925/">
                        💵 Совместные инвестиции
                     </a>
-                </li> 
+                </li>
                 <li>
                     <a href="https://sorokin.club/post/1090/">
                        🤝 Бесплатные pro-консультации
                     </a>
-                </li> 
+                </li>
             </ul>
 
             <!-- <ul class="feed-sidebar-list feed-sidebar-menu feed-sidebar-menu-small">
@@ -89,7 +89,7 @@
                     <a href="{% url "feed_label" "inside" %}" class="{% if label_code == "inside" %}feed-sidebar-menu-selected{% endif %}">
                         💎️ Инсайды
                     </a>
-                </li> 
+                </li>
                 <li>
                     <a href="{% url "feed_type" "thread" %}" class="{% if post_type == "thread" %}feed-sidebar-menu-selected{% endif %}">
                         🗄 Треды
@@ -119,7 +119,7 @@
                     <a href="{% url "feed_label" "approved" %}" class="{% if label_code == "approved" %}feed-sidebar-menu-selected{% endif %}">
                         👍 Офигенно
                     </a>
-                </li> 
+                </li>
             </ul>  -->
         </div>
 
@@ -167,7 +167,7 @@
             </li>
             <li>
                 <a href="{% url "random_coffee_stat" %}">
-                    ☕ Статистика рандом кофе. 
+                    ☕ Статистика рандом кофе.
                 </a>
             </li>
             <li>
@@ -177,7 +177,17 @@
             </li>
             <li>
                 <a href="{% url "affilates_stat" %}">
-                    📢 Стата реферальной программы 
+                    📢 Стата реферальной программы
+                </a>
+            </li>
+        </ul>
+        {% endif %}
+        {% if me.is_god %}
+        <div class="feed-sidebar-header">Ссылки оплаты</div>
+        <ul class="feed-sidebar-list feed-sidebar-menu feed-sidebar-menu-small">
+            <li>
+                <a href="{% url "payment-link" %}">
+                    💰 Ссылки
                 </a>
             </li>
         </ul>

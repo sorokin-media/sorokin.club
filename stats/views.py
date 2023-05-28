@@ -21,6 +21,7 @@ from comments.models import Comment
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
 from users.models.affilate_models import AffilateLogs, AffilateRelation
+from payments.models import PaymentLink
 
 # import config data
 from club.settings import APP_HOST as host
@@ -28,6 +29,7 @@ from club.settings import APP_HOST as host
 # import custom classes
 from auth.helpers import auth_required
 from stats.forms.money import DateForm
+from payments.forms.payment_link import PaymentLinkForm
 from users.models.affilate_models import AffilateLogs
 
 def active_or_not(user):
@@ -386,3 +388,17 @@ def affilates_days_stat(request):
             'affilate_users_sum': affilate_users_sum
         }
     )
+
+@auth_required
+def payment_link(request):
+    payments_link = ''
+    if request.method == "POST":
+        form = PaymentLinkForm(request.POST)
+    else:
+        payments_link = PaymentLink.objects.filter().order_by('-created_at')
+        form = PaymentLinkForm
+
+    return render(request, "pages/payment-link.html", {
+        "form": form,
+        "payments_link": payments_link
+    })
