@@ -20,9 +20,11 @@ class TelegramCustomMessage():
 
     exception_list = ['vika', 'skorpion28', 'sesevor']
 
-    # RETURN AFTER TEST TG_ALEX
-    logs_list = [TG_DEVELOPER_DMITRY]#, TG_ALEX]
-    # RETURN AFTER TEST TG_ALEX
+    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
+
+    # FOR TEST WITHOUT ALEX
+    # logs_list = [TG_DEVELOPER_DMITRY]#, TG_ALEX]
+    # FOR TEST WITHOUT ALEX
 
     # for tests on local
     #logs_list = ['dev']

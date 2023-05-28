@@ -123,12 +123,9 @@ def construct_message(object):
             post_exception.save()
     return return_string
 
-def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message, optional=None):
-    ''' foo send messages to user'''
-    start_len = len(header_of_message)
-    string_for_bot = ''
+'''
 
-    # DELETE AFTER TEST
+    For tests on prod.
 
     user_1 = User.objects.get(slug='romashovdmitryo')
     user_2 = User.objects.get(slug='Anna_Golubova')
@@ -138,34 +135,41 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     my_users.append(user_1)
     my_users.append(user_2)
 
-    # DELETE AFTER TEST
+    and also to add for test -> 
+    if user in my_users: 
+
+'''
+
+def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message, optional=None):
+    ''' foo send messages to user'''
+    start_len = len(header_of_message)
+    string_for_bot = ''
 
     for user in users_for_yesterday_digest:
-        if user in my_users:
-            for author_and_text in dict_list:
-                author_slug = author_and_text['slug']
-                # bruteforce resolving of problem getting value from set with one value
-                for b in author_slug:
-                    author_slug = str(b)
-                author = User.objects.get(slug=author_slug)
-                is_muted = Muted.is_muted(
-                    user_from=user,
-                    user_to=author
-                )
-                if not is_muted:
-                    string_for_bot += author_and_text['text']
-            if start_len != len(string_for_bot):
-                if optional:
-                    string_for_bot = header_of_message + string_for_bot + optional
-                else:
-                    string_for_bot = header_of_message + string_for_bot
-                custom_message = TelegramCustomMessage(
-                    etc=author,
-                    user=user,
-                    string_for_bot=string_for_bot
-                )
-                custom_message.send_message()
-                string_for_bot = ''
+        for author_and_text in dict_list:
+            author_slug = author_and_text['slug']
+            # bruteforce resolving of problem getting value from set with one value
+            for b in author_slug:
+                author_slug = str(b)
+            author = User.objects.get(slug=author_slug)
+            is_muted = Muted.is_muted(
+                user_from=user,
+                user_to=author
+            )
+            if not is_muted:
+                string_for_bot += author_and_text['text']
+        if start_len != len(string_for_bot):
+            if optional:
+                string_for_bot = header_of_message + string_for_bot + optional
+            else:
+                string_for_bot = header_of_message + string_for_bot
+            custom_message = TelegramCustomMessage(
+                etc=author,
+                user=user,
+                string_for_bot=string_for_bot
+            )
+            custom_message.send_message()
+            string_for_bot = ''
 
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
@@ -193,7 +197,7 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
             dict_list_of_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
             posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за прошедшую неделю 🚀</strong>'
 
-#        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_posts, posts_string_for_bot)
+        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_posts, posts_string_for_bot)
 
     if intros_list:
         intros = [x['post'] for x in intros_list]
@@ -202,13 +206,13 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
         for object in intros:
             dict_list_of_intros.append({'text': construct_message(object), 'slug': {object.author.slug}})
 
-#        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_intros, intros_string_for_bot)
+        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_intros, intros_string_for_bot)
         intros_string_for_bot = '<strong>Это лучшие закрытые интро недели только для членов клуба. Вам они недоступны.'\
             'Если вы хотите получить к ним доступ, вы знаете, '\
             f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">что делать</a></strong>.'
 
         optional = f'\n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-        compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
+#        compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
 
     if close_posts:
         close_posts = [x['post'] for x in close_posts]
@@ -220,7 +224,7 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
             dict_list_close_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
 
         optional = f'\n\n✅<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-        compile_message_helper(bot, users_did_not_pay, dict_list_close_posts, string_for_bot, optional)
+#        compile_message_helper(bot, users_did_not_pay, dict_list_close_posts, string_for_bot, optional)
 
     if open_posts:
         open_posts = [x['post'] for x in open_posts]
@@ -230,7 +234,7 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
             dict_list_open_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
 
         optional = f'\n\nЕсли вы хотите получить доступ к закрытым материалам клуба, вы знаете, что делать \n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-        compile_message_helper(bot, users_did_not_pay, dict_list_open_posts, string_for_bot, optional)
+#        compile_message_helper(bot, users_did_not_pay, dict_list_open_posts, string_for_bot, optional)
 
 class Command(BaseCommand):
     '''Foo creates list if best posts '''
@@ -260,7 +264,7 @@ class Command(BaseCommand):
         ))
 
         posts = Post.objects.filter(published_at__gte=week_ago_start
-                                    ).filter(published_at__lte=now
+                                    ).filter(published_at__lte=week_ago_finish
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
@@ -276,7 +280,7 @@ class Command(BaseCommand):
         # next content would be send to users who didn't pay. but we have thems telegran id
         # best close posts
         close_posts = Post.objects.filter(published_at__gte=week_ago_start
-                                          ).filter(published_at__lte=now
+                                          ).filter(published_at__lte=week_ago_finish
                                                    ).filter(is_approved_by_moderator=True
                                                             ).exclude(type='intro'
                                                                       ).filter(is_public=False).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
@@ -284,7 +288,7 @@ class Command(BaseCommand):
 
         # best open posts
         open_posts = Post.objects.filter(published_at__gte=week_ago_start
-                                         ).filter(published_at__lte=now
+                                         ).filter(published_at__lte=week_ago_finish
                                                   ).filter(is_approved_by_moderator=True
                                                            ).exclude(type='intro'
                                                                      ).filter(is_public=True).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
