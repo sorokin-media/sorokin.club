@@ -52,7 +52,7 @@ def send_message_helper(user_1, user_2):
     intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
     intro_2 = Post.objects.filter(author=user_2.user).filter(type='intro').first()
 
-    photo='https://sorokin.club/static/images/random_coffee.jpg'
+    photo = 'https://sorokin.club/static/images/random_coffee.jpg'
 
     text_finish = '<strong>Вам нужно связаться и в личке договориться о созвоне.'\
         ' Назначайте удобное время и мессенджер для знакомства. '\

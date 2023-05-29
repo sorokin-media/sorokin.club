@@ -142,6 +142,8 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     start_len = len(header_of_message)
     string_for_bot = ''
 
+    photo = 'https://sorokin.club/static/images/best_posts_day.png'
+
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
@@ -160,12 +162,13 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
             custom_message = TelegramCustomMessage(
                 etc=author,
                 user=user,
-                string_for_bot=string_for_bot
+                string_for_bot=string_for_bot,
+                photo=photo
             )
-            custom_message.send_message()
+            custom_message.send_photo()
             string_for_bot = ''
 
-    custom_message.send_count_to_dmitry(type_ = 'Рассылка постов и интро')
+    custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
 
 def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
@@ -232,7 +235,7 @@ class Command(BaseCommand):
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
-                                                                                  ).all()
+                                                                         ).all()
 
         posts_list = point_counter(posts)
         intros_list = point_counter(intros)
