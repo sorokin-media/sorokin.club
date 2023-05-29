@@ -144,7 +144,7 @@ class Command(BaseCommand):
             #pasha_me_alex_slugs = ['romashovdmitryo']
 
             # for tests on prod
-            pasha_me_alex_slugs = ['bigsmart', 'romashovdmitryo']
+            pasha_me_alex_slugs = ['bigsmart', 'Anna_Golubova']
             if user.slug in pasha_me_alex_slugs:
 
                 # if there is no record with user in table messagequeue, than create

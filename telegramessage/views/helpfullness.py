@@ -47,7 +47,7 @@ def create_day_helpfullness(request, id=None, is_archived=False):
 
         # if sending message to Alex for checking
 
-        if "Отправить тест Алексею" in request.POST:
+        if "Отправить тест Нюте" in request.POST:
 
             dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
             alex = User.objects.get(telegram_id=TG_ALEX)

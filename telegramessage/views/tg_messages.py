@@ -9,7 +9,7 @@ from telegramessage.models import TelegramMesage
 from users.models.user import User
 
 # import config data
-from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
+from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY, TG_NUTA
 
 # import class for sending message in Telegram
 from bot.sending_message import TelegramCustomMessage, MessageToDmitry
@@ -87,7 +87,7 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
 def save_data_helper(request, message, days, hours, minutes, name, text,
                      is_finish_of_queue, image_url=''):
 
-    if "Отправить тест Алексею" in request.POST:
+    if "Отправить тест Нюте" in request.POST:
 
         #tg_id_of_alex = User.objects.get(telegram_id=TG_ALEX)
         #tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
@@ -98,8 +98,9 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
         tg_ids = [fortest]
 
         # for test on prod by Dmitry
-        #tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        #tg_ids = [tg_id_of_dima]
+        tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+        tg_id_of_nuta = User.objects.get(telegram_id=TG_NUTA)
+        tg_ids = [tg_id_of_dima, tg_id_of_nuta]
 
         for _ in tg_ids:
 

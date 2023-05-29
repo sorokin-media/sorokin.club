@@ -35,6 +35,7 @@ jobs:
         env:
           secret_TG_ALEX: ${{ secrets.TG_ALEX }}
           secret_TG_DEVELOPER_DMITRY: ${{ secrets.TG_DEVELOPER_DMITRY }}
+          secret_TG_NUTA: ${{ secrets.TG_NUTA }}
           secret_SECRET_KEY: ${{ secrets.SECRET_KEY }}
           secret_APP_HOST: ${{ secrets.APP_HOST }}
           secret_MEDIA_UPLOAD_URL: ${{ secrets.MEDIA_UPLOAD_URL }}
