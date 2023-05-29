@@ -48,10 +48,11 @@ def coffee_partners_hepler(user_1, user_2):
 def send_message_helper(user_1, user_2):
 
     # need changes!
-
     # slug could be different for post and user, careful with that
     intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
     intro_2 = Post.objects.filter(author=user_2.user).filter(type='intro').first()
+
+    photo='https://sorokin.club/static/images/random_coffee.jpg'
 
     text_finish = '<strong>Вам нужно связаться и в личке договориться о созвоне.'\
         ' Назначайте удобное время и мессенджер для знакомства. '\
@@ -97,14 +98,16 @@ def send_message_helper(user_1, user_2):
         f'Телеграм для связи: {link_2}\n\n'\
         f'{text_finish}'\
 
+
     custom_message_1 = TelegramCustomMessage(
         user=user_1.user,
         string_for_bot=text,
-        random_coffee=True
+        random_coffee=True,
+        photo=photo
     )
 
     custom_message_1.delete_message()
-    custom_message_1.send_message()
+    custom_message_1.send_photo()
 
     text = '<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'\
         'Мы подобрали тебе собеседника на эту неделю!'\
@@ -116,11 +119,12 @@ def send_message_helper(user_1, user_2):
     custom_message_2 = TelegramCustomMessage(
         user=user_2.user,
         string_for_bot=text,
-        random_coffee=True
+        random_coffee=True,
+        photo=photo
     )
 
     custom_message_2.delete_message()
-    custom_message_2.send_message()
+    custom_message_2.send_photo()
 
 
 class Command(BaseCommand):
@@ -138,10 +142,11 @@ class Command(BaseCommand):
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
                 # Fixing the issue with users whose membership has expired.
-                if coffee_users[0].user.membership_expires_at < now or coffee_users[0].user.is_banned:
+                expire = time_zone.localize(coffee_users[0].user.membership_expires_at)
+                if expire < now or coffee_users[0].user.is_banned:
                     coffee_users.pop(0)
                     coffee_users[0].random_coffee_is = False
-                elif coffee_users[k].user.membership_expires_at < now or coffee_users[k].user.is_banned:
+                elif expire < now or coffee_users[k].user.is_banned:
                     coffee_users.pop(k)
                     coffee_users[0].random_coffee_is = False
                 elif coffee_users[k].random_coffee_past_partners is not None and\

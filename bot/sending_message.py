@@ -27,7 +27,7 @@ class TelegramCustomMessage():
     # FOR TEST WITHOUT ALEX
 
     # for tests on local
-    #logs_list = ['dev']
+    #logs_list = [TG_DEVELOPER_DMITRY]
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
@@ -152,11 +152,20 @@ class TelegramCustomMessage():
 
         try:
 
-            self.bot.send_photo(
+            message = self.bot.send_photo(
                 chat_id=self.telegram_id,
                 photo=self.photo,
                 caption=self.string_for_bot,
                 parse_mode=ParseMode.HTML)
+
+            # Random Coffee extension: for deleting message in future
+            u = User.objects.get(telegram_id=self.telegram_id)
+            # if user active in random coffee
+            if self.random_coffee is True:
+                if RandomCoffee.objects.filter(user=u).exists():
+                    random_coffee = RandomCoffee.objects.get(user=u)
+                    random_coffee.last_coffee_message_id = message['message_id']
+                    random_coffee.save()
 
             TelegramCustomMessage.COUNT_FOR_DMITRY += 1
 
@@ -189,6 +198,15 @@ class TelegramCustomMessage():
                         photo=self.photo,
                         caption=self.string_for_bot,
                         parse_mode=ParseMode.HTML)
+
+                    # Random Coffee extension: for deleting message in future
+                    u = User.objects.get(telegram_id=self.telegram_id)
+                    # if user active in random coffee
+                    if self.random_coffee is True:
+                        if RandomCoffee.objects.filter(user=u).exists():
+                            random_coffee = RandomCoffee.objects.get(user=u)
+                            random_coffee.last_coffee_message_id = message['message_id']
+                            random_coffee.save()
 
                     for logs_user in self.logs_list:
                         self.bot.send_message(text='я поспал, я вернулся. Всё хорошо. \n'
