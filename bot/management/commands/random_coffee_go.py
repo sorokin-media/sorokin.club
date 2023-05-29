@@ -142,11 +142,12 @@ class Command(BaseCommand):
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
                 # Fixing the issue with users whose membership has expired.
-                expire = time_zone.localize(coffee_users[0].user.membership_expires_at)
-                if expire < now or coffee_users[0].user.is_banned:
+                expire_0 = time_zone.localize(coffee_users[0].user.membership_expires_at)
+                expire_k = time_zone.localize(coffee_users[k].user.membership_expires_at)
+                if expire_0 < now or coffee_users[0].user.is_banned:
                     coffee_users.pop(0)
                     coffee_users[0].random_coffee_is = False
-                elif expire < now or coffee_users[k].user.is_banned:
+                elif expire_k < now or coffee_users[k].user.is_banned:
                     coffee_users.pop(k)
                     coffee_users[0].random_coffee_is = False
                 elif coffee_users[k].random_coffee_past_partners is not None and\
