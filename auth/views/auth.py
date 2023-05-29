@@ -81,7 +81,7 @@ def join(request):
 def login(request):
     account = request.GET.get("account")
     if account:
-        payment_link = PaymentLink.get_reference(order_id)
+        payment_link = PaymentLink.get_reference(account)
         if payment_link:
             return redirect("/payment_link/thanks/")
     if request.me:
