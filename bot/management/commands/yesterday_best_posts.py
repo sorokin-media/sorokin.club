@@ -142,7 +142,8 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     start_len = len(header_of_message)
     string_for_bot = ''
 
-    photo = 'https://sorokin.club/static/images/best_posts_day.png'
+    post_photo = 'https://sorokin.club/static/images/best_posts_day.png'
+    intro_photo = 'https://sorokin.club/static/images/best_intro_day.png'
 
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
@@ -159,14 +160,26 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
-            custom_message = TelegramCustomMessage(
-                etc=author,
-                user=user,
-                string_for_bot=string_for_bot,
-                photo=photo
-            )
-            custom_message.send_photo()
-            string_for_bot = ''
+            if 'посты' in header_of_message:
+                custom_message = TelegramCustomMessage(
+                    etc=author,
+                    user=user,
+                    string_for_bot=string_for_bot,
+                    photo=post_photo
+                )
+                custom_message.send_photo()
+                string_for_bot = ''
+            else:
+                print('COME HERE')
+                print(intro_photo)
+                custom_message = TelegramCustomMessage(
+                    etc=author,
+                    user=user,
+                    string_for_bot=string_for_bot,
+                    photo=intro_photo
+                )
+                custom_message.send_photo()
+                string_for_bot = ''                
 
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
@@ -224,14 +237,14 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+                                    ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
                                                                          ).all()
 
         intros = Post.objects.filter(published_at__gte=yesterday_start
-                                     ).filter(published_at__lte=yesterday_finish
+                                     ).filter(published_at__lte=now
                                               ).filter(is_approved_by_moderator=True
                                                        ).filter(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
