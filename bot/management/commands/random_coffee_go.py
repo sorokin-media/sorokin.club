@@ -110,7 +110,7 @@ def send_message_helper(user_1, user_2):
     custom_message_1.send_photo()
 
     text = '<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'\
-        'Мы подобрали тебе собеседника на эту неделю!'\
+        'Мы подобрали тебе собеседника на эту неделю! '\
         f'Это {user_1.user.full_name}!\n\n'\
         f'Интро: {settings.APP_HOST}/intro/{intro_1.slug}\n'\
         f'Телеграм для связи: {link_1}\n\n'\

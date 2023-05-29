@@ -60,8 +60,8 @@ class Command(BaseCommand):
 '''
 typical commands for tests on local
 
-update users set random_coffee_is=True;
-update users set random_coffee_today=True;
-update users set random_coffee_past_partners=Null;
-update users set random_coffee_last_partner_id=Null;
+update random_coffee set random_coffee_is=True;
+update random_coffee set random_coffee_today=True;
+update random_coffee set random_coffee_past_partners=Null;
+update random_coffee set random_coffee_last_partner_id=Null;
 '''
