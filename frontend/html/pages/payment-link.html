@@ -6,14 +6,14 @@
 Статистика
 {% endblock %}
 {% block og_tags %}
-<meta property="og:title" content="Разовые оплаты — {{ settings.APP_NAME }}">
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
 <meta property="og:site_name" content="{{ settings.APP_NAME }}">
 <meta property="og:url" content="{{ settings.APP_HOST }}">
 <meta property="og:type" content="website" />
 <meta property="og:description" content="">
 <meta property="og:image" content="{% static "images/share.png" %}">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Разовые оплаты — {{ settings.APP_NAME }}">
+<meta name="twitter:title" content="Разовы полаты — {{ settings.APP_NAME }}">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="{% static "images/share.png" %}">
 {% endblock %}
@@ -42,12 +42,16 @@
             {% if payments_link %}
                 {% for link in payments_link %}
                     <tr>
-                        <td><a href="/pay/{{ link.id }}" target="_blank">Ссылка</a></td>
+                        <td><a href="/pay/{{ link.id }}" target="_blank" style="color: white;">Ссылка</a></td>
                         <td>{{ link.title }}</td>
                         <td>{{ link.description }}</td>
                         <td>{{ link.amount }}</td>
                         <td>{{ link.status }}</td>
-                        <td><a href="{% url 'update_single_link' link.id %}" class="">Обновить</a> <a href="{% url 'given_to_user_link' link.id %}" class="">Отдали</a></td>
+                        <td>
+                            <a href="{% url 'update_single_link' link.id %}" class="" style="color: white;">Обновить</a> 
+                            <br>
+                            <a href="{% url 'given_to_user_link' link.id %}" class="" style="color: white;">Отдали</a>
+                        </td>
                     </tr>
                 {% endfor %}
             {% endif %}
