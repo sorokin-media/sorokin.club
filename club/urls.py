@@ -23,7 +23,7 @@ from payments.views.common import membership_expired
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription, stop_subscription_test
 from payments.views.crypto import crypto, coinbase_webhook
 from payments.views.unitpay import unitpay_pay, unitpay_webhook, unitpay_pay_single
-from payments.views.payment_link import create_payment_link, update_single_link, given_to_user_link, get_pay_link
+from payments.views.payment_link import create_payment_link, update_single_link, given_to_user_link, get_pay_link, payment_link_thanks
 
 # only for tests
 from club.dmitry_tests import dmitry_tests
@@ -144,6 +144,7 @@ urlpatterns = [
     path("pay/<slug:link_id>", get_pay_link, name="get_pay_link"),
     path("payment_link/", payment_link, name="payment-link"),
     path("payment_link/create/", create_payment_link, name="create_payment_link"),
+    path("payment_link/thanks/", payment_link_thanks, name="payment_link_thanks"),
     path("payment_link/<slug:link_id>/", update_single_link, name="update_single_link"),
     path("payment_link_status/<slug:link_id>/", given_to_user_link, name="given_to_user_link"),
 

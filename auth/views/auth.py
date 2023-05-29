@@ -14,6 +14,7 @@ from users.models.user import User
 from utils.strings import random_string
 from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
+from payments.models import PaymentLink
 import time
 
 from users.models.affilate_models import AffilateVisit
@@ -78,6 +79,11 @@ def join(request):
 
 
 def login(request):
+    account = request.GET.get("account")
+    if account:
+        payment_link = PaymentLink.get_reference(account)
+        if payment_link:
+            return redirect("/payment_link/thanks/")
     if request.me:
         return redirect("profile", request.me.slug)
     identify_string = None

@@ -258,6 +258,18 @@ def unitpay_webhook(request):
     if order_id == "test":
         return HttpResponse(dumps({"result": {"message": "Тестовый запрос успешно обработан"}}))
 
+    if request.GET["method"] == "error":
+        text_send = '#ОШИБКА_ПЛАТЕЖА КОД: ' + str(order_id)
+        send_telegram_message(
+            chat=ADMIN_CHAT,
+            text=text_send
+        )
+        send_telegram_message(
+            chat=Chat(id=204349098),
+            text=text_send
+        )
+        return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
+
     if request.GET["method"] == "check":
         # так как мы не можем разделить оплаты подписки и разовые будем чекать тут
         payment = Payment.get(order_id)

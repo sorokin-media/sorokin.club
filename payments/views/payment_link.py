@@ -54,3 +54,7 @@ def get_pay_link(request, link_id):
     return render(request, "payments/link/view.html", {
         "payment": payment_obj
     })
+
+def payment_link_thanks(request):
+    return render(request, "payments/link/thanks.html", {
+    })
