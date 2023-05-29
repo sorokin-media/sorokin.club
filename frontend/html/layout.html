@@ -63,10 +63,9 @@
 
             <a href="{% url "docs" "contact" %}">Написать нам</a> &nbsp;&middot;&nbsp;
 
-            <!-- UNCOMENT FOR REFERRAL PROGRAMM
-            <a href="{{ settings.AFFILATE_POST }}">Реферальная программа клуба</a>
-            -->
-
+            {% if user %}
+            <a href="{% url 'profile_affilate' user.slug %}">Реферальная программа клуба</a>
+            {% endif %}
             <!-- <a href="{% url "docs" "oferta" %}">Оферта</a> &nbsp;&middot;&nbsp;
 
             <a href="{% url "docs" "policy" %}">Политика оплаты, доставки и возврата</a> &nbsp;&middot;&nbsp;
