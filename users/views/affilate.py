@@ -16,13 +16,11 @@ from auth.helpers import auth_required
 def profile_affilate(request, user_slug):
 
     if user_slug == "me":
-        return redirect("edit_bot", request.me.slug, permanent=False)
+        return redirect("profile_affilate", request.me.slug, permanent=False)
 
     user = get_object_or_404(User, slug=user_slug)
     if user.id != request.me.id and not request.me.is_moderator:
         raise Http404()
-
-    user = User.objects.get(slug=user_slug)
 
     if not AffilateInfo.objects.filter(user_id=user).exists():
         new_one = AffilateInfo()
