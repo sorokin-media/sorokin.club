@@ -1,8 +1,7 @@
 # Django imports
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from django.db.models import Q
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib import messages
+from django.http import Http404
 
 # models import
 from users.models.affilate_models import AffilateInfo, AffilateLogs, AffilateRelation
@@ -15,6 +14,13 @@ from auth.helpers import auth_required
 
 @auth_required
 def profile_affilate(request, user_slug):
+
+    if user_slug == "me":
+        return redirect("edit_bot", request.me.slug, permanent=False)
+
+    user = get_object_or_404(User, slug=user_slug)
+    if user.id != request.me.id and not request.me.is_moderator:
+        raise Http404()
 
     user = User.objects.get(slug=user_slug)
 
