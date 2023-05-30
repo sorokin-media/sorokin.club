@@ -298,6 +298,13 @@ def delete_expertise(request, expertise):
 @auth_required
 def random_coffee(request, user_slug):
 
+    if user_slug == "me":
+        return redirect("random_coffee", request.me.slug, permanent=False)
+
+    user = get_object_or_404(User, slug=user_slug)
+    if user.id != request.me.id and not request.me.is_moderator:
+        raise Http404()
+
     user = User.objects.get(slug=user_slug)
 
     # if out bot doesn't know user
