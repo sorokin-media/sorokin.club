@@ -11,6 +11,9 @@ from users.models.user import User
 # forms import
 from users.forms.affilate_forms import AffilateInfoForm
 
+from auth.helpers import auth_required
+
+@auth_required
 def profile_affilate(request, user_slug):
 
     user = User.objects.get(slug=user_slug)
@@ -24,7 +27,7 @@ def profile_affilate(request, user_slug):
         form = AffilateInfoForm(request.POST, instance=affilate_info_row)
         if form.is_valid():
             form.save()
-            return redirect('profile', user_slug=user_slug)
+            return redirect('profile_affilate', user_slug=user_slug)
 
     form = AffilateInfoForm(
         instance=AffilateInfo.objects.get(

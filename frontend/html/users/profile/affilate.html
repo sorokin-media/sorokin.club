@@ -65,6 +65,17 @@
             <li>
                 Вывод средств по реферальной программе осуществляется в течение 5 дней.
             </li>
+            <br>
+            <div class="text-body text-body-type-post text-body-type-post--upvote e-content">
+                <blockquote>
+                    <div style="font-size: 20px;">
+                        <div class="text-body text-body-type-post text-body-type-post--upvote e-content">
+                                    Внимание! <br>
+                                    Запрещен спам в любых его проявлениях.
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
 
         </div>
     </div>
@@ -94,16 +105,52 @@
 
                 <input type="submit" class="button button-big" value="Сохранить">
         </div>
-        <!-- HTML код кнопки "Скопировать" -->
         <h1>Ваша партнёрская ссылка</h1>
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{ affilate_info.parametr }}')"style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
-        <span style="margin-left: 5px;">Главная страница клуба</span>
-        <br><br>
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{ affilate_info.parametr }}')"style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
-        <span style="margin-left: 5px;">Наши преимущества</span>
-        <br><br>
-        <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{ affilate_info.parametr }}')"style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
-        <span style="margin-left: 5px;">Открытые материалы</span>
+        <br>
+<!-- delimiter #1 button start -->
+        <span style="margin-left: 5px;">
+            Главная страница
+        </span>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%;">
+            <div style="width: 100%; height: 100%;">
+                <input type="text" value="{{settings.AFFILATE_LINK_1}}?p={{affilate_info.parametr}}" readonly style="width: 100%; height: 100%;">
+            </div>
+            <div>
+                <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_1}}?p={{affilate_info.parametr}}')" style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+            </div>
+        </div>
+<!-- delimiter #1 button finish -->
+        <br>
+<!-- delimiter #2 button start -->
+    <span style="margin-left: 5px;">
+        Наши преимущества
+    </span>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%;">
+        <div style="width: 100%; height: 100%;">
+            <input type="text" value="{{settings.AFFILATE_LINK_2}}?p={{affilate_info.parametr}}" readonly style="width: 100%; height: 100%;">
+        </div>
+        <div>
+            <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_2}}?p={{affilate_info.parametr}}')" style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+        </div>
+    </div>
+<!-- delimiter #2 button finish -->
+        <br>
+<!-- delimiter #3 button start -->
+        <span style="margin-left: 5px;">
+            Открытые материалы
+        </span>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%;">
+            <div style="width: 100%; height: 100%;">
+                <input type="text" value="{{settings.AFFILATE_LINK_3}}?p={{affilate_info.parametr}}" readonly style="width: 100%; height: 100%;">
+            </div>
+            <div>
+                <button onclick="copyToClipboard('{{settings.AFFILATE_LINK_3}}?p={{affilate_info.parametr}}')" style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+            </div>
+        </div>
+<!-- delimiter #3 button finish -->
 
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
