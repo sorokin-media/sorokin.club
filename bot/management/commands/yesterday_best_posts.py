@@ -175,8 +175,8 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                         user=user,
                         string_for_bot=string_for_bot
                     )
-                    custom_message.send_message()
                     string_for_bot = ''
+                    custom_message.send_message()
                 elif 'интро' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
@@ -190,8 +190,8 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                         user=user,
                         string_for_bot=string_for_bot
                     )
-                    custom_message.send_message()
                     string_for_bot = ''
+                    custom_message.send_message()
 
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
