@@ -192,7 +192,7 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                     )
                     string_for_bot = ''
                     custom_message.send_message()
-
+        string_for_bot = ''
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
 
