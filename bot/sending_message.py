@@ -60,6 +60,8 @@ class TelegramCustomMessage():
 
         time.sleep(0.100)  # beacuse of API Telegram rules
 
+        print(self.string_for_bot)
+
         try:
             message = self.bot.send_message(text=self.string_for_bot,
                                             chat_id=self.telegram_id,
