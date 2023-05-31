@@ -160,23 +160,36 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot += author_and_text['text']
         if start_len != len(string_for_bot):
             string_for_bot = header_of_message + string_for_bot
+            # quick ifx of bug, it's better to check out
             if 'посты' in header_of_message:
                 custom_message = TelegramCustomMessage(
                     etc=author,
                     user=user,
-                    string_for_bot=string_for_bot,
+                    string_for_bot='',
                     photo=post_photo
                 )
                 custom_message.send_photo()
+                custom_message = TelegramCustomMessage(
+                    etc=author,
+                    user=user,
+                    string_for_bot=string_for_bot
+                )
+                custom_message.send_message()
                 string_for_bot = ''
             elif 'интро' in header_of_message:
                 custom_message = TelegramCustomMessage(
                     etc=author,
                     user=user,
-                    string_for_bot=string_for_bot,
+                    string_for_bot='',
                     photo=intro_photo
                 )
                 custom_message.send_photo()
+                custom_message = TelegramCustomMessage(
+                    etc=author,
+                    user=user,
+                    string_for_bot=string_for_bot
+                )
+                custom_message.send_message()
                 string_for_bot = ''
 
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
