@@ -38,6 +38,7 @@
                 <th>Сумма</th>
                 <th>Статус</th>
                 <th>Юнитпей</th>
+                <th>Email</th>
                 <th>Действие</th>
             </tr>
             {% if payments_link %}
@@ -49,6 +50,7 @@
                         <td>{{ link.amount }}</td>
                         <td>{{ link.status }}</td>
                         <td>{{ link.unitpay_id }}</td>
+                        <td>{{ link.email }}</td>
                         <td>
                             <a href="{% url 'update_single_link' link.id %}" class="" style="color: white;">Обновить</a>
                             <br>

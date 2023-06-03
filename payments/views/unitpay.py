@@ -361,20 +361,25 @@ def unitpay_pay_single(request):
     email = request.GET.get("email")
 
     # find product by code
-    product = PaymentLink.objects.filter(reference=reference).last()
+    product = PaymentLink.objects.filter(reference=reference, email__isnull=True).last()
 
     if not product:
         return render(request, "error.html", {
             "title": "Что-то пошло не так 😣",
             "message": "Мы не поняли, что вы хотите купить. <br/><br/>"
         })
-
-    product.email = email
+    # Создаем новую заявку на оплату, чтобы ссылку можно было использовать повторно
+    product_new = PaymentLink.create(
+        product.title,
+        product.description,
+        product.amount,
+    )
+    product_new.email = email
     product.save()
 
     # create stripe session and payment (to keep track of history)
     pay_service = UnitpayService()
-    invoice = pay_service.create_payment_single(email, is_recurrent, reference, product.amount)
+    invoice = pay_service.create_payment_single(email, is_recurrent, product_new.reference, product_new.amount)
 
     return render(request, "payments/pay-single.html", {
         "invoice": invoice,
