@@ -375,7 +375,7 @@ def unitpay_pay_single(request):
         product.amount,
     )
     product_new.email = email
-    product.save()
+    product_new.save()
 
     # create stripe session and payment (to keep track of history)
     pay_service = UnitpayService()
