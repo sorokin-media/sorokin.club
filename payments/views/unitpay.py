@@ -383,6 +383,6 @@ def unitpay_pay_single(request):
 
     return render(request, "payments/pay-single.html", {
         "invoice": invoice,
-        "product": product,
+        "product": product_new,
         "email": email,
     })
