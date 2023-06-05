@@ -145,6 +145,9 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
     start_len = len(header_of_message)
     string_for_bot = ''
 
+    post_photo = 'https://sorokin.club/static/images/posts-weekly.png'
+    intro_photo = 'https://sorokin.club/static/images/weekly-intros.png'
+
     for user in users_for_yesterday_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
@@ -163,14 +166,38 @@ def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of
                 string_for_bot = header_of_message + string_for_bot + optional
             else:
                 string_for_bot = header_of_message + string_for_bot
-            custom_message = TelegramCustomMessage(
-                etc=author,
-                user=user,
-                string_for_bot=string_for_bot
-            )
-            custom_message.send_message()
-            string_for_bot = ''
-
+            if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
+                if 'посты' in header_of_message:
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot='',
+                        photo=post_photo
+                    )
+                    custom_message.send_photo()
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
+                    string_for_bot = ''
+                    custom_message.send_message()
+                elif 'интро' in header_of_message:
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot='',
+                        photo=intro_photo
+                    )
+                    custom_message.send_photo()
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
+                    string_for_bot = ''
+                    custom_message.send_message()
+        string_for_bot = ''
     custom_message.send_count_to_dmitry(type_='Рассылка постов и интро')
 
 
@@ -243,7 +270,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        week_ago = now - timedelta(days=7)
+        week_ago = now - timedelta(days=15)
         week_ago_start = time_zone.localize(datetime(
             year=week_ago.year,
             month=week_ago.month,
@@ -280,7 +307,7 @@ class Command(BaseCommand):
         # next content would be send to users who didn't pay. but we have thems telegran id
         # best close posts
         close_posts = Post.objects.filter(published_at__gte=week_ago_start
-                                          ).filter(published_at__lte=week_ago_finish
+                                          ).filter(published_at__lte=now
                                                    ).filter(is_approved_by_moderator=True
                                                             ).exclude(type='intro'
                                                                       ).filter(is_public=False).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
@@ -288,7 +315,7 @@ class Command(BaseCommand):
 
         # best open posts
         open_posts = Post.objects.filter(published_at__gte=week_ago_start
-                                         ).filter(published_at__lte=week_ago_finish
+                                         ).filter(published_at__lte=now
                                                   ).filter(is_approved_by_moderator=True
                                                            ).exclude(type='intro'
                                                                      ).filter(is_public=True).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
