@@ -114,6 +114,12 @@ def construct_message(object):
                 len_of_text += 10
             while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
                 text_of_post = text_of_post[:-1]
+            # quick fix bug with post https://sorokin.club/event/1330/
+            while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall('\<\/a', text_of_post[:len_of_text])):
+                text_of_post = text_of_post[:-1]
+            if text_of_post[-1] == '<':
+                text_of_post = text_of_post[:-1]
+            # enf of fix
             if len_of_text >= 300:
                 text_of_post = text_of_post[:len_of_text] + '...'
         new_string = ''
@@ -249,7 +255,7 @@ class Command(BaseCommand):
             second=59
         ))
         posts = Post.objects.filter(published_at__gte=yesterday_start
-                                    ).filter(published_at__lte=yesterday_finish
+                                    ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True
                                                       ).exclude(type='intro'
                                                                 ).filter(author__in=User.objects.filter(Q(is_banned_until__lte=now) | Q(is_banned_until=None)).all()
