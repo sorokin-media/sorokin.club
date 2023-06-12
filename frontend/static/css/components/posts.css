@@ -884,6 +884,31 @@
                 line-height: 1.2em;
             }
 
+    .post-event--past {
+        pointer-events: none;
+    }
+
+    .post-event--past,
+    .post-event--past .post-event-date,
+    .post-event--past .post-event-calendar,
+    .post-event--past .post-event-date-day {
+        opacity: 0.8;
+    }
+
+    .post-event--past .post-event-date-month {
+        color: #fff;
+        background-color: var(--visited-link-color);
+    }
+
+    .post-event--past .post-event-calendar {
+        pointer-events: none;
+    }
+
+    .post-event--past .post-event-title,
+    .post-event--past .post-event-calendar {
+        display: none;
+    }
+
     @media only screen and (max-width : 570px) {
         .post-event {
             display: grid;
