@@ -42,6 +42,14 @@
         align-items: flex-start;
     }
 
+        .network-channels__item > .network-channel {
+            padding-top: 10px;
+        }
+
+        .network-channels__item > .network-channel:first-child {
+            padding-top: 20px;
+        }
+
         .network-channel {
             position: relative;
             display: block;
