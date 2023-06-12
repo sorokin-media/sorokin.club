@@ -1359,6 +1359,11 @@
         pointer-events: none;
     }
 
+    .feed-post-event--past .post-event-title,
+    .feed-post-event--past .post-event-calendar {
+        display: none;
+    }
+
     .feed-post-event--short .feed-post-footer {
         display: none;
     }
