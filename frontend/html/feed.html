@@ -7,10 +7,11 @@
 {% block title %}
     {% if post_type == 'event' %}
         Встречи и события в клубе
-    {% elif topic %}
-        {{ topic.name }}
     {% elif custom_title %}
         {{ custom_title }}
+    {% elif topic %}
+        {{ topic.name }}
+
     {% endif %}
 {% endblock %}
 
