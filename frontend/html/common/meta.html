@@ -1,5 +1,7 @@
 <meta charset="UTF-8"/>
-<meta name="description" content="{{ settings.APP_DESCRIPTION }}">
+
+<meta name="description" content="{% if custom_description %}{{ custom_description }}{% else %}{{ settings.APP_DESCRIPTION }}{% endif %}">
+
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">

@@ -66,7 +66,8 @@ def join(request):
             request,
             "auth/join.html",
             {
-                "plans": plans
+                "plans": plans,
+                'custom_description': 'Цена за участие в клубе'
             }
         )
         expires = datetime.now() + timedelta(days=3650)
@@ -74,7 +75,8 @@ def join(request):
         return return_
 
     return render(request, "auth/join.html", {
-        "plans": plans
+        "plans": plans,
+        'custom_description': 'Цена за участие в клубе'
     })
 
 

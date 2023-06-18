@@ -47,7 +47,8 @@ def profile_affilate(request, user_slug):
         'user': user,
         'affilate_info': affilate_info,
         'affilate_logs': affilate_logs,
-        'get_money_logs': get_money_logs
+        'get_money_logs': get_money_logs,
+        'custom_description': 'Условия реферальной программы для партнеров'
     })
 
 def affilate_list(request, user_slug):

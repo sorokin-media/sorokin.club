@@ -50,6 +50,9 @@ def stats(request):
         )\
         .order_by("-membership_expires_at")[:64]
 
+    custom_title = 'Статистика клуба'
+    custom_description = 'Клубная статистика: награды и подписки участников'
+
     return render(request, "pages/stats.html", {
         "achievements": achievements,
         "latest_badges": latest_badges,
@@ -57,13 +60,19 @@ def stats(request):
         "top_users": top_users,
         "moderators": moderators,
         "parliament": parliament,
+        'custom_title': custom_title,
+        'custom_description': custom_description
     })
 
 @auth_required
 def network(request):
     secret_page_html = GodSettings.objects.first().network_page
+    custom_description = 'Перечень чатов и телеграмм каналов клуба'
+    custom_title = 'Клубные чаты и телеграм каналы'
     return render(request, "pages/network.html", {
         "page_html": secret_page_html,
+        "custom_description": custom_description,
+        "custom_title": custom_title
     })
 
 

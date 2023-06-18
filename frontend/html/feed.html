@@ -5,11 +5,17 @@
 {% load posts %}
 
 {% block title %}
-    {% if topic %}{{ topic.name }} — {% endif %}{{ block.super }}
+    {% if post_type == 'event' %}
+        Встречи и события в клубе
+    {% elif topic %}
+        {{ topic.name }}
+    {% elif custom_title %}
+        {{ custom_title }}
+    {% endif %}
 {% endblock %}
 
 {% block og_tags %}
-    <meta property="og:title" content="{% if topic %}{{ topic.name }} — {% endif %}{{ settings.APP_NAME }}">
+    <meta property="og:title" content="{% if topic %}{{ topic.name }} — {% elif feed_topic %}{{ feed_topic }}{% endif %}{{ settings.APP_NAME }}">
     <meta property="og:site_name" content="{{ settings.APP_NAME }}">
     <meta property="og:url" content="{{ settings.APP_HOST }}">
     <meta property="og:type" content="website" />
@@ -21,7 +27,6 @@
     <meta name="twitter:description" content="{% if topic %}{{ topic.description }}{% endif %}">
     <meta name="twitter:image" content="{% static "images/share.png" %}">
 {% endblock %}
-
 {% block feed_content %}
     {% if topic %}
         <div class="feed-topic-header" style="background-color: {{ topic.color }};">

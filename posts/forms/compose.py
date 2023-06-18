@@ -797,7 +797,7 @@ class CreateTopic(forms.ModelForm):
         model = Topic
         fields = '__all__'
 
-        fields = ('slug', 'name', 'icon', 'color', )
+        fields = ('slug', 'name', 'icon', 'color', 'seo_title', 'seo_description')
 
         widgets = {
             'slug': TextInput(
@@ -822,6 +822,18 @@ class CreateTopic(forms.ModelForm):
             'color': TextInput(
                 attrs={
                     'placeholder': '#16662c',
+                    'style': 'font-size:80%;'
+                }
+            ),
+            'seo_title': TextInput(
+                attrs={
+                    'placeholder': 'Текст, который будет в HTML для тега title',
+                    'style': 'font-size:80%;'
+                }
+            ),
+            'seo_description': TextInput(
+                attrs={
+                    'placeholder': 'Текст, который будет в HTML для тега description',
                     'style': 'font-size:80%;'
                 }
             )

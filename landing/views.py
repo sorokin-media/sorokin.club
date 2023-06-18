@@ -32,6 +32,8 @@ def landing(request):
         }
         cache.set("landing_stats", stats, settings.LANDING_CACHE_TIMEOUT)
 
+    custom_description = 'Правила участия в Сорокин Клуб'
+
     if not request.me:
 
         identify_string = None
@@ -68,7 +70,8 @@ def landing(request):
             request,
             "landing.html",
             {
-                "stats": stats
+                "stats": stats,
+                'custom_description': custom_description
             }
         )
         expires = datetime.now() + timedelta(days=3650)
@@ -76,7 +79,8 @@ def landing(request):
         return return_
 
     return render(request, "landing.html", {
-        "stats": stats
+        "stats": stats,
+        'custom_description': custom_description
     })
 
 def club(request):
@@ -124,7 +128,32 @@ def docs(request, doc_slug):
     if doc_slug not in EXISTING_DOCS:
         raise Http404()
 
-    return render(request, f"docs/{doc_slug}.html")
+    descriptions_and_titles = {
+        'about': {
+            'title': 'О клубе — правила сообщества',
+            'description': 'Правила участия в Сорокин Клуб'
+        },
+        'contact': {
+            'title': 'Контакты',
+            'description': 'Связь и контакты клуба по различным вопросам'
+        },
+        'subscription': {
+            'title': 'Правила подписки',
+            'description': 'Перечень правил подписки'
+        },
+        'policy': {
+            'title': 'Политика оплаты, доставки и возврата',
+            'description': 'Клубная политика оплаты, доставки и возврата'
+        }
+    }
+
+    custom_title = descriptions_and_titles[doc_slug]['title']
+    custom_description = descriptions_and_titles[doc_slug]['description']
+
+    return render(request, f"docs/{doc_slug}.html", {
+        'custom_description': custom_description,
+        'custom_title': custom_title
+    })
 
 
 @auth_required

@@ -1,6 +1,6 @@
 <meta charset="UTF-8"/>
 
-<meta name="description" content="{{ settings.LANDING_DESCRIPTION }}">
+<meta name="description" content="{% if custom_description %}{{ custom_description }}{% else %}{{ settings.LANDING_DESCRIPTION }}{% endif %}">
 <meta name="keywords" content="{{ settings.LANDING_KEYWORDS }}" />
 
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">

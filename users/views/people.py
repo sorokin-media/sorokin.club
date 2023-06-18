@@ -75,14 +75,18 @@ def people(request):
         "🏰 Города": top(users, "city")[:5],
         "🎬 Экспертиза": top(user_expertise, "name")[:5],
     }
+    custom_title = 'Участники закрытого сообщества'
+    custom_description = 'Список участников закрытого сообщества'
 
     return render(request, "users/people.html", {
         "people_query": {
             "query": query,
             "country": country,
             "tags": tags,
-            "filters": filters,
+            "filters": filters
         },
+        'custom_description': custom_description,
+        'custom_title': custom_title,
         "users": users,
         "users_total": users_total,
         "users_paginated": paginate(request, users, page_size=settings.PEOPLE_PAGE_SIZE),

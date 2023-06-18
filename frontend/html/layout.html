@@ -5,7 +5,6 @@
 <html lang="ru">
 <head>
     <title>{% block title %}{{ settings.LAYOUT_TITLE }}‍{% endblock %}</title>
-
     {% block fonts %}
         {% include "common/fonts.html" %}
     {% endblock %}
@@ -88,6 +87,13 @@
                     <button type="submit" class="footer-logout">Выйти&nbsp;<i class="fas fa-sign-out-alt"></i></button>
                 </form>
             {% endif %}
+
+            {% if custom_description %}
+            {{ custom_description }}
+            {% else %}
+            UHENJDKNJk
+            {% endif %}
+            
         </div>
     </footer>
 {% endblock %}

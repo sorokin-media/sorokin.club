@@ -33,6 +33,8 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
     else:
         posts = Post.visible_objects()
 
+    custom_description = 'Закрытое бизнес сообщество предпринимателей Сорокин клуб: мы помогаем бизнесменам становиться богаче 💰онлайн нетворкинг 💰офлайн встречи 💰наставничество 💰реальный опыт от профессионалов рынка'
+
     # filter posts by type
     if post_type != POST_TYPE_ALL:
         posts = posts.filter(type=post_type)
@@ -41,7 +43,12 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
     topic = None
     if topic_slug:
         topic = get_object_or_404(Topic, slug=topic_slug)
+        if topic:
+            custom_description = topic.seo_description
+            custom_title = topic.seo_title
         posts = posts.filter(topic=topic)
+    else:
+        custom_title = 'Бизнес клуб предпринимателей — Сорокин.Клуб: закрытое сообщество для эффективного роста и развития'
 
     # filter by label
     if label_code:
@@ -108,11 +115,15 @@ def feed(request, post_type=POST_TYPE_ALL, topic_slug=None, label_code=None, ord
     if post_type == 'event':
         event_feature_posts = posts.filter(event_time_start__gte=datetime.utcnow()).order_by("event_time_start")
         posts = posts.exclude(id__in=[p.id for p in event_feature_posts])
+        custom_description = 'Календарь предстоящих встреч, интервью, стримов, созвонов и других активностей сообщества'
+
 
     return render(request, "feed.html", {
         "post_type": post_type or POST_TYPE_ALL,
         "ordering": ordering,
         "topic": topic,
+        "custom_title": custom_title,
+        "custom_description": custom_description,
         "label_code": label_code,
         "posts": paginate(request, posts),
         "pinned_posts": pinned_posts,
