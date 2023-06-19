@@ -7,6 +7,7 @@ from users.models.affilate_models import AffilateVisit
 from common.pagination import paginate
 
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 def open_posts(request):
 
@@ -30,7 +31,7 @@ def open_posts(request):
 
         new_one = AffilateVisit()
         done = new_one.insert_first_time(
-            p_value=p_value, 
+            p_value=p_value,
             code=identify_string,
             url=request.build_absolute_uri()
         )
@@ -41,7 +42,7 @@ def open_posts(request):
     else:
         cookie = None
 
-    posts = Post.objects.filter(is_public=True).exclude(is_visible=False).all()
+    posts = Post.objects.filter(is_public=True).exclude(is_visible=False).exclude(deleted_at__isnull=True).all()
 
     if cookie:
 
