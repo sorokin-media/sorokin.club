@@ -146,9 +146,13 @@ def docs(request, doc_slug):
             'description': 'Клубная политика оплаты, доставки и возврата'
         }
     }
-
-    custom_title = descriptions_and_titles[doc_slug]['title']
-    custom_description = descriptions_and_titles[doc_slug]['description']
+    # quiec fix bug. ehere is e.g. privacy_policy page
+    try:
+        custom_title = descriptions_and_titles[doc_slug]['title']
+        custom_description = descriptions_and_titles[doc_slug]['description']
+    except:
+        custom_description = None
+        custom_title = None
 
     return render(request, f"docs/{doc_slug}.html", {
         'custom_description': custom_description,
