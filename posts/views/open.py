@@ -41,7 +41,7 @@ def open_posts(request):
     else:
         cookie = None
 
-    posts = Post.objects.filter(is_public=True).all()
+    posts = Post.objects.filter(is_public=True).exclude(is_visible=False).all()
 
     if cookie:
 
