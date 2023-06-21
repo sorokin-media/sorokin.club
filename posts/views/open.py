@@ -42,7 +42,7 @@ def open_posts(request):
     else:
         cookie = None
 
-    posts = Post.objects.filter(is_public=True).exclude(is_visible=False).all()
+    posts = Post.objects.filter(is_public=True).exclude(is_visible=False).exclude(deleted_at__isnull=False).all()
 
     if cookie:
 
