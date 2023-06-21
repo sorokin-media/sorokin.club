@@ -75,13 +75,14 @@ def send_user_rejected_email(user: User, reason: UserRejectReason):
 def send_auth_email(user: User, code: Code):
     auth_template = loader.get_template("emails/auth.html")
     MessageToDmitry(data=f'Письмо отправится юзеру {user.email}.').send_message()
-    send_club_email(
+    log_for_dmitry = send_club_email(
         recipient=user.email,
         subject=f"{code.code} — ваш код для входа",
         html=auth_template.render({"user": user, "code": code}),
         tags=["auth"]
     )
     MessageToDmitry(data=f'Письмо отправилось юзеру {user.email}.').send_message()    
+    MessageToDmitry(data=f'log_info: {log_for_dmitry}.').send_message()    
 
 def send_unmoderated_email(user: User):
     rejected_template = loader.get_template("emails/unmoderated.html")
