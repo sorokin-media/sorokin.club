@@ -68,7 +68,7 @@ def send_user_rejected_email(user: User, reason: UserRejectReason):
         recipient=user.email,
         subject=f"😕 Пока нет",
         html=rejected_template.render({"user": user}),
-        tags=["rejected"]ы
+        tags=["rejected"]
     )
 
 
