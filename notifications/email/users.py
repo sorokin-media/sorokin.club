@@ -6,6 +6,8 @@ from notifications.email.sender import send_club_email
 from users.models.user import User
 from payments.models import Payment
 
+# for logging bugs
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 def send_payed_email(user: User):
     payment_template = loader.get_template("emails/payment_done.html")
@@ -66,19 +68,20 @@ def send_user_rejected_email(user: User, reason: UserRejectReason):
         recipient=user.email,
         subject=f"😕 Пока нет",
         html=rejected_template.render({"user": user}),
-        tags=["rejected"]
+        tags=["rejected"]ы
     )
 
 
 def send_auth_email(user: User, code: Code):
     auth_template = loader.get_template("emails/auth.html")
+    MessageToDmitry(data=f'Письмо отправится юзеру {user.email}.').send_message()
     send_club_email(
         recipient=user.email,
         subject=f"{code.code} — ваш код для входа",
         html=auth_template.render({"user": user, "code": code}),
         tags=["auth"]
     )
-
+    MessageToDmitry(data=f'Письмо отправилось юзеру {user.email}.').send_message()    
 
 def send_unmoderated_email(user: User):
     rejected_template = loader.get_template("emails/unmoderated.html")
