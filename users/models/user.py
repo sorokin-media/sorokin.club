@@ -241,3 +241,6 @@ class User(models.Model, ModelDiffMixin):
             moderation_status=User.MODERATION_STATUS_APPROVED,
             membership_expires_at__gte=datetime.utcnow()
         )
+    
+    def __str__(self):
+        return self.full_name

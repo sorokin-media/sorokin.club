@@ -6,6 +6,7 @@ from django.db import models
 
 from users.models.user import User
 
+
 class TelegramMesage(models.Model):
     '''Messages that are sent according to the schedule from the moment of registration. '''
     class Meta:
@@ -33,6 +34,7 @@ class TelegramMesage(models.Model):
     days = models.PositiveIntegerField(null=False, blank=False, verbose_name='Дни задержки', default=0)
     hours = models.PositiveBigIntegerField(null=False, blank=False, verbose_name='Часы задержки', default=0)
     minutes = models.PositiveBigIntegerField(null=False, blank=False, verbose_name='Минуты задержки', default=0)
+    test_user = models.ForeignKey(User, related_name='test_user', on_delete=models.CASCADE, null=True)
 
     def set_time_of_delay(self, days, hours, minutes):
         time_zone = pytz.UTC
@@ -42,7 +44,7 @@ class TelegramMesage(models.Model):
                                      minutes=minutes)
         return time_delay
 
-    def save_data(self, name, text, image_url, is_finish_of_queue, is_archived,
+    def save_data(self, name, text, image_url, is_finish_of_queue, is_archived, test_user,
                   days=0, hours=0, minutes=0):
         self.name = name
         self.text = text
@@ -53,6 +55,7 @@ class TelegramMesage(models.Model):
         self.days = days
         self.hours = hours
         self.minutes = minutes
+        self.test_user=test_user
         self.save()
 
     def update_data(self, name, text, image_url, is_finish_of_queue, is_archived,

@@ -61,8 +61,10 @@
         {% endfor %}
         <br><br>
         <button type="submit" name="Сохранить!">Сохранить!</button>
-        <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>    
-        <button type="submit" name="Отправить тест Нюте">Отправить тест Нюте</button>       
+        <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>
+        {% if status == 'modify' %}    
+        <button type="submit" name="Отправить тест">Отправить тест</button>       
+        {% endif %}
         <div class="menu">
 
             {% if status == 'modify' %}

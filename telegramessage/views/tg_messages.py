@@ -85,13 +85,13 @@ def check_uniqie_helper(name, is_finish_of_queue, id=None):
     return True
 
 def save_data_helper(request, message, days, hours, minutes, name, text,
-                     is_finish_of_queue, image_url=''):
+                     is_finish_of_queue, test_user, image_url=''):
 
-    if "Отправить тест Нюте" in request.POST:
+    if "Отправить тест" in request.POST:
 
-        tg_id_of_nuta = User.objects.get(telegram_id=TG_NUTA)
+        test_user = User.objects.get(telegram_id=test_user.telegram_id)
         tg_id_of_dima = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        tg_ids = [tg_id_of_nuta, tg_id_of_dima]
+        tg_ids = [test_user, tg_id_of_dima]
 
         # for tests on local
         #fortest = User.objects.filter(slug='dev').first()
@@ -128,7 +128,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
             text=text,
             is_finish_of_queue=is_finish_of_queue,
             is_archived=True,
-            image_url=image_url
+            image_url=image_url,
+            test_user=test_user
         )
 
     elif "Сохранить как черновик" in request.POST:
@@ -140,7 +141,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
             text=text,
             is_finish_of_queue=is_finish_of_queue,
             is_archived=True,
-            image_url=image_url
+            image_url=image_url,
+            test_user=test_user
         )
 
     else:
@@ -152,7 +154,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
             text=text,
             is_finish_of_queue=is_finish_of_queue,
             is_archived=False,
-            image_url=image_url
+            image_url=image_url,
+            test_user=test_user
         )
 
 @auth_required
@@ -171,7 +174,8 @@ def create_telegram_message(request, message_id=None):
         text = request.POST.get('text')
         is_finish_of_queue = request.POST.get('is_finish_of_queue')
         image_url = request.POST.get('image_url')
-
+        test_user = request.POST.get('test_user')
+        test_user = User.objects.get(id=test_user)
         # if app modify message
 
         if message_id is not None:
@@ -205,7 +209,8 @@ def create_telegram_message(request, message_id=None):
             message = TelegramMesage.objects.get(id=id)
 
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
-                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url)
+                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
+                             test_user=test_user)
 
         # if app create new message
 
@@ -222,7 +227,7 @@ def create_telegram_message(request, message_id=None):
 
             message = TelegramMesage()
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
-                             name=name, text=text, is_finish_of_queue=is_finish_of_queue)
+                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, test_user=test_user)
 
         return redirect('show_telegram_messages')
 
