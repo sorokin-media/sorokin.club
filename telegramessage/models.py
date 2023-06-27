@@ -134,4 +134,4 @@ class DayHelpfulness(models.Model):
                                       verbose_name='Сохранить как черновик',
                                       default=False)
     is_sended = models.BooleanField(null=False, default=False)
-    
+    test_user = models.ForeignKey(User, related_name='day_helpfulness', on_delete=models.CASCADE, null=True)

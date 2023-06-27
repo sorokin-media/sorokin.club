@@ -47,11 +47,14 @@ def create_day_helpfullness(request, id=None, is_archived=False):
 
         # if sending message to Alex for checking
 
-        if "Отправить тест Нюте" in request.POST:
+        if "Отправить тест" in request.POST:
 
             dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-            alex = User.objects.get(telegram_id=TG_ALEX)
-            users = [dmitry, alex]
+    
+            users = [
+                dmitry,
+                User.objects.get(id=request.POST['test_user'])
+            ]
 
             image_url = request.POST['image_url'].replace(" ", '')
             string_for_bot = construct_message(request.POST['text'])

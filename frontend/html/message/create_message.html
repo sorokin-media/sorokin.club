@@ -64,6 +64,11 @@
         <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>
         {% if status == 'modify' %}    
         <button type="submit" name="Отправить тест">Отправить тест</button>       
+        {% else %}
+            <br><br>
+        <small>
+            <font color="red">Для отправки теста необходимо сохранить черновик. </font>
+        </small>
         {% endif %}
         <div class="menu">
 

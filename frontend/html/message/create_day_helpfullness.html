@@ -52,16 +52,16 @@
                 <br><br>
                 <button type="submit" name="Сохранить!">Сохранить!</button>
                 <button type="submit" name="Сохранить как черновик">Сохранить как черновик</button>
+                {% if id %}
+                <button id="send message" type="'submit" name="Отправить тест">Отправить тест</button>
+                <br><br><br>
+                    <a style="color: rgb(255, 0, 247)" href="{% url 'delete_day_helpfullness' id %}" onclick="return confirm('Вернуть не получится! Можно сохранить черновик. Точно удаляем?');">Удалить сообщение</a>
+                {% else %}
                 <br><br>
                 <small>
-                    <font color="red">Сначала сохрани!</font>
+                    <font color="red">Для отправки теста необходимо сохранить черновик. </font>
                 </small>
-                <br>
-                <button id="send message" type="'submit" name="Отправить тест Нюте">Отправить тест Нюте</button>
-                <br><br><br>
-                {% if id %}
-                    <a style="color: rgb(255, 0, 247)" href="{% url 'delete_day_helpfullness' id %}" onclick="return confirm('Вернуть не получится! Можно сохранить черновик. Точно удаляем?');">Удалить сообщение</a>
-                {% endif %}
+                    {% endif %}
                 <div class="menu">
 
             </form>

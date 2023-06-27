@@ -30,10 +30,18 @@ class CreateMessage(ModelForm):
 
 class CreateDayHelpfullness(ModelForm):
 
+    test_user = ModelChoiceField(
+        label='Пользователь',
+        queryset=User.objects.filter(roles='{god}'),
+        empty_label=None,
+        widget=Select(attrs={'class': 'form-control'}),
+        required=True
+    )
+
     class Meta:
         model = DayHelpfulness
 
-        fields = ('name', 'text', 'image_url', 'order')
+        fields = ('name', 'text', 'image_url', 'order', 'test_user')
 
         widgets = {
             'name': TextInput(attrs={'placeholder': 'Название сообщения'}),
