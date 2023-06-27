@@ -103,6 +103,8 @@ class TelegramMesageQueue(models.Model):
         string_of_ids = self.get_string_of_ids()
         if string_of_ids is None:
             string_of_ids = ''
+        else:
+            string_of_ids = string_of_ids + ', '
         string_of_ids = string_of_ids + id_of_message
         self.id_of_sended_messages = string_of_ids
         self.save()
