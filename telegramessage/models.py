@@ -97,7 +97,7 @@ class TelegramMesageQueue(models.Model):
 
     def get_string_of_ids(self):
         # if that would not be first id in queue
-        return str(self.id_of_sended_messages)
+        return str(self.id_of_sended_messages) if self.id_of_sended_messages is not None else None
 
     def push_new_id(self, id_of_message):
         string_of_ids = self.get_string_of_ids()
