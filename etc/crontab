@@ -28,5 +28,5 @@
 
 # drafts
 
-# * * * * * root cd /app && python3 manage.py check_ready_for_message  >/proc/1/fd/1 2>/proc/1/fd/2
+* * * * * root cd /app && python3 manage.py check_ready_for_message  >/proc/1/fd/1 2>/proc/1/fd/2
 # 0 12 */6 * * root cd /app && python3 manage.py send_helpfullness >/proc/1/fd/1 2>/proc/1/fd/2
