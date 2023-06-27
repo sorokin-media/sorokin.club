@@ -124,16 +124,8 @@ class Command(BaseCommand):
         ).exclude(
             telegram_id__isnull=True).all()
 
-        if users:
-            MessageToDmitry(data='Пользователи для очереди есть. ').send_message()
-
         # all writting messages
         telegram_messages = TelegramMesage.objects.all().order_by('days', 'hours', 'minutes')
-
-        if telegram_messages:
-            MessageToDmitry(data='Сообщения для очереди имеются. ').send_message()
-        else:
-            MessageToDmitry(data='Сообщений нет для пользователя. ').send_message()
 
         for user in users:
 
@@ -189,4 +181,3 @@ class Command(BaseCommand):
 
                                 break
 
-        MessageToDmitry(data='Очередь отработала.').send_message()
