@@ -16,6 +16,7 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+from club.settings import TG_BUDDY_GROUP
 
 
 def send_to_buddy_group(bot, slug, intro_id, lattest_action):
@@ -28,6 +29,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
     time_start_buddy_project = time_zone.localize(datetime(year=2022, month=11, day=28))
     now = time_zone.localize(datetime.utcnow())
     time_to_send_tusk = now-timedelta(hours=9)
+
     if time_user_created >= time_start_buddy_project:
         time_membership_expires = User.objects.filter(id=str(author_id)).first().membership_expires_at
         time_membership_expires = time_zone.localize(time_membership_expires)
@@ -41,7 +43,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                     # checking users who dosen't have any message from buddy
                     if post.buddy_counter == 0 and post.time_task_sended is None:
                         post.set_time_for_tusk()
-                        message = bot.send_message(chat_id=-1001638622431,
+                        message = bot.send_message(chat_id=TG_BUDDY_GROUP,
                                                    parse_mode=ParseMode.HTML,
                                                    text=f'У нас новый пользователь! Он 6 часов без вопроса!\n'
                                                    'Давайте поболтаем с ним!\n'
@@ -60,11 +62,11 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                             # if 9 hours have passed since sending
                             post.set_time_for_tusk()
                             try:
-                                bot.delete_message(chat_id=-1001638622431,
+                                bot.delete_message(chat_id=TG_BUDDY_GROUP,
                                                    message_id=post.message_id_to_buddy_group_from_bot)
                             except Exception:
                                 pass
-                            message = bot.send_message(chat_id=-1001638622431,
+                            message = bot.send_message(chat_id=TG_BUDDY_GROUP,
                                                        parse_mode=ParseMode.HTML,
                                                        text=f'Никто не отозвался в прошлый раз поболтать с юзером! \n'
                                                        'Давайте расспросим его!\n'
@@ -84,7 +86,7 @@ def send_to_buddy_group(bot, slug, intro_id, lattest_action):
                             lattest_action = time_zone.localize(lattest_action)
                             if lattest_action < time_to_send_tusk:
                                 post.set_time_for_tusk()
-                                message = bot.send_message(chat_id=-1001638622431,
+                                message = bot.send_message(chat_id=TG_BUDDY_GROUP,
                                                            parse_mode=ParseMode.HTML,
                                                            text='Пользователь девять часов без комментариев 😮\n'
                                                            'Давайте расспросим его!\n'
