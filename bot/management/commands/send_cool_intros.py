@@ -21,7 +21,7 @@ import pytz
 import re
 
 # for test
-from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
+from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY, TG_NUTA
 
 def construct_message(today_helpfullness):
     # divide text and name of message
@@ -62,7 +62,8 @@ class Command(BaseCommand):
 
         # for test on local
         dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        users = [dmitry]
+        nuta = User.objects.get(telegram_id=TG_NUTA)
+        users = [dmitry, nuta]
 
         # if all message are have been sended already
 
