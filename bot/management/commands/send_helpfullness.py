@@ -21,7 +21,7 @@ import pytz
 import re
 
 # for test
-from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY
+from club.settings import TG_ALEX, TG_DEVELOPER_DMITRY, TG_NUTA
 
 def construct_message(today_helpfullness):
     # divide text and name of message
@@ -53,11 +53,15 @@ class Command(BaseCommand):
 #            day_helpfullness_digest=True
 #        ).filter(
 #            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
-#        ).all()
+#        ).filter(
+#            moderation_status='approved'
+#        ).exclude(
+#            telegram_id__isnull=True).all()
 
-        # for test
+        # for tests
         dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        users = [dmitry]
+        nuta = User.objects.get(telegram_id=TG_NUTA)
+        users = [dmitry, nuta]
 
         # if all message are have been sended already
 
