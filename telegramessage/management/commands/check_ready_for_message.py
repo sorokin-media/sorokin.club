@@ -42,6 +42,8 @@ def construct_message(text):
 
 def send_message_helper(message, message_queue):
 
+    # TO CHANGE / TO REFACTOR CODE BELLOW
+
     message_queue.last_message = message
 
     if message.is_finish_of_queue is True:
@@ -55,10 +57,17 @@ def send_message_helper(message, message_queue):
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
                 photo=message.image_url,
-                string_for_bot=construct_message(message.text)
+                string_for_bot=''
             )
 
             custom_message.send_photo()
+
+            custom_message = TelegramCustomMessage(
+                user=message_queue.user_to,
+                string_for_bot=construct_message(message.text)
+            )
+
+            custom_message.send_message()            
 
         else:
 
@@ -82,10 +91,17 @@ def send_message_helper(message, message_queue):
             custom_message = TelegramCustomMessage(
                 user=message_queue.user_to,
                 photo=message.image_url,
-                string_for_bot=construct_message(message.text)
+                string_for_bot=''
             )
 
             custom_message.send_photo()
+
+            custom_message = TelegramCustomMessage(
+                user=message_queue.user_to,
+                string_for_bot=construct_message(message.text)
+            )
+
+            custom_message.send_message()            
 
         else:
 

@@ -99,7 +99,7 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
 
         for _ in tg_ids:
 
-            if image_url != '':
+            if image_url is not None and image_url != '':
 
                 custom_message = TelegramCustomMessage(
                     user=_,
