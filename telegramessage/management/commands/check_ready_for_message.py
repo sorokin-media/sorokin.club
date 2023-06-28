@@ -149,7 +149,7 @@ class Command(BaseCommand):
             # pasha_me_alex_slugs = ['dev']
 
             # ONLY Dmirty on test on production
-            pasha_me_alex_slugs = ['romashovdmitryo', 'Anna_Golubova']
+            pasha_me_alex_slugs = ['romashovdmitryo']
 
             # for tests on prod
 #            pasha_me_alex_slugs = ['romashovdmitryo', 'Anna_Golubova']
