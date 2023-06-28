@@ -28,7 +28,7 @@ from telegram.ext import CallbackContext
 import re
 
 # import custom class for sending message in Telegram
-from bot.sending_message import TelegramCustomMessage
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 dict_of_emoji = {
     'post': '📝',
@@ -49,25 +49,26 @@ def point_counter(objects):
     objects_list = objects_list[:5]
     return objects_list
 
-def construct_message(object):
+def construct_message(object, custom_utm=None):
     '''foo formates text for message from html type '''
 
     return_string = ''
     try:
         text_of_post = object.html
+        # clean html tags first block
         text_of_post = text_of_post.replace('</a></h1>', '').replace('</a></h2>', '').replace('</a></h3>', '')
         text_of_post = text_of_post.replace('</a> </h1>', '').replace('</a> </h2>', '').replace('</a> </h3>', '')
 
         text_of_post = re.sub(r'\<\/[^a]\>', '', text_of_post)
         text_of_post = text_of_post.replace('&quot;', '-')
-
+        # clean html tags second block
         text_of_post = re.sub(r'\<[^a/][\w\s\d\=\"\:\/\.\?\-\&\%\;]+\>|<\S>|\<\/[^a]\w+\>', '', text_of_post)
         text_of_post = re.sub(r'<h[123] id=\"\S+\"><a href=\"\#\S+\">', '', text_of_post)
-
+        # clean all a href
         text_of_post = re.sub(r'<a href="#\S+\"\>', '', text_of_post)
-
+        # clean all mention of users
         text_of_post = re.sub(r'\@[\w\d]+', '', text_of_post)
-
+        # clean first symbol if it is space
         while text_of_post[0].isspace():
             text_of_post = text_of_post[1:]
 
@@ -75,16 +76,29 @@ def construct_message(object):
         profession = object.author.position
         company = object.author.company
 
+        # start working on UTM
         if object.type == 'intro':
-            title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                f'{profession} - {company}'  # spaces left on purpose, don't touch
+            if custom_utm:
+                title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?{custom_utm}">{author}</a></strong>\n'\
+                    f'       <strong>{profession} - {company}</strong>'  # spaces left on purpose, don't touch
+            else:
+                title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
+                    f'       <strong>{profession} - {company}</strong>'  # spaces left on purpose, don't touch
         else:
             emoji = dict_of_emoji[object.type]
-            title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
-                f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
-
-        author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+            if custom_utm:
+                title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?{custom_utm}">{object.title}</a></strong>'
+            else:
+                title_of_message = f'{emoji} <strong><a href="{settings.APP_HOST}/{object.type}/' \
+                    f'{object.slug}?utm_source=private_bot_newsletter">{object.title}</a></strong>'
+        if custom_utm:
+            author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?{custom_utm}">{author}</a>'
+        else:
+            author_link = f'<a href="{settings.APP_HOST}/user/{object.author.slug}?utm_source=private_bot_newsletter">{author}</a>'
+        # finish working on UTM
 
         views = str(object.view_count) + ' 👀'
         upvotes = str(object.upvotes) + ' 👍'
@@ -101,6 +115,12 @@ def construct_message(object):
                 len_of_text += 10
             while len(re.findall(r'\<', text_of_post[:len_of_text])) > len(re.findall('\>', text_of_post[:len_of_text])):
                 text_of_post = text_of_post[:-1]
+            # quick fix bug with post https://sorokin.club/event/1330/
+            while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall('\<\/a', text_of_post[:len_of_text])):
+                text_of_post = text_of_post[:-1]
+            if text_of_post[-1] == '<':
+                text_of_post = text_of_post[:-1]
+            # enf of fix
             if len_of_text >= 300:
                 text_of_post = text_of_post[:len_of_text] + '...'
         new_string = ''
@@ -109,7 +129,11 @@ def construct_message(object):
             start = x.start()
             finish = x.end()
             y = x.group()
-            new_string = new_string + text_of_post[0:start] + y + '?utm_source=private_bot_newsletter'
+            # add UTM to every link
+            if custom_utm:
+                new_string = new_string + text_of_post[0:start] + y + '?' + custom_utm
+            else:
+                new_string = new_string + text_of_post[0:start] + y + '?utm_source=private_bot_newsletter'
             text_of_post = text_of_post[finish:]
         new_string += text_of_post
 
@@ -122,6 +146,7 @@ def construct_message(object):
             post_exception.foo_name = 'yesterday best posts'
             post_exception.save()
     return return_string
+
 
 '''
 
@@ -140,13 +165,13 @@ def construct_message(object):
 
 '''
 
-def compile_message_helper(bot, users_for_yesterday_digest, dict_list, header_of_message, optional=None):
+def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_message, optional=None):
     ''' foo send messages to user'''
     start_len = len(header_of_message)
     string_for_bot = ''
     post_photo = 'https://sorokin.club/static/images/posts_weekly.png'
     intro_photo = 'https://sorokin.club/static/images/weekly_intros.png'
-    for user in users_for_yesterday_digest:
+    for user in users_for_weekly_digest:
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
             # bruteforce resolving of problem getting value from set with one value
@@ -205,14 +230,21 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
     time_zone = pytz.UTC
     now = time_zone.localize(datetime.utcnow())
 
-    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True
-                                                     ).filter(membership_expires_at__gte=now
-                                                              ).exclude(telegram_id=None
-                                                                        ).exclude(telegram_id='').all()
+    # users who paid
+    users_for_weekly_digest = User.objects.filter(tg_yesterday_best_posts=True
+                                                  ).filter(membership_expires_at__gte=now
+                                                           ).exclude(telegram_id=None
+                                                                     ).exclude(telegram_id='').all()
 
     # sending messages to users, who didn't pay
     users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
         telegram_id=None).exclude(telegram_id='').all()
+
+    # 1. posts for paid ✅
+    # 2. intros for paid ✅
+    # 3. intros for NOT paid: ✅
+    # 4. OPEN posts for NOT paid: ✅
+    # 5. CLOSE posts for NOT paid: ✅
 
     if posts_list:
         # from querydict to list
@@ -222,7 +254,7 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
             dict_list_of_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
             posts_string_for_bot = f'<strong>🔥 Лучшие посты клуба за прошедшую неделю 🚀</strong>'
 
-        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_posts, posts_string_for_bot)
+        compile_message_helper(bot, users_for_weekly_digest, dict_list_of_posts, posts_string_for_bot)
 
     if intros_list:
         intros = [x['post'] for x in intros_list]
@@ -231,35 +263,56 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
         for object in intros:
             dict_list_of_intros.append({'text': construct_message(object), 'slug': {object.author.slug}})
 
-        compile_message_helper(bot, users_for_yesterday_digest, dict_list_of_intros, intros_string_for_bot)
+        # send to paid users
+        compile_message_helper(bot, users_for_weekly_digest, dict_list_of_intros, intros_string_for_bot)
+
+        # and now send to NOT paid users
         intros_string_for_bot = '<strong>Это лучшие закрытые интро недели только для членов клуба. Вам они недоступны.'\
             'Если вы хотите получить к ним доступ, вы знаете, '\
-            f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">что делать</a></strong>.'
+            f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">что делать</a></strong>.'
+        # change all basic UTM to custom
+        for obj in dict_list_of_intros:
+            obj['text'] = obj['text'].replace('utm_source=private_bot_newsletter', 'utm_source=private_bot_intro_pay')
 
-        optional = f'\n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-#        compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
+        optional = f'\n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">Вступить в клуб</a>'
+        compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
 
     if close_posts:
         close_posts = [x['post'] for x in close_posts]
         string_for_bot = '<strong>Это лучшие закрытые посты недели, только для членов клуба. '\
             'Вам они не доступны. Если вы хотите получить к ним доступ, вы знаете, '\
-            f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">что делать</a></strong>.'
+            f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_closedpost_pay">что делать</a></strong>.'
         dict_list_close_posts = []
         for object in close_posts:
-            dict_list_close_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
+            dict_list_close_posts.append(
+                {
+                    'text': construct_message(
+                        object=object,
+                        custom_utm='utm_source=private_bot_closedpost_pay'
+                    ),
+                    'slug': {object.author.slug}
+                }
+            )
 
-        optional = f'\n\n✅<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-#        compile_message_helper(bot, users_did_not_pay, dict_list_close_posts, string_for_bot, optional)
+        optional = f'\n\n✅<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_closedpost_pay">Вступить в клуб</a>'
+        compile_message_helper(bot, users_did_not_pay, dict_list_close_posts, string_for_bot, optional)
 
+    # for not paid users
     if open_posts:
         open_posts = [x['post'] for x in open_posts]
         string_for_bot = f'<strong>🔥 Это лучшие открытые посты клуба за неделю 🚀</strong>'
         dict_list_open_posts = []
         for object in open_posts:
-            dict_list_open_posts.append({'text': construct_message(object), 'slug': {object.author.slug}})
+            dict_list_open_posts.append(
+                {'text': construct_message(
+                    object=object,
+                    custom_utm='utm_source=private_bot_openpost_pay'
+                ),
+                    'slug': {object.author.slug}}
+            )
 
-        optional = f'\n\nЕсли вы хотите получить доступ к закрытым материалам клуба, вы знаете, что делать \n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_newsletter">Вступить в клуб</a>'
-#        compile_message_helper(bot, users_did_not_pay, dict_list_open_posts, string_for_bot, optional)
+        optional = f'\n\nЕсли вы хотите получить доступ к закрытым материалам клуба, вы знаете, что делать \n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_openpost_pay">Вступить в клуб</a>'
+        compile_message_helper(bot, users_did_not_pay, dict_list_open_posts, string_for_bot, optional)
 
 class Command(BaseCommand):
     '''Foo creates list if best posts '''
@@ -324,5 +377,9 @@ class Command(BaseCommand):
         close_posts_list = point_counter(close_posts)
         open_posts_list = point_counter(open_posts)
 
-        if intros or posts:
-            send_email_helper(posts_list, intros_list, close_posts_list, open_posts_list, bot)
+        if intros or posts or close_posts_list or open_posts_list:
+            try:
+                send_email_helper(posts_list, intros_list, close_posts_list, open_posts_list, bot)
+            except Exception as e:
+                MessageToDmitry(data='Что-то пошло не так! Ф-ция send_email_helper').send_message()
+                MessageToDmitry(data=f'Ошибка: {e}').send_message()

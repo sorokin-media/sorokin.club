@@ -22,12 +22,8 @@ class TelegramCustomMessage():
 
     logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
 
-    # FOR TEST WITHOUT ALEX
-    # logs_list = [TG_DEVELOPER_DMITRY]#, TG_ALEX]
-    # FOR TEST WITHOUT ALEX
-
     # for tests on local
-    #logs_list = [TG_DEVELOPER_DMITRY]
+    # logs_list = [TG_DEVELOPER_DMITRY]
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     COUNT_FOR_DMITRY = 0
@@ -169,7 +165,7 @@ class TelegramCustomMessage():
                     random_coffee.last_coffee_message_id = message['message_id']
                     random_coffee.save()
 
-            TelegramCustomMessage.COUNT_FOR_DMITRY += 1
+#            TelegramCustomMessage.COUNT_FOR_DMITRY += 1
 
         except Exception as error:
 
