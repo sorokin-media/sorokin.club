@@ -104,10 +104,17 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
                 custom_message = TelegramCustomMessage(
                     user=_,
                     photo=image_url,
-                    string_for_bot=construct_message(text)
+                    string_for_bot=''
                 )
 
                 custom_message.send_photo()
+
+                custom_message = TelegramCustomMessage(
+                    user=_,
+                    string_for_bot=construct_message(text)
+                )
+
+                custom_message.send_message()
 
             else:
 
