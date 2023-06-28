@@ -58,7 +58,7 @@ class Command(BaseCommand):
         # for test
         dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
         alex = User.objects.get(telegram_id=TG_ALEX)
-        users = [dmitry, alex]
+        users = [dmitry]
 
         # if all message are have been sended already
 
