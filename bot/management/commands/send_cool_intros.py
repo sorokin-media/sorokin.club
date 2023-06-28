@@ -60,8 +60,8 @@ class Command(BaseCommand):
 
         # for test on local
         dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        nuta = User.objects.get(telegram_id=TG_NUTA)
-        users = [dmitry, nuta]
+        # nuta = User.objects.get(telegram_id=TG_NUTA)
+        users = [dmitry] #nuta
 
         # if all message are have been sended already
 
@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
         # get message closest to zero by order
 
-        today_helpfullness = CoolIntro.objects.get(
+        cool_intro = CoolIntro.objects.get(
             order=CoolIntro.objects.filter(
                 is_sended=False,
                 is_archived=False
@@ -84,11 +84,11 @@ class Command(BaseCommand):
             )['order__min']
         )
 
-        today_helpfullness.is_sended = True
-        today_helpfullness.save()
+        cool_intro.is_sended = True
+        cool_intro.save()
 
-        text = construct_message(today_helpfullness)
-        image_url = today_helpfullness.image_url
+        text = construct_message(cool_intro.text)
+        image_url = cool_intro.image_url
 
         for user in users:
 
