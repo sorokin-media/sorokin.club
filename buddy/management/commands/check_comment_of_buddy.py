@@ -16,12 +16,15 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+from club.settings import TG_BUDDY_GROUP
+from bot.sending_message import MessageToDmitry
 
 class Command(BaseCommand):
     '''
     Foo finds the necessary intros and sends
     messages with links to the group about such intros
     '''
+
     def handle(self, *args, **options):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
@@ -31,8 +34,11 @@ class Command(BaseCommand):
             for post in posts:
                 time_of_buddy_start = time_zone.localize(post.buddy_comment_start)
                 user_buddy = post.responsible_buddy
+                # каждый раз берёт меня
                 now = time_zone.localize(datetime.utcnow())
                 message_id_in_group = post.message_id_to_buddy_group_from_bot
+                # берёт номер сообщения в группе бадди - выше
+                # берёт номер сообщения отправленного ответственному бадди - ниже
                 message_id_on_bot = post.message_id_to_responsible_buddy_user_from_bot
                 delta = now - time_of_buddy_start
                 if delta > timedelta(hours=3):
@@ -41,9 +47,9 @@ class Command(BaseCommand):
                     telegram_id = post.responsible_buddy.telegram_id
                     post.reset_buddy_status(task_status=False)
                     bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
-                    bot.send_message(chat_id=-1001638622431,
+                    bot.send_message(chat_id=TG_BUDDY_GROUP,
                                      text=f'{first_name} {last_name} не задал вопрос вовремя, поэтому повторяем задачу!')
-                    bot.send_message(chat_id=-1001638622431,
+                    bot.send_message(chat_id=TG_BUDDY_GROUP,
                                      parse_mode=ParseMode.HTML,
                                      text=f'Возращаемся к задаче! Давайте зададим вопрос пользователю. '
                                           f'<a href=\"{settings.APP_HOST}/intro/{post.slug}\">Ссылка '
@@ -52,7 +58,7 @@ class Command(BaseCommand):
                                          *[
                                           [telegram.InlineKeyboardButton("Я задам! 💪",
                                            callback_data=f'buddy_get_intro {post.id}')]]]))
-                    bot.delete_message(chat_id=-1001638622431, message_id=message_id_in_group)
+                    bot.delete_message(chat_id=TG_BUDDY_GROUP, message_id=message_id_in_group)
                     bot.delete_message(chat_id=telegram_id, message_id=message_id_on_bot)
                 elif Comment.objects.filter(author_id=user_buddy) \
                                     .filter(post_id=post.id).exists():
@@ -60,6 +66,16 @@ class Command(BaseCommand):
                                                      .aggregate(Max('created_at'))
                     time_of_comment = time_of_comment["created_at__max"]
                     time_of_comment = time_zone.localize(time_of_comment)
+
+                    # for fixing bug with @moi_imperator
+                    comment_done = Comment.objects.filter(author_id=user_buddy) \
+                        .filter(post_id=post.id).first()
+                    MessageToDmitry(data=f'Это ответственный бадди -> {user_buddy}').send_message()
+                    MessageToDmitry(data=f'Это ID поста -> {post.id}').send_message()
+                    MessageToDmitry(data=f'Это ID комментария -> {comment_done.id}').send_message()
+                    MessageToDmitry(data=f'Это текст комментария -> {comment_done.text}').send_message()
+                    MessageToDmitry(data=f'Время комента -> {time_of_comment}').send_message()
+
                     # check for cases when comment is written not because of task
                     if time_of_comment > time_of_buddy_start:
                         telegram_id = post.responsible_buddy.telegram_id
@@ -68,12 +84,12 @@ class Command(BaseCommand):
                         first_name = post.responsible_buddy.telegram_data['first_name']
                         post.reset_buddy_status(task_status=True)
                         post.increment_buddy_counter()
-                        bot.delete_message(chat_id=-1001638622431, message_id=message_id_in_group)
+                        bot.delete_message(chat_id=TG_BUDDY_GROUP, message_id=message_id_in_group)
                         bot.delete_message(chat_id=telegram_id, message_id=message_id_on_bot)
                         buddy_days = user_buddy.membership_days_left_for_tg()
                         bot.send_message(chat_id=telegram_id,
                                          text='Спасибо, твой вопрос принят! В благодарность мы на день продлили твое участие в клубе! '
                                               f'Теперь у тебя их {buddy_days} ❤️')
-                        bot.send_message(chat_id=-1001638622431,
+                        bot.send_message(chat_id=TG_BUDDY_GROUP,
                                          parse_mode=ParseMode.HTML,
                                          text=f'Новый успешный вопрос от {first_name} {last_name}. Спасибо, ты красава! ❤️ Так держать! 🚀')

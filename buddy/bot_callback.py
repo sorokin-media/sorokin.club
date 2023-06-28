@@ -14,6 +14,8 @@ from telegram import Update, ParseMode
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext
 
+from bot.sending_message import MessageToDmitry
+
 def buddy_get_task(update: Update, context: CallbackContext):
     '''
     Foo registrate time and account of buddy
@@ -26,6 +28,7 @@ def buddy_get_task(update: Update, context: CallbackContext):
     update.effective_chat.id = update.effective_user.id
     post = Post.objects.filter(id=callback_data).first()
     responsible_buddy = User.objects.filter(telegram_id=str(update.effective_chat.id)).first()
+    MessageToDmitry(data=f'Задачу взял -> {responsible_buddy.full_name}').send_message()
     post.post_waits_buddy()  # set True on field
     post.appoint_as_responsible_buddy(responsible_buddy)  # set User on field
     post.set_time_start_buddy()
