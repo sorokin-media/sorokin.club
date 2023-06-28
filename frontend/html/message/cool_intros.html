@@ -4,7 +4,7 @@
 {% load users %}
 {% load text_filters %}
 {% block title %}
-Полезняха дня
+Крутые интрухи!
 {% endblock %}
 {% block og_tags %}
 <meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
@@ -22,7 +22,7 @@
 {% if me.is_god %}
 <div class="container">
 <div class="menu-left">
-<a class="" href="{% url 'create_day_helpfullness' %}">Создать сообщение</a>
+<a class="" href="{% url 'create_cool_intro' %}">Создать сообщение c крутой интрухой!</a>
 </div>
 <br>
 <br>
@@ -37,7 +37,7 @@
                 <small><font color="red">Черновик</font></small>
                 <br>
                 {% endif %}
-                <a href="{% url 'create_day_helpfullness' message.id %}" class="p-name post-title-link"> {{ message.name }}</a>
+                <a href="{% url 'create_cool_intro' message.id %}" class="p-name post-title-link"> {{ message.name }}</a>
                 <br>Порядок отправки: {{ message.order }}
             </div>
         </div>
