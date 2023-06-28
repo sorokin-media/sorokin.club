@@ -37,7 +37,7 @@ def construct_message(text):
         start = x.start()
         finish = x.end()
         y = x.group()
-        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_messages_queue'
+        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_cool_intros'
         text = text[finish:]
     new_string += text
     return new_string
@@ -69,15 +69,22 @@ def create_cool_intro(request, id=None, is_archived=False):
 
             for user in users:
 
-                if image_url != '':
+                if image_url is not None and image_url != '':
 
                     custom_message = TelegramCustomMessage(
                         user=user,
                         photo=image_url,
-                        string_for_bot=string_for_bot
+                        string_for_bot=''
                     )
 
                     custom_message.send_photo()
+
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
+
+                    custom_message.send_message()
 
                 else:
 

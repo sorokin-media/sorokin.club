@@ -34,7 +34,7 @@ def construct_message(today_helpfullness):
         start = x.start()
         finish = x.end()
         y = x.group()
-        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_newsletter'
+        new_string = new_string + text[0:start] + y + '?utm_source=private_bot_helpfulness'
         text = text[finish:]
     new_string += text
     text = f'<strong>{name}</strong>\n\n{new_string}'
@@ -92,15 +92,22 @@ class Command(BaseCommand):
 
         for user in users:
 
-            if image_url != '' and image_url:
+            if image_url is not None and image_url != '':
 
                 custom_message = TelegramCustomMessage(
                     user=user,
                     photo=image_url,
-                    string_for_bot=text
+                    string_for_bot=''
                 )
 
                 custom_message.send_photo()
+
+                custom_message = TelegramCustomMessage(
+                    user=user,
+                    string_for_bot=text
+                )
+
+                custom_message.send_message()
 
             else:
 
