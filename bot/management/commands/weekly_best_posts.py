@@ -81,11 +81,11 @@ def construct_message(object, custom_utm=None):
             if custom_utm:
                 title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
                     f'{object.slug}?{custom_utm}">{author}</a></strong>\n'\
-                    f'       <strong>{profession} - {company}</strong>'  # spaces left on purpose, don't touch
+                    f'{profession} - {company}'
             else:
                 title_of_message = f'📝 <strong><a href="{settings.APP_HOST}/{object.type}/' \
                     f'{object.slug}?utm_source=private_bot_newsletter">{author}</a></strong>\n'\
-                    f'       <strong>{profession} - {company}</strong>'  # spaces left on purpose, don't touch
+                    f'{profession} - {company}'
         else:
             emoji = dict_of_emoji[object.type]
             if custom_utm:
