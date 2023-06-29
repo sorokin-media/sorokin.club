@@ -267,12 +267,12 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
 #                                                           ).exclude(telegram_id=None
 #                                                                     ).exclude(telegram_id='').all()
 
-    users_for_weekly_digest = [User.objects.get(slug='dev')]
+    users_for_weekly_digest = [User.objects.get(slug='romashovdmitryo')]
 
     # sending messages to users, who didn't pay
 #    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
 #        telegram_id=None).exclude(telegram_id='').all()
-    users_did_not_pay = [User.objects.get(slug='dev')]
+    users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
 
     # 1. posts for paid ✅
     # 2. intros for paid ✅
