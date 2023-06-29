@@ -234,7 +234,8 @@ def create_telegram_message(request, message_id=None):
 
             message = TelegramMesage()
             save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
-                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, test_user=test_user)
+                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
+                             test_user=test_user)
 
         return redirect('show_telegram_messages')
 
