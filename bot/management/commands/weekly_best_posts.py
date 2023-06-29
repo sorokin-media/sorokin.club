@@ -191,8 +191,22 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
             else:
                 string_for_bot = header_of_message + string_for_bot
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
-                MessageToDmitry(data=header_of_message).send_message()
-                if 'Лучшие посты' or 'Лучшие открытые посты' in header_of_message:
+                if 'Лучшие посты' in header_of_message:
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot='',
+                        photo=post_photo
+                    )
+                    custom_message.send_photo()
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
+                    string_for_bot = ''
+                    custom_message.send_message()
+                elif 'Лучшие открытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
@@ -223,9 +237,6 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     string_for_bot = ''
                     custom_message.send_message()
                 elif 'интро' in header_of_message:
-                    MessageToDmitry(data='ok go 1').send_message()
-                    MessageToDmitry(data=f'Come to intros -> photo: {intro_photo}, header: {header_of_message}').send_message()
-                    MessageToDmitry(data='ok go 2').send_message()
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
@@ -256,12 +267,12 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
 #                                                           ).exclude(telegram_id=None
 #                                                                     ).exclude(telegram_id='').all()
 
-    users_for_weekly_digest = [User.objects.get(slug='romashovdmitryo')]
+    users_for_weekly_digest = [User.objects.get(slug='dev')]
 
     # sending messages to users, who didn't pay
 #    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
 #        telegram_id=None).exclude(telegram_id='').all()
-    users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
+    users_did_not_pay = [User.objects.get(slug='dev')]
 
     # 1. posts for paid ✅
     # 2. intros for paid ✅
@@ -345,7 +356,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        week_ago = now - timedelta(days=70)
+        week_ago = now - timedelta(days=200)
         week_ago_start = time_zone.localize(datetime(
             year=week_ago.year,
             month=week_ago.month,
