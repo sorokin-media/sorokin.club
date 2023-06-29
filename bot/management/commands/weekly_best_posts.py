@@ -191,7 +191,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
             else:
                 string_for_bot = header_of_message + string_for_bot
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
-                if 'Лучшие посты' in header_of_message:
+                if 'лучшие посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
@@ -206,7 +206,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     )
                     string_for_bot = ''
                     custom_message.send_message()
-                elif 'Лучшие открытые посты' in header_of_message:
+                elif 'лучшие открытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
@@ -221,7 +221,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     )
                     string_for_bot = ''
                     custom_message.send_message()
-                elif 'Лучшие закрытые посты' in header_of_message:
+                elif 'лучшие закрытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
