@@ -208,16 +208,10 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
     time_zone = pytz.UTC
     now = time_zone.localize(datetime.utcnow())
     date_month = dict_of_year[date_month]
-#    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True
-#                                                     ).filter(membership_expires_at__gte=now
-#                                                              ).exclude(telegram_id=None
-#                                                                        ).exclude(telegram_id='').all()
-#    users_for_yesterday_digest = User.objects.get(slug='romashovdmitryo')
-    # for test on local
-    users_for_yesterday_digest = [
-        User.objects.get(slug='romashovdmitryo'), 
-        User.objects.get(slug='Anna_Golubova')
-    ]
+    users_for_yesterday_digest = User.objects.filter(tg_yesterday_best_posts=True
+                                                     ).filter(membership_expires_at__gte=now
+                                                              ).exclude(telegram_id=None
+                                                                        ).exclude(telegram_id='').all()
     if posts_list:
         posts = [x['post'] for x in posts_list]
         dict_list_of_posts = []
