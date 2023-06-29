@@ -170,6 +170,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
     start_len = len(header_of_message)
     string_for_bot = ''
     post_photo = 'https://sorokin.club/static/images/posts_weekly.png'
+    closed_post_photo = 'https://sorokin.club/static/images/closed_posts_weekly.png'
     intro_photo = 'https://sorokin.club/static/images/weekly_intros.png'
     for user in users_for_weekly_digest:
         for author_and_text in dict_list:
@@ -190,12 +191,27 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
             else:
                 string_for_bot = header_of_message + string_for_bot
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
-                if 'посты' in header_of_message:
+                if 'Лучшие посты' or 'Лучшие открытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
                         string_for_bot='',
                         photo=post_photo
+                    )
+                    custom_message.send_photo()
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot=string_for_bot
+                    )
+                    string_for_bot = ''
+                    custom_message.send_message()
+                elif 'Лучшие закрытые посты' in header_of_message:
+                    custom_message = TelegramCustomMessage(
+                        etc=author,
+                        user=user,
+                        string_for_bot='',
+                        photo=closed_post_photo
                     )
                     custom_message.send_photo()
                     custom_message = TelegramCustomMessage(
@@ -321,7 +337,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        week_ago = now - timedelta(days=7)
+        week_ago = now - timedelta(days=70)
         week_ago_start = time_zone.localize(datetime(
             year=week_ago.year,
             month=week_ago.month,
