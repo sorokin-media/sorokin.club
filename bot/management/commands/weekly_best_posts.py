@@ -169,7 +169,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
     ''' foo send messages to user'''
     start_len = len(header_of_message)
     string_for_bot = ''
-    post_photo = 'https://sorokin.club/static/images/posts_weekly.png'
+    post_photo = 'https://sorokin.club/static/images/open_posts_weekly.png'
     closed_post_photo = 'https://sorokin.club/static/images/closed_posts_weekly.png'
     intro_photo = 'https://sorokin.club/static/images/weekly_intros.png'
     for user in users_for_weekly_digest:
@@ -223,7 +223,9 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     string_for_bot = ''
                     custom_message.send_message()
                 elif 'интро' in header_of_message:
+                    MessageToDmitry(data='ok go 1').send_message()
                     MessageToDmitry(data=f'Come to intros -> photo: {intro_photo}, header: {header_of_message}').send_message()
+                    MessageToDmitry(data='ok go 2').send_message()
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
