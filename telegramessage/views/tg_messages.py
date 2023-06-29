@@ -27,7 +27,6 @@ from telegram.ext import CallbackContext
 import re
 
 def construct_message(text):
-
     '''add UTM to links in text'''
 
     new_string = ''
@@ -139,6 +138,8 @@ def save_data_helper(request, message, days, hours, minutes, name, text,
             test_user=test_user
         )
 
+        return redirect("modify_telegram_message", message.id)
+
     elif "Сохранить как черновик" in request.POST:
         message.save_data(
             days=days,
@@ -215,9 +216,9 @@ def create_telegram_message(request, message_id=None):
 
             message = TelegramMesage.objects.get(id=id)
 
-            save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
-                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
-                             test_user=test_user)
+            redirect_ = save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
+                                         name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
+                                         test_user=test_user)
 
         # if app create new message
 
@@ -233,9 +234,11 @@ def create_telegram_message(request, message_id=None):
                 return render(request, 'message/create_message.html', {"form": form, "status": "create"}, messages)
 
             message = TelegramMesage()
-            save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
-                             name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
-                             test_user=test_user)
+            redirect_ = save_data_helper(request=request, message=message, days=days, hours=hours, minutes=minutes,
+                                         name=name, text=text, is_finish_of_queue=is_finish_of_queue, image_url=image_url,
+                                         test_user=test_user)
+        if redirect_:
+            return redirect_
 
         return redirect('show_telegram_messages')
 
