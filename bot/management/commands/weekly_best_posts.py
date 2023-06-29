@@ -247,14 +247,17 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
     now = time_zone.localize(datetime.utcnow())
 
     # users who paid
-    users_for_weekly_digest = User.objects.filter(tg_yesterday_best_posts=True
-                                                  ).filter(membership_expires_at__gte=now
-                                                           ).exclude(telegram_id=None
-                                                                     ).exclude(telegram_id='').all()
+#    users_for_weekly_digest = User.objects.filter(tg_yesterday_best_posts=True
+#                                                  ).filter(membership_expires_at__gte=now
+#                                                           ).exclude(telegram_id=None
+#                                                                     ).exclude(telegram_id='').all()
+
+    users_for_weekly_digest = [User.objects.get(slug='romashovdmitryo')]
 
     # sending messages to users, who didn't pay
-    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
-        telegram_id=None).exclude(telegram_id='').all()
+#    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
+#        telegram_id=None).exclude(telegram_id='').all()
+    users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
 
     # 1. posts for paid ✅
     # 2. intros for paid ✅
@@ -283,17 +286,18 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
         compile_message_helper(bot, users_for_weekly_digest, dict_list_of_intros, intros_string_for_bot)
 
         # and now send to NOT paid users
-        intros_string_for_bot = '<strong>Это лучшие закрытые интро недели только для членов клуба. Вам они недоступны.'\
-            'Если вы хотите получить к ним доступ, вы знаете, '\
-            f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">что делать</a></strong>.'
-        # change all basic UTM to custom
-        for obj in dict_list_of_intros:
-            obj['text'] = obj['text'].replace('utm_source=private_bot_newsletter', 'utm_source=private_bot_intro_pay')
+        if users_did_not_pay:
+            intros_string_for_bot = '<strong>Это лучшие закрытые интро недели только для членов клуба. Вам они недоступны.'\
+                'Если вы хотите получить к ним доступ, вы знаете, '\
+                f'<a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">что делать</a></strong>.'
+            # change all basic UTM to custom
+            for obj in dict_list_of_intros:
+                obj['text'] = obj['text'].replace('utm_source=private_bot_newsletter', 'utm_source=private_bot_intro_pay')
 
-        optional = f'\n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">Вступить в клуб</a>'
-        compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
+            optional = f'\n\n✅ <a href="{settings.APP_HOST}/auth/login/?utm_source=private_bot_intro_pay">Вступить в клуб</a>'
+            compile_message_helper(bot, users_did_not_pay, dict_list_of_intros, intros_string_for_bot, optional)
 
-    if close_posts:
+    if close_posts and users_did_not_pay:
         close_posts = [x['post'] for x in close_posts]
         string_for_bot = '<strong>Это лучшие закрытые посты недели, только для членов клуба. '\
             'Вам они не доступны. Если вы хотите получить к ним доступ, вы знаете, '\
@@ -314,7 +318,7 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
         compile_message_helper(bot, users_did_not_pay, dict_list_close_posts, string_for_bot, optional)
 
     # for not paid users
-    if open_posts:
+    if open_posts and users_did_not_pay:
         open_posts = [x['post'] for x in open_posts]
         string_for_bot = f'<strong>🔥 Это лучшие открытые посты клуба за неделю 🚀</strong>'
         dict_list_open_posts = []
