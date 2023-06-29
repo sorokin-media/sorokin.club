@@ -214,7 +214,10 @@ def send_email_helper(posts_list, intros_list, bot, date_day, date_month):
 #                                                                        ).exclude(telegram_id='').all()
 #    users_for_yesterday_digest = User.objects.get(slug='romashovdmitryo')
     # for test on local
-    users_for_yesterday_digest = [User.objects.get(slug='romashovdmitry'), User.objects.get(slug='Anna_Golubova')]
+    users_for_yesterday_digest = [
+        User.objects.get(slug='romashovdmitryo'), 
+        User.objects.get(slug='Anna_Golubova')
+    ]
     if posts_list:
         posts = [x['post'] for x in posts_list]
         dict_list_of_posts = []
