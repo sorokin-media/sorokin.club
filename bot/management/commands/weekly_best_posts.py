@@ -191,6 +191,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
             else:
                 string_for_bot = header_of_message + string_for_bot
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
+                MessageToDmitry(data=header_of_message).send_message()
                 if 'Лучшие посты' or 'Лучшие открытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
@@ -222,6 +223,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     string_for_bot = ''
                     custom_message.send_message()
                 elif 'интро' in header_of_message:
+                    MessageToDmitry(data=f'Come to intros -> photo: {intro_photo}, header: {header_of_message}').send_message()
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
