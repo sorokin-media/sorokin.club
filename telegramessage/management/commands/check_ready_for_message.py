@@ -145,55 +145,49 @@ class Command(BaseCommand):
 
         for user in users:
 
-            # for tests on local
-            # pasha_me_alex_slugs = ['dev']
+            # for tests on prod. 
+#            pasha_me_alex_slugs = ['romashovdmitryo', 'Anna_Golubova']
+#            if user.slug in pasha_me_alex_slugs:
 
-            # ONLY Dmirty on test on production
-            # pasha_me_alex_slugs = ['romashovdmitryo']
+            # if there is no record with user in table messagequeue, than create
+            if not TelegramMesageQueue.objects.filter(user_to=user).exists():
+                _ = TelegramMesageQueue()
+                _.user_to = user
+                _.save()
 
-            # for tests on prod
-            pasha_me_alex_slugs = ['romashovdmitryo', 'Anna_Golubova']
-            if user.slug in pasha_me_alex_slugs:
+            # if the user has not yet received the final message
+            if TelegramMesageQueue.objects.filter(
+                    user_to=user).first().is_series_finished is not True:
 
-                # if there is no record with user in table messagequeue, than create
-                if not TelegramMesageQueue.objects.filter(user_to=user).exists():
-                    _ = TelegramMesageQueue()
-                    _.user_to = user
-                    _.save()
+                for message in telegram_messages:
 
-                # if the user has not yet received the final message
-                if TelegramMesageQueue.objects.filter(
-                        user_to=user).first().is_series_finished is not True:
+                    delay_time_values = timedelta(
+                        days=message.days,
+                        hours=message.hours,
+                        minutes=message.minutes
+                    )
 
-                    for message in telegram_messages:
+                    # the time at which the message should have been sent
+                    time_to_send = time_zone.localize(user.created_at) + delay_time_values
+                    message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
 
-                        delay_time_values = timedelta(
-                            days=message.days,
-                            hours=message.hours,
-                            minutes=message.minutes
-                        )
+                    # 1) if message is not in list of messages that was wended earlier
+                    # 2) it's time to send a message
+                    if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
 
-                        # the time at which the message should have been sent
-                        time_to_send = time_zone.localize(user.created_at) + delay_time_values
-                        message_queue = TelegramMesageQueue.objects.filter(user_to=user).first()
+                        if message.is_archived is not True:
 
-                        # 1) if message is not in list of messages that was wended earlier
-                        # 2) it's time to send a message
-                        if str(message.id) not in str(message_queue.get_string_of_ids()) and time_to_send <= now:
+                            message_queue.push_new_id(str(message.id))
+                            message_queue.save_time_message_sended()
 
-                            if message.is_archived is not True:
+                            send_message_helper(message=message, message_queue=message_queue)
 
-                                message_queue.push_new_id(str(message.id))
-                                message_queue.save_time_message_sended()
+                            # saving data about event in table 'webhook_events', as written in task
+                            WebhookEvent(
+                                type='private_bot_message',
+                                recipient=message_queue.user_to,
+                                data=message.text
+                            ).save()
 
-                                send_message_helper(message=message, message_queue=message_queue)
-
-                                # saving data about event in table 'webhook_events', as written in task
-                                WebhookEvent(
-                                    type='private_bot_message',
-                                    recipient=message_queue.user_to,
-                                    data=message.text
-                                ).save()
-
-                                break
+                            break
 
