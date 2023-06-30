@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      header {
+        background-color: #222;
+        color: #fff;
+        padding: 10px;
+      }
+      h1 {
+      font-size: 36px;
+      color: #ffffff;
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      color: #d68b8b;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    h3 {
+      font-size: 18px;
+      color: #999;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+      main {
+        padding: 20px;
+      }
+      .arguments {
+        color: #ff0000;       
+        font-weight: bold;
+    }
+    .div-text{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 25px;
+    }
+    .center-div {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .return-link {
+    color: #ffffff; /* Белый цвет */
+    text-decoration: none; /* Удалить подчеркивание ссылки */
+}
+
+.return-link:hover {
+    text-decoration: underline; /* Подчеркивание при наведении курсора */
+}
+</style>
+  </head>
+  <body>
+    <header>
+      <h1>Инстра для написания сообщений в бот Telegram</h1>
+      <div class="center-div">
+        <small><a href="{% url page %}" class="return-link">Вернуться</a></small>
+    </div>
+    </header>
+    <main>
+        <p class="div-text">
+            <strong>Только</strong> описанные ниже теги Telegram воспринимает. В остальных случаях будет ошибка. 
+            <br><br>
+            &lt;i&gt;<i>Так выглядит шрифт italian</i>&lt;/i&gt;
+            <br><br>
+            &lt;strong&gt;<strong>Так выглядит выделенный жирным текст</strong>&lt;/strong&gt;
+            <br><br>            
+            Перенос строки можно делать без всяких тегов
+            <br><br>
+            &lt;code&gt;<code>Так делается текст как будто это код компуктерный</code>&lt;/code&gt;
+            <br><br>
+            &lt;u&gt;<u>Так делается подчёркивание</u>&lt;/u&gt;
+            <br><br>            
+            &lt;s&gt;<s>Так зачёркнутый текст делается</s>&lt;/s&gt;
+            <br><br>
+            Эмоджи можно добавлять. Вот, например: ❤️🤌🏻💋
+            <br><br>
+            &lt;a href="https://sorokin.club/"&gt;<a href="https://sorokin.club/">А так можно делать ссылку</a>&lt;/a&gt; 
+            <br><br>
+            p.s. к ссылкам не надо добавлять параметр дополнительный. Он уже добавляется автоматически. 
+          </p>
+            </main>
+  </body>
+</html>

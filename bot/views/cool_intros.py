@@ -155,3 +155,8 @@ def delete_cool_intro(request, id):
     obj = CoolIntro.objects.get(id=id)
     obj.delete()
     return redirect('cool_intros')
+
+# for one simple HTML with insctruction
+@auth_required
+def info_tg_format(request, page):
+    return render(request, 'message/info_tg_format.html', {'page': page})

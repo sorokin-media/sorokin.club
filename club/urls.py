@@ -66,7 +66,7 @@ from stats.views import stats_gode, stats_content, edit_payments_sale, stats_bud
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
-from bot.views.cool_intros import cool_intros, create_cool_intro, delete_cool_intro
+from bot.views.cool_intros import cool_intros, create_cool_intro, delete_cool_intro, info_tg_format
 
 POST_TYPE_RE = r"(?P<post_type>(all|{}))".format("|".join(dict(Post.TYPES).keys()))
 ORDERING_RE = r"(?P<ordering>(activity|new|top|top_week|top_month|top_year|hot))"
@@ -175,7 +175,8 @@ urlpatterns = [
     path("cool_intros", cool_intros, name='cool_intros'),
     path('create_cool_intro', create_cool_intro, name='create_cool_intro'),
     path("create_cool_intro/<id>", create_cool_intro, name="create_cool_intro"),
-    path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"), 
+    path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"),
+    path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),
