@@ -88,7 +88,7 @@ def create_day_helpfullness(request, id=None, is_archived=False):
                     custom_message.send_message()
 
             custom_message.send_count_to_dmitry()
-            return redirect('show_helpfullness_list')
+            return redirect('create_day_helpfullness', id)
             
         if "Сохранить как черновик" in request.POST:
             is_archived = True

@@ -96,7 +96,7 @@ def create_cool_intro(request, id=None, is_archived=False):
                     custom_message.send_message()
 
             custom_message.send_count_to_dmitry()
-            return redirect('show_helpfullness_list')
+            return redirect('create_cool_intro', id)
             
         if "Сохранить как черновик" in request.POST:
             is_archived = True
