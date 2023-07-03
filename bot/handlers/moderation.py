@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timedelta
+import pytz
 
 from django.conf import settings
 from django.urls import reverse
@@ -224,7 +225,13 @@ def command_promote_user(update: Update, context: CallbackContext) -> None:
         update.effective_chat.send_message("Пользователь с таким email не найден")
         return
 
-    user.membership_expires_at += timedelta(days=30)
+    time_zone = pytz.UTC
+    now = time_zone.localize(datetime.utcnow())
+
+    if time_zone.localize(user.membership_expires_at) < now:
+        user.membership_expires_at = now + timedelta(days=30)
+    else:
+        user.membership_expires_at += timedelta(days=30)
     user.save()
 
     update.effective_chat.send_message(
