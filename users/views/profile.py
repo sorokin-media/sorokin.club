@@ -111,7 +111,7 @@ def profile(request, user_slug):
             try:
                 # don't delete. that's for check out exist or not instead of ORM exist method
                 form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
-                percent = AffilateInfo.objects.get(user_id=affilate_creator).percent
+                percent = AffilateInfo.objects.get(user_id=form_affilate_creator).percent
                 MessageToDmitry(data=f'{form_affilate_creator}').send_message()
                 # save logs
                 new_one = AffilateLogs()
