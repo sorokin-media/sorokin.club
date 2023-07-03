@@ -366,7 +366,7 @@ def random_coffee(request, user_slug):
             random_string.set_activation_coffee_time()
 
         random_string.save()
-        return redirect('/')
+        return redirect('random_coffee')
 
     if tg_data is not None and 'https://t.me/' in tg_data:
         tg_data = tg_data.replace('https://t.me/', '@')
