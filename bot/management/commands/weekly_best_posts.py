@@ -270,12 +270,24 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
 
     users_for_weekly_digest = [User.objects.get(slug='romashovdmitryo')]
 
+    if settings.APP_HOST:
+
+        users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
+
+    else:
+
+        users_did_not_pay = [User.objects.get(slug='dev')]
+
     # sending messages to users, who didn't pay
 #    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
 #        telegram_id=None).exclude(telegram_id='').all()
     if settings.APP_HOST:
 
-    users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
+        users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
+
+    else:
+
+        users_did_not_pay = [User.objects.get(slug='dev')]
 
     # 1. posts for paid ✅
     # 2. intros for paid ✅
