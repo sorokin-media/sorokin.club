@@ -122,7 +122,6 @@ def profile(request, user_slug):
                 new_one_relation = AffilateRelation()
                 new_one_relation.creator_id = form_affilate_creator
                 new_one_relation.affilated_user = user
-                new_one_relation.code = None
                 new_one_relation.save()
 
                 return redirect('index')
