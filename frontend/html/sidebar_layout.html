@@ -179,6 +179,14 @@
                 </a>
             </li>
         </ul>
+        <div class="feed-sidebar-header">Дополнительные ф-ции</div>
+        <ul class="feed-sidebar-list feed-sidebar-menu feed-sidebar-menu-small">
+            <li>
+                <a href="{% url "user_interface" %}">
+                    🕵️ Войти за юзера
+                </a>
+            </li>
+        </ul>
         {% endif %}
         {% if me.is_god %}
         <div class="feed-sidebar-header">Ссылки оплаты</div>

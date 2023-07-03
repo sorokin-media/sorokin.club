@@ -8,6 +8,7 @@ from auth.views.auth import login, logout, debug_dev_login, debug_random_login, 
 from auth.views.email import email_login, email_login_code
 from auth.views.external import external_login
 from auth.views.patreon import patreon_login, patreon_oauth_callback
+from auth.views.user_interface import user_interface
 from badges.views import create_badge_for_post, create_badge_for_comment
 from club import features
 from comments.views import create_comment, edit_comment, delete_comment, show_comment, upvote_comment, \
@@ -102,6 +103,7 @@ urlpatterns = [
     path("auth/email/", email_login, name="email_login"),
     path("auth/email/code/", email_login_code, name="email_login_code"),
     path("auth/external/", external_login, name="external_login"),
+    path("auth/user_interface", user_interface, name="user_interface"),
 
     path("monies/", pay, name="pay"),
     path("monies/crypto/", crypto, name="crypto"),

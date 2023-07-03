@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru-en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Вход за юзера</title>
+    {% load static %}
+
+    {% include "common/css.html" %}
+    {% block css %}{% endblock %}
+
+</head>
+<main id="app">
+    {% block menu %}
+    {% if me %}
+    {% include "common/menu-full.html" %}
+    {% else %}
+    {% include "common/menu-simplified.html" %}
+    {% endif %}
+    {% endblock %}
+    {% if request.path in telegram_modal_ignore_paths %}
+    {% else %}
+    {% if me.moderation_status != 'approved' %}
+    <get-post-modal />
+    {% endif %}
+    {% endif %}
+</main>
+{% block content %}
+
+{% if me.is_god %}
+
+<div class="container">
+    <form action="{% url 'user_interface' %}" method="post">{% csrf_token %}
+        <a href="{% url 'index' %}">Вернуться в клуб</a>
+        <br><br>
+        <label for="slug">Введи слаг</label>
+        <br>
+        <input type="text" id="slug" name="slug" />
+        <br><br>
+        <form action="{% url 'user_interface' %}" method="post">
+            <button type="submit" name="Сохранить!">Войти!</button>
+        </form>
+
+        {% else %}
+        <div class="stats">
+            Не для тебя
+        </div>
+        {% endif %}
+
+        {% endblock %}
+
+</html>
