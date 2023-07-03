@@ -38,16 +38,21 @@
         <br>
         <input type="text" id="slug" name="slug" />
         <br><br>
-        <form action="{% url 'user_interface' %}" method="post">
-            <button type="submit" name="Сохранить!">Войти!</button>
-        </form>
+        <dev style="font-style: Courier New;">
+            <span>
+                А чтобы вернуться к своей админской страничке, надо разлогиниться от юзера и заново залогиниться. 
+            </span>
+        </dev>
+        <br><br>
+        <button type="submit" name="Сохранить!">Войти!</button>
+    </form>
 
-        {% else %}
-        <div class="stats">
-            Не для тебя
-        </div>
-        {% endif %}
+    {% else %}
+    <div class="stats">
+        Не для тебя
+    </div>
+    {% endif %}
 
-        {% endblock %}
+    {% endblock %}
 
 </html>
