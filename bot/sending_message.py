@@ -12,7 +12,7 @@ from users.models.random_coffee import RandomCoffee
 from users.models.user import User
 
 # import static config data
-from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN
+from club.settings import TG_DEVELOPER_DMITRY, TG_ALEX, TELEGRAM_TOKEN, APP_HOST
 
 class TelegramCustomMessage():
 
@@ -20,7 +20,10 @@ class TelegramCustomMessage():
 
     exception_list = ['vika', 'skorpion28', 'sesevor']
 
-    logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
+    if '127.0.0.1' in APP_HOST:
+        logs_list = [TG_DEVELOPER_DMITRY]
+    else:
+        logs_list = [TG_DEVELOPER_DMITRY, TG_ALEX]
 
     # for tests on local
     # logs_list = [TG_DEVELOPER_DMITRY]

@@ -192,7 +192,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                 string_for_bot = header_of_message + string_for_bot
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
                 MessageToDmitry(data=f'{header_of_message}').send_message()
-                if 'лучшие посты' in header_of_message:
+                if 'Лучшие посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
                         user=user,
@@ -273,6 +273,8 @@ def send_email_helper(posts_list, intros_list, close_posts, open_posts, bot):
     # sending messages to users, who didn't pay
 #    users_did_not_pay = User.objects.filter(membership_expires_at__lte=now).exclude(
 #        telegram_id=None).exclude(telegram_id='').all()
+    if settings.APP_HOST:
+
     users_did_not_pay = [User.objects.get(slug='romashovdmitryo')]
 
     # 1. posts for paid ✅
@@ -357,7 +359,7 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
-        week_ago = now - timedelta(days=7)
+        week_ago = now - timedelta(days=200)
         week_ago_start = time_zone.localize(datetime(
             year=week_ago.year,
             month=week_ago.month,
