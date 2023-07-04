@@ -127,6 +127,12 @@ def send_message_helper(user_1, user_2):
     custom_message_2.send_photo()
 
 
+# CHANGE
+# в переборе ниже есть случай, когда в выборку для рандом-кофе изначальную могут попадать
+# юзеры, у которых окончилась подписка но оставлся подключенным рандом-кофе. 
+# с этим надо что-то придумать. Как-то изменить изначальную выбору, select-related 
+# или что-то такое использовать
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
@@ -146,10 +152,10 @@ class Command(BaseCommand):
                 expire_k = time_zone.localize(coffee_users[k].user.membership_expires_at)
                 if expire_0 < now or coffee_users[0].user.is_banned:
                     coffee_users.pop(0)
-                    coffee_users[0].random_coffee_is = False
+                    coffee_users[0].random_coffee_today = False
                 elif expire_k < now or coffee_users[k].user.is_banned:
                     coffee_users.pop(k)
-                    coffee_users[0].random_coffee_is = False
+                    coffee_users[0].random_coffee_today = False
                 elif coffee_users[k].random_coffee_past_partners is not None and\
                     coffee_users[0].random_coffee_past_partners is not None and\
                         (coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners or
