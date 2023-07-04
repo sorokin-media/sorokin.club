@@ -29,7 +29,6 @@ log = logging.getLogger(__name__)
 def bonus_to_creator(creator_user, new_one, product):
 
     time_zone = pytz.UTC
-    now = time_zone.localize(datetime.utcnow())
 
     fee_type = AffilateInfo.objects.get(user_id=creator_user).fee_type
     percent = AffilateInfo.objects.get(user_id=creator_user).percent * 0.01
@@ -139,7 +138,6 @@ def unitpay_pay(request):
 
             if not AffilateRelation.objects.filter(creator_id=creator).filter(affilated_user=user).exists():
 
-                db_row_info = AffilateInfo.objects.get(user_id=creator)
                 new_one = AffilateRelation()
                 new_one.creator_id = creator
                 new_one.affilated_user = user
