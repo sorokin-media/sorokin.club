@@ -33,6 +33,10 @@ class Session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(null=True)
 
+    # for entering in user interface by admin
+    original_token = models.CharField(max_length=127, null=True, unique=True)
+    original_user = models.ForeignKey(User, related_name="admin_sessions", null=True, on_delete=models.CASCADE, db_column='original_user')
+
     class Meta:
         db_table = "sessions"
 
@@ -44,7 +48,25 @@ class Session(models.Model):
             created_at=datetime.utcnow(),
             expires_at=max(user.membership_expires_at, datetime.utcnow() + timedelta(days=30)),
         )
+    
+    @classmethod
+    def create_for_admin(cls, admin_user, user):
+        session = Session.objects.filter(user=admin_user).latest('created_at')
+        session.original_token = session.token
+        session.original_user = admin_user
+        session.user = user
+        session.token = random_string(length=32)
+        session.save()
+        return session
 
+    @classmethod
+    def return_to_admin(cls, token):
+        session = Session.objects.get(token=token)
+        session.token = session.original_token
+        session.user = session.original_user
+        session.original_token, session.original_user = None, None
+        session.save()
+        return session
 
 class Code(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)

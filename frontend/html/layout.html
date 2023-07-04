@@ -34,6 +34,9 @@
 
 {% block body %}
     <main id="app">
+        {% if my_session.original_token %}
+        <a href="{% url 'user_interface' %}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50;color: white;border-radius: 4px;cursor: pointer;">Вернуться к себе</a>
+        {% endif %}
         {% block menu %}
             {% if me %}
                 {% include "common/menu-full.html" %}

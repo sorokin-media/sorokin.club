@@ -25,11 +25,16 @@ def user_interface(request):
     if request.method == 'POST':
         slug = request.POST['slug']
         if User.objects.filter(slug=slug).exists():
-            logout(request)
+            admin_user = request.me
             user = User.objects.filter(slug=slug).first()
-            session = Session.create_for_user(user)
+            session = Session.create_for_admin(admin_user, user)
             redirect_to = reverse("profile", args=[user.slug])
             response = redirect(redirect_to)
             return set_session_cookie(response, user, session)
-        return HttpResponse('ok')
+        return render(request, 'auth/user_interface.html', {'error': 'ERROR'})
+    if request.my_session.original_token:
+        session = Session.return_to_admin(request.my_session.token)
+        redirect_to = reverse("profile", args=[session.user.slug])
+        response = redirect(redirect_to)
+        return set_session_cookie(response, session.user, session)
     return render(request, 'auth/user_interface.html')

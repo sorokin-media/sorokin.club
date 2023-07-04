@@ -22,6 +22,8 @@ from users.models.subscription_plan import SubscriptionPlan
 # and open_posts.py
 # where updates must be too. of just search by <if 'affilate_p'>
 
+# CHANGE classmethods for creating new one
+
 class AffilateInfo(models.Model):
     ''' This stores data about a user who has connected to the referral program and their referral program settings '''
 

@@ -29,8 +29,10 @@
 {% block content %}
 
 {% if me.is_god %}
-
 <div class="container">
+    {% if error %}
+    <h2 style="color: red;">{{ error }}</h2>
+    {% endif %}
     <form action="{% url 'user_interface' %}" method="post">{% csrf_token %}
         <a href="{% url 'index' %}">Вернуться в клуб</a>
         <br><br>
