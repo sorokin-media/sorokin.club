@@ -125,6 +125,7 @@ def profile(request, user_slug):
                 new_one_relation = AffilateRelation()
                 new_one_relation.creator_id = form_affilate_creator
                 new_one_relation.affilated_user = user
+                new_one_relation.percent = percent
                 MessageToDmitry(data='going to save').send_message()
                 new_one_relation.save()
                 MessageToDmitry(data='save success').send_message()
@@ -366,7 +367,7 @@ def random_coffee(request, user_slug):
             random_string.set_activation_coffee_time()
 
         random_string.save()
-        return redirect('random_coffee')
+        return redirect("random_coffee", request.me.slug, permanent=False)
 
     if tg_data is not None and 'https://t.me/' in tg_data:
         tg_data = tg_data.replace('https://t.me/', '@')
