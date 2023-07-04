@@ -154,6 +154,4 @@ class AffilateRelation(models.Model):
                                        on_delete=models.CASCADE, db_column='affilated_user', null=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True)
-    percent = models.PositiveSmallIntegerField(default=10, editable=True)
-    fee_type = models.CharField(default='Дни', choices=AffilateInfo.AFFILATE_CHOICES, max_length=24)
     last_product = models.ForeignKey(SubscriptionPlan, related_name='product_for_affilate', on_delete=models.CASCADE, null=True)

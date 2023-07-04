@@ -125,7 +125,6 @@ def profile(request, user_slug):
                 new_one_relation = AffilateRelation()
                 new_one_relation.creator_id = form_affilate_creator
                 new_one_relation.affilated_user = user
-                new_one_relation.percent = percent
                 MessageToDmitry(data='going to save').send_message()
                 new_one_relation.save()
                 MessageToDmitry(data='save success').send_message()
@@ -150,8 +149,6 @@ def profile(request, user_slug):
 
         affilate_creator = AffilateRelation.objects.filter(affilated_user=user).first().creator_id
         affilate_creator_slug = affilate_creator.slug
-
-        percent = AffilateInfo.objects.filter(user_id=affilate_creator).first().percent
 
     if AffilateLogs.objects.filter(creator_id=user).exists():
 

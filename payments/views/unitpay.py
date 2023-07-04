@@ -143,8 +143,6 @@ def unitpay_pay(request):
                 new_one = AffilateRelation()
                 new_one.creator_id = creator
                 new_one.affilated_user = user
-                new_one.percent = db_row_info.percent
-                new_one.fee_type = db_row_info.fee_type
                 new_one.last_product = product
                 new_one.save()
 
