@@ -95,24 +95,20 @@ def profile(request, user_slug):
 
     if request.method == 'POST':
 
-        MessageToDmitry(data='Start').send_message()
-
         if 'PercentSelect' in request.POST:
 
             aff_info = AffilateInfo.objects.get(user_id=user)
             aff_info.percent = request.POST['PercentSelect']
             aff_info.save()
 
-        MessageToDmitry(data='First condition').send_message()
         if not AffilateRelation.objects.filter(affilated_user=user).exists() and 'SlugField' in request.POST:
-            MessageToDmitry(data='First condition is done').send_message()
+
             affilate_creator_slug = request.POST['SlugField']
-            MessageToDmitry(data=f'{affilate_creator_slug}').send_message()
+
             try:
                 # don't delete. that's for check out exist or not instead of ORM exist method
                 form_affilate_creator = User.objects.get(slug=affilate_creator_slug)
                 percent = AffilateInfo.objects.get(user_id=form_affilate_creator).percent
-                MessageToDmitry(data=f'{form_affilate_creator}').send_message()
                 # save logs
                 new_one = AffilateLogs()
                 new_one.manual_insert(
@@ -120,14 +116,11 @@ def profile(request, user_slug):
                     affilated_user=user,
                     percent=percent
                 )
-                MessageToDmitry(data='logs done').send_message()
                 # save relation
                 new_one_relation = AffilateRelation()
                 new_one_relation.creator_id = form_affilate_creator
                 new_one_relation.affilated_user = user
-                MessageToDmitry(data='going to save').send_message()
                 new_one_relation.save()
-                MessageToDmitry(data='save success').send_message()
                 return redirect('index')
 
             except Exception:
