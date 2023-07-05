@@ -153,6 +153,45 @@
             </div>
         </div>
 <!-- delimiter #3 button finish -->
+        <br>
+<!-- delimiter custom link -->
+            <span style="margin-left: 5px;">
+            Если вы хотите дать реферальную ссылку на конкретную статью, то можете скопировать отдельно параметр и добавить его к желаемой ссылке. 
+            </span>
+            <br><br>
+            Параметр
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%;">
+                <div style="width: 100%; height: 100%;">
+                    <input type="text" value="p={{affilate_info.parametr}}" readonly style="width: 100%; height: 100%;">
+                </div>
+                <div>
+                    <button onclick="copyToClipboard('p={{affilate_info.parametr}}')" style="background-color: lightblue; color: black; padding: 5px 10px;">Скопировать</button>
+                </div>
+            </div
+            <br><br>
+            Пример такой ссылки на один из открытых постов
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%;">
+                <div style="width: 100%; height: 100%;">
+                    <input type="text" value="{{settings.AFFILATE_LINK_4}}?p={{affilate_info.parametr}}" readonly style="width: 100%; height: 100%;">
+                </div>
+            </div>
+            <br>
+            <span style="margin-left: 5px;">
+                Не забудьте поставить вопросительный знак, если копируете параметр. Как в примере.  
+            </span>
+            <br><br>
+            <div class="text-body text-body-type-post text-body-type-post--upvote e-content">
+                <blockquote>
+                    <div style="font-size: 20px;">
+                        <div class="text-body text-body-type-post text-body-type-post--upvote e-content">
+                                    Обратите внимание! 
+                                        <br>
+                                    Давать ссылки можно только на открытые статьи
+                        </div>
+                    </div>
+                </blockquote>
+            </div>
+<!-- delimiter #3 button finish -->
 
 <!-- JavaScript код для копирования ссылки в буфер обмена -->
 <script>
@@ -166,11 +205,10 @@ function copyToClipboard(text) {
   alert('Ссылка скопирована! ');
 }
 </script>
-    </div>
 </div>
 <div class="container">
     <div class="form-row">
-<!-- отсортировать надо по дате регистрации пользователя -->
+        <!-- отсортировать надо по дате регистрации пользователя -->
 {% if affilate_logs %}
 <h3>Мои рефералы: </h3>
 {% for log in affilate_logs %}
@@ -183,9 +221,9 @@ function copyToClipboard(text) {
     Дата регистрации: {% make_moscow_time log.affilated_user.created_at %}
     <br>
     {% if log.affilated_user %}
-<!-- delete? -->
+<!-- delete CHANGE? -->
     {% active_or_not log.affilated_user %}
-<!-- delete? -->
+<!-- delete? CHANGE-->
     <br>
     {% endif %}
     {% if log.creator_fee_type == "DAYS" or log.creator_fee_type == 'Дни' %}
