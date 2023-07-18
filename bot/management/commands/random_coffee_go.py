@@ -23,7 +23,9 @@ from bot.sending_message import TelegramCustomMessage
 from datetime import datetime
 import pytz
 
-def coffee_partners_hepler(user_1, user_2):
+def coffee_partners_hepler(user_1: object, user_2: object) -> None:
+    ''' set partners for coffee '''
+    # CHANGE: need class, no repeats
     if user_1.random_coffee_past_partners is None:
         user_1.random_coffee_past_partners = user_2.user.slug
 
@@ -45,8 +47,9 @@ def coffee_partners_hepler(user_1, user_2):
     user_1.save()
     user_2.save()
 
-def send_message_helper(user_1, user_2):
 
+def send_message_helper(user_1: object, user_2: object):
+    ''' send first message to random coffee user '''
     # need changes!
     # slug could be different for post and user, careful with that
     intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
@@ -153,9 +156,13 @@ class Command(BaseCommand):
                 if expire_0 < now or coffee_users[0].user.is_banned:
                     coffee_users.pop(0)
                     coffee_users[0].random_coffee_today = False
+                    # to catch bug
+                    coffee_users[0].set_activity('random coffee set to False by membership')
                 elif expire_k < now or coffee_users[k].user.is_banned:
                     coffee_users.pop(k)
                     coffee_users[0].random_coffee_today = False
+                    # to catch bug
+                    coffee_users[0].set_activity('random coffee set to False by user ban')
                 elif coffee_users[k].random_coffee_past_partners is not None and\
                     coffee_users[0].random_coffee_past_partners is not None and\
                         (coffee_users[k].user.slug in coffee_users[0].random_coffee_past_partners or
@@ -170,6 +177,9 @@ class Command(BaseCommand):
                 else:
                     coffee_partners_hepler(coffee_users[0], coffee_users[k])
                     send_message_helper(coffee_users[0], coffee_users[k])
+                    # catch bug
+                    coffee_users[0].set_activity('message with partner was sended')
+                    coffee_users[k].set_activity('message with partner was sended')
                     coffee_users.pop(k)
                     coffee_users.pop(0)
             else:
@@ -178,6 +188,8 @@ class Command(BaseCommand):
                 coffee_users[0].save()
                 text = 'Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'\
                     'На следующей неделе мы постараемся исправиться! ❤️'
+                # catch bug
+                coffee_users[0].set_activity('not found partner')
                 custom_message = TelegramCustomMessage(
                     string_for_bot=text,
                     user=coffee_users[0].user
@@ -191,6 +203,7 @@ class Command(BaseCommand):
             u.random_coffee_last_partner_id = None
             u.random_coffee_today = False
             u.save()
+            u.set_activity('not found partner')
             text = 'Извини, но на этой неделе не получилось подобрать тебе собеседника 😞'\
                 'На следующей неделе мы постараемся исправиться! ❤️'
             custom_message = TelegramCustomMessage(
@@ -200,7 +213,7 @@ class Command(BaseCommand):
             custom_message.delete_message()
             custom_message.send_message()
 
-        # change this one!
+        # CHANGE
         custom_message = TelegramCustomMessage(
             string_for_bot='',
             user=u_

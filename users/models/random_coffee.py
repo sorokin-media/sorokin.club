@@ -31,13 +31,23 @@ class RandomCoffee(models.Model):
     last_coffee_message_id = models.CharField(max_length=128, null=True)
     coffee_done = models.IntegerField(default=0)
     coffee_deny = models.IntegerField(default=0)
+    # to catch bug
+    last_bot_activity = models.CharField(max_length=256, null=True)
+    last_datetime_bot_activity = models.DateTimeField(null=True)
 
-
-
-    def set_activation_coffee_time(self):
+    def set_activation_coffee_time(self: object) -> None:
+        ''' catch bug '''
         time_zone = pytz.UTC
         now = datetime.now(time_zone)
         self.coffee_activation_time = now
+        self.save()
+
+    def set_activity(self, activity: str) -> None:
+        ''' catch bug '''
+        self.last_bot_activity = activity
+        time_zone = pytz.UTC
+        now = datetime.now(time_zone)
+        self.last_datetime_bot_activity = now
         self.save()
 
 

@@ -5,7 +5,7 @@ from django.core.management import BaseCommand
 from users.models.random_coffee import RandomCoffee
 
 # import custom package for sending message
-from bot.sending_message import TelegramCustomMessage
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 
 text_for_message = 'Привет! Напоминаю, что ты участвуешь в Random Coffee!\n' \
@@ -21,21 +21,28 @@ class Command(BaseCommand):
         coffee_users = RandomCoffee.objects.filter(random_coffee_is=True).all()
 
         for coffee_user in coffee_users:
-            coffee_user.random_coffee_today = True
-            coffee_user.save()
 
-            buttons = {}
-            buttons['text'] = 'Я не готов на этой неделе 😿'
-            buttons['callback'] = f'no_random_coffee {coffee_user.user.telegram_id}'
-            buttons = [buttons]
+            if not coffee_user.user.membership_expires_is():
 
-            custom_message = TelegramCustomMessage(
-                user=coffee_user.user,
-                string_for_bot=text_for_message,
-                buttons=buttons,
-                random_coffee=True
-            )
+                coffee_user.set_activity('Start')
+                coffee_user.random_coffee_today = True
+                coffee_user.save()
 
-            custom_message.send_message()
+                buttons = {}
+                buttons['text'] = 'Я не готов на этой неделе 😿'
+                buttons['callback'] = f'no_random_coffee {coffee_user.user.telegram_id}'
+                buttons = [buttons]
 
-        custom_message.send_count_to_dmitry(type_='Рассылка уведомления об участии в рандом-кофе')
+                custom_message = TelegramCustomMessage(
+                    user=coffee_user.user,
+                    string_for_bot=text_for_message,
+                    buttons=buttons,
+                    random_coffee=True
+                )
+
+                coffee_user.set_activity('first monday message was sended')
+                custom_message.send_message()
+        try:
+            custom_message.send_count_to_dmitry(type_='Рассылка уведомления об участии в рандом-кофе')
+        except:
+            MessageToDmitry(data=Exception).send_message()

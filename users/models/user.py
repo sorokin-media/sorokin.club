@@ -194,6 +194,14 @@ class User(models.Model, ModelDiffMixin):
         self.membership_expires_at = membership_expires_at
         self.save()
 
+    def membership_expires_is(self):
+
+        time_zone = pytz.UTC
+        now = time_zone.localize(datetime.utcnow())
+
+        membership_expires_at = time_zone.localize(self.membership_expires_at)
+        return now > membership_expires_at
+
     @property
     def is_banned(self):
         if self.is_god:
