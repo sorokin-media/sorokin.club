@@ -238,6 +238,7 @@ class Command(BaseCommand):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN)
         now = time_zone.localize(datetime.utcnow())
         yesterday = now - timedelta(days=1)
+        # CHANGE
         yesterday_start = time_zone.localize(datetime(
             year=yesterday.year,
             month=yesterday.month,
