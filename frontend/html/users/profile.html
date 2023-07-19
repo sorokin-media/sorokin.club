@@ -69,6 +69,13 @@
                     Сумма накопленных реферальных денег: {{ aff_money }}
                     <a href="{% url 'get_affilate_money' user.slug %}"> Вывести бабки</a>
                 </p>
+
+            {% else %}
+
+            <p>
+                У юзера нет накопленных реферальной программой денег.
+            </p>
+
             {% endif %}
 
             {% if affilate_creator %}
