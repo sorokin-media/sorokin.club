@@ -23,38 +23,9 @@ from bot.sending_message import TelegramCustomMessage
 from datetime import datetime
 import pytz
 
-def coffee_partners_hepler(user_1: object, user_2: object) -> None:
-    ''' set partners for coffee '''
-    # CHANGE: need class, no repeats
-    if user_1.random_coffee_past_partners is None:
-        user_1.random_coffee_past_partners = user_2.user.slug
 
-    else:
-        partners_1 = user_1.random_coffee_past_partners.split(', ')
-        partners_1.append(user_2.user.slug)
-        partners_1 = ', '.join(partners_1)
-        user_1.random_coffee_past_partners = partners_1
-
-    if user_2.random_coffee_past_partners is None:
-        user_2.random_coffee_past_partners = user_1.user.slug
-
-    else:
-        partners_2 = user_2.random_coffee_past_partners.split(', ')
-        partners_2.append(user_1.user.slug)
-        partners_2 = ', '.join(partners_2)
-        user_2.random_coffee_past_partners = partners_2
-
-    user_1.save()
-    user_2.save()
-
-
-def send_message_helper(user_1: object, user_2: object):
-    ''' send first message to random coffee user '''
-    # need changes!
-    # slug could be different for post and user, careful with that
-    intro_1 = Post.objects.filter(author=user_1.user).filter(type='intro').first()
-    intro_2 = Post.objects.filter(author=user_2.user).filter(type='intro').first()
-
+class RandomCoffeeHelper:
+    ''' make anything '''
     photo = 'https://sorokin.club/static/images/random_coffee.jpg'
 
     text_finish = '<strong>Вам нужно связаться и в личке договориться о созвоне.'\
@@ -64,76 +35,80 @@ def send_message_helper(user_1: object, user_2: object):
         'Текст передает только крупицу важной информации, звук - чуть больше,'\
         ' а с видео можно получить максимум,возможный на расстоянии ❤️'\
 
-    user_1.random_coffee_last_partner_id = user_2.user.id
-    user_2.random_coffee_last_partner_id = user_1.user.id
 
-    user_1.save()
-    user_2.save()
+    def __init__(self, first_coffee_user: RandomCoffee, second_coffee_use: RandomCoffee) -> None:
 
-    coffee_log_1 = RandomCoffeeLogs()
-    coffee_log_2 = RandomCoffeeLogs()
+        self.first_coffee_user = first_coffee_user
+        self.second_coffee_user = second_coffee_use
 
-    coffee_log_1.user, coffee_log_2.user = user_1.user, user_2.user
-    coffee_log_1.user_buddy, coffee_log_2.user_buddy = user_2.user, user_1.user
-    coffee_log_1.set_today_date()
-    coffee_log_2.set_today_date()
-    coffee_log_1.save()
-    coffee_log_2.save()
+    def send_message(self, coffee_user: RandomCoffee, coffee_buddy: RandomCoffee) -> None:
+        ''' set, last partner id, make random cofee log and send message '''
+        coffee_log = RandomCoffeeLogs()
+        coffee_buddy_intro = Post.objects.filter(author=coffee_buddy.user).filter(type='intro').first()
 
-    # formatting for Telegram
-    link_1 = user_1.random_coffee_tg_link
-    link_2 = user_2.random_coffee_tg_link
+        coffee_user.random_coffee_last_partner_id = coffee_buddy.user.id
+        coffee_user.save()
+    
+        coffee_log.user = coffee_user.user
+        coffee_log.user_buddy = coffee_buddy.user
+        coffee_log.set_today_date()
+        coffee_log.save()
 
-    if 'https://t.me/' in link_1:
-        link_1 = link_1.replace('https://t.me/', '@')
-    if 'https://t.me/' in link_2:
-        link_2 = link_2.replace('https://t.me/', '@')
+        tg_link = coffee_buddy.random_coffee_tg_link
+        if 'https://t.me/' in tg_link:
+            tg_link = tg_link.replace('https://t.me/', '@')
 
-    if link_1[0] != '@':
-        link_1 = '@' + link_1
-    if link_2[0] != '@':
-        link_2 = '@' + link_2
+        if tg_link[0] != '@':
+            tg_link = '@' + tg_link
 
-    text = '\n<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
-           'Мы подобрали тебе собеседника на эту неделю! '\
-        f'Это {user_2.user.full_name}!\n\n'\
-        f'Интро: {settings.APP_HOST}/intro/{intro_2.slug}\n'\
-        f'Телеграм для связи: {link_2}\n\n'\
-        f'{text_finish}'\
+        text = '\n<strong>Привет! Это система Рандом Кофе!</strong>\n\n'\
+            'Мы подобрали тебе собеседника на эту неделю! '\
+            f'Это {coffee_buddy.user.full_name}!\n\n'\
+            f'Интро: {settings.APP_HOST}/intro/{coffee_buddy_intro.slug}\n'\
+            f'Телеграм для связи: {tg_link}\n\n'\
+            f'{self.text_finish}'\
 
+        custom_message = TelegramCustomMessage(
+            user=coffee_user.user,
+            string_for_bot=text,
+            random_coffee=True,
+            photo=self.photo
+        )
 
-    custom_message_1 = TelegramCustomMessage(
-        user=user_1.user,
-        string_for_bot=text,
-        random_coffee=True,
-        photo=photo
-    )
+        custom_message.delete_message()
+        custom_message.send_photo()
 
-    custom_message_1.delete_message()
-    custom_message_1.send_photo()
+    def set_partner(self, coffee_user: RandomCoffee, coffee_buddy: RandomCoffee) -> None:
+        ''' set past_partner field in RandomCoffee '''
+        if coffee_user.random_coffee_past_partners is None:
+            coffee_user.random_coffee_past_partners = coffee_buddy.user.slug
 
-    text = '<strong>Привет! Это система Рандом Кофе!☕️</strong>\n'\
-        'Мы подобрали тебе собеседника на эту неделю! '\
-        f'Это {user_1.user.full_name}!\n\n'\
-        f'Интро: {settings.APP_HOST}/intro/{intro_1.slug}\n'\
-        f'Телеграм для связи: {link_1}\n\n'\
-        f'{text_finish}'
+        else:
+            partners_1 = coffee_user.random_coffee_past_partners.split(', ')
+            partners_1.append(coffee_buddy.user.slug)
+            partners_1 = ', '.join(partners_1)
+            coffee_user.random_coffee_past_partners = partners_1
 
-    custom_message_2 = TelegramCustomMessage(
-        user=user_2.user,
-        string_for_bot=text,
-        random_coffee=True,
-        photo=photo
-    )
+        coffee_user.save()
 
-    custom_message_2.delete_message()
-    custom_message_2.send_photo()
+    def process_data(self):
+        ''' Main method of class which call other single methods '''
+        self.set_partner(self.first_coffee_user, self.second_coffee_user)
+        self.set_partner(self.second_coffee_user, self.first_coffee_user)
 
+        self.first_coffee_user.random_coffee_last_partner_id = self.second_coffee_user.user.id
+        self.second_coffee_user.random_coffee_last_partner_id = self.first_coffee_user.user.id
+
+        self.first_coffee_user.save()
+        self.second_coffee_user.save()
+
+        self.send_message(self.first_coffee_user, self.second_coffee_user)
+        self.send_message(self.second_coffee_user, self.first_coffee_user)
 
 # CHANGE
 # в переборе ниже есть случай, когда в выборку для рандом-кофе изначальную могут попадать
-# юзеры, у которых окончилась подписка но оставлся подключенным рандом-кофе. 
-# с этим надо что-то придумать. Как-то изменить изначальную выбору, select-related 
+# юзеры, у которых окончилась подписка но оставлся подключенным рандом-кофе.
+# с этим надо что-то придумать. Как-то изменить изначальную выбору, select-related
 # или что-то такое использовать
 
 class Command(BaseCommand):
@@ -175,8 +150,10 @@ class Command(BaseCommand):
                          ))):
                     k += 1
                 else:
-                    coffee_partners_hepler(coffee_users[0], coffee_users[k])
-                    send_message_helper(coffee_users[0], coffee_users[k])
+                    RandomCoffeeHelper(
+                        first_coffee_user=coffee_users[0],
+                        second_coffee_use=coffee_users[k]
+                    ).process_data()
                     # catch bug
                     coffee_users[0].set_activity('message with partner was sended')
                     coffee_users[k].set_activity('message with partner was sended')
