@@ -247,14 +247,7 @@ class Command(BaseCommand):
             minute=0,
             second=0
         ))
-        yesterday_finish = time_zone.localize(datetime(
-            year=yesterday.year,
-            month=yesterday.month,
-            day=yesterday.day,
-            hour=23,
-            minute=59,
-            second=59
-        ))
+        yesterday_finish = yesterday_start + timedelta(days=1)
         posts = Post.objects.filter(published_at__gte=yesterday_start
                                     ).filter(published_at__lte=now
                                              ).filter(is_approved_by_moderator=True

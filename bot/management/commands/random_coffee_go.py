@@ -25,7 +25,7 @@ import pytz
 
 
 class RandomCoffeeHelper:
-    ''' make anything '''
+    ''' set partners for coffee users and send message about coffee date  '''
     photo = 'https://sorokin.club/static/images/random_coffee.jpg'
 
     text_finish = '<strong>Вам нужно связаться и в личке договориться о созвоне.'\
@@ -105,24 +105,22 @@ class RandomCoffeeHelper:
         self.send_message(self.first_coffee_user, self.second_coffee_user)
         self.send_message(self.second_coffee_user, self.first_coffee_user)
 
-# CHANGE
-# в переборе ниже есть случай, когда в выборку для рандом-кофе изначальную могут попадать
-# юзеры, у которых окончилась подписка но оставлся подключенным рандом-кофе.
-# с этим надо что-то придумать. Как-то изменить изначальную выбору, select-related
-# или что-то такое использовать
 
 class Command(BaseCommand):
-
+    '''
+    Django command for:
+    1. Creating list of users for random coffee
+    2. Matching these users
+    3. Sendind message with buddy for coffee date by RandomCoffeeHelper
+    '''
     def handle(self, *args, **options):
 
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
 
         coffee_users = list(RandomCoffee.objects.filter(random_coffee_today=True).filter(random_coffee_is=True).all())
-        # look bellow, change that
         u_ = coffee_users[0].user
         k = 1
-        # random_coffee_today True - user is not busy
         while len(coffee_users) >= 2:
             if k < len(coffee_users):
                 # Fixing the issue with users whose membership has expired.
@@ -190,10 +188,7 @@ class Command(BaseCommand):
             custom_message.delete_message()
             custom_message.send_message()
 
-        # CHANGE
         custom_message = TelegramCustomMessage(
             string_for_bot='',
             user=u_
-        )
-
-        custom_message.send_count_to_dmitry(type_='Всем участникам рандом-кофе отправили данные для созвона. ')
+        ).send_count_to_dmitry(type_='Всем участникам рандом-кофе отправили данные для созвона. ')
