@@ -175,8 +175,8 @@ urlpatterns = [
     path("show_helpfullness_list", show_helpfullness_list, name="show_helpfullness_list"),
     path("delete_day_helpfullness/<id>", delete_day_helpfullness, name="delete_day_helpfullness"),
     path("cool_intros", cool_intros, name='cool_intros'),
-    path('create_cool_intro', create_cool_intro, name='create_cool_intro'),
     path("create_cool_intro/<id>", create_cool_intro, name="create_cool_intro"),
+    path('create_cool_intro/', create_cool_intro, name='create_new_cool_intro'),
     path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"),
     path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
 
