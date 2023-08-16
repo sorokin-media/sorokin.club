@@ -25,46 +25,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ''' to start command and get arguments if there are '''
-        subscribed_users = User.objects\
-            .filter(
-                daily_email_digest=True,
-                is_email_verified=True,
-                membership_expires_at__gte=datetime.utcnow() - timedelta(days=14),
-                moderation_status=User.MODERATION_STATUS_APPROVED,
-            )\
-            .exclude(is_email_unsubscribed=True)
-        for user in subscribed_users:
-            if not options.get("production") and user.email not in dict(settings.ADMINS).values():
-                self.stdout.write("Test mode. Use --production to send the digest to all users")
-                continue
+        user = User.objects.get(slug='dev')
+        try:
+            digest = generate_daily_digest(user)
+        except NotFound:
+            self.stdout.write("Empty digest. Skipping")
+            return
+        digest = digest\
+            .replace("%username%", user.slug)\
+            .replace("%user_id%", str(user.id))\
+            .replace("%secret_code%", base64.b64encode(user.secret_hash.encode("utf-8")).decode())
+        # TO DO: return back previous string
+        self.stdout.write("Sending email to Kir!...")
 
-            # render user digest using a special html endpoint
-            self.stdout.write(f"Generating digest for user: {user.slug}")
-
-            try:
-                digest = generate_daily_digest(user)
-            except NotFound:
-                self.stdout.write("Empty digest. Skipping")
-                continue
-
-            digest = digest\
-                .replace("%username%", user.slug)\
-                .replace("%user_id%", str(user.id))\
-                .replace("%secret_code%", base64.b64encode(user.secret_hash.encode("utf-8")).decode())
-
-            self.stdout.write(f"Sending email to {user.email}...")
-
-            try:
-                subject = f"Дайджест за {date(datetime.utcnow(), 'd E')}"
-                Email(html=digest, email='kufd.deal@gmail.com', subject=subject).send()
-#                send_club_email(
-#                    recipient=user.email,
-#                    subject=f"Дайджест за {date(datetime.utcnow(), 'd E')}",
-#                    html=digest,
-#                    tags=["daily_digest"]
-#                )
-            except Exception as ex:
-                self.stdout.write(f"Sending to {user.email} failed: {ex}")
-                continue
-
+        try:
+            subject = f"Дайджест за {date(datetime.utcnow(), 'd E')}"
+            Email(html=digest, email='kufd.deal@gmail.com', subject=subject).send()
+        except Exception as ex:
+            self.stdout.write(f"Sending to Kir failed: {ex}")
+            return
         self.stdout.write("Done 🥙")
