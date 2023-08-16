@@ -96,6 +96,7 @@ def robots(request):
         "Disallow: /admin",
         "Disallow: /edit",
         "Disallow: /stat",
+        "Disallow: /room",
         "Disallow: /static/js/parts/initHideLinks.js",
         "Clean-param: comment_order&goto /",
     ]

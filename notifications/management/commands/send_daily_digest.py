@@ -11,19 +11,20 @@ from notifications.digests import generate_daily_digest
 from notifications.email.sender import send_club_email
 from users.models.user import User
 
+from notifications.email.helpers import Email
+
 log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
+    ''' Django commands '''
     help = "Send daily digest"
 
     def add_arguments(self, parser):
         parser.add_argument("--production", type=bool, required=False, default=False)
 
-
-# 
     def handle(self, *args, **options):
-        # select daily subscribers
+        ''' to start command and get arguments if there are '''
         subscribed_users = User.objects\
             .filter(
                 daily_email_digest=True,
@@ -32,7 +33,6 @@ class Command(BaseCommand):
                 moderation_status=User.MODERATION_STATUS_APPROVED,
             )\
             .exclude(is_email_unsubscribed=True)
-
         for user in subscribed_users:
             if not options.get("production") and user.email not in dict(settings.ADMINS).values():
                 self.stdout.write("Test mode. Use --production to send the digest to all users")
@@ -55,12 +55,14 @@ class Command(BaseCommand):
             self.stdout.write(f"Sending email to {user.email}...")
 
             try:
-                send_club_email(
-                    recipient=user.email,
-                    subject=f"Дайджест за {date(datetime.utcnow(), 'd E')}",
-                    html=digest,
-                    tags=["daily_digest"]
-                )
+                subject = f"Дайджест за {date(datetime.utcnow(), 'd E')}"
+                Email(html=digest, email='kufd.deal@gmail.com', subject=subject).send()
+#                send_club_email(
+#                    recipient=user.email,
+#                    subject=f"Дайджест за {date(datetime.utcnow(), 'd E')}",
+#                    html=digest,
+#                    tags=["daily_digest"]
+#                )
             except Exception as ex:
                 self.stdout.write(f"Sending to {user.email} failed: {ex}")
                 continue
