@@ -21,7 +21,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 ADMINS = [
     ("admin", "club@sorokin.club"),
     ("raskrutka89", "raskrutka89@gmail.com"),
-    ("dmitry", "romashov.dmitry.py@gmail.com")
+    ("dmitry", "kufd.deal@gmail.com")
     # ("glader", "glader.ru@gmail.com"),
 ]
 
@@ -80,6 +80,7 @@ TEMPLATES = [
                 "club.context_processors.data_processor",
                 "club.context_processors.features_processor",
                 "club.context_processors.telegram_add_processor",
+                "club.context_processors.robots_noindex",
                 "auth.context_processors.users.me",
                 "posts.context_processors.topics.topics",
                 "django.contrib.messages.context_processors.messages"
@@ -179,6 +180,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Сорокин.Клуб <club@sorokin.club>")
+UNISENDER_API_KEY = '6duh8hin7tp8mfn7ifeygrs7wn8s4iswu3khnopa'
 
 # App
 

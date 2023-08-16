@@ -21,6 +21,7 @@ def data_processor(request):
 def features_processor(request):
     return {"features": features}
 
+
 def telegram_add_processor(request):
     ignore_paths = [
         '/intro/',
@@ -45,3 +46,20 @@ def telegram_add_processor(request):
         '/monies/unitpay/webhook/',
     ]
     return {"telegram_modal_ignore_paths": ignore_paths}
+
+
+def robots_noindex(request):
+    ''' add metatag for search engine to html  '''
+    noindex_urls = [
+        '/network',
+        '/people',
+        '/monies',
+        '/announce',
+        '/admin',
+        '/?type=search',
+        '/edit'
+        
+    ]
+    if any(url in request.path for url in noindex_urls):
+        return {"noindex": True}
+    return {}
