@@ -104,7 +104,7 @@ urlpatterns = [
     path("auth/email/code/", email_login_code, name="email_login_code"),
     path("auth/external/", external_login, name="external_login"),
     path("auth/user_interface", user_interface, name="user_interface"),
-
+        
     path("monies/", pay, name="pay"),
     path("monies/crypto/", crypto, name="crypto"),
     path("monies/done/", done, name="done"),
