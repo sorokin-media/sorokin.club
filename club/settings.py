@@ -180,7 +180,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Сорокин.Клуб <club@sorokin.club>")
-UNISENDER_API_KEY = '6duh8hin7tp8mfn7ifeygrs7wn8s4iswu3khnopa'
+UNISENDER_API_KEY = os.getenv("UNISENDER_API_KEY")
 
 # App
 

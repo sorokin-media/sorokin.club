@@ -10,7 +10,7 @@ from posts.models.post import Post
 from users.models.friends import Friend
 from users.models.user import User
 from django.template import loader
-from notifications.email.sender import send_club_email
+from notifications.email.sender import send_club_email, Email
 
 REJECT_POST_REASONS = {
     "post": [
@@ -136,12 +136,13 @@ def async_create_or_update_post(post, is_created):
                 else:
                     if user.id not in notified_user_ids:
                         renewal_template = loader.get_template("emails/post_mention_email.html")
-                        send_club_email(
-                            recipient=user.email,
-                            subject=f"Кто-то упомянул вас в посте!",
+                        email = Email(
                             html=renewal_template.render({"post": post}),
-                            tags=["comment"]
+                            email=user.email,
+                            subject=f"Кто-то упомянул вас в посте!"
                         )
+                        email.prepare_email()
+                        email.send()
                         notified_user_ids.add(user.id)
 
 

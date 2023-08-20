@@ -11,7 +11,7 @@ from users.models.friends import Friend
 from users.models.mute import Muted
 from users.models.user import User
 from django.template import loader, TemplateDoesNotExist
-from notifications.email.sender import send_club_email
+from notifications.email.sender import send_club_email, Email
 
 
 @receiver(post_save, sender=Comment)
@@ -49,12 +49,14 @@ def async_create_or_update_comment(comment):
                 if post_subscriber.type == PostSubscription.TYPE_ALL_COMMENTS \
                         or (post_subscriber.type == PostSubscription.TYPE_TOP_LEVEL_ONLY and not comment.reply_to_id):
                     renewal_template = loader.get_template("emails/comment_to_post_email.html")
-                    send_club_email(
-                        recipient=post_subscriber.user.email,
-                        subject=f"Новый коммент к посту!",
+                    email = Email(
                         html=renewal_template.render({"comment": comment}),
-                        tags=["comment"]
+                        email=post_subscriber.user.email,
+                        subject="Новый коммент к посту!"
                     )
+                    email.prepare_email()
+                    email.send()
+
     # notify thread author on reply (note: do not notify yourself)
     if comment.reply_to:
         if mute_check(user_from=comment.reply_to.author, user_to=comment.author):
@@ -69,12 +71,13 @@ def async_create_or_update_comment(comment):
             else:
                 if comment.author != thread_author and thread_author.id not in notified_user_ids:
                     renewal_template = loader.get_template("emails/comment_to_thread_email.html")
-                    send_club_email(
-                        recipient=thread_author.email,
-                        subject=f"Новый реплай к вашему комментарию!",
+                    email = Email(
                         html=renewal_template.render({"comment": comment}),
-                        tags=["comment"]
+                        email=thread_author.email,
+                        subject="Новый реплай к вашему комментарию!"
                     )
+                    email.prepare_email()
+                    email.send()
                     notified_user_ids.add(thread_author.id)
 
     # post top level comments to online channel
