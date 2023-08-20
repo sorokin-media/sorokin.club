@@ -102,6 +102,7 @@ def render_post(request, post, context=None):
 
     # TODO: make a proper type->form mapping here in future
     if post.type == Post.TYPE_BATTLE:
+        request.session['post_id'] = str(post.id)
         context["comment_form"] = BattleCommentForm()
 
     action = request.POST.get("action")
@@ -110,11 +111,13 @@ def render_post(request, post, context=None):
         LinkedPost.create_links_from_text(post, post.text)
         return redirect("show_post", post.type, post.slug)
     if post.type == 'event':
+        request.session['post_id'] = str(post.id)
         return render(request, "posts/show/event.html", context)
 
     if post.type == 'idea':
+        request.session['post_id'] = str(post.id)
         return render(request, "posts/show/idea.html", context)
-
+    request.session["post_id"] = str(post.id)  # to get post in context processor
     try:
         if cookie:
             return_ = render(request, f"posts/show/{post.type}.html", context)

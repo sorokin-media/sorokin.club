@@ -80,6 +80,7 @@ TEMPLATES = [
                 "club.context_processors.data_processor",
                 "club.context_processors.features_processor",
                 "club.context_processors.telegram_add_processor",
+                "club.context_processors.robots_noindex",
                 "auth.context_processors.users.me",
                 "posts.context_processors.topics.topics",
                 "django.contrib.messages.context_processors.messages"

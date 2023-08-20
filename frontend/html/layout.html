@@ -29,6 +29,9 @@
     {% include "common/favicon.html" %}
     {% include "common/css.html" %}
     {% block css %}{% endblock %}
+    {% if noindex %}
+    <meta name="robots" content="noindex">
+    {% endif %}
 </head>
 <body>
 
