@@ -23,6 +23,7 @@ def data_processor(request):
 def features_processor(request):
     return {"features": features}
 
+
 def telegram_add_processor(request):
     ignore_paths = [
         '/intro/',
@@ -57,24 +58,9 @@ def robots_noindex(request):
         '/announce',
         '/admin',
         '/?type=search',
-        '/edit',
-        '/stats-buddy',
-        '/room',
-        '/auth',
-        'cool_intro',
-        'day_helpfullness',
-        'telegram_message',
-        '/info_tg_format',
-        'stat'
-
+        '/edit'
+        
     ]
     if any(url in request.path for url in noindex_urls):
         return {"noindex": True}
-    try:
-        post_id = request.session.pop('post_id', None)
-        post = Post.objects.get(id=post_id)
-        if not post.is_public:
-            return {"noindex": True}
-    except:
-        pass
     return {}
