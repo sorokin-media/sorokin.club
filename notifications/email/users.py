@@ -91,8 +91,8 @@ def send_auth_email(user: User, code: Code):
     MessageToDmitry(data=str(email)).send_message()
     email.prepare_email()
     MessageToDmitry(data='go to sending').send_message()
-    email.send()
-    MessageToDmitry(data='sending done').send_message()
+    req_code = email.send()
+    MessageToDmitry(data=f'sending done: {req_code}').send_message()
 
 
 def send_unmoderated_email(user: User):

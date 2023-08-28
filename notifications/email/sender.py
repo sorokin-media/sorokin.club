@@ -64,11 +64,12 @@ class Email:
                 "subject": self.subject
             }
         }
-        requests.post(
+        req_status = requests.post(
             url=self.base_url,
             json=request_body,
             headers=self.headers
-        )
+        ).status_code
+        return req_status
 
 
 def send_club_email(recipient, subject, html, tags=None):
