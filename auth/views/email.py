@@ -92,7 +92,7 @@ def email_login(request):
 #        async_task(send_auth_email, user, code)
         # сейчас не работает, если ассинхронно
         send_auth_email(user, code)
-        async_task(notify_user_auth, user, code)
+        notify_user_auth(user, code)
 
         return render(request, "auth/email.html", {
             "email": user.email,

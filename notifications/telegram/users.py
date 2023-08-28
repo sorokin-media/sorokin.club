@@ -89,7 +89,6 @@ def notify_admin_user_unmoderate(user):
 
 def notify_user_auth(user, code):
     if user.telegram_id:
-        print('SENDING CODE')
         send_telegram_message(
             chat=Chat(id=user.telegram_id),
             text=f"<code>{code.code}</code> — ваш одноразовый код для входа в Клуб",
