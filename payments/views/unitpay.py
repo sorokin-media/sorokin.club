@@ -282,36 +282,67 @@ def unitpay_webhook(request):
 
     if request.GET["method"] == "pay":
         payload = request.GET
+        send_telegram_message(
+            chat=Chat(id=204349098),
+            text='1'
+        )
         log.info("Unitpay order %s", order_id)
         payment = Payment.get(order_id)
-
+        send_telegram_message(
+            chat=Chat(id=204349098),
+            text='2'
+        )
         if payment:
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='3'
+            )
             payment = Payment.finish(
                 reference=order_id,
                 status=Payment.STATUS_SUCCESS,
                 data=payload,
             )
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='4'
+            )
 
             # subscriptionId -> references in DB table
 
             user_model = payment.user
-
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='5'
+            )
             if "params[subscriptionId]" in request.GET:
                 user_model.unitpay_id = int(request.GET["params[subscriptionId]"])
                 user_model.save()
-
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='6'
+            )
             product = SubscriptionPlan.objects.filter(code=payment.product_code).last()
             if product.code == 'club1_invite':
                 club_invite_activator(product, payment, payment.user)
             else:
                 club_subscription_activator(product, payment, payment.user)
             # it's better to comment for tests: next 2 rows
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='7'
+            )
             if payment.user.moderation_status != User.MODERATION_STATUS_APPROVED:
                 send_payed_email(payment.user)
-
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='8'
+            )
             # if there is affilate relation where affilated user is who pay
             if AffilateRelation.objects.filter(affilated_user=user_model).exists():
-
+                send_telegram_message(
+                    chat=Chat(id=204349098),
+                    text='9'
+                )
                 # get object of this relation
 
                 new_one = AffilateRelation.objects.filter(affilated_user=user_model).latest('created_at')
@@ -322,7 +353,10 @@ def unitpay_webhook(request):
                     product=product
                 )
             return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
-
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text='10'
+            )
         payment_link = PaymentLink.get_reference(order_id)
 
         if payment_link:
