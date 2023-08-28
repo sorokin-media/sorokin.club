@@ -89,7 +89,9 @@ def email_login(request):
                 }, status=404)
 
         code = Code.create_for_user(user=user, recipient=user.email, length=settings.AUTH_CODE_LENGTH)
-        async_task(send_auth_email, user, code)
+#        async_task(send_auth_email, user, code)
+        # сейчас не работает, если ассинхронно
+        send_auth_email(user, code)
         async_task(notify_user_auth, user, code)
 
         return render(request, "auth/email.html", {
