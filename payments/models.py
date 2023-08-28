@@ -54,8 +54,6 @@ class Payment(models.Model):
         # it's better to comment for tests: next 4 rows
         if not payment:
             raise PaymentNotFound()
-        if payment.status != cls.STATUS_STARTED and status == cls.STATUS_SUCCESS:
-            raise PaymentAlreadyFinalized()
 
         payment.status = status
         if data:
