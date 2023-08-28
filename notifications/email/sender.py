@@ -48,7 +48,6 @@ class Email:
 
     def send(self):
         ''' send email '''
-        log.info(f"Sending email to {recipient}")
         request_body = {
             "message": {
                 "recipients": [
@@ -57,7 +56,7 @@ class Email:
                     }
                 ],
                 "from_email": "club@sorokin.club",
-                "from_name": "sorokin.club", 
+                "from_name": "sorokin.club",
                 "body": {
                     "html": self.html,
                     "plaintext": "Hello"
@@ -66,7 +65,7 @@ class Email:
             }
         }
         requests.post(
-            url=self.base_url,  
+            url=self.base_url,
             json=request_body,
             headers=self.headers
         )
