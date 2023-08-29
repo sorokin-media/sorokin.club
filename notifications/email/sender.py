@@ -64,14 +64,14 @@ class Email:
                 "subject": self.subject
             }
         }
-        req_status = requests.post(
+        requests.post(
             url=self.base_url,
             json=request_body,
             headers=self.headers
-        ).status_code
-        return req_status
+        )
 
 
+# такая отправка писем использовалась ранее
 def send_club_email(recipient, subject, html, tags=None):
     log.info(f"Sending email to {recipient}")
     return None

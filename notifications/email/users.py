@@ -81,19 +81,15 @@ def send_user_rejected_email(user: User, reason: UserRejectReason):
 
 
 def send_auth_email(user: User, code: Code):
-    MessageToDmitry(data=f'Email User: {user.email}').send_message()
     auth_template = loader.get_template("emails/auth.html")
     email = Email(
         html=auth_template.render({"user": user, "code": code}),
         email=user.email,
         subject=f"{code.code} — ваш код для входа"
     )
-    MessageToDmitry(data=str(email)).send_message()
     email.prepare_email()
-    MessageToDmitry(data='go to sending').send_message()
-    req_code = email.send()
-    MessageToDmitry(data=f'sending done: {req_code}').send_message()
-
+    email.send()
+    
 
 def send_unmoderated_email(user: User):
     rejected_template = loader.get_template("emails/unmoderated.html")
