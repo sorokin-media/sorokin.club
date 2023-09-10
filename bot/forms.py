@@ -1,5 +1,5 @@
 # django imports
-from django.forms import ModelForm, TextInput, Textarea, ModelChoiceField, Select
+from django.forms import ModelForm, TextInput, Textarea, ModelChoiceField, Select, ValidationError
 
 # import models
 from bot.models.cool_intros import CoolIntro
@@ -15,6 +15,12 @@ class CoolIntroForm(ModelForm):
         required=True
     )
 
+    def __init__(self, *args, **kwargs):
+        
+        self.cool_intro_id = kwargs.pop('cool_intro_id', None)
+        super().__init__(*args, **kwargs)
+        self.order_field_value = self.data.get('order')
+
     class Meta:
         model = CoolIntro
 
@@ -25,3 +31,45 @@ class CoolIntroForm(ModelForm):
             'text': Textarea(
                 attrs={'placeholder': 'Сюды тексты сообщения набери'})
         }
+
+    def clean_order(self):
+        ''' валидация для поля order, которая позволит заменять порядок '''
+
+        cleaned_data = super().clean()
+        order = cleaned_data.get('order')
+
+        if order and \
+            CoolIntro.objects.filter(id=self.cool_intro_id).exists() and \
+                CoolIntro.objects.filter(order=order).exists() and \
+                CoolIntro.objects.filter(order=order).first().order == order:
+
+            if self.cool_intro_id:
+                return self.instance.order
+
+            else:
+                raise ValidationError("Такой порядок отправки уже занят. "
+                                    "Если хочешь сделать замену, сначала сделай "
+                                    "форму с тем номером порядка, на который хочешь "
+                                    "заменить. ")
+        return order
+
+    def save(self, commit=True):
+        ''' метод сохранения данных из формы  '''
+
+        cleaned_data = super().clean()
+        order = cleaned_data.get('order')
+
+        instance = super().save(commit=False)
+ 
+        if self.order_field_value and self.cool_intro_id and self.order_field_value != instance.order:
+
+            existing_cool_intro = CoolIntro.objects.get(order=self.order_field_value)
+            existing_cool_intro.order = instance.order
+            # замена на None, чтобы избежать ошибки при сохранении
+            instance.order = None
+            instance.save()
+            existing_cool_intro.save()
+            instance.order = self.order_field_value
+
+        instance.save()
+        return instance

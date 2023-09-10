@@ -58,36 +58,29 @@ def create_cool_intro(request, id=None, is_archived=False):
         if "Отправить тест" in request.POST:
 
             dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-    
             users = [
                 dmitry,
                 User.objects.get(id=request.POST['test_user'])
             ]
-
             image_url = request.POST['image_url'].replace(" ", '')
             string_for_bot = construct_message(request.POST['text'])
 
             for user in users:
 
                 if image_url is not None and image_url != '':
-
                     custom_message = TelegramCustomMessage(
                         user=user,
                         photo=image_url,
                         string_for_bot=''
                     )
-
                     custom_message.send_photo()
-
                     custom_message = TelegramCustomMessage(
                         user=user,
                         string_for_bot=string_for_bot
                     )
-
                     custom_message.send_message()
 
                 else:
-
                     custom_message = TelegramCustomMessage(
                         user=user,
                         string_for_bot=string_for_bot
@@ -106,7 +99,7 @@ def create_cool_intro(request, id=None, is_archived=False):
         if id:
             obj = CoolIntro.objects.get(id=id)
             obj.is_archived = is_archived
-            form = CoolIntroForm(request.POST, instance=obj)
+            form = CoolIntroForm(request.POST, instance=obj, cool_intro_id=id)
             if form.is_valid():
                 form.save()
             else:
