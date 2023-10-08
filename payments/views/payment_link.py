@@ -79,6 +79,7 @@ def payment_link_thanks(request):
     })
 
 def write_of_money(request, link_id):
+    payment_obj = PaymentLink.objects.filter(id=link_id).last()
     if request.method == "POST":
         form = PaymentLinkForm(request.POST)
         if form.is_valid():
