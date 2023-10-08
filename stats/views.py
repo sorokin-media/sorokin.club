@@ -405,7 +405,7 @@ def payment_link(request):
             payments_link = payments_link.filter(description=description)
         if email != '':
             payments_link = payments_link.filter(email=email)
-        payments_link.order_by('-created_at')
+        payments_link = payments_link.order_by('-created_at')
     else:
         payments_link = PaymentLink.objects.filter().order_by('-created_at')
         form = PaymentLinkSingleForm
