@@ -130,7 +130,7 @@ def write_of_money(request, link_id):
                     )
                 else:
                     print("Success")
-                    text_send = '#ПОВТОРНОЕ_СПИСАНИЕ ' + str(product.amount)
+                    text_send = '#ПОВТОРНОЕ_СПИСАНИЕ ' + str(product_new.amount)
                     send_telegram_message(
                         chat=ADMIN_CHAT,
                         text=text_send
