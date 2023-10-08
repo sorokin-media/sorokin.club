@@ -28,9 +28,11 @@ from club.settings import APP_HOST as host
 
 # import custom classes
 from auth.helpers import auth_required
-from stats.forms.money import DateForm
+from stats.forms.money import DateForm, PaymentLinkSingleForm
 from payments.forms.payment_link import PaymentLinkForm
 from users.models.affilate_models import AffilateLogs
+
+from pprint import pprint
 
 def active_or_not(user):
 
@@ -393,10 +395,21 @@ def affilates_days_stat(request):
 def payment_link(request):
     payments_link = ''
     if request.method == "POST":
-        form = PaymentLinkForm(request.POST)
+        form = PaymentLinkSingleForm(request.POST)
+        status = request.POST['status']
+        description = request.POST['description']
+        email = request.POST['email']
+        payments_link = PaymentLink.objects.all()
+        if status != '':
+            payments_link = payments_link.filter(status=status)
+        if description != '':
+            payments_link = payments_link.filter(description=description)
+        if email != '':
+            payments_link = payments_link.filter(email=status)
+        payments_link.order_by('-created_at')
     else:
         payments_link = PaymentLink.objects.filter().order_by('-created_at')
-        form = PaymentLinkForm
+        form = PaymentLinkSingleForm
 
     return render(request, "pages/payment-link.html", {
         "form": form,

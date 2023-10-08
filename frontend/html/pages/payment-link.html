@@ -27,6 +27,27 @@
                 Создать новую
             </a>
 
+        <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
+            {% csrf_token %}
+<!--            <div class="date-range">-->
+<!--                <label class="form-label">Email</label>-->
+<!--                <input id="email" type="text" name="email" value="{{ form.email }}">-->
+<!--                <input type="text" value="{{form.email}}" name="email" class="payment_link_email" data-submit="true" >-->
+<!--            </div>-->
+            <div class="payment_single_form">
+                <label class="form-label">Email</label>
+                <input type="text" name="email" class="email" data-submit="true" />
+            </div>
+            <div class="payment_single_form">
+                <label class="form-label">Описание</label>
+                <input type="text" name="description" class="description" data-submit="true" />
+            </div>
+            <div class="payment_single_form">
+                <label class="form-label">Статус</label>
+                <input type="text" name="status" class="status" data-submit="true" />
+            </div>
+            <button type="submit" class="button button-small">Отправить</button>
+        </form>
 
         <div class="stats-description">
         </div>
@@ -43,7 +64,13 @@
             </tr>
             {% if payments_link %}
                 {% for link in payments_link %}
+                    {% if link.unitpay_id and link.status == 'success' %}
+                    <tr class="payment_one_success_and_unitpay_id">
+                    {% elif link.status == 'success' %}
+                    <tr class="payment_one_success">
+                    {% else %}
                     <tr>
+                    {% endif %}
                         <td><a href="/pay/{{ link.id }}" target="_blank" style="color: white;">Ссылка</a></td>
                         <td>{{ link.title }}</td>
                         <td>{{ link.description }}</td>
@@ -53,6 +80,10 @@
                         <td>{{ link.email }}</td>
                         <td>
                             <a href="{% url 'update_single_link' link.id %}" class="" style="color: white;">Обновить</a>
+                            {% if link.unitpay_id %}
+                                <br>
+                                <a href="{% url 'write_of_money' link.id %}" class="" style="color: white;">Повторить</a>
+                            {% endif %}
                             <br>
                             <a href="{% url 'given_to_user_link' link.id %}" class="" style="color: white;">Отдали</a>
                         </td>
