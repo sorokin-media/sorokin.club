@@ -393,7 +393,6 @@ def affilates_days_stat(request):
 
 @auth_required
 def payment_link(request):
-    payments_link = ''
     if request.method == "POST":
         form = PaymentLinkSingleForm(request.POST)
         status = request.POST['status']
@@ -405,7 +404,7 @@ def payment_link(request):
         if description != '':
             payments_link = payments_link.filter(description=description)
         if email != '':
-            payments_link = payments_link.filter(email=status)
+            payments_link = payments_link.filter(email=email)
         payments_link.order_by('-created_at')
     else:
         payments_link = PaymentLink.objects.filter().order_by('-created_at')

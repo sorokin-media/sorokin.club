@@ -22,8 +22,6 @@ class PaymentLinkSingleForm(forms.Form):
         max_length=100,
         required=False
     )
-    status = forms.CharField(
-        label="Статус",
-        max_length=25,
-        required=False
-    )
+
+    CHOICES = (('', ''), ('success', 'Успешная'),('started', 'Новая'),('given_to_user', 'Передали'))
+    status = forms.ChoiceField(choices=CHOICES,required=False)

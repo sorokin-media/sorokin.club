@@ -26,27 +26,25 @@
         <a href="/payment_link/create" class="">
                 Создать новую
             </a>
-
+        <div class="payment_single_form_title">
+            Поиск
+        </div>
         <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
             {% csrf_token %}
-<!--            <div class="date-range">-->
-<!--                <label class="form-label">Email</label>-->
-<!--                <input id="email" type="text" name="email" value="{{ form.email }}">-->
-<!--                <input type="text" value="{{form.email}}" name="email" class="payment_link_email" data-submit="true" >-->
-<!--            </div>-->
             <div class="payment_single_form">
                 <label class="form-label">Email</label>
-                <input type="text" name="email" class="email" data-submit="true" />
+                {{ form.email }}
             </div>
             <div class="payment_single_form">
                 <label class="form-label">Описание</label>
-                <input type="text" name="description" class="description" data-submit="true" />
+                {{ form.description }}
             </div>
             <div class="payment_single_form">
                 <label class="form-label">Статус</label>
-                <input type="text" name="status" class="status" data-submit="true" />
+                {{ form.status }}
             </div>
-            <button type="submit" class="button button-small">Отправить</button>
+            <br>
+            <button type="submit" class="button button-small payment_single_form_button">Найти</button>
         </form>
 
         <div class="stats-description">

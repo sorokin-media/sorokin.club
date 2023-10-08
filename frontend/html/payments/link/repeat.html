@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content pay">
+        <div class="block pay-description">
+            <div class="pay-title">
+                СПИСАТЬ! платеж💰<br>
+                <small>
+
+                </small>
+            </div>
+        </div>
+        <form action="." method="post" class="payment-link-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="">
+                <div class="form-row form-row-right">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                    {% if form.title.errors %}<span class="form-row-errors">{{ form.title.errors }}</span>{% endif %}
+                </div>
+                <div class="form-row form-row-right">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                    {% if form.description.errors %}<span class="form-row-errors">{{ form.description.errors }}</span>{% endif %}
+                </div>
+                <div class="form-row form-row-right">
+                    {{ form.amount.label_tag }}
+                    {{ form.amount }}
+                    {% if form.amount.errors %}<span class="form-row-errors">{{ form.amount.errors }}</span>{% endif %}
+                </div>
+
+            </div>
+            <button type="submit" class="button">Списать!</button>
+        </form>
+    </div>
+{% endblock %}

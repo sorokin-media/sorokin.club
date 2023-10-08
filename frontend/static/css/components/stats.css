@@ -53,6 +53,18 @@
 .payment_one_success_and_unitpay_id {
     background-color: #00a550 !important;
 }
+.payment_single_form {
+    float: left;
+    margin: 0 15px 15px 0;
+}
+.payment_single_form_button {
+    clear: both;
+    display: block;
+}
+.payment_single_form_title {
+    font-size: 20px;
+    margin-top: 20px;
+}
 
 .stats--single {
     min-height: 600px;
