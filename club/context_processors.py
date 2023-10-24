@@ -58,6 +58,7 @@ def robots_noindex(request):
         '/announce',
         '/admin',
         '/?type=search',
+        '/search',
         '/edit'
         
     ]
