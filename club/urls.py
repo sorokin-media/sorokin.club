@@ -15,7 +15,7 @@ from comments.views import create_comment, edit_comment, delete_comment, show_co
     retract_comment_vote, pin_comment
 from common.feature_flags import feature_switch
 from landing.views import landing, club, tg_bot, tg_bot_second, tg_bot_second_2, geo_moscow, docs, godmode_network_settings, godmode_digest_settings, godmode_settings, \
-    godmode_invite
+    godmode_invite, google_search
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, render_daily_digest, \
     email_digest_switch, link_telegram  # email_digest_switch is not user now
@@ -270,6 +270,10 @@ urlpatterns = [
     path("<slug:post_type>/<slug:post_slug>/", show_post, name="show_post"),
     path("<slug:post_type>/<slug:post_slug>.md", md_show_post, name="md_show_post"),
     path("<slug:post_type>/<slug:post_slug>.json", api_show_post, name="api_show_post"),
+
+    # google search, подтверждение прав на владение сайтом
+    # https://support.google.com/webmasters/answer/9008080#html_verification
+    path("googleb77180c5fc68b58f.html", google_search, name="google_search"),
 
 ]
 

@@ -239,3 +239,10 @@ def godmode_invite(request):
         form = GodmodeInviteForm()
 
     return render(request, "admin/simple_form.html", {"form": form})
+
+
+def google_search(request):
+    ''' подтверждение прав на сайт
+    https://support.google.com/webmasters/answer/9008080#html_verification
+    '''
+    return render(request, "googleb77180c5fc68b58f.html")
