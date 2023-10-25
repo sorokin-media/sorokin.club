@@ -25,6 +25,7 @@ import uuid
 def show_post(request, post_type, post_slug):
 
     post = get_object_or_404(Post, slug=post_slug)
+    noindex = False
 
     # post_type can be changed by moderator
     if post.type != post_type:
@@ -40,6 +41,8 @@ def show_post(request, post_type, post_slug):
         access_denied = check_user_permissions(request, post=post)
         if access_denied:
             return access_denied
+        else:
+            noindex = True
 
     # record a new view
     last_view_at = None
@@ -100,7 +103,8 @@ def show_post(request, post_type, post_slug):
     return render_post(request, post, {
         "post_last_view_at": last_view_at,
         "linked_posts": linked_posts,
-        "cookie": cookie
+        "cookie": cookie,
+        "noindex": noindex
     })
 
 
