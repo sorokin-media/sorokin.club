@@ -154,7 +154,7 @@ urlpatterns = [
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
     path("achievements/", RedirectView.as_view(url="/stats", permanent=True), name="achievements"),
-    path("pages-code/", stats, name="pages-code"),
+    path("pages-code/", pages_code, name="pages-code"),
     path("stats/", stats, name="stats"),
     path("stats-gode/", stats_gode, name="stats-gode"),
     path("stats-buddy/", stats_buddy, name="stats-buddy"),
