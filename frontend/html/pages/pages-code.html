@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block og_tags %}
+<meta property="og:title" content="Ачивки — {{ settings.APP_NAME }}">
+<meta property="og:site_name" content="{{ settings.APP_NAME }}">
+<meta property="og:url" content="{{ settings.APP_HOST }}">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="">
+<meta property="og:image" content="{% static "images/share.png" %}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Разовы полаты — {{ settings.APP_NAME }}">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+{% block content %}
+{% if me.is_god %}
+<div class="stats stats--single">
+    <div class="container">
+        <div class="stats-header">Коды входа</div>
+
+        <div class="payment_single_form_title">
+            Поиск
+        </div>
+        <form action="." method="post" class="stat-money-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="payment_single_form">
+                <label class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+            <br>
+            <button type="submit" class="button button-small payment_single_form_button">Найти</button>
+        </form>
+
+        <div class="stats-description">
+        </div>
+        <table>
+            <tr>
+                <th>Email</th>
+                <th>Code</th>
+                <th>Date</th>
+            </tr>
+            {% if codes %}
+                {% for codes in code %}
+                    <tr>
+                        <td>{{ code.recepient }}</td>
+                        <td>{{ code.code }}</td>
+                        <td>{{ code.created_at }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="stats">
+    Не для тебя
+</div>
+{% endif %}
+{% endblock %}
