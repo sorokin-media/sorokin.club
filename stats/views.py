@@ -423,7 +423,7 @@ def pages_code(request):
         email = request.POST['email']
         codes = Code.objects.all()
         if email != '':
-            codes = codes.filter(email=email)
+            codes = codes.filter(recipient=email)
         codes = codes.order_by('-created_at')
     else:
         codes = Code.objects.filter().order_by('-created_at')
