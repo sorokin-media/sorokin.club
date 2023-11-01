@@ -6,7 +6,7 @@ from django.db.models import Min
 from django.db.models import Q
 
 # import custom class for sending message in Telegram
-from bot.sending_message import TelegramCustomMessage
+from bot.sending_message import TelegramCustomMessage, MessageToDmitry
 
 # import Models
 from bot.models.cool_intros import CoolIntro
@@ -47,11 +47,11 @@ class Command(BaseCommand):
 
         # users who activate helpfulness digest and not banned
 
-#        users = User.objects.filter(
-#            day_helpfullness_digest=True
-#        ).filter(
-#            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
-#        ).all()
+        users = User.objects.filter(
+            day_helpfullness_digest=True
+        ).filter(
+            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
+        ).all()
 
         # for test on prod
 #        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
@@ -59,9 +59,9 @@ class Command(BaseCommand):
 #        users = [dmitry, alex]
 
         # for test on local
-        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-        nuta = User.objects.get(telegram_id=TG_NUTA)
-        users = [dmitry, nuta]
+#        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+#        nuta = User.objects.get(telegram_id=TG_NUTA)
+#        users = [dmitry, nuta]
 
         # if all message are have been sended already
 
@@ -74,50 +74,53 @@ class Command(BaseCommand):
                 _.save()
 
         # get message closest to zero by order
+        try:
+            cool_intro = CoolIntro.objects.get(
+                order=CoolIntro.objects.filter(
+                    is_sended=False,
+                    is_archived=False
+                ).aggregate(
+                    Min('order')
+                )['order__min']
+            )
 
-        cool_intro = CoolIntro.objects.get(
-            order=CoolIntro.objects.filter(
-                is_sended=False,
-                is_archived=False
-            ).aggregate(
-                Min('order')
-            )['order__min']
-        )
+            cool_intro.is_sended = True
+            cool_intro.save()
 
-        cool_intro.is_sended = True
-        cool_intro.save()
+            text = construct_message(cool_intro.text)
+            image_url = cool_intro.image_url
 
-        text = construct_message(cool_intro.text)
-        image_url = cool_intro.image_url
+            for user in users:
 
-        for user in users:
+                if image_url is not None and image_url != '':
 
-            if image_url is not None and image_url != '':
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        photo=image_url,
+                        string_for_bot=''
+                    )
 
-                custom_message = TelegramCustomMessage(
-                    user=user,
-                    photo=image_url,
-                    string_for_bot=''
-                )
+                    custom_message.send_photo()
 
-                custom_message.send_photo()
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        string_for_bot=text
+                    )
 
-                custom_message = TelegramCustomMessage(
-                    user=user,
-                    string_for_bot=text
-                )
+                    custom_message.send_message()
 
-                custom_message.send_message()
+                else:
 
-            else:
+                    custom_message = TelegramCustomMessage(
+                        user=user,
+                        string_for_bot=text
+                    )
 
-                custom_message = TelegramCustomMessage(
-                    user=user,
-                    string_for_bot=text
-                )
+                    custom_message.send_message()
 
-                custom_message.send_message()
+            if users:
 
-        if users:
+                custom_message.send_count_to_dmitry(type_='Крутая интруха отправлена. ')
 
-            custom_message.send_count_to_dmitry(type_='Крутая интруха отправлена. ')
+        except:
+            MessageToDmitry(data="Лучшие интрухи не отправились. Возможно, их нет.").send_message()
