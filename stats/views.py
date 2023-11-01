@@ -22,13 +22,14 @@ from users.models.subscription import Subscription
 from users.models.subscription_plan import SubscriptionPlan
 from users.models.affilate_models import AffilateLogs, AffilateRelation
 from payments.models import PaymentLink
+from auth.models import Code
 
 # import config data
 from club.settings import APP_HOST as host
 
 # import custom classes
 from auth.helpers import auth_required
-from stats.forms.money import DateForm, PaymentLinkSingleForm
+from stats.forms.money import DateForm, PaymentLinkSingleForm, PagesCodeForm
 from payments.forms.payment_link import PaymentLinkForm
 from users.models.affilate_models import AffilateLogs
 
@@ -413,4 +414,22 @@ def payment_link(request):
     return render(request, "pages/payment-link.html", {
         "form": form,
         "payments_link": payments_link
+    })
+
+@auth_required
+def pages_code(request):
+    if request.method == "POST":
+        form = PagesCodeForm(request.POST)
+        email = request.POST['email']
+        codes = Code.objects.all()
+        if email != '':
+            codes = codes.filter(recipient=email)
+        codes = codes.order_by('-created_at')
+    else:
+        codes = Code.objects.filter().order_by('-created_at')
+        form = PagesCodeForm
+
+    return render(request, "pages/pages-code.html", {
+        "form": form,
+        "codes": codes
     })

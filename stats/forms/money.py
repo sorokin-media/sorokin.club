@@ -25,3 +25,10 @@ class PaymentLinkSingleForm(forms.Form):
 
     CHOICES = (('', ''), ('success', 'Успешная'),('started', 'Новая'),('given_to_user', 'Передали'))
     status = forms.ChoiceField(choices=CHOICES,required=False)
+
+class PagesCodeForm(forms.Form):
+    email = forms.CharField(
+        label="Email",
+        max_length=100,
+        required=False
+    )

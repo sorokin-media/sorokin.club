@@ -63,7 +63,7 @@ from users.views.people import people
 from users.views.profile import random_coffee
 from users.views.affilate import profile_affilate, affilate_list, get_affilate_money
 from search.api import api_search_users
-from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat, payment_link
+from stats.views import stats_gode, stats_content, edit_payments_sale, stats_buddy, posts_rating, random_coffee_stat, affilates_stat, affilates_days_stat, affilates_money_stat, payment_link, pages_code
 from telegramessage.views.tg_messages import create_telegram_message, show_telegram_messages, modify_telegram_message, delete_telegram_message
 from telegramessage.views.helpfullness import create_day_helpfullness, show_helpfullness_list, delete_day_helpfullness
 
@@ -154,6 +154,7 @@ urlpatterns = [
     path("intro/", intro, name="intro"),
     path("people/", people, name="people"),
     path("achievements/", RedirectView.as_view(url="/stats", permanent=True), name="achievements"),
+    path("pages-code/", pages_code, name="pages-code"),
     path("stats/", stats, name="stats"),
     path("stats-gode/", stats_gode, name="stats-gode"),
     path("stats-buddy/", stats_buddy, name="stats-buddy"),
