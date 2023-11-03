@@ -90,6 +90,12 @@
             text-align: center;
         }
 
+            @media (max-width: 800px) {
+                .post-type-post .post-header {
+                    margin-bottom: 20px;
+                }
+            }
+
         .post-type-post .post-info {
             padding-bottom: 20px;
             display: inline-flex;
@@ -166,6 +172,45 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+            @media (max-width: 800px) {
+                .post-type-post .post-actions-line {
+                    margin: -8px;
+                    font-size: 14px;
+                }
+
+                .post-type-post .post-actions-line .post-actions-line-item {
+                    width: 100%;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    padding: 8px 17px;
+                    padding-bottom: 0;
+                    margin: 8px;
+                    margin-bottom: 0;
+
+                    border-radius: 6px;
+
+                    box-sizing: border-box;
+                }
+
+                .post-type-post .post-actions-line .post-actions-line-item:last-of-type {
+                    padding-bottom: 8px;
+                }
+
+                .post-type-post .post-actions-line a.post-actions-line-item {
+                    width: auto;
+
+                    min-width: 45px;
+                    min-height: 45px;
+                    margin-bottom: 8px;
+                    padding-bottom: 8px;
+
+                    border: 1px solid var(--input-border-color);
+                    background-color: var(--block-bg-color);
+                }
+            }
 
         .post-type-post .post-author {
             font-size: 110%;
@@ -396,6 +441,20 @@
 
     .text-body h4 {
         font-size: 120%;
+        margin-top: 70px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .text-body h5 {
+        font-size: 100%;
+        margin-top: 70px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .text-body h6 {
+        font-size: 90%;
         margin-top: 70px;
         margin-bottom: 10px;
         text-align: left;
