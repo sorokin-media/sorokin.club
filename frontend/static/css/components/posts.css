@@ -1003,6 +1003,11 @@
             grid-row-end: 4;
 
             padding-top: 30px;
+
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.7rem 0.5rem;
         }
 
         .post-event-rsvp {
@@ -1046,6 +1051,12 @@
         box-sizing: border-box;
         font-size: 90%;
     }
+
+        @media (max-width: 800px) {
+            .linked-posts-scroll {
+                font-size: 100%;
+            }
+        }
 
         @media only screen and (max-width : 570px) {
             .linked-posts-scroll {
