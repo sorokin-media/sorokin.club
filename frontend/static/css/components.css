@@ -1518,7 +1518,7 @@
 
     @media only screen and (max-width : 570px) {
         .menu-button {
-            display: none;
+            padding: 10px;
         }
         .mobile-menu-opened .menu-button {
             display: inline-block;

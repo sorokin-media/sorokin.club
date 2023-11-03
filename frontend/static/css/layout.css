@@ -26,6 +26,12 @@
         position: relative;
     }
 
+        @media (max-width: 576px) {
+          .menu-full {
+            gap: 0.5rem;
+          }
+        }
+
         .menu-left {
             text-align: left;
             transition: margin-left .3s ease;
@@ -39,7 +45,6 @@
             .menu-center {
                 order: 3;
                 flex-grow: 2;
-                display: none;
             }
 
             .mobile-menu-opened .menu-center {
