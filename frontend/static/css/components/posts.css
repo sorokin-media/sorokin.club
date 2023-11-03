@@ -175,7 +175,12 @@
 
             @media (max-width: 800px) {
                 .post-type-post .post-actions-line {
-                    margin: -8px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 8px;
+                    margin: 0;
+
                     font-size: 14px;
                 }
 
@@ -187,8 +192,7 @@
 
                     padding: 8px 17px;
                     padding-bottom: 0;
-                    margin: 8px;
-                    margin-bottom: 0;
+                    margin: 0;
 
                     border-radius: 6px;
 
@@ -368,7 +372,7 @@
 
     @media only screen and (max-width : 570px) {
         .text-body {
-            font-size: 15px;
+            font-size: 13px;
             line-height: 1.6em;
         }
     }
@@ -454,7 +458,7 @@
     }
 
     .text-body h6 {
-        font-size: 90%;
+        font-size: 100%;
         margin-top: 70px;
         margin-bottom: 10px;
         text-align: left;
