@@ -321,6 +321,15 @@ def unitpay_webhook(request):
                     new_one=new_one,
                     product=product
                 )
+            text_send = '#Оплата Сумма: ' + str(payment.amount) + "\nEmail: " + str(user_model.email)
+            send_telegram_message(
+                chat=ADMIN_CHAT,
+                text=text_send
+            )
+            send_telegram_message(
+                chat=Chat(id=204349098),
+                text=text_send
+            )
             return HttpResponse(dumps({"result": {"message": "Запрос успешно обработан"}}))
 
         payment_link = PaymentLink.get_reference(order_id)
