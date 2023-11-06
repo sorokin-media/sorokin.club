@@ -15,7 +15,7 @@ from landing.models import GodSettings
 from users.models.achievements import Achievement
 from users.models.user import User
 from payments.models import Payment
-
+from posts.models.post import Post
 
 @auth_required
 def stats(request):
@@ -98,9 +98,11 @@ def robots(request):
         "Disallow: /edit",
         "Disallow: /stat",
         "Disallow: /room",
-        "Disallow: /static/js/parts/initHideLinks.js",
-        "Clean-param: comment_order&goto /",
+        "Disallow: /static/js/parts/initHideLinks.js"
     ]
+    private_posts = Post.objects.filter(is_public=False).all()
+    lines.extend([f'Disallow: /{post.slug}' for post in private_posts])
+    lines.append("Clean-param: comment_order&goto /")
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
