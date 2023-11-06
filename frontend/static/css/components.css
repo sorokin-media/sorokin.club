@@ -32,12 +32,42 @@
         .footer {
             margin-top: 40px;
             padding: 25px 20px;
+            padding-bottom: 75px;
         }
+    }
+
+    @media (max-width: 576px) {
+      .footer {
+        flex-direction: column;
+        justify-content: stretch;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .footer-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+
+      .footer-left br + br {
+        display: none;
+      }
     }
 
     .footer-right {
         text-align: right;
     }
+
+        @media (max-width: 576px) {
+          .footer-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1rem;
+          }
+        }
 
     .footer-logout {
         display: block;
@@ -48,9 +78,22 @@
         background: none;
         text-decoration: underline;
         cursor: pointer;
-        color: var(--link-color);
+        color: #fff;
         transition: color linear .1s;
+
+        text-decoration: none;
+        background: #333;
+        padding: 12px 23px;
+        border-radius: 15px;
+
+        background: #d42020;
     }
+
+        @media (max-width: 576px) {
+         .footer-logout {
+            margin-top: 0;
+         }
+        }
 
         .footer-logout i {
             display: inline-block;
@@ -1475,7 +1518,7 @@
 
     @media only screen and (max-width : 570px) {
         .menu-button {
-            display: none;
+            padding: 10px;
         }
         .mobile-menu-opened .menu-button {
             display: inline-block;
@@ -1604,7 +1647,9 @@
         }
 
     .post-comments-subscription {
-        display: inline-block;
+        display: inline-flex;
+        align-content: center;
+
         position: relative;
         top: -3px;
         padding: 10px 15px;

@@ -26,6 +26,12 @@
         position: relative;
     }
 
+        @media (max-width: 576px) {
+          .menu-full {
+            gap: 0.5rem;
+          }
+        }
+
         .menu-left {
             text-align: left;
             transition: margin-left .3s ease;
@@ -39,7 +45,6 @@
             .menu-center {
                 order: 3;
                 flex-grow: 2;
-                display: none;
             }
 
             .mobile-menu-opened .menu-center {
@@ -74,6 +79,12 @@
         justify-content: space-between;
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        padding-top: 15px;
+        height: unset;
+        min-height: 75px;
     }
 
         .menu-simplified-right {
@@ -81,6 +92,15 @@
             justify-items: flex-end;
             align-items: center;
             gap: 20px;
+        }
+
+        @media (max-width: 576px) {
+          .menu-simplified-right {
+            flex-wrap: wrap;
+
+            gap: 0.5rem;
+            font-size: 15px;
+          }
         }
 
 .content {
@@ -307,6 +327,7 @@
       .comment-form {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
+        gap: 0.5rem;
       }
     }
 
