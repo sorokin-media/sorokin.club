@@ -39,7 +39,7 @@ from posts.views.admin import admin_post, announce_post, curate_post
 from posts.views.api import toggle_post_bookmark
 from posts.views.feed import feed
 from posts.views.posts import show_post, edit_post, upvote_post, retract_post_vote, compose, compose_type, \
-    toggle_post_subscription, delete_post, unpublish_post, clear_post
+    toggle_post_subscription, delete_post, unpublish_post, clear_post, change_post_slug
 from posts.views.topic_create_delete import create_topic, open_form, show_list_of_rooms, delete_room
 from posts.views.open import open_posts
 
@@ -164,9 +164,10 @@ urlpatterns = [
     path("affilates_stat", affilates_stat, name='affilates_stat'),
     path("affilates_days_stat", affilates_days_stat, name='affilates_days_stat'),
     path("affilates_money_stat", affilates_money_stat, name='affilates_money_stat'),
-
+b
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
 
+    # urls only for admins
     path("create_telegram_message/<uuid:message_id>/", create_telegram_message, name='create_telegram_message'),
     path("create_telegram_message/", create_telegram_message, name='create_telegram_message'),
     path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
@@ -181,6 +182,8 @@ urlpatterns = [
     path('create_cool_intro/', create_cool_intro, name='create_new_cool_intro'),
     path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"),
     path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
+    path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
+    path("change_post_slug/", change_post_slug, name='change_post_slug'),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),

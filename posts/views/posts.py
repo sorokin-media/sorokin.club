@@ -1,7 +1,12 @@
+# Python imports
+import logging
+
+# Django imports
 from django.conf import settings
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse
 
 from auth.helpers import check_user_permissions, auth_required
 from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
@@ -16,11 +21,13 @@ from posts.renderers import render_post
 from search.models import SearchIndex
 from users.models.affilate_models import AffilateLogs, AffilateVisit
 
-from django.http import HttpResponse
-
 import re
 import uuid
+from transliterate import translit
 
+from club.settings import APP_HOST
+
+log = logging.getLogger(__name__)
 
 def show_post(request, post_type, post_slug):
 
@@ -307,3 +314,58 @@ def create_or_edit(request, post_type, post=None, mode="create"):
         "post_type": post_type,
         "form": form,
     })
+
+
+@auth_required
+def change_post_slug(request):
+    ''' view for updating post's slug '''
+    error, message = None, None
+    if request.method == 'POST':
+
+        try:
+            previous_slug = request.POST['previous_slug'].strip().replace(" ", "")
+            new_slug = request.POST['new_slug'].strip().replace(" ", "")
+
+            if re.search('[^a-zA-Z0-9-]+', previous_slug):
+                error = 'Есть лишние символы в указании существующего слага'
+
+            if re.search('[^a-zA-Z0-9-]+', new_slug):
+                error = 'Есть лишние символы в указании нового слага'
+
+            post = Post.objects.get(slug=previous_slug)
+            post.slug = new_slug
+            post.save()
+            message = f'{APP_HOST}/post/{new_slug}/'
+
+        except Exception as ex:
+            error = f'Есть ошибка при обработке данных: {ex}\n\nНадо сообщить разработчику'
+            log.error(f"Ошибка в ф-ции change_post_slug: {ex}")
+
+    return render(request,
+                  "posts/admin/change_post_slug.html",
+                  {
+                      "error": error,
+                      "message": message
+                  }
+                )
+
+'''
+@auth_required
+def user_interface(request):
+    if request.method == 'POST':
+        slug = request.POST['slug']
+        if User.objects.filter(slug=slug).exists():
+            admin_user = request.me
+            user = User.objects.filter(slug=slug).first()
+            session = Session.create_for_admin(admin_user, user)
+            redirect_to = reverse("profile", args=[user.slug])
+            response = redirect(redirect_to)
+            return set_session_cookie(response, user, session)
+        return render(request, 'auth/user_interface.html', {'error': 'ERROR'})
+    if request.my_session.original_token:
+        session = Session.return_to_admin(request.my_session.token)
+        redirect_to = reverse("profile", args=[session.user.slug])
+        response = redirect(redirect_to)
+        return set_session_cookie(response, session.user, session)
+    return render(request, 'auth/user_interface.html')
+'''
