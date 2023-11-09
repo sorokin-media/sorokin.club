@@ -32,7 +32,8 @@ class Command(BaseCommand):
                     # remove all except letters, numbers and spaces
                     post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
                     post_slug = post.slug + f"-{post_title}"
-                    post_title = post_title.replace(" ", "-").replace("--", "-")
+                    self.stdout.write(post_slug)
+                    post_slug = post_slug.replace(" ", "-").replace("--", "-")
                     while post_slug[-1] == '-':
                         post_slug = post_slug[:-1]
 
