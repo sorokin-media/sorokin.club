@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
+from django.urls import reverse
 
 from auth.helpers import check_user_permissions, auth_required
 from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
@@ -326,16 +326,18 @@ def change_post_slug(request):
             previous_slug = request.POST['previous_slug'].strip().replace(" ", "")
             new_slug = request.POST['new_slug'].strip().replace(" ", "")
 
-            if re.search('[^a-zA-Z0-9-]+', previous_slug):
-                error = 'Есть лишние символы в указании существующего слага'
-
             if re.search('[^a-zA-Z0-9-]+', new_slug):
                 error = 'Есть лишние символы в указании нового слага'
 
-            post = Post.objects.get(slug=previous_slug)
-            post.slug = new_slug
-            post.save()
-            message = f'{APP_HOST}/post/{new_slug}/'
+            post = Post.objects.filter(slug=previous_slug).first()
+            if post and not error:
+                post.slug = new_slug
+                post.save()
+                message = f'{APP_HOST}/post/{new_slug}/'
+                return redirect(reverse('show_post', kwargs={'post_type': post.type, 'post_slug': post.slug}))
+
+            else:
+                error = f"Поста с таким slug нет. Введённый slug: {previous_slug}"
 
         except Exception as ex:
             error = f'Есть ошибка при обработке данных: {ex}\n\nНадо сообщить разработчику'
@@ -348,24 +350,3 @@ def change_post_slug(request):
                       "message": message
                   }
                 )
-
-'''
-@auth_required
-def user_interface(request):
-    if request.method == 'POST':
-        slug = request.POST['slug']
-        if User.objects.filter(slug=slug).exists():
-            admin_user = request.me
-            user = User.objects.filter(slug=slug).first()
-            session = Session.create_for_admin(admin_user, user)
-            redirect_to = reverse("profile", args=[user.slug])
-            response = redirect(redirect_to)
-            return set_session_cookie(response, user, session)
-        return render(request, 'auth/user_interface.html', {'error': 'ERROR'})
-    if request.my_session.original_token:
-        session = Session.return_to_admin(request.my_session.token)
-        redirect_to = reverse("profile", args=[session.user.slug])
-        response = redirect(redirect_to)
-        return set_session_cookie(response, session.user, session)
-    return render(request, 'auth/user_interface.html')
-'''

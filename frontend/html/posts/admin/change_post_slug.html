@@ -9,7 +9,25 @@
 
     {% include "common/css.html" %}
     {% block css %}{% endblock %}
+    <style>
+        body {
+            /* Любой общий стиль для body, если нужно */
+        }
 
+        .container {
+            /* Любой общий стиль для контейнера, если нужно */
+        }
+
+        .error-message, .info-message {
+            border: 2px solid red; /* Красная рамка */
+            padding: 10px; /* Добавление отступов вокруг текста */
+            color: black; /* Черные буквы */
+        }
+        .info-message a {
+            /* Стиль для ссылки внутри .info-message */
+            text-decoration: underline; /* Подчеркивание ссылки */
+        }
+    </style>
 </head>
 
 <main id="app">
@@ -32,12 +50,15 @@
 
 {% if me.is_god %}
 <div class="container">
-    {% if error %}
-    <h2 style="color: red;">{{ error }}</h2>
-    {% endif %}
-    {% if message %}
-    <h2 style="color: red;">{{ message }}</h2>
-    {% endif %}    
+    <div class="container">
+        {% if error %}
+        <h2 class="error-message">{{ error }}</h2>
+        {% endif %}
+        {% if message %}
+        <h2 class="info-message">Успешно сохранилось! Ссылка на пост: <a class="info-message" target="_blank" href="{{ message }}">{{ message }}</a></h2>
+        {% endif %}
+    </div>
+    {% csrf_token %}
     <form action="{% url 'change_post_slug' %}" method="post">{% csrf_token %}
         <a href="{% url 'index' %}">Вернуться в клуб</a>
         <br><br>
@@ -50,7 +71,7 @@
         <input type="text" id="new_slug" name="new_slug" />
         <br><br>
         <br><br>
-        <button type="submit" name="Сохранить!">Войти!</button>
+        <button type="submit" name="Сохранить!">Сохранить!</button>
     </form>
 
     <h2 style="color: red;">Инструкция</h2>
