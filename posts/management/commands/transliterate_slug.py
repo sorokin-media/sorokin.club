@@ -19,24 +19,28 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ''' get posts titles, translitarate them all '''
         posts = Post.objects.filter(type='post').all()
+        # for test on prod
+        output_file_path = 'transliterated_slugs.txt'
+        with open(output_file_path, 'w', encoding='utf-8') as output_file:
 
-        for post in posts:
-            
-            try:
-                post_title = post.title
-                post_title = translit(post_title, 'ru', reversed=True)
-                post_title = post_title.strip()
-                # remove all except letters, numbers and spaces
-                post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
-                post_title = post_title.replace("  ", "").replace(" ", "-").replace("--", "-")
-                post_slug = post.slug + f"-{post_title}"
-                post.slug = post_slug
-                post.save()
-                self.stdout.write(post_slug)
+            for post in posts:
+                
+                try:
+                    post_title = post.title
+                    post_title = translit(post_title, 'ru', reversed=True)
+                    post_title = post_title.strip()
+                    # remove all except letters, numbers and spaces
+                    post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
+                    post_title = post_title.replace("  ", "").replace(" ", "-").replace("--", "-")
+                    post_slug = post.slug + f"-{post_title}"
+#                    post.slug = post_slug
+#                    post.save()
+                    output_file.write(f'{post_slug}\n')
+#                    self.stdout.write(post_slug)
 
-            except Exception as ex:
+                except Exception as ex:
 
-                self.stdout.write("Транслитерация не "\
-                                  f"получилась. Post ID:{post.id}. Ошибка: {ex}")
-                log.error("Транслитерация не получилась. "\
-                          f"Post ID:{post.id}. Ошибка: {ex}")
+                    self.stdout.write("Транслитерация не "\
+                                    f"получилась. Post ID:{post.id}. Ошибка: {ex}")
+                    log.error("Транслитерация не получилась. "\
+                            f"Post ID:{post.id}. Ошибка: {ex}")
