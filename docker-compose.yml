@@ -98,3 +98,7 @@ services:
     volumes:
       - .:/app:delegated
     working_dir: /app/frontend
+
+#  bot_removing_user:
+#    depends_on:
+#      - club_app
