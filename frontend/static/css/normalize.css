@@ -1,4 +1,4 @@
-body {
+body * {
     font-size: initial;
 }
 
@@ -15,4 +15,8 @@ img,
 svg {
     display: initial;
     max-width: initial;
+}
+
+pre {
+    white-space: initial;
 }

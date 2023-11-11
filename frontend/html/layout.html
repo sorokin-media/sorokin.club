@@ -24,7 +24,7 @@
           href="{% url "rss" %}{% if me %}?hash={{ me.secret_hash }}{% endif %}" />
 
     <style>
-        body {
+        body * {
             font-size: 16px;
         }
 
@@ -41,6 +41,10 @@
         svg {
             display: block;
             max-width: 100%;
+        }
+
+		pre {
+           white-space: pre-wrap;
         }
     </style>
 
