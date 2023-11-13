@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.http import HttpRequest
 
 from auth.helpers import check_user_permissions, auth_required
 from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
@@ -31,7 +32,15 @@ log = logging.getLogger(__name__)
 
 def show_post(request, post_type, post_slug):
 
-    post = get_object_or_404(Post, slug=post_slug)
+    if post_slug.isdigit() and post_type=='post':
+
+        post = Post.objects.filter(slug__startswith=post_slug).first()
+        return redirect("show_post", post.type, post.slug)
+
+    else:
+
+        post = get_object_or_404(Post, slug=post_slug)
+
     noindex = False
 
     # post_type can be changed by moderator

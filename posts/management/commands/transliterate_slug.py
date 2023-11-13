@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 post_slug = post.slug + f"-{post_title}"
                 post.slug = post_slug
                 post.save()
-                self.stdout.write(post_slug)
+                self.stdout.write(post.slug)
 
             except Exception as ex:
 
