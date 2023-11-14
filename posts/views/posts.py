@@ -1,5 +1,8 @@
 # Python imports
 import logging
+import re
+import uuid
+from transliterate import translit
 
 # Django imports
 from django.conf import settings
@@ -7,31 +10,45 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.http import HttpRequest
 
-from auth.helpers import check_user_permissions, auth_required
-from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
-from common.request import ajax_request
-from posts.forms.compose import POST_TYPE_MAP, PostTextForm
+# import models
 from posts.models.linked import LinkedPost
 from posts.models.post import Post
 from posts.models.subscriptions import PostSubscription
 from posts.models.views import PostView
 from posts.models.votes import PostVote
-from posts.renderers import render_post
 from search.models import SearchIndex
 from users.models.affilate_models import AffilateLogs, AffilateVisit
 
-import re
-import uuid
-from transliterate import translit
+# import Django forms
+from posts.forms.compose import POST_TYPE_MAP, PostTextForm
 
+# import custom foos, classes
+from auth.helpers import check_user_permissions, auth_required
+from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
+from common.request import ajax_request
+from posts.renderers import render_post
+
+# import constants
 from club.settings import APP_HOST
+
 
 log = logging.getLogger(__name__)
 
+
 def show_post(request, post_type, post_slug):
 
-    post = get_object_or_404(Post, slug=post_slug)
+    # redirect for old links. like /post/3/ -> /post/3-business-v-monako/
+    if post_slug.isdigit() and post_type == 'post':
+
+        post = Post.objects.filter(slug__startswith=post_slug).first()
+        return redirect("show_post", post.type, post.slug)
+
+    else:
+
+        post = get_object_or_404(Post, slug=post_slug)
+
     noindex = False
 
     # post_type can be changed by moderator

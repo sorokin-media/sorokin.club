@@ -37,10 +37,10 @@ class Command(BaseCommand):
                     while post_slug[-1] == '-':
                         post_slug = post_slug[:-1]
 
-#                    post.slug = post_slug
-#                    post.save()
+                    post.slug = post_slug
+                    post.save()
                     output_file.write(f'{post_slug}\n')
-#                    self.stdout.write(post_slug)
+                    self.stdout.write(post_slug)
 
                 except Exception as ex:
 
