@@ -43,7 +43,8 @@ def show_post(request, post_type, post_slug):
     if post_slug.isdigit() and post_type == 'post':
 
         post = Post.objects.filter(slug__startswith=post_slug).first()
-        return redirect("show_post", post.type, post.slug)
+        if post.slug != Post.objects.filter(slug__startswith=post_slug).first().slug:
+            return redirect("show_post", post.type, post.slug)
 
     else:
 
