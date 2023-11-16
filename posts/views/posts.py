@@ -42,9 +42,11 @@ def show_post(request, post_type, post_slug):
     # redirect for old links. like /post/3/ -> /post/3-business-v-monako/
     if post_slug.isdigit() and post_type == 'post':
 
-        post = Post.objects.filter(slug__startswith=post_slug).first()
-        if post.slug != Post.objects.filter(slug__startswith=post_slug).first().slug:
-            return redirect("show_post", post.type, post.slug)
+        # TO FIX: попробовать сразу забрать нужное
+        same_posts = Post.objects.filter(slug__startswith=post_slug).all()
+        for post in same_posts:
+            if post.slug.split("0")[0] == post_slug:
+                return redirect("show_post", post.type, post.slug)
 
     else:
 
