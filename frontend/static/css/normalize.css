@@ -1,0 +1,26 @@
+body {
+    font-size: initial;
+}
+
+input, textarea, button {
+    font-size: initial;
+}
+
+a,
+button,
+input,
+textarea {
+    max-width: initial;
+    display: initial;
+    margin: initial;
+}
+
+img,
+svg {
+    display: initial;
+    max-width: initial;
+}
+
+pre {
+    white-space: initial;
+}

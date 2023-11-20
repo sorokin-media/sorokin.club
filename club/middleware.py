@@ -1,6 +1,10 @@
+# Django imports
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.urls import resolve
+from django.utils.encoding import force_str
 
+# import custom foos, classes
 from auth.helpers import authorized_user_with_session
 from club.exceptions import ClubException, ApiException
 

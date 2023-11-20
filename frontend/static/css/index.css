@@ -1,7 +1,7 @@
 @charset "utf-8";
 
+@import "./normalize.css";
 @import "easymde/dist/easymde.min.css";
-@import "normalize.css";
 @import "./fonts.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @import 'slick-carousel/slick/slick.css';

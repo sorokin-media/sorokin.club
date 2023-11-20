@@ -1,5 +1,5 @@
-0 1 * * * root cd /app && python3 manage.py delete_users  >/proc/1/fd/1 2>/proc/1/fd/2
-0 9 * * 2-6 root cd /app && python3 manage.py send_daily_digest --production true  >/proc/1/fd/1 2>/proc/1/fd/2
+#0 1 * * * root cd /app && python3 manage.py delete_users  >/proc/1/fd/1 2>/proc/1/fd/2
+0 10 * * 2-6 root cd /app && python3 manage.py send_daily_digest --production true  >/proc/1/fd/1 2>/proc/1/fd/2
 0 11 * * 1 root cd /app && python3 manage.py send_weekly_digest --production true  >/proc/1/fd/1 2>/proc/1/fd/2
 0 5 * * 7 root cd /app && python3 manage.py rebuild_search_index  >/proc/1/fd/1 2>/proc/1/fd/2
 0 8 * * * root cd /app && python3 manage.py replay_stuck_reviews  >/proc/1/fd/1 2>/proc/1/fd/2
@@ -16,7 +16,7 @@
 
 * * * * * root cd /app && python3 manage.py check_posts_for_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
 * * * * * root cd /app && python3 manage.py check_comment_of_buddy  >/proc/1/fd/1 2>/proc/1/fd/2
-0 8 * * * root cd /app && python3 manage.py yesterday_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
+0 9 * * * root cd /app && python3 manage.py yesterday_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
 0 12 * * 1 root cd /app && python3 manage.py weekly_best_posts  >/proc/1/fd/1 2>/proc/1/fd/2
 
 # random coffee

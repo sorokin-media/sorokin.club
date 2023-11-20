@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru-en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Изменение URL поста</title>
+    {% load static %}
+
+    {% include "common/css.html" %}
+    {% block css %}{% endblock %}
+    <style>
+        body {
+            /* Любой общий стиль для body, если нужно */
+        }
+
+        .container {
+            /* Любой общий стиль для контейнера, если нужно */
+        }
+
+        .error-message, .info-message {
+            border: 2px solid red; /* Красная рамка */
+            padding: 10px; /* Добавление отступов вокруг текста */
+            color: black; /* Черные буквы */
+        }
+        .info-message a {
+            /* Стиль для ссылки внутри .info-message */
+            text-decoration: underline; /* Подчеркивание ссылки */
+        }
+    </style>
+</head>
+
+<main id="app">
+    {% block menu %}
+    {% if me %}
+    {% include "common/menu-full.html" %}
+    {% else %}
+    {% include "common/menu-simplified.html" %}
+    {% endif %}
+    {% endblock %}
+    {% if request.path in telegram_modal_ignore_paths %}
+    {% else %}
+    {% if me.moderation_status != 'approved' %}
+    <get-post-modal />
+    {% endif %}
+    {% endif %}
+</main>
+{% block content %}
+
+
+{% if me.is_god %}
+<div class="container">
+    <div class="container">
+        {% if error %}
+        <h2 class="error-message">{{ error }}</h2>
+        {% endif %}
+        {% if message %}
+        <h2 class="info-message">Успешно сохранилось! Ссылка на пост: <a class="info-message" target="_blank" href="{{ message }}">{{ message }}</a></h2>
+        {% endif %}
+    </div>
+    {% csrf_token %}
+    <form action="{% url 'change_post_slug' %}" method="post">{% csrf_token %}
+        <a href="{% url 'index' %}">Вернуться в клуб</a>
+        <br><br>
+        <label for="previous_slug">Введи Slug поста</label>
+        <br>
+        <input type="text" id="previous_slug" name="previous_slug" />
+        <br><br>
+        <label for="new_slug">Введи новый Slug</label>
+        <br>
+        <input type="text" id="new_slug" name="new_slug" />
+        <br><br>
+        <br><br>
+        <button type="submit" name="Сохранить!">Сохранить!</button>
+    </form>
+
+    <h2 style="color: red;">Инструкция</h2>
+    <p class="div-text">
+        <code>
+            <strong>Где взять Slug?</strong>
+            <br> 
+            <a target="_blank" href="https://sorokin.club/post/1/">Кликни по мне</a>
+            <br>
+            Посмотри в URL. Там такая структура<br>
+            <strong>sorokin.club/post/1/</strong><br>
+            После /post/ идёт то, что называется Slug. Slug может быть, например, и таким <strong>/357-example-slug/</strong><br>
+            В форму не надо вводить слэш (/). Только то, что можно использовать, об этом ниже. 
+            <br><br>
+            <strong>Что можно использовать в Slug новом?</strong>
+            <br>
+            Латинские символы, символ дефис (тире), цифры.
+            <br><br>
+            <strong>Что нельзя?</strong>
+            Всё остальное! 🤡<br>
+            Пробелы в том числе
+        </code>
+        <br>
+        <h4 style="color: red;">Информация для разработчика</h4>        
+        <small>
+            Работа происходит с полем Slug в модели данных Post. Ни заголовок, ничего остального в логике не задействуется. 
+        </small>
+      </p>
+
+
+    {% else %}
+    <div class="stats">
+        Не для тебя
+    </div>
+    {% endif %}
+
+    {% endblock %}
+
+</html>

@@ -1,21 +1,31 @@
+# Python imports
 import logging
 from datetime import datetime, timedelta
 import pytz
+from transliterate import translit
+import re
 
+# Django imports
 from django.conf import settings
 from django.urls import reverse
+
+# Telegram imports
 from telegram import Update
 from telegram.ext import CallbackContext
-
 from bot.handlers.common import UserRejectReason, PostRejectReason
 from bot.decorators import is_moderator
+
+# import models
+from posts.models.post import Post
+from search.models import SearchIndex
+from users.models.user import User
+
+# custom foos, classes imports
 from notifications.email.users import send_welcome_drink, send_user_rejected_email
 from notifications.telegram.posts import notify_post_approved, announce_in_club_chats, \
     notify_post_rejected
 from notifications.telegram.users import notify_user_profile_approved, notify_user_profile_rejected
-from posts.models.post import Post
-from search.models import SearchIndex
-from users.models.user import User
+
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +41,26 @@ def approve_post(update: Update, context: CallbackContext) -> None:
         return
 
     post.is_approved_by_moderator = True
+
+    # transliterate post slug
+    if post.type == 'post':
+
+        try:
+            post_title = post.title
+            post_title = translit(post_title, 'ru', reversed=True)
+            post_title = post_title.strip()
+            # remove all except letters, numbers and spaces
+            post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
+            post_slug = post.slug + f"-{post_title}"
+            post_slug = post_slug.replace(" ", "-").replace("--", "-")
+            while post_slug[-1] == '-':
+                post_slug = post_slug[:-1]
+            post.slug = post_slug
+            post.save()
+
+        except:
+            log.error(f"Не получилось сделать транслитерацию. Post ID: {post.id}")
+
     post.last_activity_at = datetime.utcnow()
     post.published_at = datetime.utcnow()
     post.save()

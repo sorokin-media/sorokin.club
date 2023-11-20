@@ -1,30 +1,56 @@
+# Python imports
+import logging
+import re
+import uuid
+from transliterate import translit
+
+# Django imports
 from django.conf import settings
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.http import HttpRequest
 
-from auth.helpers import check_user_permissions, auth_required
-from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
-from common.request import ajax_request
-from posts.forms.compose import POST_TYPE_MAP, PostTextForm
+# import models
 from posts.models.linked import LinkedPost
 from posts.models.post import Post
 from posts.models.subscriptions import PostSubscription
 from posts.models.views import PostView
 from posts.models.votes import PostVote
-from posts.renderers import render_post
 from search.models import SearchIndex
 from users.models.affilate_models import AffilateLogs, AffilateVisit
 
-from django.http import HttpResponse
+# import Django forms
+from posts.forms.compose import POST_TYPE_MAP, PostTextForm
 
-import re
-import uuid
+# import custom foos, classes
+from auth.helpers import check_user_permissions, auth_required
+from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
+from common.request import ajax_request
+from posts.renderers import render_post
+
+# import constants
+from club.settings import APP_HOST
+
+
+log = logging.getLogger(__name__)
 
 
 def show_post(request, post_type, post_slug):
 
-    post = get_object_or_404(Post, slug=post_slug)
+    # redirect for old links. like /post/3/ -> /post/3-business-v-monako/
+    if post_slug.isdigit() and post_type == 'post':
+        # TO FIX: попробовать сразу забрать нужное
+        same_posts = Post.objects.filter(slug__startswith=post_slug).all()
+        for post in same_posts:
+            if post.slug.split("-")[0] == post_slug and post.slug != post_slug:
+                return redirect("show_post", post.type, post.slug)
+
+    else:
+
+        post = get_object_or_404(Post, slug=post_slug)
+
     noindex = False
 
     # post_type can be changed by moderator
@@ -307,3 +333,39 @@ def create_or_edit(request, post_type, post=None, mode="create"):
         "post_type": post_type,
         "form": form,
     })
+
+
+@auth_required
+def change_post_slug(request):
+    ''' view for updating post's slug '''
+    error, message = None, None
+    if request.method == 'POST':
+
+        try:
+            previous_slug = request.POST['previous_slug'].strip().replace(" ", "")
+            new_slug = request.POST['new_slug'].strip().replace(" ", "")
+
+            if re.search('[^a-zA-Z0-9-]+', new_slug):
+                error = 'Есть лишние символы в указании нового слага'
+
+            post = Post.objects.filter(slug=previous_slug).first()
+            if post and not error:
+                post.slug = new_slug
+                post.save()
+                message = f'{APP_HOST}/post/{new_slug}/'
+                return redirect(reverse('show_post', kwargs={'post_type': post.type, 'post_slug': post.slug}))
+
+            else:
+                error = f"Поста с таким slug нет. Введённый slug: {previous_slug}"
+
+        except Exception as ex:
+            error = f'Есть ошибка при обработке данных: {ex}\n\nНадо сообщить разработчику'
+            log.error(f"Ошибка в ф-ции change_post_slug: {ex}")
+
+    return render(request,
+                  "posts/admin/change_post_slug.html",
+                  {
+                      "error": error,
+                      "message": message
+                  }
+                )

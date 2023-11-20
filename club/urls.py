@@ -39,7 +39,7 @@ from posts.views.admin import admin_post, announce_post, curate_post
 from posts.views.api import toggle_post_bookmark
 from posts.views.feed import feed
 from posts.views.posts import show_post, edit_post, upvote_post, retract_post_vote, compose, compose_type, \
-    toggle_post_subscription, delete_post, unpublish_post, clear_post
+    toggle_post_subscription, delete_post, unpublish_post, clear_post, change_post_slug
 from posts.views.topic_create_delete import create_topic, open_form, show_list_of_rooms, delete_room
 from posts.views.open import open_posts
 
@@ -164,23 +164,7 @@ urlpatterns = [
     path("affilates_stat", affilates_stat, name='affilates_stat'),
     path("affilates_days_stat", affilates_days_stat, name='affilates_days_stat'),
     path("affilates_money_stat", affilates_money_stat, name='affilates_money_stat'),
-
     path("sale-2022/", edit_payments_sale, name="edit-payment-sale"),
-
-    path("create_telegram_message/<uuid:message_id>/", create_telegram_message, name='create_telegram_message'),
-    path("create_telegram_message/", create_telegram_message, name='create_telegram_message'),
-    path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
-    path("modify_telegram_message/<uuid:message_id>/", modify_telegram_message, name='modify_telegram_message'),
-    path("delete_telegram_message/<uuid:message_id>/", delete_telegram_message, name='delete_telegram_message'),
-    path("create_day_helpfullness/<id>", create_day_helpfullness, name="create_day_helpfullness"),
-    path("create_day_helpfullness", create_day_helpfullness, name="create_day_helpfullness"),
-    path("show_helpfullness_list", show_helpfullness_list, name="show_helpfullness_list"),
-    path("delete_day_helpfullness/<id>", delete_day_helpfullness, name="delete_day_helpfullness"),
-    path("cool_intros", cool_intros, name='cool_intros'),
-    path("create_cool_intro/<id>", create_cool_intro, name="create_cool_intro"),
-    path('create_cool_intro/', create_cool_intro, name='create_new_cool_intro'),
-    path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"),
-    path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
 
     path("profile/tag/<slug:tag_code>/toggle/", toggle_tag, name="toggle_tag"),
     path("profile/expertise/add/", add_expertise, name="add_expertise"),
@@ -254,6 +238,23 @@ urlpatterns = [
     path("godmode/dev_login/", debug_dev_login, name="debug_dev_login"),
     path("godmode/random_login/", debug_random_login, name="debug_random_login"),
     path("godmode/login/<str:user_slug>/", debug_login, name="debug_login"),
+    # admin panel urls, admin features too
+    path("create_telegram_message/<uuid:message_id>/", create_telegram_message, name='create_telegram_message'),
+    path("create_telegram_message/", create_telegram_message, name='create_telegram_message'),
+    path("show_telegram_messages", show_telegram_messages, name='show_telegram_messages'),
+    path("modify_telegram_message/<uuid:message_id>/", modify_telegram_message, name='modify_telegram_message'),
+    path("delete_telegram_message/<uuid:message_id>/", delete_telegram_message, name='delete_telegram_message'),
+    path("create_day_helpfullness/<id>", create_day_helpfullness, name="create_day_helpfullness"),
+    path("create_day_helpfullness", create_day_helpfullness, name="create_day_helpfullness"),
+    path("show_helpfullness_list", show_helpfullness_list, name="show_helpfullness_list"),
+    path("delete_day_helpfullness/<id>", delete_day_helpfullness, name="delete_day_helpfullness"),
+    path("cool_intros", cool_intros, name='cool_intros'),
+    path("create_cool_intro/<id>", create_cool_intro, name="create_cool_intro"),
+    path('create_cool_intro/', create_cool_intro, name='create_new_cool_intro'),
+    path("delete_cool_intro/<id>", delete_cool_intro, name="delete_cool_intro"),
+    path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
+    path("info_tg_format/<page>", info_tg_format, name='info_tg_format'),
+    path("change_post_slug/", change_post_slug, name='change_post_slug'),
 
     # misc
     path("misc/calendar/ical", generate_ical_invite, name="generate_ical_invite"),

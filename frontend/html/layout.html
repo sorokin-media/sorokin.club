@@ -23,6 +23,35 @@
           title="Сорокин.Клуб: Новые посты"
           href="{% url "rss" %}{% if me %}?hash={{ me.secret_hash }}{% endif %}" />
 
+    <style>
+        body {
+            font-size: 16px;
+        }
+
+        input, textarea, button {
+            font-size: 1rem;
+        }
+
+        a,
+        button,
+        input,
+        textarea {
+            max-width: 100%;
+            display: block;
+            margin: 1.5rem 1rem;
+        }
+
+        img,
+        svg {
+            display: block;
+            max-width: 100%;
+        }
+
+		pre {
+           white-space: pre-wrap;
+        }
+    </style>
+
     {% block og_tags %}
         {% include "common/og.html" %}
     {% endblock %}
@@ -97,7 +126,7 @@
             {% if custom_description %}
             {{ custom_description }}
             {% endif %}
-            
+
         </div>
     </footer>
 {% endblock %}
