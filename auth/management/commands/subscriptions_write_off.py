@@ -92,7 +92,7 @@ class Command(BaseCommand):
             self.sendPayUnitpay(user, 1)
         self.stdout.write("Done 🥙")
 
-        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-30),
+        expiring_users = User.objects.filter(membership_expires_at__gte=datetime.utcnow() + timedelta(days=-1),
                                              membership_expires_at__lte=datetime.utcnow() + timedelta(days=0),
                                              unitpay_id__gt=0,
                                              moderation_status='approved',
