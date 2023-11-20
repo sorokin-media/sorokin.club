@@ -43,21 +43,23 @@ def approve_post(update: Update, context: CallbackContext) -> None:
     post.is_approved_by_moderator = True
 
     # transliterate post slug
-    try:
-        post_title = post.title
-        post_title = translit(post_title, 'ru', reversed=True)
-        post_title = post_title.strip()
-        # remove all except letters, numbers and spaces
-        post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
-        post_slug = post.slug + f"-{post_title}"
-        post_slug = post_slug.replace(" ", "-").replace("--", "-")
-        while post_slug[-1] == '-':
-            post_slug = post_slug[:-1]
-        post.slug = post_slug
-        post.save()
+    if post.type == 'post':
 
-    except:
-        log.error(f"Не получилось сделать транслитерацию. Post ID: {post.id}")
+        try:
+            post_title = post.title
+            post_title = translit(post_title, 'ru', reversed=True)
+            post_title = post_title.strip()
+            # remove all except letters, numbers and spaces
+            post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
+            post_slug = post.slug + f"-{post_title}"
+            post_slug = post_slug.replace(" ", "-").replace("--", "-")
+            while post_slug[-1] == '-':
+                post_slug = post_slug[:-1]
+            post.slug = post_slug
+            post.save()
+
+        except:
+            log.error(f"Не получилось сделать транслитерацию. Post ID: {post.id}")
 
     post.last_activity_at = datetime.utcnow()
     post.published_at = datetime.utcnow()
