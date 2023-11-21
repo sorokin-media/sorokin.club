@@ -70,9 +70,8 @@ class Command(BaseCommand):
                 User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first()
                 for telegram_id in chat_users
                 # TO FIX: bad code. Так сделано из-за наличия трёх тг на одном юзере, см. exception_list
-                if User.objects.filter(telegram_id=telegram_id).exclude(slug_in=exception_list).first() is not None
+                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None
             ]
-
         except Exception as ex:
             log.error(f"Exception in pyament_bot: {ex}")
             MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
@@ -89,3 +88,4 @@ class Command(BaseCommand):
             log.error(f"Exception in pyament_bot: {ex}")
             MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
 
+        MessageToDmitry(data="finished").send_message()
