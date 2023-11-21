@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     "django_q",
     "webpack_loader",
     "buddy",
-    "telegramessage"
+    "telegramessage",
+    "bot_payment_checker"
 ]
 
 MIDDLEWARE = [
