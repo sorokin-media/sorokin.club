@@ -51,7 +51,7 @@ class Command(BaseCommand):
             There is no way to get chat_id of all members in chat
             because of default Telegram privacy rules.
         '''
-        users_telegram_id = User.objects.all().values_list('telegram_id')
+        users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
         TELEGRAM_TOKEN_PAYMENT_BOT = "6808722895:AAESiT-izNKj_0chctWHmzOqAvgm16hRieg"
         bot = Bot(token=TELEGRAM_TOKEN_PAYMENT_BOT)
         chat_id = -1002010838055
