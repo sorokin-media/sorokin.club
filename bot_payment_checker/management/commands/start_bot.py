@@ -68,20 +68,23 @@ class Command(BaseCommand):
         [
             self.stdout.write(obj)
             for obj in chat_users
+            if obj is not None
         ]
 
         try:
             [
-                self.stdout(
+                self.stdout.write(
                     User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first().slug
                 )
                 for telegram_id in chat_users
-                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
+                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None \
+                    and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
             ]
             club_users = [
-                User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first()
+                User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() 
                 for telegram_id in chat_users
-                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
+                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists() \
+                    and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None
             ]
         except Exception as ex:
             log.error(f"Exception in pyament_bot: {ex}")
