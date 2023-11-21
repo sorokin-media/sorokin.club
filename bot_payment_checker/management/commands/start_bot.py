@@ -67,7 +67,7 @@ class Command(BaseCommand):
         # TO FIX: if 2 users have same telegran_id? 
         try:
             club_users = [
-                User.objects.filter(telegram_id=telegram_id).exclude(slug_in=exception_list).first()
+                User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first()
                 for telegram_id in chat_users
                 # TO FIX: bad code. Так сделано из-за наличия трёх тг на одном юзере, см. exception_list
                 if User.objects.filter(telegram_id=telegram_id).exclude(slug_in=exception_list).first() is not None
