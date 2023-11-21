@@ -65,7 +65,19 @@ class Command(BaseCommand):
             for telegram_id in users_telegram_id
         ]
         # TO FIX: if 2 users have same telegran_id? 
+        [
+            self.stdout.write(obj)
+            for obj in chat_users
+        ]
+
         try:
+            [
+                self.stdout(
+                    User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first().slug
+                )
+                for telegram_id in chat_users
+                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
+            ]
             club_users = [
                 User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first()
                 for telegram_id in chat_users
