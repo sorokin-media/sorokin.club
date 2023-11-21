@@ -12,6 +12,8 @@ from posts.models.post import Post
 log = logging.getLogger(__name__)
 
 
+# НЕ ЗАПУСКАТЬ! 
+# Команда использовалась один раз для транслитерации всех постов
 class Command(BaseCommand):
     ''' Django command '''
     help = "Add translitarate prefix to URL"
@@ -33,7 +35,7 @@ class Command(BaseCommand):
                     post_title = re.sub("[^A-Za-z\d\s]", "", post_title)
                     post_slug = post.slug + f"-{post_title}"
                     self.stdout.write(post_slug)
-                    post_slug = post_slug.replace(" ", "-").replace("--", "-")
+                    post_slug = post_slug.replace(" ", "-").replace("--", "-").replace('u202f', "").replace("\\", "").replace("u2009", "")
                     while post_slug[-1] == '-':
                         post_slug = post_slug[:-1]
 
