@@ -81,7 +81,10 @@ class Command(BaseCommand):
                 for user in club_users
                 if user.membership_days_left_round() < -10 # Перенесено условие в правильное место
             ]
-            MessageToDmitry(data=str(expired_user_or_not)).send_message()
+            [
+                MessageToDmitry(data=str(user)).send_message()
+                for user in expired_user_or_not
+            ]
 
         except Exception as ex:
             log.error(f"Exception in pyament_bot: {ex}")
