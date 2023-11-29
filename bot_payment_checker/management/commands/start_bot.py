@@ -30,13 +30,14 @@ from bot.sending_message import MessageToDmitry
 
 log = logging.getLogger(__name__)
 
-def try_except_helper(chat_id: int, user_id: int, bot: Bot) -> ChatMember:
+def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> ChatMember:
     ''' helper for using generator instead of for-loop '''
     try:
         return bot.get_chat_member(
             chat_id=chat_id,
-            user_id=user_id
+            user_id=str(user_id)
         ).user.id
+
     except:
         pass
 
@@ -56,53 +57,64 @@ class Command(BaseCommand):
         bot = Bot(token=TELEGRAM_TOKEN_PAYMENT_BOT)
         chat_id = -1002010838055
         exception_list = ['vika', 'skorpion28', 'sesevor']
-        chat_users = [
-            try_except_helper(
-                bot=bot,
-                chat_id=chat_id,
-                user_id=telegram_id[0]
-            )
-            for telegram_id in users_telegram_id
-        ]
-        # TO FIX: if 2 users have same telegran_id? 
-        [
-            self.stdout.write(obj)
-            for obj in chat_users
-            if obj is not None
-        ]
 
-        try:
+        with open("output.txt", "w", encoding="utf-8") as output_file:
             [
-                self.stdout.write(
-                    User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first().slug
+                (output_file.write(
+                    f"[obj in users_telegram_id] Type: {type(obj)}, obj: {obj}\n")
                 )
-                for telegram_id in chat_users
-                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None \
-                    and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
+                for obj in users_telegram_id
             ]
-            club_users = [
-                User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() 
-                for telegram_id in chat_users
-                if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists() \
-                    and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None
-            ]
-        except Exception as ex:
-            log.error(f"Exception in pyament_bot: {ex}")
-            MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
+            chat_users = []
+            for telegram_id in users_telegram_id:
+                output_file.write(f"Telegram ID: {telegram_id}\n")
+                telegram_id = try_except_helper(
+                    bot=bot,
+                    chat_id=chat_id,
+                    user_id=telegram_id # отправялется один и тот же объект
+                )
 
-        try:
-            expired_user_or_not = [
-                {user.telegram_id: user.membership_days_left_round()}
-                for user in club_users
-                if user.membership_days_left_round() < -10 # Перенесено условие в правильное место
-            ]
-            [
-                MessageToDmitry(data=str(user)).send_message()
-                for user in expired_user_or_not
-            ]
+                if telegram_id:
+                    output_file.write(
+                            f"[telegram_id in users_telegram_id] Type: {type(telegram_id)}, obj: {telegram_id}\n"
+                        )           
+                    chat_users.append(telegram_id)
+                else:
+                    output_file.write("Nope\n")
+            try:
+                [
+                    output_file.write(
+                        User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first().slug
+                    )
+                    for telegram_id in chat_users
+                    if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None \
+                        and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists()
+                ]
+                club_users = [
+                    User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() 
+                    for telegram_id in chat_users
+                    if User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).exists() \
+                        and User.objects.filter(telegram_id=telegram_id).exclude(slug__in=exception_list).first() is not None
+                ]
+            except Exception as ex:
+                log.error(f"\nException in pyament_bot: {ex}")
+                MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
 
-        except Exception as ex:
-            log.error(f"Exception in pyament_bot: {ex}")
-            MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
+            try:
+                expired_user_or_not = [
+                    {user.telegram_id: user.membership_days_left_round()}
+                    for user in club_users
+                    if user.membership_days_left_round() < -10 # Перенесено условие в правильное место
+                ]
+                for user in expired_user_or_not:
+                    output_file.write(f"\nExpired: {str(user)}")
+                [
+                    MessageToDmitry(data=str(user)).send_message()
+                    for user in expired_user_or_not
+                ]
+
+            except Exception as ex:
+                log.error(f"\nException in pyament_bot: {ex}")
+                MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
 
         MessageToDmitry(data="finished").send_message()
