@@ -28,11 +28,11 @@
     <div class="form-row compose-form-title">
 
         {% if validation_errors %}
-        {% if "order" in validation_errors.as_text %}
-        <div style="color: rgb(255, 0, 0);font-size:20px">
-            <i> Крутая интруха с таким порядком отправки уже есть </i>
-        </div>
-        {% endif %}
+
+            <div style="color: rgb(255, 0, 0);font-size:20px">
+                <i> {{ validation_errors.as_text }} </i>
+            </div>
+
         {% endif %}
         <br>
         <small><a href="{% url 'cool_intros' %}">Вернуться к списку</a></small>

@@ -45,24 +45,6 @@ class Command(BaseCommand):
         time_zone = pytz.UTC
         now = time_zone.localize(datetime.utcnow())
 
-        # users who activate helpfulness digest and not banned
-
-        users = User.objects.filter(
-            day_helpfullness_digest=True
-        ).filter(
-            Q(is_banned_until__lte=now) | Q(is_banned_until=None)
-        ).all()
-
-        # for test on prod
-#        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-#        alex = User.objects.get(telegram_id=TG_ALEX)
-#        users = [dmitry, alex]
-
-        # for test on local
-#        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
-#        nuta = User.objects.get(telegram_id=TG_NUTA)
-#        users = [dmitry, nuta]
-
         # if all message are have been sended already
 
         if not CoolIntro.objects.filter(is_sended=False).exists():
@@ -89,6 +71,25 @@ class Command(BaseCommand):
 
             text = construct_message(cool_intro.text)
             image_url = cool_intro.image_url
+
+            # users who activate helpfulness digest and not banned
+
+            users = User.objects.filter(
+                day_helpfullness_digest=True
+            ).filter(
+                Q(is_banned_until__lte=now) | Q(is_banned_until=None)
+            ).exclude(
+                telegram_id=cool_intro.telegram_id
+            ).all()
+
+            # for test on prod
+    #        dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+    #        alex = User.objects.get(telegram_id=TG_ALEX)
+    #        users = [dmitry, alex]
+
+            # for test on local
+#            dmitry = User.objects.get(telegram_id=TG_DEVELOPER_DMITRY)
+#            users = [dmitry]
 
             for user in users:
 

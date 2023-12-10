@@ -29,3 +29,10 @@ class CoolIntro(models.Model):
                                       default=False)
     is_sended = models.BooleanField(null=False, default=False)
     test_user = models.ForeignKey(User, related_name='cool_intros_test_users', on_delete=models.CASCADE, null=True)
+    telegram_id = models.CharField(
+        default=None,
+        null=True,
+        blank=False,
+        max_length=36,
+        verbose_name="Telegram ID автора крутой интрухи"
+    )

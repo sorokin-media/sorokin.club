@@ -75,6 +75,8 @@ class Command(BaseCommand):
         bot = Bot(token=TELEGRAM_TOKEN_PAYMENT_BOT)
         chat_id = -1002010838055
         exception_list = ['vika', 'skorpion28', 'sesevor']
+        message_text = """Эти ребята в чате, но срок аккаунта в клубе у них истек! 
+                        Гоните их и насмехайтесь над ними!\n\n"""
 
         with open("output.txt", "w", encoding="utf-8") as output_file:
             [
@@ -132,10 +134,13 @@ class Command(BaseCommand):
                     ]
                     for user in expired_user_or_not:
                         output_file.write(f"\nExpired: {user}")
-                    [
-                        MessageToDmitry(data=str(user)).send_message()
-                        for user in expired_user_or_not
-                    ]
+                    for username in expired_user_or_not:
+                        message_text = message_text + "@" + username + "\n"
+
+                    TelegramCustomMessage(
+                        user=chat_id,
+                        string_for_bot=message_text
+                    )
 
                 except Exception as ex:
                     log.error(f"\nException in pyament_bot: {ex}")

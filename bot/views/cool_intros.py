@@ -115,6 +115,7 @@ def create_cool_intro(request, id=None, is_archived=False):
         # if new message
 
         form = CoolIntroForm(request.POST)
+
         if form.is_valid():
             instance = form.save(commit=False)
             instance.is_archived = is_archived

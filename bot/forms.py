@@ -1,5 +1,5 @@
 # django imports
-from django.forms import ModelForm, TextInput, Textarea, ModelChoiceField, Select, ValidationError
+from django.forms import ModelForm, TextInput, Textarea, ModelChoiceField, Select, ValidationError, CharField
 
 # import models
 from bot.models.cool_intros import CoolIntro
@@ -24,7 +24,14 @@ class CoolIntroForm(ModelForm):
     class Meta:
         model = CoolIntro
 
-        fields = ('name', 'text', 'image_url', 'order', 'test_user')
+        fields = (
+            'name',
+            'text',
+            'image_url',
+            'order',
+            'telegram_id',
+            'test_user'
+        )
 
         widgets = {
             'name': TextInput(attrs={'placeholder': 'Название сообщения'}),
@@ -37,6 +44,7 @@ class CoolIntroForm(ModelForm):
 
         cleaned_data = super().clean()
         order = cleaned_data.get('order')
+        telegram_id = cleaned_data.get('telegram_id')
 
         if order and \
             CoolIntro.objects.filter(id=self.cool_intro_id).exists() and \
@@ -51,7 +59,19 @@ class CoolIntroForm(ModelForm):
                                     "Если хочешь сделать замену, сначала сделай "
                                     "форму с тем номером порядка, на который хочешь "
                                     "заменить. ")
+
         return order
+
+    def clean_telegram_id(self):
+        ''' валидация поля telegram_id '''
+        telegram_id = self.data.get('telegram_id')
+
+        if not User.objects.filter(telegram_id=telegram_id).exists():
+            raise ValidationError("Пользователя с таким telegram_id "
+                                  "нет в нашей базе данных")
+
+        return telegram_id
+
 
     def save(self, commit=True):
         ''' метод сохранения данных из формы  '''

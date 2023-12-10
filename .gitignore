@@ -62,3 +62,9 @@ webpack.config-copy.js
 
 # for tests on local machine
 ngrok.exe
+
+# logs for special cases
+output.txt
+
+# VSCode auto files
+extensions.json
