@@ -45,6 +45,7 @@ def approve_post(update: Update, context: CallbackContext) -> None:
     # transliterate post slug
     if post.type == 'post':
 
+        start_slug = post.slug
         try:
             post_title = post.title
             post_title = translit(post_title, 'ru', reversed=True)
@@ -59,6 +60,7 @@ def approve_post(update: Update, context: CallbackContext) -> None:
             post.save()
 
         except:
+            post.slug = start_slug
             log.error(f"Не получилось сделать транслитерацию. Post ID: {post.id}")
 
     post.last_activity_at = datetime.utcnow()
