@@ -53,6 +53,16 @@ class CoolIntroForm(ModelForm):
                                     "заменить. ")
         return order
 
+    def clean_telegram_id(self):
+        ''' валидация поля telegram_id '''
+        telegram_id = self.data.get('telegram_id')
+
+        if not User.objects.filter(telegram_id=telegram_id).exists():
+            raise ValidationError("Пользователя с таким telegram_id "
+                                  "нет в нашей базе данных")
+
+        return telegram_id
+
     def save(self, commit=True):
         ''' метод сохранения данных из формы  '''
 

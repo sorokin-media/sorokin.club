@@ -20,6 +20,9 @@ run-bot:  ## Runs telegram bot
 docker-run-bot:
 	python3 bot/main.py
 
+docker-run-payment-bot:
+	python3 bot_payment_checker/payment_bot_setup.py
+
 docker-run-cron:
 	env >> /etc/environment
 	cron -f -l 2
@@ -71,6 +74,7 @@ psql:
   run-queue \
   run-bot \
   docker-run-bot \
+  docker-run-payment-bot \
   run-uvicorn \
   requirements \
   help \

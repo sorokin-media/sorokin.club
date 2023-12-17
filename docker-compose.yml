@@ -74,6 +74,17 @@ services:
       - postgres
       - redis
 
+  payment_bot:
+    <<: *app
+    command: make docker-run-payment-bot
+    container_name: payment_bot
+    depends_on:
+      - club_app
+      - postgres
+      - redis
+    ports:
+      - "8820:8820"
+
   postgres:
     image: postgres:11
     container_name: club_postgres
