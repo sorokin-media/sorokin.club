@@ -11,6 +11,15 @@
     {% block meta %}
         {% include "common/meta.html" %}
     {% endblock %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GQ6P0EVKNN"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-GQ6P0EVKNN');
+    </script>
 
     <script>
         const theme = localStorage.getItem('theme');
