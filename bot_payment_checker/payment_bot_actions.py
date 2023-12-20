@@ -73,7 +73,6 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
     except:
         pass
 
-
     return 
 
 def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
@@ -82,44 +81,33 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
     bot = Bot(token=settings.TELEGRAM_TOKEN)
     exception_list = ['vika', 'skorpion28', 'sesevor']
-    message_text = """<USERS>\nЭти ребята в чате, но срок аккаунта в клубе у них истек! 
-                    Гоните их и насмехайтесь над ними!\n\n
-                    @bigsmart Алексей Сорокин
-                    @Golubova_Ann Нюта Голубова"""
+    message_text = (
+        "<USERS>\nЭти ребята в чате, но срок аккаунта в клубе у них истек! \n"
+        "Гоните их и насмехайтесь над ними!\n\n"
+        "@bigsmart Алексей Сорокин\n"
+        "@Golubova_Ann Нюта Голубова"
+    )
     users_str = ""
-    chat_id = update.message.chat_id
-    
-    if update.message.chat_id in SOROKIN_GROUPS:
+    chat_id = str(update.message.chat_id)
 
+    if chat_id in SOROKIN_GROUPS:
 
-    with open("output.txt", "w", encoding="utf-8") as output_file:
         chat_users = []
+
         for telegram_id in users_telegram_id:
-            output_file.write(f"Telegram ID: {telegram_id}\n")
             telegram_user_info = try_except_helper(
                 bot=bot,
                 chat_id=chat_id,
                 user_id=telegram_id  # отправялется один и тот же объект
             )
+
             if telegram_user_info:
-                output_file.write(
-                        f"[telegram_user_info in users_telegram_user_info] Type: {type(telegram_user_info)}, obj: {telegram_user_info}\n"
-                    )           
-                chat_users.append(telegram_user_info)
-            else:
-                output_file.write(f" 88 строка:{chat_id}, {telegram_id}")
+                chat_users.append(telegram_user_info)               
 
         if chat_users:
 
             try:
-                [
-                    output_file.write(
-                        "Club user: " + User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first().slug
-                    )
-                    for chat_user in chat_users
-                    if User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first() is not None \
-                        and User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).exists()
-                ]
+
                 club_users = [
                     {
                         "club_user_obj": User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first(),
@@ -129,6 +117,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                     if User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).exists() \
                         and User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first() is not None
                 ]
+
             except Exception as ex:
                 log.error(f"\nException in pyament_bot: {ex}")
                 MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
@@ -139,25 +128,26 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                     for user in club_users
                     if user["club_user_obj"].membership_days_left_round() < -10  # Перенесено условие в правильное место
                 ]
-                for user in expired_user_or_not:
-                    output_file.write(f"\nExpired: {user}")
-                for username in expired_user_or_not:
-                    users_str = users_str + "@" + username + "\n"
-#                        message_text = message_text + "@" + username + "\n"
+                
+                if expired_user_or_not:
 
-                message_text = message_text.replace(
-                    "<USERS>",
-                    users_str
-                )
-                TelegramCustomMessage(
-                    user=chat_id,
-                    string_for_bot=message_text
-                )
+                    for username in expired_user_or_not:
+                        users_str = users_str + "@" + username + "\n"
+
+                    message_text = message_text.replace(
+                        "<USERS>",
+                        users_str
+                    )
+                    bot.send_message(
+                        text=message_text,
+                        chat_id=chat_id
+                    )
+
+                else:
+                    MessageToDmitry(data=f"no users for payment bot: {chat_id}").send_message()
 
             except Exception as ex:
                 log.error(f"\nException in pyament_bot: {ex}")
                 MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
-        else:
-            MessageToDmitry(data="no users for payment bot")
 
     MessageToDmitry(data="finished").send_message()

@@ -25,6 +25,7 @@ from bot_payment_checker.constants import SOROKIN_GROUPS
 # import custom foos, classes
 from bot_payment_checker.payment_bot_actions import search_for_unpaid_users
 
+log = logging.getLogger(__name__)
 
 def validate_group(update: Update, context: CallbackContext) -> bool:
     """Validate group: is it Sorokin's froup or not. """
@@ -44,10 +45,13 @@ def main() -> None:
         CommandHandler(
             "nonactive",  # command for bot reaction
             search_for_unpaid_users,  # call foo
-            filter = Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID))  # validation for bot calls
-#            filters=Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID)) & validate_group  так не работает 
+#            Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID))  # validation for bot calls
         )
     )
+    updater.start_polling()
+    log.info(f"Start_polling payment Telegram bot. ")
+
+    updater.idle()
 
 if __name__ == '__main__':
     main()
