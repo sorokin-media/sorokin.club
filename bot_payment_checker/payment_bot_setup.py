@@ -27,9 +27,9 @@ from bot_payment_checker.payment_bot_actions import search_for_unpaid_users
 
 log = logging.getLogger(__name__)
 
-def validate_group(update: Update, context: CallbackContext) -> bool:
-    """Validate group: is it Sorokin's froup or not. """
-    return update.message.chat_id in SOROKIN_GROUPS
+#def validate_group(update: Update, context: CallbackContext) -> bool:
+#    """Validate group: is it Sorokin's froup or not. """
+#    return (update.message.chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]
 
 def main() -> None:
     '''
@@ -43,15 +43,14 @@ def main() -> None:
     dispatcher = updater.dispatcher
     dispatcher.add_handler(
         CommandHandler(
-            "nonactive",  # command for bot reaction
-            search_for_unpaid_users,  # call foo
-#            Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID))  # validation for bot calls
+            "nonactive",
+            search_for_unpaid_users
         )
     )
     updater.start_polling()
     log.info(f"Start_polling payment Telegram bot. ")
-
     updater.idle()
+
 
 if __name__ == '__main__':
     main()
