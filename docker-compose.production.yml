@@ -50,6 +50,17 @@ services:
     ports:
       - "8816:8816"
 
+  payment_bot:
+    <<: *app
+    command: make docker-run-payment-bot
+    container_name: payment_bot
+    depends_on:
+      - club_app
+      - postgres
+      - redis
+    ports:
+      - "8820:8820"
+      
   cron:
     <<: *app
     command: make docker-run-cron
