@@ -59,8 +59,8 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
         Dict[ChatMember.user.id, ChatMember.user.username]: dict with 
         telegram user account id and telegram account username
     """
-    s = f"go. user id: {user_id}"
-    MessageToDmitry(data=s).send_message()
+    if user_id == "442442997"
+    MessageToDmitry(data="ME go!").send_message()
     try:
         member_info = bot.get_chat_member(
             chat_id=chat_id,
@@ -69,11 +69,14 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
         MessageToDmitry(data='done').send_message()
         tg_id = member_info.user.id
         tg_username = member_info.user.username
+        MessageToDmitry(data=tg_id).send_message()
+        MessageToDmitry(data=tg_username).send_message
         return {
             "tg_id": tg_id,
             "tg_username": tg_username
         }
     except:
+        MessageToDmitry(data='fuck up').send_message()
         pass
 
     return
@@ -102,7 +105,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
         str_users_telegram_id = str(users_telegram_id)
         MessageToDmitry(data=str_users_telegram_id).send_message()
-        bot = Bot(token=settings.TELEGRAM_TOKEN)
+        bot = Bot(token=settings.PAYMENT_BOT_TELEGRAM_TOKEN)
         exception_list = ['vika', 'skorpion28', 'sesevor']
         message_text = (
             "<USERS>\nЭти ребята в чате, но срок аккаунта в клубе у них истек! \n"
