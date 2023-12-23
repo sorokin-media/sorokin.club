@@ -78,6 +78,16 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
 def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     ''' foo searchs for users whi didn't pay '''
 
+    log1 = str(update.message.chat_id)
+    log.info(f"Start_polling payment Telegram bot. {log1}")
+    log2 = type(update.message.chat_id)
+    log.info(f"Start_polling payment Telegram bot. {log2}")
+    log3 = update.message.chat_id in SOROKIN_GROUPS
+    log.info(log3)
+    log4 = str(update.message.from_user.id)
+    log.info(log4)
+    log5 = type(update.message.from_user.id)
+    log.info(log5)
     if (update.message.chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
