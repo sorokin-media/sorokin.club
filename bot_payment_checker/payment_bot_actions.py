@@ -79,16 +79,16 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     ''' foo searchs for users whi didn't pay '''
 
     log1 = str(update.message.chat_id)
-    log.info(f"Start_polling payment Telegram bot. {log1}")
+    MessageToDmitry(data=f"LOG1 ----> {log1}").send_message()
     log2 = type(update.message.chat_id)
-    log.info(f"Start_polling payment Telegram bot. {log2}")
+    MessageToDmitry(data=f"LOG2 ----> {log2}").send_message()
     log3 = update.message.chat_id in SOROKIN_GROUPS
-    log.info(log3)
+    MessageToDmitry(data=f"LOG3 ----> {log3}").send_message()
     log4 = str(update.message.from_user.id)
-    log.info(log4)
+    MessageToDmitry(data=f"LOG4 -----> {log4}").send_message()
     log5 = type(update.message.from_user.id)
-    log.info(log5)
-    if (update.message.chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
+    MessageToDmitry(data=f"LOG5 -----> {log5}").send_message()
+    if (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
         bot = Bot(token=settings.TELEGRAM_TOKEN)
