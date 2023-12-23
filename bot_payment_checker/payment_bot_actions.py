@@ -87,7 +87,9 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     log3 = str(update.message.from_user.id)
     MessageToDmitry(data=f"LOG3 -----> {log3}").send_message()
 
-    bool_result = (str(update.message.chat_id) in SOROKIN_GROUPS and str(update.message.from_user.id) in ["442442997"])
+    bool_result = (
+        (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]
+    )
     MessageToDmitry(data=f"bool_result ----> {bool_result}")
 
     if (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
