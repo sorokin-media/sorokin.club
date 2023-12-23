@@ -62,7 +62,7 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
     try:
         member_info = bot.get_chat_member(
             chat_id=chat_id,
-            user_id=str(user_id)
+            user_id=user_id
         )
         tg_id = member_info.user.id
         tg_username = member_info.user.username
@@ -73,7 +73,7 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
     except:
         pass
 
-    return 
+    return
 
 def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     ''' foo searchs for users whi didn't pay '''
@@ -97,6 +97,8 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
+        str_users_telegram_id = str(users_telegram_id)
+        MessageToDmitry(data=str_users_telegram_id).send_message()
         bot = Bot(token=settings.TELEGRAM_TOKEN)
         exception_list = ['vika', 'skorpion28', 'sesevor']
         message_text = (
