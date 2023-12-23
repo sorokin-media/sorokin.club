@@ -76,7 +76,8 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
             "tg_username": tg_username
         }
     except:
-        MessageToDmitry(data='fuck up').send_message()
+        if user_id == "442442997":
+            MessageToDmitry(data='fuck up').send_message()
         pass
 
     return
