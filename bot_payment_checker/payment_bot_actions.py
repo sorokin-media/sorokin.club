@@ -80,14 +80,16 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
 
     log1 = str(update.message.chat_id)
     MessageToDmitry(data=f"LOG1 ----> {log1}").send_message()
-    log2 = type(update.message.chat_id)
+
+    log2 = str(update.message.chat_id) in SOROKIN_GROUPS
     MessageToDmitry(data=f"LOG2 ----> {log2}").send_message()
-    log3 = update.message.chat_id in SOROKIN_GROUPS
-    MessageToDmitry(data=f"LOG3 ----> {log3}").send_message()
-    log4 = str(update.message.from_user.id)
-    MessageToDmitry(data=f"LOG4 -----> {log4}").send_message()
-    log5 = type(update.message.from_user.id)
-    MessageToDmitry(data=f"LOG5 -----> {log5}").send_message()
+
+    log3 = str(update.message.from_user.id)
+    MessageToDmitry(data=f"LOG3 -----> {log3}").send_message()
+
+    bool_result = (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]
+    MessageToDmitry(data=f"bool_result ----> {bool_result}")
+
     if (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
