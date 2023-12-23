@@ -59,8 +59,8 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
         Dict[ChatMember.user.id, ChatMember.user.username]: dict with 
         telegram user account id and telegram account username
     """
-    if user_id == "442442997"
-    MessageToDmitry(data="ME go!").send_message()
+    if user_id == "442442997":
+        MessageToDmitry(data="ME go!").send_message()
     try:
         member_info = bot.get_chat_member(
             chat_id=chat_id,
