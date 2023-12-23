@@ -92,7 +92,9 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     )
     MessageToDmitry(data=f"bool_result ----> {bool_result}").send_message()
 
-    if (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
+    chat_id = str(update.message.chat_id)
+
+    if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
         bot = Bot(token=settings.TELEGRAM_TOKEN)
@@ -104,67 +106,81 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
             "@Golubova_Ann Нюта Голубова"
         )
         users_str = ""
-        chat_id = str(update.message.chat_id)
 
-        if chat_id in SOROKIN_GROUPS:
+        chat_users = []
 
-            chat_users = []
+        for telegram_id in users_telegram_id:
+            telegram_user_info = try_except_helper(
+                bot=bot,
+                chat_id=chat_id,
+                user_id=telegram_id  # отправялется один и тот же объект
+            )
 
-            for telegram_id in users_telegram_id:
-                telegram_user_info = try_except_helper(
-                    bot=bot,
-                    chat_id=chat_id,
-                    user_id=telegram_id  # отправялется один и тот же объект
-                )
+            if telegram_user_info:
+                chat_users.append(telegram_user_info)               
 
-                if telegram_user_info:
-                    chat_users.append(telegram_user_info)               
+        if chat_users:
+            MessageToDmitry(data="there are chat_users list").send_message()
+            MessageToDmitry(data=f"list len ----> {len(chat_users)}").send_message()
 
-            if chat_users:
+            try:
 
-                try:
+                club_users = [
+                    {
+                        "club_user_obj": User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first(),
+                        "telegram_username": chat_user["tg_username"]
+                    }
+                    for chat_user in chat_users
+                    if User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).exists() \
+                        and User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first() is not None
+                ]
 
-                    club_users = [
-                        {
-                            "club_user_obj": User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first(),
-                            "telegram_username": chat_user["tg_username"]
-                        }
-                        for chat_user in chat_users
-                        if User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).exists() \
-                            and User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first() is not None
-                    ]
-
-                except Exception as ex:
-                    log.error(f"\nException in pyament_bot: {ex}")
-                    MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
+                tg_chat_users = str(chat_users)
 
                 try:
-                    expired_user_or_not = [
-                        user["telegram_username"]
-                        for user in club_users
-                        if user["club_user_obj"].membership_days_left_round() < -10  # Перенесено условие в правильное место
-                    ]
-                    
-                    if expired_user_or_not:
+                    MessageToDmitry(data=tg_chat_users).send_message()
 
-                        for username in expired_user_or_not:
-                            users_str = users_str + "@" + username + "\n"
+                except:
+                    MessageToDmitry(data="Yaha Balya!").send_message()
 
-                        message_text = message_text.replace(
-                            "<USERS>",
-                            users_str
-                        )
-                        bot.send_message(
-                            text=message_text,
-                            chat_id=chat_id
-                        )
+            except Exception as ex:
+                log.error(f"\nException in pyament_bot: {ex}")
+                MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
 
-                    else:
-                        MessageToDmitry(data=f"no users for payment bot: {chat_id}").send_message()
+            try:
+                expired_user_or_not = [
+                    user["telegram_username"]
+                    for user in club_users
+                    if user["club_user_obj"].membership_days_left_round() < -10  # Перенесено условие в правильное место
+                ]
+                
+                try:
+                    m = str(expired_user_or_not)
+                    m = f"MMMM: {m}"
+                    MessageToDmitry(data=m).send_message()
+                except:
+                    MessageToDmitry(data='YAHOUA BIAL').send_message()
 
-                except Exception as ex:
-                    log.error(f"\nException in pyament_bot: {ex}")
-                    MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
+                if expired_user_or_not:
+
+                    for username in expired_user_or_not:
+                        users_str = users_str + "@" + username + "\n"
+
+                    message_text = message_text.replace(
+                        "<USERS>",
+                        users_str
+                    )
+                    bot.send_message(
+                        text=message_text,
+                        chat_id=chat_id
+                    )
+
+                else:
+                    MessageToDmitry(data=f"no users for payment bot: {chat_id}").send_message()
+
+            except Exception as ex:
+                log.error(f"\nException in pyament_bot: {ex}")
+                MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
 
         MessageToDmitry(data="finished").send_message()
     
