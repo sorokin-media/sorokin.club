@@ -95,10 +95,9 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
         bot = Bot(token=settings.PAYMENT_BOT_TELEGRAM_TOKEN)
         exception_list = ['vika', 'skorpion28', 'sesevor']
         message_text = (
-            "<USERS>\nЭти ребята в чате, но срок аккаунта в клубе у них истек! \n"
+            "Эти ребята в чате, но срок аккаунта в клубе у них истек! \n"
             "Гоните их и насмехайтесь над ними!\n\n"
-            "@bigsmart Алексей Сорокин\n"
-            "@Golubova_Ann Нюта Голубова"
+            "<USERS>"
         )
         users_str = ""
 
@@ -127,8 +126,6 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                     if User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).exists() \
                         and User.objects.filter(telegram_id=chat_user['tg_id']).exclude(slug__in=exception_list).first() is not None
                 ]
-
-                tg_chat_users = str(chat_users)
 
             except Exception as ex:
                 log.error(f"\nException in pyament_bot: {ex}")
