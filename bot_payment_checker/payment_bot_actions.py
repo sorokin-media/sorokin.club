@@ -106,7 +106,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
         users_str = ""
 
         chat_users = []
-
+        MessageToDmitry(data="come here").send_message()
         for telegram_id in users_telegram_id:
             telegram_user_info = try_except_helper(
                 bot=bot,
