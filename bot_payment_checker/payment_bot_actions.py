@@ -68,9 +68,18 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
         )
         MessageToDmitry(data='done').send_message()
         tg_id = member_info.user.id
-        tg_username = member_info.user.username
-        MessageToDmitry(data=tg_id).send_message()
-        MessageToDmitry(data=tg_username).send_message
+
+        try:
+            tg_username = member_info.user.username
+
+        except:
+            tg_username = " - пользователь скрыл никней в Telegram"
+            MessageToDmitry(
+                data=(
+                    "Не получилось забрать никней юзера в телеграмм. \n"
+                    f"tg_id: {tg_id}"
+                )
+            )
         return {
             "tg_id": tg_id,
             "tg_username": tg_username
@@ -91,7 +100,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
 
     if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997", "241157209"]:
 
-        users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
+        users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', 'full_name', flat=True)
         bot = Bot(token=settings.PAYMENT_BOT_TELEGRAM_TOKEN)
         exception_list = ['vika', 'skorpion28', 'sesevor']
         message_text = (
@@ -133,7 +142,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
 
             try:
                 expired_user_or_not = [
-                    user["telegram_username"]
+                    user["club_user_obj"].full_name + " " + user["telegram_username"]
                     for user in club_users
                     if user["club_user_obj"].membership_days_left_round() < -10  # Перенесено условие в правильное место
                 ]
