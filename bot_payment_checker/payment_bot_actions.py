@@ -74,12 +74,7 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
 
         except:
             tg_username = " - пользователь скрыл никней в Telegram"
-            MessageToDmitry(
-                data=(
-                    "Не получилось забрать никней юзера в телеграмм. \n"
-                    f"tg_id: {tg_id}"
-                )
-            )
+            MessageToDmitry(data=f"Не получилось забрать никней юзера в телеграмм. \ntg_id: {tg_id}").send_message()
         return {
             "tg_id": tg_id,
             "tg_username": tg_username
