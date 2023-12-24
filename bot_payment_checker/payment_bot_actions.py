@@ -85,27 +85,13 @@ def try_except_helper(chat_id: int, user_id: str, bot: Bot) -> Dict[ChatMember, 
 def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
     ''' foo searchs for users whi didn't pay '''
 
-    log1 = str(update.message.chat_id)
-    MessageToDmitry(data=f"LOG1 ----> {log1}").send_message()
-
-    log2 = str(update.message.chat_id) in SOROKIN_GROUPS
-    MessageToDmitry(data=f"LOG2 ----> {log2}").send_message()
-
-    log3 = str(update.message.from_user.id)
-    MessageToDmitry(data=f"LOG3 -----> {log3}").send_message()
-
-    bool_result = (
-        (str(update.message.chat_id) in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]
-    )
-    MessageToDmitry(data=f"bool_result ----> {bool_result}").send_message()
+    MessageToDmitry(data="go to search unpaid users").send_message()
 
     chat_id = str(update.message.chat_id)
 
-    if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997"]:
+    if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997", "241157209"]:
 
         users_telegram_id = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', flat=True)
-        str_users_telegram_id = str(users_telegram_id)
-        MessageToDmitry(data=str_users_telegram_id).send_message()
         bot = Bot(token=settings.PAYMENT_BOT_TELEGRAM_TOKEN)
         exception_list = ['vika', 'skorpion28', 'sesevor']
         message_text = (
@@ -129,8 +115,6 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                 chat_users.append(telegram_user_info)               
 
         if chat_users:
-            MessageToDmitry(data="there are chat_users list").send_message()
-            MessageToDmitry(data=f"list len ----> {len(chat_users)}").send_message()
 
             try:
 
@@ -146,12 +130,6 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
 
                 tg_chat_users = str(chat_users)
 
-                try:
-                    MessageToDmitry(data=tg_chat_users).send_message()
-
-                except:
-                    MessageToDmitry(data="Yaha Balya!").send_message()
-
             except Exception as ex:
                 log.error(f"\nException in pyament_bot: {ex}")
                 MessageToDmitry(data=f"error in club_users. Ex: {ex}").send_message()
@@ -163,13 +141,6 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                     if user["club_user_obj"].membership_days_left_round() < -10  # Перенесено условие в правильное место
                 ]
                 
-                try:
-                    m = str(expired_user_or_not)
-                    m = f"MMMM: {m}"
-                    MessageToDmitry(data=m).send_message()
-                except:
-                    MessageToDmitry(data='YAHOUA BIAL').send_message()
-
                 if expired_user_or_not:
 
                     for username in expired_user_or_not:
@@ -191,7 +162,12 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
                 log.error(f"\nException in pyament_bot: {ex}")
                 MessageToDmitry(data=f"error in expired_user_or_not. Ex: {ex}").send_message()
 
-        MessageToDmitry(data="finished").send_message()
+        MessageToDmitry(
+            data=(
+                "unpaid users searching is finished. "
+                f"chat_id: {chat_id}"
+            )
+        )
     
     else:
         MessageToDmitry(data="Кто-то пытается вызвать команду, кто доступа не имеет").send_message()
