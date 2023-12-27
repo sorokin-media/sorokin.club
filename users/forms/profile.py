@@ -32,7 +32,7 @@ class ProfileEditForm(ModelForm):
         label="Ссылочки на себя и всякое такое",
         required=False,
         max_length=1024,
-        widget=forms.Textarea(attrs={"maxlength": 1024}),
+        widget=forms.Textarea(attrs={"maxlength": 1024, "rel": "nofollow"}),
     )
     company = forms.CharField(
         label="Компания",
