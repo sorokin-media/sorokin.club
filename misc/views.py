@@ -98,7 +98,8 @@ def robots(request):
         "Disallow: /edit",
         "Disallow: /stat",
         "Disallow: /room",
-        "Disallow: /static/js/parts/initHideLinks.js"
+        "Disallow: /static/js/parts/initHideLinks.js",
+        "Disallow: /upvoteUrl"
     ]
     private_posts = Post.objects.filter(is_public=False).all()
     lines.extend([f'Disallow: /{post.slug}' for post in private_posts])

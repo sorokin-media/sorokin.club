@@ -59,8 +59,8 @@ def robots_noindex(request):
         '/admin',
         '/?type=search',
         '/search',
-        '/edit'
-        
+        '/edit',
+        '/upvoteUrl'
     ]
     if any(url in request.path for url in noindex_urls):
         return {"noindex": True}
