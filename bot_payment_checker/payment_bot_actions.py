@@ -92,7 +92,7 @@ def search_for_unpaid_users(update: Update, context: CallbackContext) -> None:
 
     chat_id = str(update.message.chat_id)
 
-    if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997", "241157209"]:
+    if (chat_id in SOROKIN_GROUPS) and str(update.message.from_user.id) in ["442442997", "241157209", "263982754"]:
 
         telegram_users = User.objects.exclude(telegram_id__isnull=True).exclude(telegram_id='').values_list('telegram_id', 'full_name')
         bot = Bot(token=settings.PAYMENT_BOT_TELEGRAM_TOKEN)
