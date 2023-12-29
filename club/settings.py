@@ -274,7 +274,7 @@ OG_IMAGE_GENERATOR_DEFAULTS = {
 # 6067062018:AAGzrsk-6P9gX6HFmK38sAHyWY273KjsCsE - is not realy using token on app_host
 # just only for working on local development
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN") or '6067062018:AAGzrsk-6P9gX6HFmK38sAHyWY273KjsCsE'
-PAYMENT_BOT_TELEGRAM_TOKEN = os.getenv("PAYMENT_BOT_TELEGRAM_TOKEN") or "6808722895:AAESiT-izNKj_0chctWHmzOqAvgm16hRieg"
+PAYMENT_BOT_TELEGRAM_TOKEN = os.getenv("PAYMENT_BOT_TELEGRAM_TOKEN") or "6850333750:AAHGLxWhELS4DS5Sywx9XM0udPDD92hFSps"
 TELEGRAM_BOT_URL = os.getenv("TELEGRAM_BOT_URL") or "https://t.me/vas3k_club_bot"
 # random number after or
 TELEGRAM_ADMIN_CHAT_ID = os.getenv("TELEGRAM_ADMIN_CHAT_ID") or "442442997"
