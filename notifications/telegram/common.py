@@ -13,6 +13,7 @@ ADMIN_CHAT = Chat(id=settings.TELEGRAM_ADMIN_CHAT_ID)
 CLUB_CHAT = Chat(id=settings.TELEGRAM_CLUB_CHAT_ID)
 CLUB_CHANNEL = Chat(id=settings.TELEGRAM_CLUB_CHANNEL_ID)
 CLUB_ONLINE = Chat(id=settings.TELEGRAM_ONLINE_CHANNEL_ID)
+TELEGRAM_CLUB_MONEY_GROUP = Chat(id=settings.TELEGRAM_CLUB_MONEY_GROUP)
 
 
 def send_telegram_message(

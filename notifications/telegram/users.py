@@ -3,7 +3,7 @@ from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
-from notifications.telegram.common import Chat, ADMIN_CHAT, send_telegram_message, render_html_message
+from notifications.telegram.common import Chat, ADMIN_CHAT, TELEGRAM_CLUB_MONEY_GROUP, send_telegram_message, render_html_message
 from bot.handlers.common import UserRejectReason
 from users.models.user import User
 
@@ -165,7 +165,7 @@ def cancel_subscribe_admin(user):
     user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user.slug})
     if user.telegram_id:
         send_telegram_message(
-            chat=ADMIN_CHAT,
+            chat=TELEGRAM_CLUB_MONEY_GROUP,
             text=f"#днизакончилисьсовсем {user_profile_url}",
         )
 

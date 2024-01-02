@@ -17,7 +17,7 @@ from users.models.subscription_plan import SubscriptionPlan
 from payments.unitpay import UnitpayService
 from urllib.request import urlopen
 from urllib.parse import quote
-from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, render_html_message
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, TELEGRAM_CLUB_MONEY_GROUP, render_html_message
 from django.urls import reverse
 
 
@@ -174,14 +174,14 @@ class Command(BaseCommand):
                 couldnd_withdraw_money(user)
                 couldnd_withdraw_money_email(user)
                 send_telegram_message(
-                    chat=ADMIN_CHAT,
+                    chat=TELEGRAM_CLUB_MONEY_GROUP,
                     text=text_send
                 )
             else:
                 print("Success")
                 text_send = '#Автосписание ' + user.email + " " + str(product.amount)
                 send_telegram_message(
-                    chat=ADMIN_CHAT,
+                    chat=TELEGRAM_CLUB_MONEY_GROUP,
                     text=text_send
                 )
 

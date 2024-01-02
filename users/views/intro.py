@@ -7,7 +7,7 @@ import pytz
 
 import decimal
 
-from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, TELEGRAM_CLUB_MONEY_GROUP
 from payments.models import Payment
 from auth.helpers import auth_required, check_user_permissions
 from notifications.telegram.users import notify_profile_needs_review
@@ -84,7 +84,7 @@ def intro(request):
                 sum_amount = 'Нет платежа'
             text_send = user.email + ' Сумма: ' + sum_amount + "\n" + cookie_auth.replace('/', "\n")
             send_telegram_message(
-                chat=ADMIN_CHAT,
+                chat=TELEGRAM_CLUB_MONEY_GROUP,
                 text=text_send
             )
             send_telegram_message(

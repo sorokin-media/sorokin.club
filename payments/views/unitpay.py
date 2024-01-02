@@ -13,7 +13,7 @@ from payments.products import club_invite_activator
 from payments.unitpay import UnitpayService
 from users.models.user import User
 from users.models.subscription_plan import SubscriptionPlan
-from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT
+from notifications.telegram.common import Chat, send_telegram_message, ADMIN_CHAT, TELEGRAM_CLUB_MONEY_GROUP
 from payments.models import PaymentLink
 
 # imports for affilate programm
@@ -257,7 +257,7 @@ def unitpay_webhook(request):
     if request.GET["method"] == "error":
         text_send = '#ОШИБКА_ПЛАТЕЖА КОД: ' + str(order_id)
         send_telegram_message(
-            chat=ADMIN_CHAT,
+            chat=TELEGRAM_CLUB_MONEY_GROUP,
             text=text_send
         )
         send_telegram_message(
@@ -323,7 +323,7 @@ def unitpay_webhook(request):
                 )
             text_send = '#Оплата Сумма: ' + str(payment.amount) + "\nEmail: " + str(user_model.email)
             send_telegram_message(
-                chat=ADMIN_CHAT,
+                chat=TELEGRAM_CLUB_MONEY_GROUP,
                 text=text_send
             )
             send_telegram_message(
@@ -347,7 +347,7 @@ def unitpay_webhook(request):
 
             text_send = '#Разовый_платеж Сумма: ' + str(payment_link.amount) + "\nEmail: " + str(payment_link.email)
             send_telegram_message(
-                chat=ADMIN_CHAT,
+                chat=TELEGRAM_CLUB_MONEY_GROUP,
                 text=text_send
             )
             send_telegram_message(
