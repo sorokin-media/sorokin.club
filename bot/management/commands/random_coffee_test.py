@@ -28,4 +28,4 @@ class Command(BaseCommand):
                 )
                 MessageToDmitry(data=test_message).send_message()
 
-        MessageToDmitry(data=Exception).send_message()
+        MessageToDmitry(data='ЗАКОНЧИЛ!').send_message()
