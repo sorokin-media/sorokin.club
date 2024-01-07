@@ -22,9 +22,9 @@ class Command(BaseCommand):
             if not coffee_user.user.membership_expires_is():
 
                 test_message = (
-                    coffee_user.user.slug + ": " + coffee_user.user + "\n"
-                    "random_coffee_last_partner_id: " + coffee_user.random_coffee_last_partner_id  + '\n'
-                    "coffee_user.user.membership_expires_is(): " + coffee_user.user.membership_expires_is() + "\n"
+                    str(coffee_user.user.slug) + ": " + str(coffee_user.user) + "\n"
+                    "random_coffee_last_partner_id: " + str(coffee_user.random_coffee_last_partner_id)  + '\n'
+                    "coffee_user.user.membership_expires_is(): " + str(coffee_user.user.membership_expires_is()) + "\n"
                 )
                 MessageToDmitry(data=test_message).send_message()
 
