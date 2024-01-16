@@ -108,7 +108,7 @@ def construct_message(object, custom_utm=None):
         while text_of_post[-1] == ' ':
             text_of_post = text_of_post[:-1]
         text_of_post = re.sub(
-            r'\<img src="[\w\s\d\=\:\/\.\?\-\&\%\;]+\"{1}\salt="[\w\s\!\-\.\,\?\+\=\:\;\'\"\%\*\(\)]+\"\>', '', text_of_post)
+            r'\<img src=\"[\w\s\d\=\:\/\.\?\-\&\%\;]+\"{1}\salt=\"[\w\s\!\-\.\«\»\,\?\+\=\:\;\'\"\%\*\(\)]+\"\>', '', text_of_post)
         len_of_text = 300
         if len(text_of_post) > len_of_text:
             while len(re.findall(r'\<a', text_of_post[:len_of_text])) > len(re.findall(r'\<\/a', text_of_post[:len_of_text])):
@@ -172,10 +172,13 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
     post_photo = 'https://sorokin.club/static/images/open_posts_weekly.png'
     closed_post_photo = 'https://sorokin.club/static/images/closed_posts_weekly.png'
     intro_photo = 'https://sorokin.club/static/images/weekly_intros.png'
+
     for user in users_for_weekly_digest:
+
         for author_and_text in dict_list:
             author_slug = author_and_text['slug']
             # bruteforce resolving of problem getting value from set with one value
+
             for b in author_slug:
                 author_slug = str(b)
             author = User.objects.get(slug=author_slug)
@@ -183,14 +186,20 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                 user_from=user,
                 user_to=author
             )
+
             if not is_muted:
                 string_for_bot += author_and_text['text']
+
         if start_len != len(string_for_bot):
+
             if optional:
                 string_for_bot = header_of_message + string_for_bot + optional
+
             else:
                 string_for_bot = header_of_message + string_for_bot
+
             if user.slug not in ['AlekseiPodkletnov', 'den-is', 'Lisa', 'nabiullin', 'hichnii', 'rav'] and user.slug not in ['vika', 'skorpion28', 'sesevor']:
+
                 if 'Лучшие посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
@@ -206,6 +215,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     )
                     string_for_bot = ''
                     custom_message.send_message()
+
                 elif 'лучшие открытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
@@ -221,6 +231,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     )
                     string_for_bot = ''
                     custom_message.send_message()
+
                 elif 'лучшие закрытые посты' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
@@ -236,6 +247,7 @@ def compile_message_helper(bot, users_for_weekly_digest, dict_list, header_of_me
                     )
                     string_for_bot = ''
                     custom_message.send_message()
+
                 elif 'интро' in header_of_message:
                     custom_message = TelegramCustomMessage(
                         etc=author,
